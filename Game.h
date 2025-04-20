@@ -7,6 +7,7 @@
 #include "DeviceResources.h"
 #include "SpriteSheet.h"
 #include "World.h"
+#include "GameLoader.h"
 
 #include "StepTimer.h"
 
@@ -15,6 +16,7 @@
 // provides a game loop.
 class Game final : public DX::IDeviceNotify
 {
+    friend class GameLoader;
 public:
 
     Game() noexcept(false);

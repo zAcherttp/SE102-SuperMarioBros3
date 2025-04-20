@@ -7,19 +7,20 @@
 #include <SpriteBatch.h>
 #include "SpriteSheet.h"
 
+struct AnimationSequence
+{
+    std::vector<const SpriteSheet::SpriteFrame*> frames;
+    bool loop;
+    float baseTimePerFrame;
+    float minTimePerFrame;
+    float maxTimePerFrame;
+    bool useVelocityScaling;
+    float velocityScaleFactor;
+};
+
 class Animator
 {
 public:
-    struct AnimationSequence
-    {
-        std::vector<const SpriteSheet::SpriteFrame*> frames;
-        bool loop;                  
-        float baseTimePerFrame;     
-        float minTimePerFrame;       
-        float maxTimePerFrame;       
-        bool useVelocityScaling;     
-        float velocityScaleFactor; 
-    };
 
     Animator() noexcept :
         mCurrentSequence(""),

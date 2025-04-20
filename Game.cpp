@@ -77,6 +77,7 @@ void Game::HandleInput()
 {
     auto kb = m_keyboard->GetState();
     m_keys.Update(kb);
+	DebugOverlay::UpdateInput(kb);
     if (m_keys.IsKeyPressed(Keyboard::Escape))
     {
         ExitGame();
@@ -131,6 +132,7 @@ void Game::Render()
     /// end block
 
 	DebugOverlay::DrawFPSCounter(m_spriteBatch.get(), m_font.get(), m_timer.GetFramesPerSecond());
+	DebugOverlay::DrawInput(m_spriteBatch.get(), m_font.get());
     m_spriteBatch->End();
 
     context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);

@@ -185,6 +185,7 @@
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameLoader.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="pch.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">
