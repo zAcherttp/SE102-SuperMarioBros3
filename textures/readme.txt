@@ -1,0 +1,9 @@
+mario.spritefont created using MakeSpriteFont with this command:
+
+MakeSpriteFont font.png mario.spritefont /Sharp /CharacterRegion:0-9 /CharacterRegion:a-z /CharacterRegion:0x020
+
+0x020 for U+0020 (space)
+
+default extracting is from right -> left + top -> bottom
+
+refer to this document: https://github.com/microsoft/DirectXTK/wiki/MakeSpriteFont

@@ -1,0 +1,266 @@
+﻿//
+// Game.cpp
+//
+
+#include "pch.h"
+#include "Game.h"
+#include "Helpers.h"
+
+extern void ExitGame() noexcept;
+
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
+
+using Microsoft::WRL::ComPtr;
+
+Game::Game() noexcept(false)
+{
+    m_deviceResources = std::make_unique<DX::DeviceResources>(DXGI_FORMAT_B8G8R8A8_UNORM,
+        DXGI_FORMAT_UNKNOWN);
+    // TODO: Provide parameters for swapchain format, depth/stencil format, and backbuffer count.
+    //   Add DX::DeviceResources::c_AllowTearing to opt-in to variable rate displays.
+    //   Add DX::DeviceResources::c_EnableHDR for HDR10 display.
+    m_deviceResources->RegisterDeviceNotify(this);
+}
+
+// Initialize the Direct3D resources required to run.
+void Game::Initialize(HWND window, int width, int height)
+{
+    m_deviceResources->SetWindow(window, width, height);
+
+    m_deviceResources->CreateDeviceResources();
+    CreateDeviceDependentResources();
+
+    // Renders only 2D, so no need for a depth buffer.
+    m_deviceResources->CreateWindowSizeDependentResources();
+    CreateWindowSizeDependentResources();
+
+    // TODO: Change the timer settings if you want something other than the default variable timestep mode.
+    // e.g. for 60 FPS fixed timestep update logic, call:
+    /*
+    m_timer.SetFixedTimeStep(true);
+    m_timer.SetTargetElapsedSeconds(1.0 / 60);
+    */
+}
+
+#pragma region Frame Update
+// Executes the basic game loop.
+void Game::Tick()
+{
+    m_timer.Tick([&]()
+    {
+        Update(m_timer);
+    });
+
+    Render();
+}
+
+// Updates the world.
+void Game::Update(DX::StepTimer const& timer)
+{
+    float elapsedTime = float(timer.GetElapsedSeconds());
+
+    //m_ship->Update(elapsedTime);
+    
+    elapsedTime;
+}
+#pragma endregion
+
+#pragma region Frame Render
+// Draws the scene.
+void Game::Render()
+{
+    // Don't try to render anything before the first Update.
+    if (m_timer.GetFrameCount() == 0)
+    {
+        return;
+    }
+
+    Clear();
+
+    m_deviceResources->PIXBeginEvent(L"Render");
+    auto context = m_deviceResources->GetD3DDeviceContext();
+
+    m_spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, m_states->PointClamp());
+
+	RECT r = { 256, 188, 256 + 16, 188 + 16};
+    XMVECTOR pos = XMLoadFloat2(&m_screenPos);
+
+    static const XMVECTORF32 s_half = { { { 0.5f, 0.5f, 0.f, 0.f } } };
+
+    pos = XMVectorAdd(XMVectorTruncate(pos), s_half);
+
+    m_spriteBatch->Draw(m_texture.Get(), pos, &r,
+		Colors::White, 0.f, m_origin, 1.f);
+    /*m_ship->Draw(m_spriteBatch.get(), m_shipPos);*/
+    /*const wchar_t* output = L"hello \n world\nse104";
+
+    Vector2 origin = m_font->MeasureString(output) / 2.f;
+
+    m_font->DrawString(m_spriteBatch.get(), output,
+        m_fontPos, Colors::White, 0.f, origin, 5.0f);*/
+
+    int fps = m_timer.GetFramesPerSecond();
+
+    wchar_t fpsOutput[32];
+    swprintf_s(fpsOutput, L"fps %d", fps);
+    Vector2 fpsOrigin = m_font->MeasureString(fpsOutput) / 2.f;
+    m_font->DrawString(m_spriteBatch.get(), fpsOutput,
+        m_fontPos + Vector2(0, 20), Colors::White, 0.f, fpsOrigin, 5.0f);
+
+    m_spriteBatch->End();
+
+    context;
+
+    m_deviceResources->PIXEndEvent();
+
+    // Show the new frame.
+    m_deviceResources->Present();
+}
+
+// Helper method to clear the back buffers.
+void Game::Clear()
+{
+    m_deviceResources->PIXBeginEvent(L"Clear");
+
+    // Clear the views.
+    auto context = m_deviceResources->GetD3DDeviceContext();
+    auto renderTarget = m_deviceResources->GetRenderTargetView();
+
+    context->ClearRenderTargetView(renderTarget, Colors::CornflowerBlue);
+    context->OMSetRenderTargets(1, &renderTarget, nullptr);
+
+    // Set the viewport.
+    auto const viewport = m_deviceResources->GetScreenViewport();
+    context->RSSetViewports(1, &viewport);
+
+    m_deviceResources->PIXEndEvent();
+}
+#pragma endregion
+
+#pragma region Message Handlers
+// Message handlers
+void Game::OnActivated()
+{
+    // TODO: Game is becoming active window.
+}
+
+void Game::OnDeactivated()
+{
+    // TODO: Game is becoming background window.
+}
+
+void Game::OnSuspending()
+{
+    // TODO: Game is being power-suspended (or minimized).
+}
+
+void Game::OnResuming()
+{
+    m_timer.ResetElapsedTime();
+
+    // TODO: Game is being power-resumed (or returning from minimize).
+}
+
+void Game::OnWindowMoved()
+{
+    auto const r = m_deviceResources->GetOutputSize();
+    m_deviceResources->WindowSizeChanged(r.right, r.bottom);
+}
+
+void Game::OnDisplayChange()
+{
+    m_deviceResources->UpdateColorSpace();
+}
+
+void Game::OnWindowSizeChanged(int width, int height)
+{
+    if (!m_deviceResources->WindowSizeChanged(width, height))
+        return;
+
+    CreateWindowSizeDependentResources();
+
+    // TODO: Game window is being resized.
+}
+
+// Properties
+void Game::GetDefaultSize(int& width, int& height) const noexcept
+{
+    // TODO: Change to desired default window size (note minimum size is 320x200).
+    width = 512;
+    height = 512;
+}
+#pragma endregion
+
+#pragma region Direct3D Resources
+// These are the resources that depend on the device.
+void Game::CreateDeviceDependentResources()
+{
+    auto device = m_deviceResources->GetD3DDevice();
+    auto context = m_deviceResources->GetD3DDeviceContext();
+    m_spriteBatch = std::make_unique<SpriteBatch>(context);
+    m_states = std::make_unique<CommonStates>(device);
+    m_font = std::make_unique<SpriteFont>(device, L"textures/mario.spritefont");
+
+
+	// uncomment to see the defined symbols, might not cover all symbols
+	//Helpers::DisplayDefinedSymbols(m_font.get());
+
+    ComPtr<ID3D11Resource> resource;
+
+    DX::ThrowIfFailed(
+        CreateDDSTextureFromFile(device, L"textures/tiles.dds",
+            resource.GetAddressOf(),
+            m_texture.ReleaseAndGetAddressOf()));
+
+    ComPtr<ID3D11Texture2D> tiles;
+    DX::ThrowIfFailed(resource.As(&tiles));
+
+    CD3D11_TEXTURE2D_DESC tilesDesc;
+    tiles->GetDesc(&tilesDesc);
+
+
+    /*DX::ThrowIfFailed(CreateWICTextureFromFile(device, L"textures/shipanimated.png",
+        nullptr, m_texture.ReleaseAndGetAddressOf()));
+        
+    m_ship = std::make_unique<AnimatedTexture>();
+    m_ship->Load(m_texture.Get(), 4,60)*/;
+
+
+    m_origin.x = float(tilesDesc.Width / 2);
+    m_origin.y = float(tilesDesc.Height / 2);
+}
+
+// Allocate all memory resources that change on a window SizeChanged event.
+void Game::CreateWindowSizeDependentResources()
+{
+    auto size = m_deviceResources->GetOutputSize();
+
+    m_screenPos.x = 1024 / 2.f;
+    m_screenPos.y = 1024 / 2.f;
+    m_fontPos.x = float(size.right) / 2.f;
+    m_fontPos.y = float(size.bottom) / 2.f;
+
+    /*m_shipPos.x = float(size.right / 2);
+    m_shipPos.y = float((size.bottom / 2) + (size.bottom / 4));*/
+}
+
+void Game::OnDeviceLost()
+{
+	// Add Direct3D resource cleanup here.
+    m_texture.Reset();
+    m_spriteBatch.reset();
+    m_states.reset();
+    m_font.reset();
+
+    m_ship.reset();
+}
+
+void Game::OnDeviceRestored()
+{
+    CreateDeviceDependentResources();
+
+    CreateWindowSizeDependentResources();
+}
+
+#pragma endregion
