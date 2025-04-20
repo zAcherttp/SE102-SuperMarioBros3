@@ -5,8 +5,6 @@
 #pragma once
 
 #include "DeviceResources.h"
-#include "AnimatedTexture.h"
-
 #include "SpriteSheet.h"
 #include "World.h"
 

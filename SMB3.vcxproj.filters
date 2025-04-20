@@ -8,32 +8,62 @@
       <UniqueIdentifier>d439e338-f767-4ef7-9b54-da8b4177f705</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dds;dlg;fbx;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Stable">
+      <UniqueIdentifier>{0d3608c2-36e4-444f-b6a8-ccfb46cf423c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="DeviceResources.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="AnimatedTexture.h" />
-    <ClInclude Include="StepTimer.h" />
-    <ClInclude Include="Helpers.h" />
-    <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="World.h" />
-    <ClInclude Include="DebugOverlay.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="DebugOverlay.h">
+      <Filter>Stable</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Stable</Filter>
+    </ClInclude>
+    <ClInclude Include="Helpers.h">
+      <Filter>Stable</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteSheet.h">
+      <Filter>Stable</Filter>
+    </ClInclude>
+    <ClInclude Include="StepTimer.h">
+      <Filter>Stable</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h" />
+    <ClInclude Include="json.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="DeviceResources.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="AnimatedTexture.cpp" />
-    <ClCompile Include="Helpers.cpp" />
-    <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="World.cpp" />
-    <ClCompile Include="DebugOverlay.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="DebugOverlay.cpp">
+      <Filter>Stable</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Stable</Filter>
+    </ClCompile>
+    <ClCompile Include="Helpers.cpp">
+      <Filter>Stable</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Stable</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteSheet.cpp">
+      <Filter>Stable</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

@@ -180,20 +180,23 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AnimatedTexture.h" />
+    <ClInclude Include="Animator.h" />
     <ClInclude Include="DebugOverlay.h" />
     <ClInclude Include="DeviceResources.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Helpers.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AnimatedTexture.cpp" />
+    <ClCompile Include="Animator.cpp" />
     <ClCompile Include="DebugOverlay.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="Main.cpp" />
