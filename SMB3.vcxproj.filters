@@ -42,6 +42,30 @@
     <Image Include="textures\shipanimated.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="textures\bg-1-1.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="textures\bg-1-4.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="textures\enemies.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="textures\font.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="textures\hud.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="textures\mario.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="textures\smb3_enemies_sheet_2.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="textures\tiles.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest">
@@ -50,5 +74,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="textures\mario.spritefont">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="textures\sfmono.spritefont">
+      <Filter>Assets</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="textures\readme.txt">
+      <Filter>Assets</Filter>
+    </Text>
   </ItemGroup>
 </Project>

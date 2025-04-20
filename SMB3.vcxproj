@@ -205,14 +205,27 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico" />
+    <Image Include="textures\bg-1-1.png" />
+    <Image Include="textures\bg-1-4.png" />
+    <Image Include="textures\enemies.png" />
+    <Image Include="textures\font.png" />
+    <Image Include="textures\hud.png" />
+    <Image Include="textures\mario.png" />
     <Image Include="textures\shipanimated.png" />
+    <Image Include="textures\smb3_enemies_sheet_2.png" />
     <Image Include="textures\tiles.dds" />
+    <Image Include="textures\tiles.png" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="textures\mario.spritefont" />
+    <None Include="textures\sfmono.spritefont" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="textures\readme.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
