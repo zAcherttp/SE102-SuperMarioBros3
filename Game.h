@@ -69,12 +69,14 @@ private:
                             
     // Texture resource
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
+    Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
 	// SpriteBatch for rendering sprites
     std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
     std::unique_ptr<DirectX::CommonStates> m_states;
 
-    std::unique_ptr<DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionColor>> m_batch;
+    std::unique_ptr<DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionColor>> m_primitiveBatch;
+    std::unique_ptr<DirectX::BasicEffect> m_effect;
     
     DirectX::SimpleMath::Vector2 m_screenPos;
     DirectX::SimpleMath::Vector2 m_origin;

@@ -10,7 +10,8 @@ using namespace DirectX::SimpleMath;
 class DebugOverlay  
 {  
 private:  
-    static bool m_draw;
+	static bool m_drawFPSCounter;
+	static bool m_drawCollisionBox;
 
 public:
     DebugOverlay() = delete;  
@@ -23,7 +24,8 @@ public:
     static void DrawLine(PrimitiveBatch<VertexPositionColor>* primitiveBatch,  
         Vector2 start,  
         Vector2 end,  
-        GXMVECTOR color = Colors::White);  
+        GXMVECTOR color = Colors::White);
+	// TODO: change the param to array of positions and size from gameWorld to draw
     static void DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch,  
         Vector2 position,  
         Vector2 size,  
@@ -31,5 +33,6 @@ public:
     static void DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch,  
         RECT rect,  
         GXMVECTOR color = Colors::White);  
-    static void Toggle();  
+    static void ToggleFPSCounter();
+	static void ToggleCollisionBox();
 };

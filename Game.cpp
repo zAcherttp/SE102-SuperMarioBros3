@@ -83,7 +83,11 @@ void Game::HandleInput()
     }
     if (m_keys.IsKeyPressed(Keyboard::F3))
     {
-		DebugOverlay::Toggle();
+		DebugOverlay::ToggleFPSCounter();
+    }
+    if (m_keys.IsKeyPressed(Keyboard::F4))
+	{
+		DebugOverlay::ToggleCollisionBox();
 	}
     if(m_gameWorld)
     {
@@ -110,6 +114,7 @@ void Game::Render()
 	//m_states->PointClamp(); for nearest neighbor sampling a.k.a pixelated look
     m_spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, m_states->PointClamp());
 
+    /// todo: put this into World class rendering
 	RECT r = { 256, 188, 256 + 16, 188 + 16};
     XMVECTOR pos = XMLoadFloat2(&m_screenPos);
 
@@ -123,12 +128,26 @@ void Game::Render()
     assert(frame != 0);
 
 	m_spriteSheet->Draw(m_spriteBatch.get(), *frame, pos);
+    /// end block
 
 	DebugOverlay::DrawFPSCounter(m_spriteBatch.get(), m_font.get(), m_timer.GetFramesPerSecond());
-
     m_spriteBatch->End();
 
-    context;
+    context->OMSetBlendState(m_states->Opaque(), nullptr, 0xFFFFFFFF);
+    context->OMSetDepthStencilState(m_states->DepthNone(), 0);
+    context->RSSetState(m_states->CullNone());
+
+    m_effect->Apply(context);
+
+    context->IASetInputLayout(m_inputLayout.Get());
+
+	m_primitiveBatch->Begin();
+
+	DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), pos, Vector2(16, 16), Colors::Lime);
+	DebugOverlay::DrawLine(m_primitiveBatch.get(), Vector2(0, 300), Vector2(256, 300), Colors::Lime);
+	DebugOverlay::DrawLine(m_primitiveBatch.get(), Vector2(512, 290), Vector2(256, 290), Colors::Lime);
+
+	m_primitiveBatch->End();
 
     m_deviceResources->PIXEndEvent();
 
@@ -218,7 +237,20 @@ void Game::CreateDeviceDependentResources()
     auto device = m_deviceResources->GetD3DDevice();
     auto context = m_deviceResources->GetD3DDeviceContext();
     m_spriteBatch = std::make_unique<SpriteBatch>(context);
+	m_primitiveBatch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
     m_states = std::make_unique<CommonStates>(device);
+    m_effect = std::make_unique<BasicEffect>(device);
+    m_effect->SetProjection(XMMatrixOrthographicOffCenterRH(0,
+        m_deviceResources->GetOutputSize().right,
+        m_deviceResources->GetOutputSize().bottom, 0, 0, 1));
+    m_effect->SetVertexColorEnabled(true);
+
+    DX::ThrowIfFailed(
+        CreateInputLayoutFromEffect<VertexPositionColor>(device, m_effect.get(),
+            m_inputLayout.ReleaseAndGetAddressOf())
+    );
+
+
     m_font = std::make_unique<SpriteFont>(device, L"textures/mario.spritefont");
 	m_spriteSheet = std::make_unique<SpriteSheet>();
 
@@ -277,7 +309,10 @@ void Game::OnDeviceLost()
     m_spriteBatch.reset();
 	m_spriteSheet.reset();
     m_states.reset();
-    m_font.reset();
+    m_font.reset(); 
+    m_effect.reset();
+    m_primitiveBatch.reset();
+    m_inputLayout.Reset();
 }
 
 void Game::OnDeviceRestored()

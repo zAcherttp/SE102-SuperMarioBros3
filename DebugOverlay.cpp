@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "DebugOverlay.h"
 
-bool DebugOverlay::m_draw = true;
+bool DebugOverlay::m_drawFPSCounter = true;
+bool DebugOverlay::m_drawCollisionBox = true;
 
 void DebugOverlay::DrawFPSCounter(DirectX::SpriteBatch* spriteBatch, DirectX::SpriteFont* font, uint32_t fps)
 {
-	if (!m_draw) return;
+	if (!m_drawFPSCounter) return;
 	wchar_t fpsOutput[16]{};
 	swprintf_s(fpsOutput, L"fps %d", fps);
 	font->DrawString(spriteBatch, fpsOutput,
@@ -14,45 +15,45 @@ void DebugOverlay::DrawFPSCounter(DirectX::SpriteBatch* spriteBatch, DirectX::Sp
 
 void DebugOverlay::DrawLine(PrimitiveBatch<VertexPositionColor>* primitiveBatch, Vector2 start, Vector2 end, GXMVECTOR color)
 {
-	if (!m_draw) return;
+	if (!m_drawCollisionBox) return;
 	VertexPositionColor v1(start, color);
 	VertexPositionColor v2(end, color);
 
 	primitiveBatch->DrawLine(v1, v2);
 }
 
-void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, Vector2 position, Vector2 size, GXMVECTOR color)
+void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, Vector2 pos, Vector2 size, GXMVECTOR color)
 {
-	if (!m_draw) return;
-	Vector2 halfSize = size / 2.f;
-	Vector2 topLeft = position - halfSize;
-	Vector2 topRight = position + Vector2(halfSize.x, -halfSize.y);
-	Vector2 bottomLeft = position + Vector2(-halfSize.x, halfSize.y);
-	Vector2 bottomRight = position + halfSize;
-	primitiveBatch->DrawQuad(
-		VertexPositionColor(topLeft, color),
-		VertexPositionColor(topRight, color),
-		VertexPositionColor(bottomRight, color),
-		VertexPositionColor(bottomLeft, color)
-	);
+	if (!m_drawCollisionBox) return;
+    VertexPositionColor topLeft(pos - Vector2(size.x / 2, size.y / 2), color);  
+    VertexPositionColor topRight(pos + Vector2(size.x / 2, -size.y / 2), color);  
+    VertexPositionColor bottomLeft(pos + Vector2(-size.x / 2, size.y / 2), color);  
+    VertexPositionColor bottomRight(pos + Vector2(size.x / 2, size.y / 2), color);
+	primitiveBatch->DrawLine(topLeft, topRight);
+	primitiveBatch->DrawLine(topRight, bottomRight);
+	primitiveBatch->DrawLine(bottomRight, bottomLeft);
+	primitiveBatch->DrawLine(bottomLeft, topLeft);
 }
 
 void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, RECT rect, GXMVECTOR color)
 {
-	if (!m_draw) return;
-	Vector2 topLeft = Vector2(static_cast<float>(rect.left), static_cast<float>(rect.top));
-	Vector2 topRight = Vector2(static_cast<float>(rect.right), static_cast<float>(rect.top));
-	Vector2 bottomLeft = Vector2(static_cast<float>(rect.left), static_cast<float>(rect.bottom));
-	Vector2 bottomRight = Vector2(static_cast<float>(rect.right), static_cast<float>(rect.bottom));
-	primitiveBatch->DrawQuad(
-		VertexPositionColor(topLeft, color),
-		VertexPositionColor(topRight, color),
-		VertexPositionColor(bottomRight, color),
-		VertexPositionColor(bottomLeft, color)
-	);
+	if (!m_drawCollisionBox) return;
+	VertexPositionColor topLeft(Vector2(rect.left, rect.top), color);
+	VertexPositionColor topRight(Vector2(rect.right, rect.top), color);
+	VertexPositionColor bottomLeft(Vector2(rect.left, rect.bottom), color);
+	VertexPositionColor bottomRight(Vector2(rect.right, rect.bottom), color);
+	primitiveBatch->DrawLine(topLeft, topRight);
+	primitiveBatch->DrawLine(topRight, bottomRight);
+	primitiveBatch->DrawLine(bottomRight, bottomLeft);
+	primitiveBatch->DrawLine(bottomLeft, topLeft);
 }
 
-void DebugOverlay::Toggle()
+void DebugOverlay::ToggleCollisionBox()
 {
-	m_draw = !m_draw;
+	m_drawCollisionBox = !m_drawCollisionBox;
+}
+
+void DebugOverlay::ToggleFPSCounter()
+{
+	m_drawFPSCounter = !m_drawFPSCounter;
 }
