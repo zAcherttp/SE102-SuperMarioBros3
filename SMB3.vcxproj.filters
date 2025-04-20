@@ -19,6 +19,8 @@
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="SpriteSheet.h" />
+    <ClInclude Include="World.h" />
+    <ClInclude Include="DebugOverlay.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -30,6 +32,8 @@
     <ClCompile Include="AnimatedTexture.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
+    <ClCompile Include="World.cpp" />
+    <ClCompile Include="DebugOverlay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

@@ -8,6 +8,7 @@
 #include "AnimatedTexture.h"
 
 #include "SpriteSheet.h"
+#include "World.h"
 
 #include "StepTimer.h"
 
@@ -53,6 +54,7 @@ private:
 
     void Update(DX::StepTimer const& timer);
     void Render();
+    void HandleInput();
 
     void Clear();
 
@@ -60,26 +62,30 @@ private:
     void CreateWindowSizeDependentResources();
 
     // Device resources.
-    std::unique_ptr<DX::DeviceResources>                m_deviceResources;
+    std::unique_ptr<DX::DeviceResources> m_deviceResources;
 
     // Rendering loop timer.
-    DX::StepTimer                                        m_timer;
+    DX::StepTimer m_timer;
                             
     // Texture resource
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>     m_texture;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
 
 	// SpriteBatch for rendering sprites
-    std::unique_ptr<DirectX::SpriteBatch>                m_spriteBatch;
-    std::unique_ptr<DirectX::CommonStates>               m_states;
+    std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+    std::unique_ptr<DirectX::CommonStates> m_states;
+
+    std::unique_ptr<DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionColor>> m_batch;
     
-    DirectX::SimpleMath::Vector2                         m_screenPos;
-    DirectX::SimpleMath::Vector2                         m_origin;
+    DirectX::SimpleMath::Vector2 m_screenPos;
+    DirectX::SimpleMath::Vector2 m_origin;
 
-    std::unique_ptr<AnimatedTexture>                     m_ship;
-    DirectX::SimpleMath::Vector2                         m_shipPos;
+    std::unique_ptr<DirectX::SpriteFont> m_font;
+    DirectX::SimpleMath::Vector2 m_fontPos;
 
-    std::unique_ptr<DirectX::SpriteFont>                 m_font;
-    DirectX::SimpleMath::Vector2                         m_fontPos;
+	std::unique_ptr<SpriteSheet> m_spriteSheet;
 
-	std::unique_ptr<SpriteSheet>                         m_spriteSheet;
+    std::unique_ptr<DirectX::Keyboard> m_keyboard;
+    DirectX::Keyboard::KeyboardStateTracker m_keys;
+
+	std::unique_ptr<World> m_gameWorld;
 };

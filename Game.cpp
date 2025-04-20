@@ -5,6 +5,7 @@
 #include "pch.h"
 #include "Game.h"
 #include "Helpers.h"
+#include "DebugOverlay.h"
 
 extern void ExitGame() noexcept;
 
@@ -35,9 +36,9 @@ void Game::Initialize(HWND window, int width, int height)
     m_deviceResources->CreateWindowSizeDependentResources();
     CreateWindowSizeDependentResources();
 
-    // TODO: Change the timer settings if you want something other than the default variable timestep mode.
-    // e.g. for 60 FPS fixed timestep update logic, call:
-    
+    m_keyboard = std::make_unique<Keyboard>();
+
+	// uncomment to use the fixed timestep
     /*m_timer.SetFixedTimeStep(true);
     m_timer.SetTargetElapsedSeconds(1.0 / 60);*/
     
@@ -59,12 +60,37 @@ void Game::Tick()
 void Game::Update(DX::StepTimer const& timer)
 {
     float elapsedTime = float(timer.GetElapsedSeconds());
-
-    //m_ship->Update(elapsedTime);
     
+    if (m_gameWorld)
+    {
+        /*m_gameWorld->Update(elapsedTime);*/
+    }
+
+	HandleInput();
     elapsedTime;
+    
+
 }
 #pragma endregion
+
+void Game::HandleInput()
+{
+    auto kb = m_keyboard->GetState();
+    m_keys.Update(kb);
+    if (m_keys.IsKeyPressed(Keyboard::Escape))
+    {
+        ExitGame();
+    }
+    if (m_keys.IsKeyPressed(Keyboard::F3))
+    {
+		DebugOverlay::Toggle();
+	}
+    if(m_gameWorld)
+    {
+        /*m_gameWorld->HandleInput(m_keys);*/
+	}
+
+}
 
 #pragma region Frame Render
 // Draws the scene.
@@ -87,9 +113,8 @@ void Game::Render()
 	RECT r = { 256, 188, 256 + 16, 188 + 16};
     XMVECTOR pos = XMLoadFloat2(&m_screenPos);
 
-    static const XMVECTORF32 s_half = { { { 0.5f, 0.5f, 0.f, 0.f } } };
-
-    pos = XMVectorAdd(XMVectorTruncate(pos), s_half);
+    //halve the pos vector
+	pos = XMVectorMultiply(pos, XMVectorSet(0.5f, 0.5f, 0.f, 1.f));
 
     m_spriteBatch->Draw(m_texture.Get(), pos, &r,
 		Colors::White, 0.f, m_origin, 1.f);
@@ -97,23 +122,9 @@ void Game::Render()
     auto frame = m_spriteSheet->Find(L"jump");
     assert(frame != 0);
 
-	m_spriteSheet->Draw(m_spriteBatch.get(), *frame, Vector2(100, 100));
+	m_spriteSheet->Draw(m_spriteBatch.get(), *frame, pos);
 
-
-    /*m_ship->Draw(m_spriteBatch.get(), m_shipPos);*/
-    /*const wchar_t* output = L"hello \n world\nse104";
-
-    Vector2 origin = m_font->MeasureString(output) / 2.f;
-
-    m_font->DrawString(m_spriteBatch.get(), output,
-        m_fontPos, Colors::White, 0.f, origin, 5.0f);*/
-
-    int fps = m_timer.GetFramesPerSecond();
-
-    wchar_t fpsOutput[32];
-    swprintf_s(fpsOutput, L"fps %d", fps);
-    m_font->DrawString(m_spriteBatch.get(), fpsOutput,
-        Vector2(10, 10), Colors::White, 0.f, Vector2::Zero, 3.f);
+	DebugOverlay::DrawFPSCounter(m_spriteBatch.get(), m_font.get(), m_timer.GetFramesPerSecond());
 
     m_spriteBatch->End();
 
@@ -124,6 +135,7 @@ void Game::Render()
     // Show the new frame.
     m_deviceResources->Present();
 }
+
 
 // Helper method to clear the back buffers.
 void Game::Clear()
@@ -263,10 +275,9 @@ void Game::OnDeviceLost()
 	// Add Direct3D resource cleanup here.
     m_texture.Reset();
     m_spriteBatch.reset();
+	m_spriteSheet.reset();
     m_states.reset();
     m_font.reset();
-
-    m_ship.reset();
 }
 
 void Game::OnDeviceRestored()
