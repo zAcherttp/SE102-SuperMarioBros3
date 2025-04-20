@@ -104,9 +104,8 @@ void Game::Render()
 
     wchar_t fpsOutput[32];
     swprintf_s(fpsOutput, L"fps %d", fps);
-    Vector2 fpsOrigin = m_font->MeasureString(fpsOutput) / 2.f;
     m_font->DrawString(m_spriteBatch.get(), fpsOutput,
-        m_fontPos + Vector2(0, 20), Colors::White, 0.f, fpsOrigin, 5.0f);
+        Vector2(10, 10), Colors::White, 0.f, Vector2::Zero, 1.0f);
 
     m_spriteBatch->End();
 

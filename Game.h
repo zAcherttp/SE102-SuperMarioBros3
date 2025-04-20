@@ -7,7 +7,6 @@
 #include "DeviceResources.h"
 #include "AnimatedTexture.h"
 #include "StepTimer.h"
-#include "FrameCounter.h"
 
 
 // A basic game implementation that creates a D3D11 device and
