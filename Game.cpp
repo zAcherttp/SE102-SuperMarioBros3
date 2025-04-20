@@ -37,10 +37,10 @@ void Game::Initialize(HWND window, int width, int height)
 
     // TODO: Change the timer settings if you want something other than the default variable timestep mode.
     // e.g. for 60 FPS fixed timestep update logic, call:
-    /*
-    m_timer.SetFixedTimeStep(true);
-    m_timer.SetTargetElapsedSeconds(1.0 / 60);
-    */
+    
+    /*m_timer.SetFixedTimeStep(true);
+    m_timer.SetTargetElapsedSeconds(1.0 / 60);*/
+    
 }
 
 #pragma region Frame Update
@@ -81,6 +81,7 @@ void Game::Render()
     m_deviceResources->PIXBeginEvent(L"Render");
     auto context = m_deviceResources->GetD3DDeviceContext();
 
+	//m_states->PointClamp(); for nearest neighbor sampling a.k.a pixelated look
     m_spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, m_states->PointClamp());
 
 	RECT r = { 256, 188, 256 + 16, 188 + 16};
@@ -92,6 +93,13 @@ void Game::Render()
 
     m_spriteBatch->Draw(m_texture.Get(), pos, &r,
 		Colors::White, 0.f, m_origin, 1.f);
+
+    auto frame = m_spriteSheet->Find(L"jump");
+    assert(frame != 0);
+
+	m_spriteSheet->Draw(m_spriteBatch.get(), *frame, Vector2(100, 100));
+
+
     /*m_ship->Draw(m_spriteBatch.get(), m_shipPos);*/
     /*const wchar_t* output = L"hello \n world\nse104";
 
@@ -105,7 +113,7 @@ void Game::Render()
     wchar_t fpsOutput[32];
     swprintf_s(fpsOutput, L"fps %d", fps);
     m_font->DrawString(m_spriteBatch.get(), fpsOutput,
-        Vector2(10, 10), Colors::White, 0.f, Vector2::Zero, 1.0f);
+        Vector2(10, 10), Colors::White, 0.f, Vector2::Zero, 3.f);
 
     m_spriteBatch->End();
 
@@ -200,17 +208,23 @@ void Game::CreateDeviceDependentResources()
     m_spriteBatch = std::make_unique<SpriteBatch>(context);
     m_states = std::make_unique<CommonStates>(device);
     m_font = std::make_unique<SpriteFont>(device, L"textures/mario.spritefont");
-
+	m_spriteSheet = std::make_unique<SpriteSheet>();
 
 	// uncomment to see the defined symbols, might not cover all symbols
 	//Helpers::DisplayDefinedSymbols(m_font.get());
 
     ComPtr<ID3D11Resource> resource;
 
-    DX::ThrowIfFailed(
+    /*DX::ThrowIfFailed(
         CreateDDSTextureFromFile(device, L"textures/tiles.dds",
             resource.GetAddressOf(),
-            m_texture.ReleaseAndGetAddressOf()));
+            m_texture.ReleaseAndGetAddressOf()));*/
+    
+    DX::ThrowIfFailed(
+        CreateWICTextureFromFile(device, L"textures/mario/mario.png",
+            resource.GetAddressOf(),
+			m_texture.ReleaseAndGetAddressOf()));
+    m_spriteSheet->Load(m_texture.Get(), L"textures/mario/mario.txt");
 
     ComPtr<ID3D11Texture2D> tiles;
     DX::ThrowIfFailed(resource.As(&tiles));

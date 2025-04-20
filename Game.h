@@ -6,6 +6,9 @@
 
 #include "DeviceResources.h"
 #include "AnimatedTexture.h"
+
+#include "SpriteSheet.h"
+
 #include "StepTimer.h"
 
 
@@ -68,6 +71,7 @@ private:
 	// SpriteBatch for rendering sprites
     std::unique_ptr<DirectX::SpriteBatch>                m_spriteBatch;
     std::unique_ptr<DirectX::CommonStates>               m_states;
+    
     DirectX::SimpleMath::Vector2                         m_screenPos;
     DirectX::SimpleMath::Vector2                         m_origin;
 
@@ -76,4 +80,6 @@ private:
 
     std::unique_ptr<DirectX::SpriteFont>                 m_font;
     DirectX::SimpleMath::Vector2                         m_fontPos;
+
+	std::unique_ptr<SpriteSheet>                         m_spriteSheet;
 };

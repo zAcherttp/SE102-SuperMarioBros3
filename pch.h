@@ -67,6 +67,7 @@
 #include "ScreenGrab.h"
 #include "SimpleMath.h"
 #include "SpriteBatch.h"
+#include "SpriteSheet.h"
 #include "SpriteFont.h"
 #include "VertexTypes.h"
 #include "WICTextureLoader.h"
