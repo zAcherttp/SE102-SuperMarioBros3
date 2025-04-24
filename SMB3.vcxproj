@@ -181,6 +181,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animator.h" />
+    <ClInclude Include="CollisionEvent.h" />
     <ClInclude Include="DebugOverlay.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Entity.h" />
@@ -188,13 +189,17 @@
     <ClInclude Include="GameLoader.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="Mario.h" />
+    <ClInclude Include="MarioMovementStates.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="SpriteSheet.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
+    <ClCompile Include="CollisionEvent.cpp" />
     <ClCompile Include="DebugOverlay.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -202,6 +207,8 @@
     <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="MarioMovementStates.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

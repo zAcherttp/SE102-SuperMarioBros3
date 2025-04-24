@@ -9,13 +9,13 @@
 
 struct AnimationSequence
 {
-    std::vector<const SpriteSheet::SpriteFrame*> frames;
-    bool loop;
-    float baseTimePerFrame;
-    float minTimePerFrame;
-    float maxTimePerFrame;
-    bool useVelocityScaling;
-    float velocityScaleFactor;
+    std::vector<const SpriteSheet::SpriteFrame*> frames{};
+    bool loop{};
+    float baseTimePerFrame{};
+    float minTimePerFrame{};
+    float maxTimePerFrame{};
+    bool useVelocityScaling{};
+    float velocityScaleFactor{};
 };
 
 class Animator
@@ -104,4 +104,3 @@ private:
     DirectX::XMFLOAT2 mScale;
     DirectX::FXMVECTOR mColor = DirectX::Colors::White;
 };
-

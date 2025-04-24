@@ -58,15 +58,15 @@ void DebugOverlay::DrawLine(PrimitiveBatch<VertexPositionColor>* primitiveBatch,
 	primitiveBatch->DrawLine(v1, v2);
 }
 
-void DebugOverlay::UpdateInput(Keyboard::State kbState)
+void DebugOverlay::UpdateInput(Keyboard::State* kbState)
 {
-	m_keyState[0] = kbState.W;
-	m_keyState[1] = kbState.A;
-	m_keyState[2] = kbState.S;
-	m_keyState[3] = kbState.D;
-	m_keyState[4] = kbState.J;
-	m_keyState[5] = kbState.K;
-	m_keyState[6] = kbState.I;
+	m_keyState[0] = kbState->W;
+	m_keyState[1] = kbState->A;
+	m_keyState[2] = kbState->S;
+	m_keyState[3] = kbState->D;
+	m_keyState[4] = kbState->J;
+	m_keyState[5] = kbState->K;
+	m_keyState[6] = kbState->I;
 }
 
 void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, Vector2 pos, Vector2 size, GXMVECTOR color)

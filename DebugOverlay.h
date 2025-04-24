@@ -29,7 +29,7 @@ public:
         Vector2 start,  
         Vector2 end,  
         GXMVECTOR color = Colors::White);
-	static void UpdateInput(Keyboard::State kbState);
+	static void UpdateInput(Keyboard::State* kbState);
 	// TODO: change the param to array of positions and size from gameWorld to draw
     static void DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch,  
         Vector2 position,  

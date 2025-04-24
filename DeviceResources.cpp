@@ -18,6 +18,9 @@ using Microsoft::WRL::ComPtr;
 
 #pragma warning(disable : 4061)
 
+constexpr auto GAME_WIDTH = 512.f;
+constexpr auto GAME_HEIGHT = 512.f;
+
 namespace
 {
 #if defined(_DEBUG)
@@ -318,7 +321,7 @@ void DeviceResources::CreateWindowSizeDependentResources()
         swapChainDesc.BufferCount = m_backBufferCount;
         swapChainDesc.SampleDesc.Count = 1;
         swapChainDesc.SampleDesc.Quality = 0;
-        swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
+        swapChainDesc.Scaling = DXGI_SCALING_NONE;
         swapChainDesc.SwapEffect = (m_options & (c_FlipPresent | c_AllowTearing | c_EnableHDR)) ? DXGI_SWAP_EFFECT_FLIP_DISCARD : DXGI_SWAP_EFFECT_DISCARD;
         swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
         swapChainDesc.Flags = (m_options & c_AllowTearing) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u;
@@ -377,8 +380,41 @@ void DeviceResources::CreateWindowSizeDependentResources()
             ));
     }
 
+    const float gameAspectRatio = GAME_WIDTH / GAME_HEIGHT;
+
+    const float windowWidth = static_cast<float>(backBufferWidth);
+    const float windowHeight = static_cast<float>(backBufferHeight);
+    const float windowAspectRatio = windowWidth / windowHeight;
+
+    float viewWidth, viewHeight;
+    float viewX, viewY;
+
+    if (windowAspectRatio > gameAspectRatio) {
+        // Window is wider than game - use pillarboxing (black bars on sides)
+        viewHeight = windowHeight;
+        viewWidth = viewHeight * gameAspectRatio;
+        viewY = 0.0f;
+        viewX = (windowWidth - viewWidth) / 2.0f;
+    }
+    else {
+        // Window is taller than game - use letterboxing (black bars on top/bottom)
+        viewWidth = windowWidth;
+        viewHeight = viewWidth / gameAspectRatio;
+        viewX = 0.0f;
+        viewY = (windowHeight - viewHeight) / 2.0f;
+    }
+
     // Set the 3D rendering viewport to target the entire window.
-    m_screenViewport = { 0.0f, 0.0f, static_cast<float>(backBufferWidth), static_cast<float>(backBufferHeight), 0.f, 1.f };
+    //m_screenViewport = { 0.0f, 0.0f, static_cast<float>(backBufferWidth), static_cast<float>(backBufferHeight), 0.f, 1.f };
+
+    m_screenViewport = { viewX, viewY, viewWidth, viewHeight, 0.0f, 1.0f };
+
+    /*D3D11_RECT scissorRect{};
+    scissorRect.left = static_cast<LONG>(viewX);
+    scissorRect.top = static_cast<LONG>(viewY);
+    scissorRect.right = static_cast<LONG>(viewX + viewWidth);
+    scissorRect.bottom = static_cast<LONG>(viewY + viewHeight);
+    m_d3dContext->RSSetScissorRects(1, &scissorRect);*/
 }
 
 // This method is called when the Win32 window is created (or re-created).
@@ -397,10 +433,12 @@ bool DeviceResources::WindowSizeChanged(int width, int height)
     if (!m_window)
         return false;
 
-    RECT newRc;
+    RECT newRc{};
     newRc.left = newRc.top = 0;
     newRc.right = static_cast<long>(width);
     newRc.bottom = static_cast<long>(height);
+
+
     if (newRc.right == m_outputSize.right && newRc.bottom == m_outputSize.bottom)
     {
         // Handle color space settings for HDR

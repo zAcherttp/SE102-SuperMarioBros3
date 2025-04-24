@@ -39,6 +39,10 @@
     <ClInclude Include="Animator.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="GameLoader.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="CollisionEvent.h" />
+    <ClInclude Include="Mario.h" />
+    <ClInclude Include="MarioMovementStates.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -66,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="GameLoader.cpp" />
+    <ClCompile Include="CollisionEvent.cpp" />
+    <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="MarioMovementStates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
