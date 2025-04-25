@@ -40,7 +40,7 @@ public:
 	virtual bool IsGrounded() const {
 		return false;
 	}
-private:
+protected:
 	/// <summary>
 	/// Smart pointer for entity animator.
 	/// </summary>

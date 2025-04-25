@@ -94,13 +94,13 @@ private:
     std::unique_ptr<SpriteSheet> mSpriteSheet;
     std::map<std::string, AnimationSequence> mAnimations;
 
+    DirectX::FXMVECTOR mColor = DirectX::Colors::White;
+    DirectX::SpriteEffects mEffects;
+    DirectX::XMFLOAT2 mScale;
     std::string mCurrentSequence;
     int mCurrentFrame;
     float mTotalElapsed;
     bool mPaused;
-    DirectX::SpriteEffects mEffects;
     float mDepth;
     float mRotation;
-    DirectX::XMFLOAT2 mScale;
-    DirectX::FXMVECTOR mColor = DirectX::Colors::White;
 };

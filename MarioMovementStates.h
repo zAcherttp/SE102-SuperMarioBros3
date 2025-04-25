@@ -1,5 +1,5 @@
 #pragma once
-
+#include "pch.h"
 #include "State.h"
 
 class MarioWalkState;
@@ -7,71 +7,78 @@ class MarioRunState;
 class MarioSkidState;
 class MarioJumpState;
 class MarioSitState;
+class Mario;
 
-class MarioStateBase : protected State {
+class MarioStateBase : protected State<Mario> {
 protected:
 	int m_dir;
 public:
-	MarioStateBase(Entity* mario, int dir) : State(mario) {
-		m_dir = dir;
-	};
-
-	Mario* GetMario();
+	MarioStateBase(int dir) : m_dir(dir), State() {};
 	int GetDirection() const;
+	virtual MarioStateBase* HandleInput(Mario* mario, DirectX::Keyboard::KeyboardStateTracker* kbStates) = 0;
 };
 
 
 class MarioMovementState : protected MarioStateBase {
 public:
-	MarioMovementState(Entity* mario, int dir) : MarioStateBase(mario, dir) {};
+	MarioMovementState(int dir) : MarioStateBase(dir) {};
+	virtual MarioMovementState* HandleInput(Mario* mario, DirectX::Keyboard::KeyboardStateTracker* kbStates) override = 0;
+	virtual void Update(Mario* mario, float dt) override = 0;
+	virtual void Enter(Mario* mario) override = 0;
 };
 
 using KBState = DirectX::Keyboard;
 
 class MarioIdleState : public MarioMovementState {
 public:
-	MarioIdleState(Entity* mario, int dir) : MarioMovementState(mario, dir) {};
-	State* HandleInput(KBState::KeyboardStateTracker* kbState) override;
-	void Update(float dt) override;
-	void Enter() override;
+	MarioIdleState(int dir) : MarioMovementState(dir) {};
+	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
+	void Update(Mario* mario, float dt) override;
+	void Enter(Mario* mario) override;
+	void Exit() override;
 };
 
 class MarioWalkState : public MarioMovementState {
 public:
-	MarioWalkState(Entity* mario, int dir) : MarioMovementState(mario, dir) {};
-	State* HandleInput(KBState::KeyboardStateTracker* kbState) override;
-	void Update(float dt) override;
-	void Enter() override;
+	MarioWalkState(int dir) : MarioMovementState(dir) {};
+	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
+	void Update(Mario* mario, float dt) override;
+	void Enter(Mario* mario) override;
+	void Exit() override;
 };
 
 class MarioRunState : public MarioMovementState {
 public:
-	MarioRunState(Entity* mario, int dir) : MarioMovementState(mario, dir) {};
-	State* HandleInput(KBState::KeyboardStateTracker* kbState) override;
-	void Update(float dt) override;
-	void Enter() override;
+	MarioRunState(int dir) : MarioMovementState(dir) {};
+	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
+	void Update(Mario* mario, float dt) override;
+	void Enter(Mario* mario) override;
+	void Exit() override;
 };
 
 class MarioSkidState : public MarioMovementState {
 public:
-	MarioSkidState(Entity* mario, int dir) : MarioMovementState(mario, dir) {};
-	State* HandleInput(KBState::KeyboardStateTracker* kbState) override;
-	void Update(float dt) override;
-	void Enter() override;
+	MarioSkidState(int dir) : MarioMovementState(dir) {};
+	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
+	void Update(Mario* mario, float dt) override;
+	void Enter(Mario* mario) override;
+	void Exit() override;
 };
 
 class MarioJumpState : public MarioMovementState {
 public:
-	MarioJumpState(Entity* mario, int dir) : MarioMovementState(mario, dir) {};
-	State* HandleInput(KBState::KeyboardStateTracker* kbState) override;
-	void Update(float dt) override;
-	void Enter() override;
+	MarioJumpState(int dir) : MarioMovementState(dir) {};
+	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
+	void Update(Mario* mario, float dt) override;
+	void Enter(Mario* mario) override;
+	void Exit() override;
 };	
 
 class MarioSitState : public MarioMovementState {
 public:
-	MarioSitState(Entity* mario, int dir) : MarioMovementState(mario, dir) {};
-	State* HandleInput(KBState::KeyboardStateTracker* kbState) override;
-	void Update(float dt) override;
-	void Enter() override;
+	MarioSitState(int dir) : MarioMovementState(dir) {};
+	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
+	void Update(Mario* mario, float dt) override;
+	void Enter(Mario* mario) override;
+	void Exit() override;
 };

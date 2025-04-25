@@ -1,16 +1,12 @@
-class State  
-{  
-protected:
-	Entity* m_entity;  
+#pragma once
 
-public:  
-	State(Entity* entity) : m_entity(entity) {}  
+template <typename EntityType>
+class State {
+public:
+    State() = default;
+    virtual ~State() = default;
 
-	virtual ~State() = default;  
-	virtual void Enter() = 0;  
-	virtual State* HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbStates) = 0;  
-	virtual void Update(float dt) = 0;  
-	Entity* Exit() {  
-		return m_entity;  
-	}  
+    virtual void Enter(EntityType* entity) = 0;
+    virtual void Exit() = 0;
+    virtual void Update(EntityType* entity, float dt) = 0;
 };

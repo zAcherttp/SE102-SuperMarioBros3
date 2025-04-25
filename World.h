@@ -1,21 +1,20 @@
 #pragma once
-#include "pch.h"
-#include "Entity.h"
 #include <vector>
+
+class Entity;
 
 class World
 {
 private:
-	Entity* player;
-	std::vector<Entity*> entities;
-	int id;
-
+	Entity* m_player;
+	std::vector<Entity*> m_entities;
+	int m_id;
+	float m_gravity;
 public:
 	World();
 	~World();
-	void Load();
 	void Clear();
-	void Update();
+	void Update(float dt);
 	void Render();
 	void Reset();
 

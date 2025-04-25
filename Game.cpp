@@ -6,6 +6,7 @@
 #include "Game.h"
 #include "Helpers.h"
 #include "DebugOverlay.h"
+#include "Mario.h"
 
 constexpr auto GAME_WIDTH = 512;
 constexpr auto GAME_HEIGHT = 512;
@@ -162,7 +163,7 @@ void Game::Render()
 	DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), pos, Vector2(16, 16), Colors::Lime);
 	DebugOverlay::DrawLine(m_primitiveBatch.get(), Vector2(0, 300), Vector2(256, 300), Colors::Lime);
 	DebugOverlay::DrawLine(m_primitiveBatch.get(), Vector2(512, 290), Vector2(256, 290), Colors::Lime);
-	DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), Vector2(0, 0), Vector2(viewPort.right, viewPort.bottom), Colors::Lime);
+	DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), Vector2(0, 0), Vector2((float)viewPort.right, (float)viewPort.bottom), Colors::Lime);
 
 	m_primitiveBatch->End();
 
