@@ -67,19 +67,26 @@ private:
     // Rendering loop timer.
     DX::StepTimer m_timer;
                             
-    // Texture resource
+    // Game view
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> m_gameRenderTarget;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_gameRenderTargetView;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_gameShaderResource;
+
+    // Textures
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
-    Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
 	// SpriteBatch for rendering sprites
     std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
     std::unique_ptr<DirectX::CommonStates> m_states;
 
+    Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
     std::unique_ptr<DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionColor>> m_primitiveBatch;
     std::unique_ptr<DirectX::BasicEffect> m_effect;
     
     DirectX::SimpleMath::Vector2 m_screenPos;
     DirectX::SimpleMath::Vector2 m_origin;
+    D3D11_VIEWPORT m_gameView;
+    RECT m_gameViewRect;
 
     std::unique_ptr<DirectX::SpriteFont> m_font;
     DirectX::SimpleMath::Vector2 m_fontPos;

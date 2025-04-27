@@ -18,9 +18,6 @@ using Microsoft::WRL::ComPtr;
 
 #pragma warning(disable : 4061)
 
-constexpr auto GAME_WIDTH = 512.f;
-constexpr auto GAME_HEIGHT = 512.f;
-
 namespace
 {
 #if defined(_DEBUG)
@@ -38,7 +35,7 @@ namespace
             nullptr,                    // No need to keep the D3D device reference.
             nullptr,                    // No need to know the feature level.
             nullptr                     // No need to keep the D3D device context reference.
-            );
+        );
 
         return SUCCEEDED(hr);
     }
@@ -70,17 +67,17 @@ DeviceResources::DeviceResources(
     UINT backBufferCount,
     D3D_FEATURE_LEVEL minFeatureLevel,
     unsigned int flags) noexcept :
-        m_screenViewport{},
-        m_backBufferFormat(backBufferFormat),
-        m_depthBufferFormat(depthBufferFormat),
-        m_backBufferCount(backBufferCount),
-        m_d3dMinFeatureLevel(minFeatureLevel),
-        m_window(nullptr),
-        m_d3dFeatureLevel(D3D_FEATURE_LEVEL_9_1),
-        m_outputSize{0, 0, 1, 1},
-        m_colorSpace(DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709),
-        m_options(flags | c_FlipPresent),
-        m_deviceNotify(nullptr)
+    m_screenViewport{},
+    m_backBufferFormat(backBufferFormat),
+    m_depthBufferFormat(depthBufferFormat),
+    m_backBufferCount(backBufferCount),
+    m_d3dMinFeatureLevel(minFeatureLevel),
+    m_window(nullptr),
+    m_d3dFeatureLevel(D3D_FEATURE_LEVEL_9_1),
+    m_outputSize{ 0, 0, 1, 1 },
+    m_colorSpace(DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709),
+    m_options(flags | c_FlipPresent),
+    m_deviceNotify(nullptr)
 {
 }
 
@@ -195,7 +192,7 @@ void DeviceResources::CreateDeviceResources()
             device.GetAddressOf(),  // Returns the Direct3D device created.
             &m_d3dFeatureLevel,     // Returns feature level of device created.
             context.GetAddressOf()  // Returns the device immediate context.
-            );
+        );
     }
 #if defined(NDEBUG)
     else
@@ -219,7 +216,7 @@ void DeviceResources::CreateDeviceResources()
             device.GetAddressOf(),
             &m_d3dFeatureLevel,
             context.GetAddressOf()
-            );
+        );
 
         if (SUCCEEDED(hr))
         {
@@ -241,7 +238,7 @@ void DeviceResources::CreateDeviceResources()
             d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
             d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
 #endif
-            D3D11_MESSAGE_ID hide [] =
+            D3D11_MESSAGE_ID hide[] =
             {
                 D3D11_MESSAGE_ID_SETPRIVATEDATA_CHANGINGPARAMS,
             };
@@ -288,7 +285,7 @@ void DeviceResources::CreateWindowSizeDependentResources()
             backBufferHeight,
             backBufferFormat,
             (m_options & c_AllowTearing) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u
-            );
+        );
 
         if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
         {
@@ -321,7 +318,7 @@ void DeviceResources::CreateWindowSizeDependentResources()
         swapChainDesc.BufferCount = m_backBufferCount;
         swapChainDesc.SampleDesc.Count = 1;
         swapChainDesc.SampleDesc.Quality = 0;
-        swapChainDesc.Scaling = DXGI_SCALING_NONE;
+        swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
         swapChainDesc.SwapEffect = (m_options & (c_FlipPresent | c_AllowTearing | c_EnableHDR)) ? DXGI_SWAP_EFFECT_FLIP_DISCARD : DXGI_SWAP_EFFECT_DISCARD;
         swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
         swapChainDesc.Flags = (m_options & c_AllowTearing) ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u;
@@ -336,7 +333,7 @@ void DeviceResources::CreateWindowSizeDependentResources()
             &swapChainDesc,
             &fsSwapChainDesc,
             nullptr, m_swapChain.ReleaseAndGetAddressOf()
-            ));
+        ));
 
         // This class does not support exclusive full-screen mode and prevents DXGI from responding to the ALT+ENTER shortcut
         ThrowIfFailed(m_dxgiFactory->MakeWindowAssociation(m_window, DXGI_MWA_NO_ALT_ENTER));
@@ -353,7 +350,7 @@ void DeviceResources::CreateWindowSizeDependentResources()
         m_renderTarget.Get(),
         &renderTargetViewDesc,
         m_d3dRenderTargetView.ReleaseAndGetAddressOf()
-        ));
+    ));
 
     if (m_depthBufferFormat != DXGI_FORMAT_UNKNOWN)
     {
@@ -365,55 +362,23 @@ void DeviceResources::CreateWindowSizeDependentResources()
             1, // Use a single array entry.
             1, // Use a single mipmap level.
             D3D11_BIND_DEPTH_STENCIL
-            );
+        );
 
         ThrowIfFailed(m_d3dDevice->CreateTexture2D(
             &depthStencilDesc,
             nullptr,
             m_depthStencil.ReleaseAndGetAddressOf()
-            ));
+        ));
 
         ThrowIfFailed(m_d3dDevice->CreateDepthStencilView(
             m_depthStencil.Get(),
             nullptr,
             m_d3dDepthStencilView.ReleaseAndGetAddressOf()
-            ));
-    }
-
-    const float gameAspectRatio = GAME_WIDTH / GAME_HEIGHT;
-
-    const float windowWidth = static_cast<float>(backBufferWidth);
-    const float windowHeight = static_cast<float>(backBufferHeight);
-    const float windowAspectRatio = windowWidth / windowHeight;
-
-    float viewWidth, viewHeight;
-    float viewX, viewY;
-
-    if (windowAspectRatio > gameAspectRatio) {
-        // Window is wider than game - use pillarboxing (black bars on sides)
-        viewHeight = windowHeight;
-        viewWidth = viewHeight * gameAspectRatio;
-        viewY = 0.0f;
-        viewX = (windowWidth - viewWidth) / 2.0f;
-    }
-    else {
-        // Window is taller than game - use letterboxing (black bars on top/bottom)
-        viewWidth = windowWidth;
-        viewHeight = viewWidth / gameAspectRatio;
-        viewX = 0.0f;
-        viewY = (windowHeight - viewHeight) / 2.0f;
+        ));
     }
 
     // Set the 3D rendering viewport to target the entire window.
-
-    m_screenViewport = { viewX, viewY, viewWidth, viewHeight, 0.0f, 1.0f };
-
-    /*D3D11_RECT scissorRect{};
-    scissorRect.left = static_cast<LONG>(viewX);
-    scissorRect.top = static_cast<LONG>(viewY);
-    scissorRect.right = static_cast<LONG>(viewX + viewWidth);
-    scissorRect.bottom = static_cast<LONG>(viewY + viewHeight);
-    m_d3dContext->RSSetScissorRects(1, &scissorRect);*/
+    m_screenViewport = { 0.0f, 0.0f, static_cast<float>(backBufferWidth), static_cast<float>(backBufferHeight), 0.f, 1.f };
 }
 
 // This method is called when the Win32 window is created (or re-created).
@@ -436,8 +401,6 @@ bool DeviceResources::WindowSizeChanged(int width, int height)
     newRc.left = newRc.top = 0;
     newRc.right = static_cast<long>(width);
     newRc.bottom = static_cast<long>(height);
-
-
     if (newRc.right == m_outputSize.right && newRc.bottom == m_outputSize.bottom)
     {
         // Handle color space settings for HDR
@@ -569,7 +532,7 @@ void DeviceResources::CreateFactory()
     if (!debugDXGI)
 #endif
 
-    ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(m_dxgiFactory.ReleaseAndGetAddressOf())));
+        ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(m_dxgiFactory.ReleaseAndGetAddressOf())));
 }
 
 // This method acquires the first available hardware adapter.
@@ -589,7 +552,7 @@ void DeviceResources::GetHardwareAdapter(IDXGIAdapter1** ppAdapter)
                 adapterIndex,
                 DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE,
                 IID_PPV_ARGS(adapter.ReleaseAndGetAddressOf())));
-            adapterIndex++)
+                adapterIndex++)
         {
             DXGI_ADAPTER_DESC1 desc;
             ThrowIfFailed(adapter->GetDesc1(&desc));
@@ -600,11 +563,11 @@ void DeviceResources::GetHardwareAdapter(IDXGIAdapter1** ppAdapter)
                 continue;
             }
 
-        #ifdef _DEBUG
+#ifdef _DEBUG
             wchar_t buff[256] = {};
             swprintf_s(buff, L"Direct3D Adapter (%u): VID:%04X, PID:%04X - %ls\n", adapterIndex, desc.VendorId, desc.DeviceId, desc.Description);
             OutputDebugStringW(buff);
-        #endif
+#endif
 
             break;
         }
@@ -616,7 +579,7 @@ void DeviceResources::GetHardwareAdapter(IDXGIAdapter1** ppAdapter)
             SUCCEEDED(m_dxgiFactory->EnumAdapters1(
                 adapterIndex,
                 adapter.ReleaseAndGetAddressOf()));
-            adapterIndex++)
+                adapterIndex++)
         {
             DXGI_ADAPTER_DESC1 desc;
             ThrowIfFailed(adapter->GetDesc1(&desc));

@@ -5,6 +5,12 @@ bool DebugOverlay::m_drawFPSCounter = true;
 bool DebugOverlay::m_drawCollisionBox = true;
 bool DebugOverlay::m_keyState[7] = { false };
 
+/// <summary>
+/// Draws an FPS (frames per second) counter on the screen using a sprite batch and font.
+/// </summary>
+/// <param name="spriteBatch">A pointer to the DirectX::SpriteBatch object used for rendering the FPS counter.</param>
+/// <param name="font">A pointer to the DirectX::SpriteFont object used to render the text of the FPS counter.</param>
+/// <param name="fps">The current frames per second value to display.</param>
 void DebugOverlay::DrawFPSCounter(DirectX::SpriteBatch* spriteBatch, DirectX::SpriteFont* font, uint32_t fps)
 {
 	if (!m_drawFPSCounter) return;
@@ -14,6 +20,11 @@ void DebugOverlay::DrawFPSCounter(DirectX::SpriteBatch* spriteBatch, DirectX::Sp
 		Vector2(10, 10), Colors::White, 0.f, Vector2::Zero, 2.f);
 }
 
+/// <summary>
+/// Renders a debug overlay displaying the state of specific input keys.
+/// </summary>
+/// <param name="spriteBatch">A pointer to the SpriteBatch object used for rendering the text.</param>
+/// <param name="font">A pointer to the SpriteFont object used to render the text strings.</param>
 void DebugOverlay::DrawInput(SpriteBatch* spriteBatch, SpriteFont* font)
 {
 	if (!m_drawFPSCounter) return;
@@ -69,6 +80,13 @@ void DebugOverlay::UpdateInput(Keyboard::State* kbState)
 	m_keyState[6] = kbState->I;
 }
 
+/// <summary>
+/// Draws a collision box on the debug overlay using the specified position, size, and color.
+/// </summary>
+/// <param name="primitiveBatch">A pointer to the PrimitiveBatch object used for rendering the collision box.</param>
+/// <param name="pos">The center position of the collision box, represented as a 2D vector.</param>
+/// <param name="size">The size of the collision box, represented as a 2D vector (width and height).</param>
+/// <param name="color">The color of the collision box, represented as a GXMVECTOR.</param>
 void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, Vector2 pos, Vector2 size, GXMVECTOR color)
 {
 	if (!m_drawCollisionBox) return;
@@ -76,10 +94,11 @@ void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primiti
 	VertexPositionColor topRight(pos + Vector2(size.x / 2, -size.y / 2), color);
 	VertexPositionColor bottomLeft(pos + Vector2(-size.x / 2, size.y / 2), color);
 	VertexPositionColor bottomRight(pos + Vector2(size.x / 2, size.y / 2), color);
-	primitiveBatch->DrawLine(topLeft, topRight);
+	/*primitiveBatch->DrawLine(topLeft, topRight);
 	primitiveBatch->DrawLine(topRight, bottomRight);
 	primitiveBatch->DrawLine(bottomRight, bottomLeft);
-	primitiveBatch->DrawLine(bottomLeft, topLeft);
+	primitiveBatch->DrawLine(bottomLeft, topLeft);*/
+	primitiveBatch->DrawQuad(topLeft, topRight, bottomRight, bottomLeft);
 }
 
 void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, RECT rect, GXMVECTOR color)
