@@ -94,11 +94,10 @@ void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primiti
 	VertexPositionColor topRight(pos + Vector2(size.x / 2, -size.y / 2), color);
 	VertexPositionColor bottomLeft(pos + Vector2(-size.x / 2, size.y / 2), color);
 	VertexPositionColor bottomRight(pos + Vector2(size.x / 2, size.y / 2), color);
-	/*primitiveBatch->DrawLine(topLeft, topRight);
+	primitiveBatch->DrawLine(topLeft, topRight);
 	primitiveBatch->DrawLine(topRight, bottomRight);
 	primitiveBatch->DrawLine(bottomRight, bottomLeft);
-	primitiveBatch->DrawLine(bottomLeft, topLeft);*/
-	primitiveBatch->DrawQuad(topLeft, topRight, bottomRight, bottomLeft);
+	primitiveBatch->DrawLine(bottomLeft, topLeft);
 }
 
 void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, RECT rect, GXMVECTOR color)

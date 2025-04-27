@@ -120,6 +120,10 @@ void Game::Render() {
 		D3D11_VIEWPORT oldViewport;
 		UINT viewportCount = 1;
 		context->RSGetViewports(&viewportCount, &oldViewport);
+
+		ID3D11ShaderResourceView* const nullSRVs[1] = { nullptr };
+        context->PSSetShaderResources(0, 1, nullSRVs);
+
 		context->OMSetRenderTargets(1, m_gameRenderTargetView.GetAddressOf(),
 			nullptr);
 		context->RSSetViewports(1, &m_gameView);
@@ -157,15 +161,12 @@ void Game::Render() {
 		Clear();
 		m_deviceResources->PIXBeginEvent(L"Render to screen");
 
-		// Draw the game render target to the screen
 		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
 			m_states->PointClamp());
 
+		// Draw the game render target to the screen
 		m_spriteBatch->Draw(m_gameShaderResource.Get(), m_gameViewRect);
 
-		DebugOverlay::DrawFPSCounter(m_spriteBatch.get(), m_font.get(),
-			m_timer.GetFramesPerSecond());
-		DebugOverlay::DrawInput(m_spriteBatch.get(), m_font.get());
 
 		m_spriteBatch->End();
 
@@ -174,21 +175,20 @@ void Game::Render() {
 
 		m_primitiveBatch->Begin();
 
-		// DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), Vector2(GAME_WIDTH
-		// / 2, GAME_HEIGHT / 2), Vector2(16, 16), Colors::Lime);
-		// DebugOverlay::DrawLine(m_primitiveBatch.get(), Vector2(GAME_WIDTH / 2,
-		// 0), Vector2(GAME_WIDTH / 2, GAME_HEIGHT), Colors::Lime);
-		// DebugOverlay::DrawLine(m_primitiveBatch.get(), Vector2(0, GAME_HEIGHT /
-		// 2), Vector2(GAME_WIDTH, GAME_HEIGHT / 2), Colors::Lime);
-		// DebugOverlay::DrawLine(m_primitiveBatch.get(), Vector2(0, 0),
-		// Vector2(1000, 600), Colors::Lime);
-		//DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), Vector2(0, 0), Vector2(256, 240), Colors::Lime);
-		DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), { 0, 0, 256, 240 }, Colors::Lime);
-		DebugOverlay::DrawLine(m_primitiveBatch.get(), Vector2(0, 0), Vector2(256, 240), Colors::Red);
-
-
-
+		 DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), Vector2(GAME_WIDTH
+		 / 2, GAME_HEIGHT / 2), Vector2(16, 16), Colors::Lime);
+		DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), { 0, 0, GAME_WIDTH, GAME_HEIGHT }, Colors::Lime);
 		m_primitiveBatch->End();
+
+		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
+			m_states->PointClamp());
+
+		DebugOverlay::DrawFPSCounter(m_spriteBatch.get(), m_font.get(),
+			m_timer.GetFramesPerSecond());
+		DebugOverlay::DrawInput(m_spriteBatch.get(), m_font.get());
+
+		m_spriteBatch->End();
+
 
 		m_deviceResources->PIXEndEvent();
 	}
