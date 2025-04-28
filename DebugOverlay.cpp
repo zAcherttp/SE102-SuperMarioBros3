@@ -30,33 +30,33 @@ void DebugOverlay::DrawInput(SpriteBatch* spriteBatch, SpriteFont* font)
 	if (!m_drawFPSCounter) return;
 	wchar_t string[128]{};
 	if (m_keyState[0]) 
-		wcsncat(string, L"w down\n", 8);
+		wcsncat_s(string, L"w down\n", 8);
 	else
-		wcsncat(string, L"w up\n", 7);
+		wcsncat_s(string, L"w up\n", 7);
 	if (m_keyState[1])
-		wcsncat(string, L"a down\n", 8);
+		wcsncat_s(string, L"a down\n", 8);
 	else
-		wcsncat(string, L"a up\n", 7);
+		wcsncat_s(string, L"a up\n", 7);
 	if (m_keyState[2])
-		wcsncat(string, L"s down\n", 8);
+		wcsncat_s(string, L"s down\n", 8);
 	else
-		wcsncat(string, L"s up\n", 7);
+		wcsncat_s(string, L"s up\n", 7);
 	if (m_keyState[3])
-		wcsncat(string, L"d down\n", 8);
+		wcsncat_s(string, L"d down\n", 8);
 	else
-		wcsncat(string, L"d up\n", 7);
+		wcsncat_s(string, L"d up\n", 7);
 	if (m_keyState[4])
-		wcsncat(string, L"j down\n", 8);
+		wcsncat_s(string, L"j down\n", 8);
 	else
-		wcsncat(string, L"j up\n", 7);
+		wcsncat_s(string, L"j up\n", 7);
 	if(m_keyState[5])
-		wcsncat(string, L"k down\n", 8);
+		wcsncat_s(string, L"k down\n", 8);
 	else
-		wcsncat(string, L"k up\n", 7);
+		wcsncat_s(string, L"k up\n", 7);
 	if (m_keyState[6])
-		wcsncat(string, L"i down\n", 8);
+		wcsncat_s(string, L"i down\n", 8);
 	else
-		wcsncat(string, L"i up\n", 7);
+		wcsncat_s(string, L"i up\n", 7);
 	font->DrawString(spriteBatch, string, Vector2(10, 30), Colors::White, 0.f, Vector2::Zero, 2.f);
 }
 
@@ -103,10 +103,10 @@ void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primiti
 void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, RECT rect, GXMVECTOR color)
 {
 	if (!m_drawCollisionBox) return;
-	VertexPositionColor topLeft(Vector2(rect.left, rect.top), color);
-	VertexPositionColor topRight(Vector2(rect.right, rect.top), color);
-	VertexPositionColor bottomLeft(Vector2(rect.left, rect.bottom), color);
-	VertexPositionColor bottomRight(Vector2(rect.right, rect.bottom), color);
+	VertexPositionColor topLeft(Vector2((float)rect.left, (float)rect.top), color);
+	VertexPositionColor topRight(Vector2((float)rect.right, (float)rect.top), color);
+	VertexPositionColor bottomLeft(Vector2((float)rect.left, (float)rect.bottom), color);
+	VertexPositionColor bottomRight(Vector2((float)rect.right, (float)rect.bottom), color);
 	primitiveBatch->DrawLine(topLeft, topRight);
 	primitiveBatch->DrawLine(topRight, bottomRight);
 	primitiveBatch->DrawLine(bottomRight, bottomLeft);

@@ -1,0 +1,14 @@
+#
+# Sprite sheet data for MonoGame.
+#
+# To learn how to import these sprites into your MonoGame project visit:
+# https://www.codeandweb.com/texturepacker/monogame
+#
+# Sprite sheet: coin.png (28 x 36)
+# $TexturePacker:SmartUpdate:c501cc1eabbcc6a82671e5545d3a58b0:7a84e0e7274235ee26e938ecbcd82977:bfecdb9c4242e64fbb2698120b6ca3dd$
+#
+
+coin-1;0;1;1;16;16;16;16;0.5;0.5
+coin-2;0;1;19;12;16;16;16;0.5;0.5
+coin-3;0;19;1;8;16;16;16;0.5;0.5
+coin-4;0;15;19;12;16;16;16;0.5;0.5

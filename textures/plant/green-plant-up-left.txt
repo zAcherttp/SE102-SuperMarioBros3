@@ -1,0 +1,12 @@
+#
+# Sprite sheet data for MonoGame.
+#
+# To learn how to import these sprites into your MonoGame project visit:
+# https://www.codeandweb.com/texturepacker/monogame
+#
+# Sprite sheet: green-plant-up-left.png (36 x 36)
+# $TexturePacker:SmartUpdate:40c6dd82acd14273f42248ad1f967a19:2392a98fa9e9f21130635efff3631102:03ba1ffa054b4dee5dce9e75d4f127e8$
+#
+
+green-plant-up-left-closed;0;1;1;16;32;16;32;0.5;0.5
+green-plant-up-left-open;0;19;1;16;32;16;32;0.5;0.5

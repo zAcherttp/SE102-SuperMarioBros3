@@ -1,0 +1,12 @@
+#
+# Sprite sheet data for MonoGame.
+#
+# To learn how to import these sprites into your MonoGame project visit:
+# https://www.codeandweb.com/texturepacker/monogame
+#
+# Sprite sheet: red-koopas-walk.png (36 x 32)
+# $TexturePacker:SmartUpdate:ee68af1307e833094981e6a2e0f831c8:9c668542969026ee0c1f70a0bf4034be:6b9f6fa9e03db9a1bdd481a8d7b28aaa$
+#
+
+red-koopas-walk-1;0;1;1;16;27;16;27;0.5;0.5
+red-koopas-walk-2;0;19;1;16;27;16;27;0.5;0.5

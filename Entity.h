@@ -12,7 +12,7 @@ public:
 	Entity(DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMath::Vector2 size)
 		: m_pos(pos), m_size(size) {
 	}
-	~Entity() = default;
+	virtual ~Entity() = default;
 
 	virtual void Update(float dt) = 0;
 	virtual void Render() = 0;

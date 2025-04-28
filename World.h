@@ -6,18 +6,21 @@ class Entity;
 class World
 {
 private:
-	Entity* m_player;
+	std::string m_path;
+	std::string m_name;
 	std::vector<Entity*> m_entities;
-	int m_id;
+	Entity* m_player;
 	float m_gravity;
 public:
 	World();
 	~World();
-	void Clear();
 	void Update(float dt);
 	void Render();
 	void Reset();
+	bool Load();
+	bool Unload();
 
+	std::string GetName();
 
 	void HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbTracker);
 };

@@ -4,6 +4,7 @@
 
 #include "pch.h"
 #include "Game.h"
+#include "Debug.h"
 
 using namespace DirectX;
 
@@ -18,8 +19,6 @@ namespace
 {
     std::unique_ptr<Game> g_game;
 }
-
-LPCWSTR g_szAppName = L"SMB3";
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void ExitGame() noexcept;
@@ -45,6 +44,11 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         return 1;
 
     g_game = std::make_unique<Game>();
+    if (!g_game->LoadGame("game.json"))
+    {
+        Log(__FUNCTION__, "Failed loading game");
+        return 1;
+    }
 
     // Register class and create window
     {
@@ -64,13 +68,16 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
         // Create window
         int w, h;
-        g_game->GetDefaultSize(w, h);
+        LPCWSTR g_appName{};
+        g_game->GetDefaultWndSize(w, h);
+        g_game->GetDefaultGameTitle(g_appName);
+
 
         RECT rc = { 0, 0, static_cast<LONG>(w), static_cast<LONG>(h) };
 
         AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-        HWND hwnd = CreateWindowExW(0, L"SMB3WindowClass", g_szAppName, WS_OVERLAPPEDWINDOW,
+        HWND hwnd = CreateWindowExW(0, L"SMB3WindowClass", g_appName, WS_OVERLAPPEDWINDOW,
             CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top,
             nullptr, nullptr, hInstance,
             g_game.get());
@@ -267,7 +274,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 int width = 800;
                 int height = 600;
                 if (game)
-                    game->GetDefaultSize(width, height);
+                    game->GetDefaultWndSize(width, height);
 
                 ShowWindow(hWnd, SW_SHOWNORMAL);
 

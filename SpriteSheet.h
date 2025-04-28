@@ -102,7 +102,7 @@ public:
 					if (!str)
 						throw std::runtime_error("SpriteSheet encountered invalid .txt data");
 
-					SpriteFrame frame;
+					SpriteFrame frame{};
 					frame.rotated = (_wtoi(str) == 1);
 
 					str = wcstok_s(nullptr, delim, &context);

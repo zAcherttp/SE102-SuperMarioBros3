@@ -5,13 +5,9 @@
 #include "pch.h"
 #include "Game.h"
 #include "Helpers.h"
+#include "Debug.h"
 #include "DebugOverlay.h"
 #include "Mario.h"
-
-constexpr auto GAME_WIDTH = 256;
-constexpr auto GAME_HEIGHT = 240;
-constexpr auto WND_WIDTH = 512;
-constexpr auto WND_HEIGHT = 512;
 
 extern void ExitGame() noexcept;
 
@@ -28,6 +24,11 @@ Game::Game() noexcept(false)
 	//   Add DX::DeviceResources::c_AllowTearing to opt-in to variable rate displays.
 	//   Add DX::DeviceResources::c_EnableHDR for HDR10 display.
 	m_deviceResources->RegisterDeviceNotify(this);
+	m_gameView = {};
+	m_gameViewRect = {};
+	m_gameHeight = m_gameWidth = m_wndHeight = m_wndWidth = 0;
+	m_currentWorldId = m_nextWorldId = 0;
+	m_gameTitle = L"";
 }
 
 // Initialize the Direct3D resources required to run.
@@ -45,8 +46,8 @@ void Game::Initialize(HWND window, int width, int height) {
 
 	m_gameView.TopLeftX = 0.0f;
 	m_gameView.TopLeftY = 0.0f;
-	m_gameView.Width = static_cast<float>(GAME_WIDTH);
-	m_gameView.Height = static_cast<float>(GAME_HEIGHT);
+	m_gameView.Width = static_cast<float>(m_gameWidth);
+	m_gameView.Height = static_cast<float>(m_gameHeight);
 	m_gameView.MinDepth = 0.0f;
 	m_gameView.MaxDepth = 1.0f;
 
@@ -71,12 +72,12 @@ void Game::Tick()
 void Game::Update(DX::StepTimer const& timer) {
 	float elapsedTime = float(timer.GetElapsedSeconds());
 
-	if (m_gameWorld) {
-		/*m_gameWorld->Update(elapsedTime);*/
+	HandleInput();
+
+	if (m_worlds[m_currentWorldId]) {
+		m_worlds[m_currentWorldId]->Update(elapsedTime);
 	}
 
-	HandleInput();
-	elapsedTime;
 }
 #pragma endregion
 
@@ -93,8 +94,8 @@ void Game::HandleInput() {
 	if (m_keys.IsKeyPressed(Keyboard::F4)) {
 		DebugOverlay::ToggleCollisionBox();
 	}
-	if (m_gameWorld) {
-		m_gameWorld->HandleInput(&m_keys);
+	if (m_worlds[m_currentWorldId]) {
+		m_worlds[m_currentWorldId]->HandleInput(&m_keys);
 	}
 }
 
@@ -139,12 +140,12 @@ void Game::Render() {
 		auto frame = m_spriteSheet->Find(L"walk2");
 		if (frame != 0)
 			m_spriteSheet->Draw(m_spriteBatch.get(), *frame,
-				Vector2(GAME_WIDTH / 2, GAME_HEIGHT / 2));
+				Vector2(m_gameWidth / 2.f, m_gameHeight / 2.f));
 
 		auto frame1 = m_spriteSheet->Find(L"jump");
 		if (frame1 != 0)
 			m_spriteSheet->Draw(m_spriteBatch.get(), *frame1,
-				Vector2(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 32));
+				Vector2(m_gameWidth / 2.f, m_gameHeight / 2.f + 32.f));
 		// endblock
 
 		m_spriteBatch->End();
@@ -158,7 +159,7 @@ void Game::Render() {
 	}
 	// Pass 2
 	{
-		Clear();
+		ClearBackBuffer();
 		m_deviceResources->PIXBeginEvent(L"Render to screen");
 
 		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
@@ -175,9 +176,9 @@ void Game::Render() {
 
 		m_primitiveBatch->Begin();
 
-		 DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), Vector2(GAME_WIDTH
-		 / 2, GAME_HEIGHT / 2), Vector2(16, 16), Colors::Lime);
-		DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), { 0, 0, GAME_WIDTH, GAME_HEIGHT }, Colors::Lime);
+		 DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), Vector2(m_gameWidth
+		 / 2.f, m_gameHeight / 2.f), Vector2(16, 16), Colors::Lime);
+		DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), { 0, 0, m_gameWidth, m_gameHeight }, Colors::Lime);
 		m_primitiveBatch->End();
 
 		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
@@ -197,7 +198,7 @@ void Game::Render() {
 }
 
 // Helper method to clear the back buffers.
-void Game::Clear() {
+void Game::ClearBackBuffer() {
 	m_deviceResources->PIXBeginEvent(L"Clear");
 
 	// Clear the views.
@@ -249,14 +250,83 @@ void Game::OnWindowSizeChanged(int width, int height) {
 	CreateWindowSizeDependentResources();
 	// TODO: Game window is being resized.
 }
-
-// Properties
-void Game::GetDefaultSize(int& width, int& height) const noexcept {
-	// TODO: Change to desired default window size (note minimum size is 320x200).
-	width = WND_WIDTH;
-	height = WND_HEIGHT;
-}
 #pragma endregion
+
+#pragma region Game Properties
+// Properties
+void Game::GetDefaultWndSize(int& width, int& height) const noexcept {
+	// TODO: Change to desired default window size (note minimum size is 320x200).
+	width = m_wndWidth;
+	height = m_wndHeight;
+}
+
+void Game::GetDefaultGameSize(int& width, int& height) const noexcept {
+	width = m_gameWidth;
+	height = m_gameHeight;
+}
+
+void Game::GetDefaultGameTitle(LPCWSTR& title) const noexcept {
+	title = m_gameTitle	;
+}
+
+#pragma endregion
+
+World* Game::GetCurrentWorld()
+{
+	return m_worlds[m_currentWorldId];
+}
+
+bool Game::LoadGame(const std::string& filePath)
+{
+	try {
+		std::ifstream gameFile(filePath);
+		if (!gameFile.is_open()) {
+			Log(__FUNCTION__, "Failed to open file: " + filePath);
+			return false;
+		}
+
+		json gameData{};
+		gameFile >> gameData;
+
+		LoadGameConfig(gameData["config"]);
+	}
+	catch (const std::exception& e) {
+		Log(__FUNCTION__, "Exception occurred: " + std::string(e.what()));
+	}
+	return true;
+}
+
+void Game::LoadGameConfig(const json& config)
+{
+	m_gameWidth = config["game"]["width"];
+	m_gameHeight = config["game"]["height"];
+
+	m_wndWidth = config["window"]["width"];
+	m_wndHeight = config["window"]["height"];
+
+	Log(__FUNCTION__, "Window size set to: " + std::to_string(m_wndWidth) + "x" + std::to_string(m_wndHeight));
+}
+
+void Game::SetNextWorldId(int id)
+{
+	m_nextWorldId = id;
+}
+
+void Game::SwitchWorld()
+{
+	if (m_nextWorldId < 0 || m_nextWorldId == m_currentWorldId) return;
+
+	if (m_worlds[m_currentWorldId] != NULL)
+		m_worlds[m_currentWorldId]->Unload();
+	m_currentWorldId = m_nextWorldId;
+
+	//TODO: clean up sprites/anims 
+
+	World* world = m_worlds[m_nextWorldId];
+	Log(__FUNCTION__, "Loading into world: " + world->GetName());
+
+	world->Load();
+}
 
 #pragma region Direct3D Resources
 // These are the resources that depend on the device.
@@ -265,8 +335,8 @@ void Game::CreateDeviceDependentResources() {
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
 	D3D11_TEXTURE2D_DESC rtDesc = {};
-	rtDesc.Width = GAME_WIDTH;
-	rtDesc.Height = GAME_HEIGHT;
+	rtDesc.Width = m_gameWidth;
+	rtDesc.Height = m_gameHeight;
 	rtDesc.MipLevels = 1;
 	rtDesc.ArraySize = 1;
 	rtDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -347,7 +417,7 @@ void Game::CreateWindowSizeDependentResources() {
 	float windowHeight = static_cast<float>(size.bottom);
 
 	// Calculate aspect ratios
-	const float gameAspectRatio = static_cast<float>(GAME_WIDTH) / static_cast<float>(GAME_HEIGHT);
+	const float gameAspectRatio = static_cast<float>(m_gameWidth) / static_cast<float>(m_gameHeight);
 	const float windowAspectRatio = windowWidth / windowHeight;
 
 	// Center positions for UI elements
@@ -382,7 +452,7 @@ void Game::CreateWindowSizeDependentResources() {
 	};
 
 	// Calculate scale factor to maintain proper aspect ratio
-	float scale = std::min(viewWidth / GAME_WIDTH, viewHeight / GAME_HEIGHT);
+	float scale = std::min(viewWidth / m_gameWidth, viewHeight / m_gameHeight);
 
 	// Create transformation matrices
 	XMMATRIX projectionMatrix = XMMatrixOrthographicOffCenterRH(

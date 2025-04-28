@@ -1,0 +1,23 @@
+{
+  "config": {
+    "game": {
+      "title": "SMB3",
+      "width": 256,
+      "height": 240,
+      "world": {
+        "startWorldId": 1
+      }
+    },
+    "window": {
+      "width": 768,
+      "height": 512
+    }
+  },
+  "worlds": [
+    {
+      "id": 1,
+      "name": "testWorld",
+      "path": "testWorld.json"
+    }
+  ]
+}

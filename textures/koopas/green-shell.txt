@@ -1,0 +1,14 @@
+#
+# Sprite sheet data for MonoGame.
+#
+# To learn how to import these sprites into your MonoGame project visit:
+# https://www.codeandweb.com/texturepacker/monogame
+#
+# Sprite sheet: green-shell.png (72 x 20)
+# $TexturePacker:SmartUpdate:f6586b6b35f5775669d31919398bc252:1e9da01e716150f2330a23ac2586f31a:73689f2d402499fd845992479d689632$
+#
+
+green-shell-1;0;1;1;16;16;16;16;0.5;0.5
+green-shell-2;0;19;1;16;16;16;16;0.5;0.5
+green-shell-3;0;37;1;16;16;16;16;0.5;0.5
+green-shell-4;0;55;1;16;16;16;16;0.5;0.5

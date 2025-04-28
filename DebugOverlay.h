@@ -20,6 +20,7 @@ public:
     DebugOverlay(const DebugOverlay&) = delete;  
     DebugOverlay& operator=(const DebugOverlay&) = delete;  
 
+    //BoundingBox rendering + fps counter + key states
     static void DrawFPSCounter(SpriteBatch* spriteBatch,  
         SpriteFont* font,  
         uint32_t fps);

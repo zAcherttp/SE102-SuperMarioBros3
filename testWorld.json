@@ -1,0 +1,14 @@
+{
+  "width": 800,
+  "height": 800,
+  "background": [0, 255, 0],
+  "entities": [
+    { "type": "mario", "x": 0, "y": 200 },
+    {
+      "type": "brick",
+      "x": 0,
+      "y": 180,
+      "solid": true
+    }
+  ]
+}

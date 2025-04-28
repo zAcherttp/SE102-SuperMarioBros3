@@ -7,16 +7,15 @@
 #include "DeviceResources.h"
 #include "SpriteSheet.h"
 #include "World.h"
-#include "GameLoader.h"
-
 #include "StepTimer.h"
+#include "json.hpp"
 
+using json = nlohmann::json;
 
 // A basic game implementation that creates a D3D11 device and
 // provides a game loop.
 class Game final : public DX::IDeviceNotify
 {
-    friend class GameLoader;
 public:
 
     Game() noexcept(false);
@@ -48,7 +47,14 @@ public:
     void OnWindowSizeChanged(int width, int height);
 
     // Properties
-    void GetDefaultSize( int& width, int& height ) const noexcept;
+    void GetDefaultWndSize( int& width, int& height ) const noexcept;
+    void GetDefaultGameSize( int& width, int& height ) const noexcept;
+    void GetDefaultGameTitle(LPCWSTR& title) const noexcept;
+
+    World* GetCurrentWorld();
+    bool LoadGame(const std::string& filePath);
+    void SwitchWorld();
+    void SetNextWorldId(int id);
 
 private:
 
@@ -56,7 +62,8 @@ private:
     void Render();
     void HandleInput();
 
-    void Clear();
+    void ClearBackBuffer();
+    void LoadGameConfig(const json& config);
 
     void CreateDeviceDependentResources();
     void CreateWindowSizeDependentResources();
@@ -79,15 +86,11 @@ private:
     std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
     std::unique_ptr<DirectX::CommonStates> m_states;
 
+    // PrimitiveBatch for rendering debug primitives
     Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
     std::unique_ptr<DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionColor>> m_primitiveBatch;
     std::unique_ptr<DirectX::BasicEffect> m_effect;
     
-    DirectX::SimpleMath::Vector2 m_screenPos;
-    DirectX::SimpleMath::Vector2 m_origin;
-    D3D11_VIEWPORT m_gameView;
-    RECT m_gameViewRect;
-
     std::unique_ptr<DirectX::SpriteFont> m_font;
     DirectX::SimpleMath::Vector2 m_fontPos;
 
@@ -96,5 +99,17 @@ private:
     std::unique_ptr<DirectX::Keyboard> m_keyboard;
     DirectX::Keyboard::KeyboardStateTracker m_keys;
 
-	std::unique_ptr<World> m_gameWorld;
+    DirectX::SimpleMath::Vector2 m_screenPos;
+    DirectX::SimpleMath::Vector2 m_origin;
+    D3D11_VIEWPORT m_gameView;
+    RECT m_gameViewRect;
+    LPCWSTR m_gameTitle;
+	int m_gameWidth;
+	int m_gameHeight;
+	int m_wndWidth;
+	int m_wndHeight;
+
+    std::unordered_map<int, World*> m_worlds;
+    int m_currentWorldId;
+    int m_nextWorldId;
 };

@@ -1,0 +1,14 @@
+#
+# Sprite sheet data for MonoGame.
+#
+# To learn how to import these sprites into your MonoGame project visit:
+# https://www.codeandweb.com/texturepacker/monogame
+#
+# Sprite sheet: luckybox.png (72 x 20)
+# $TexturePacker:SmartUpdate:8bd9fb442b4962dd4a4b637bad03dbc3:6649b9173efe42ef64b26d8de4e576e4:884b009f6d6d1592ea2393b7587b3394$
+#
+
+lucky-box-1;0;1;1;16;16;16;16;0.5;0.5
+lucky-box-2;0;19;1;16;16;16;16;0.5;0.5
+lucky-box-3;0;37;1;16;16;16;16;0.5;0.5
+lucky-box-4;0;55;1;16;16;16;16;0.5;0.5

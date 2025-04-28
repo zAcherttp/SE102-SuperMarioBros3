@@ -38,11 +38,11 @@
     </ClInclude>
     <ClInclude Include="Animator.h" />
     <ClInclude Include="json.hpp" />
-    <ClInclude Include="GameLoader.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="CollisionEvent.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="MarioMovementStates.h" />
+    <ClInclude Include="Debug.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -69,10 +69,10 @@
       <Filter>Stable</Filter>
     </ClCompile>
     <ClCompile Include="Animator.cpp" />
-    <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="CollisionEvent.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="MarioMovementStates.cpp" />
+    <ClCompile Include="Debug.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -123,6 +123,9 @@
       <Filter>Assets</Filter>
     </None>
     <None Include="textures\sfmono.spritefont">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="game.json">
       <Filter>Assets</Filter>
     </None>
   </ItemGroup>

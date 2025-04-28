@@ -1,0 +1,14 @@
+#
+# Sprite sheet data for MonoGame.
+#
+# To learn how to import these sprites into your MonoGame project visit:
+# https://www.codeandweb.com/texturepacker/monogame
+#
+# Sprite sheet: red-shell.png (72 x 20)
+# $TexturePacker:SmartUpdate:ec2916cfb9a12c377964a79d471b6ee9:f1699f9b893a17465a2aaea0df77439e:3e53d5cf90d62a122956efd7b59b17b3$
+#
+
+red-shell-1;0;1;1;16;16;16;16;0.5;0.5
+red-shell-2;0;19;1;16;16;16;16;0.5;0.5
+red-shell-3;0;37;1;16;16;16;16;0.5;0.5
+red-shell-4;0;55;1;16;16;16;16;0.5;0.5
