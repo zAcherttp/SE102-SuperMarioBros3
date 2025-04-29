@@ -25,6 +25,9 @@ public:
 	void Load(SpriteSheet* spriteSheet);
 	void Unload();
 
+	std::vector<Entity*>& GetEntities();
+	Entity* GetPlayer();
+
 	DirectX::XMVECTORF32 GetColor() const;
 	std::string GetName() const;
 

@@ -21,6 +21,13 @@ using Keys = DirectX::Keyboard;
 constexpr auto DIR_LEFT  = -1;
 constexpr auto DIR_RIGHT = 1;
 
+void MarioMovementState::Update(Mario* mario, float dt)
+{
+	//apply universal forces on mario
+
+
+	
+}
 
 MarioMovementState* MarioIdleState::HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState)
 {
@@ -48,12 +55,13 @@ void MarioIdleState::Update(Mario* mario, float dt)
 	//call animator to render corresponding sprite and also pass in direction to flip accordingly
 }
 
-void MarioIdleState::Enter(Mario* mario)  
+void MarioIdleState::Enter(Mario* mario)
 {  
 	//switch sprite/ kill mario/ decrease health etc.
 	// later on powerup state will add/ subtract its anim ids, currently default to small mario
 	mario->SetAnimId(mario->GetAnimId() + ID_ANIM_MARIO_IDLE);
 	mario->SetAnimation(mario->GetAnimId(), true);
+
 	Log(__FUNCTION__, "Mario idle, anim id: " + std::to_string(mario->GetAnimId()));
 }
 

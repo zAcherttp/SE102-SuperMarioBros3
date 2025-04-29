@@ -10,6 +10,8 @@ public:
 	Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spriteSheet);
 	~Mario() = default;
 
+	void ItsAMe();
+
 	void Update(float dt) override;
 	void Render(DirectX::SpriteBatch* spriteBatch) override;
 	void HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbState);

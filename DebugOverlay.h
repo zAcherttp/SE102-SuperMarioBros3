@@ -2,7 +2,8 @@
 
 #include <SpriteBatch.h>  
 #include <SpriteFont.h>  
-#include "StepTimer.h"  
+#include "StepTimer.h" 
+#include "World.h"
 
 using namespace DirectX;  
 using namespace DirectX::SimpleMath;  
@@ -32,13 +33,16 @@ public:
         GXMVECTOR color = Colors::White);
 	static void UpdateInput(Keyboard::State* kbState);
 	// TODO: change the param to array of positions and size from gameWorld to draw
-    static void DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch,  
+    static void DrawBoundingBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch,  
         Vector2 position,  
         Vector2 size,  
         GXMVECTOR color = Colors::White);  
-    static void DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch,  
+    static void DrawBoundingBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch,  
         RECT rect,  
-        GXMVECTOR color = Colors::White);  
+        GXMVECTOR color = Colors::White);
+    static void DrawBoundingBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch,
+        World* world,
+        GXMVECTOR color = Colors::White);
     static void ToggleFPSCounter();
 	static void ToggleCollisionBox();
 };

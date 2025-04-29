@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "DebugOverlay.h"
+#include "Entity.h"
 
 bool DebugOverlay::m_drawFPSCounter = true;
 bool DebugOverlay::m_drawCollisionBox = true;
@@ -87,7 +88,7 @@ void DebugOverlay::UpdateInput(Keyboard::State* kbState)
 /// <param name="pos">The center position of the collision box, represented as a 2D vector.</param>
 /// <param name="size">The size of the collision box, represented as a 2D vector (width and height).</param>
 /// <param name="color">The color of the collision box, represented as a GXMVECTOR.</param>
-void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, Vector2 pos, Vector2 size, GXMVECTOR color)
+void DebugOverlay::DrawBoundingBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, Vector2 pos, Vector2 size, GXMVECTOR color)
 {
 	if (!m_drawCollisionBox) return;
 	VertexPositionColor topLeft(pos - Vector2(size.x / 2, size.y / 2), color);
@@ -100,7 +101,7 @@ void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primiti
 	primitiveBatch->DrawLine(bottomLeft, topLeft);
 }
 
-void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, RECT rect, GXMVECTOR color)
+void DebugOverlay::DrawBoundingBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, RECT rect, GXMVECTOR color)
 {
 	if (!m_drawCollisionBox) return;
 	VertexPositionColor topLeft(Vector2((float)rect.left, (float)rect.top), color);
@@ -111,6 +112,23 @@ void DebugOverlay::DrawCollisionBox(PrimitiveBatch<VertexPositionColor>* primiti
 	primitiveBatch->DrawLine(topRight, bottomRight);
 	primitiveBatch->DrawLine(bottomRight, bottomLeft);
 	primitiveBatch->DrawLine(bottomLeft, topLeft);
+}
+
+void DebugOverlay::DrawBoundingBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, World* world, GXMVECTOR color)
+{
+	for (auto e : world->GetEntities())
+	{
+		DebugOverlay::DrawBoundingBox(
+			primitiveBatch,
+			e->GetPosition(),
+			e->GetSize(),
+			Colors::Lime);
+	}
+	DebugOverlay::DrawBoundingBox(
+		primitiveBatch,
+		world->GetPlayer()->GetPosition(),
+		world->GetPlayer()->GetSize(),
+		Colors::Lime);
 }
 
 void DebugOverlay::ToggleCollisionBox()

@@ -171,9 +171,9 @@ void Game::Render() {
 
 		m_primitiveBatch->Begin();
 
-		DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), Vector2(m_gameWidth
-		 / 2.f, m_gameHeight / 2.f), Vector2(16, 16), Colors::Lime);
-		DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), { 0, 0, m_gameWidth, m_gameHeight }, Colors::Lime);
+		//loops through all entities to render bounding box
+		DebugOverlay::DrawBoundingBox(m_primitiveBatch.get(), GetCurrentWorld(), Colors::Lime);
+		
 		m_primitiveBatch->End();
 
 		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
@@ -357,7 +357,6 @@ void Game::SwitchWorld()
 		m_worlds[m_currentWorldId]->Unload();
 		m_currentWorldId = m_nextWorldId;
 
-	Log(__FUNCTION__, "Loading into world id: " + std::to_string(m_currentWorldId));
 	//TODO: clean up sprites/anims
 
 	World* world = m_worlds[m_currentWorldId];
@@ -426,6 +425,7 @@ void Game::CreateDeviceDependentResources() {
 					resource.GetAddressOf(),
 					m_texture.ReleaseAndGetAddressOf()));*/
 
+	//TODO: put this into game.json
 	DX::ThrowIfFailed(CreateWICTextureFromFile(
 		device, L"textures/mario/mario.png", resource.GetAddressOf(),
 		m_texture.ReleaseAndGetAddressOf()));

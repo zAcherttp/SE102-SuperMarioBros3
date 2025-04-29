@@ -158,6 +158,9 @@ void World::Load(SpriteSheet* spriteSheet)
 	catch (const std::exception& e) {
 		Log(__FUNCTION__, "Exception occurred: " + std::string(e.what()));
 	}
+	Log(__FUNCTION__, m_name + " loaded successfully");
+
+	dynamic_cast<Mario*>(m_player)->ItsAMe();
 
 	return;
 }
@@ -180,6 +183,16 @@ void World::Unload()
 	m_path = "";
 
 	return;
+}
+
+std::vector<Entity*>& World::GetEntities()
+{
+	return m_entities;
+}
+
+Entity* World::GetPlayer()
+{
+	return m_player;
 }
 
 XMVECTORF32 World::GetColor() const

@@ -23,7 +23,7 @@ class MarioMovementState : protected MarioStateBase {
 public:
 	MarioMovementState(int dir) : MarioStateBase(dir) {};
 	virtual MarioMovementState* HandleInput(Mario* mario, DirectX::Keyboard::KeyboardStateTracker* kbStates) override = 0;
-	virtual void Update(Mario* mario, float dt) override = 0;
+	void Update(Mario* mario, float dt) override = 0;
 	virtual void Enter(Mario* mario) override = 0;
 	virtual void Exit(Mario* mario) override = 0;
 };
