@@ -81,14 +81,11 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
             CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top,
             nullptr, nullptr, hInstance,
             g_game.get());
-        // TODO: Change to CreateWindowExW(WS_EX_TOPMOST, L"SMB3WindowClass", g_szAppName, WS_POPUP,
-        // to default to fullscreen.
 
         if (!hwnd)
             return 1;
 
         ShowWindow(hwnd, nCmdShow);
-        // TODO: Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.
 
         GetClientRect(hwnd, &rc);
 

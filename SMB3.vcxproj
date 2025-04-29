@@ -181,6 +181,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animator.h" />
+    <ClInclude Include="AssetIDs.h" />
     <ClInclude Include="CollisionEvent.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DebugOverlay.h" />
@@ -199,6 +200,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
+    <ClCompile Include="AssetIDs.cpp" />
     <ClCompile Include="CollisionEvent.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DebugOverlay.cpp" />
@@ -238,8 +240,10 @@
     <Manifest Include="settings.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="sprites.json" />
     <None Include="game.json" />
     <None Include="packages.config" />
+    <None Include="testWorld.json" />
     <None Include="textures\mario.spritefont" />
     <None Include="textures\sfmono.spritefont" />
   </ItemGroup>

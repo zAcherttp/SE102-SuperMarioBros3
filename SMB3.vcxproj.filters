@@ -43,6 +43,7 @@
     <ClInclude Include="Mario.h" />
     <ClInclude Include="MarioMovementStates.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="AssetIDs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -73,6 +74,7 @@
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="MarioMovementStates.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="AssetIDs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -126,6 +128,12 @@
       <Filter>Assets</Filter>
     </None>
     <None Include="game.json">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="testWorld.json">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="sprites.json">
       <Filter>Assets</Filter>
     </None>
   </ItemGroup>

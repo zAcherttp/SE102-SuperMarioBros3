@@ -6,6 +6,7 @@
 
 #include "DeviceResources.h"
 #include "SpriteSheet.h"
+#include "Animator.h"
 #include "World.h"
 #include "StepTimer.h"
 #include "json.hpp"
@@ -26,6 +27,8 @@ public:
 
     Game(Game const&) = delete;
     Game& operator= (Game const&) = delete;
+
+    static Game* GetInstance();
 
     // Initialization and management
     void Initialize(HWND window, int width, int height);
@@ -56,7 +59,11 @@ public:
     void SwitchWorld();
     void SetNextWorldId(int id);
 
+    SpriteSheet* GetSpriteSheet() const;
+    DirectX::SpriteBatch* GetSpriteBatch() const;
 private:
+
+    static Game* s_instance;
 
     void Update(DX::StepTimer const& timer);
     void Render();
@@ -64,6 +71,7 @@ private:
 
     void ClearBackBuffer();
     void LoadGameConfig(const json& config);
+    void LoadWorldConfig(const json& config);
 
     void CreateDeviceDependentResources();
     void CreateWindowSizeDependentResources();
@@ -95,6 +103,8 @@ private:
     DirectX::SimpleMath::Vector2 m_fontPos;
 
 	std::unique_ptr<SpriteSheet> m_spriteSheet;
+    std::string m_spritePath;
+    std::string m_spriteDataPath;
 
     std::unique_ptr<DirectX::Keyboard> m_keyboard;
     DirectX::Keyboard::KeyboardStateTracker m_keys;

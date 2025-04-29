@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "MarioMovementStates.h"
+#include "Debug.h"
+#include "AssetIDs.h"
 
 #include "Mario.h"
 
@@ -48,13 +50,17 @@ void MarioIdleState::Update(Mario* mario, float dt)
 
 void MarioIdleState::Enter(Mario* mario)  
 {  
-	//switch sprite/ kill mario/ decrease health etc.  
-	OutputDebugString(L"Mario has entered the idle state.\n");  
+	//switch sprite/ kill mario/ decrease health etc.
+	// later on powerup state will add/ subtract its anim ids, currently default to small mario
+	mario->SetAnimId(mario->GetAnimId() + ID_ANIM_MARIO_IDLE);
+	mario->SetAnimation(mario->GetAnimId(), true);
+	Log(__FUNCTION__, "Mario idle, anim id: " + std::to_string(mario->GetAnimId()));
 }
 
-void MarioIdleState::Exit()
+void MarioIdleState::Exit(Mario* mario)
 {
 	//clean up velocity/ acceleration etc.
+	mario->SetAnimId(mario->GetAnimId() - ID_ANIM_MARIO_IDLE);
 }
 
 MarioMovementState* MarioWalkState::HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState)
@@ -109,11 +115,14 @@ void MarioWalkState::Update(Mario* mario, float dt)
 
 void MarioWalkState::Enter(Mario* mario)
 {
-	OutputDebugString(L"Mario has entered the walk state.\n");
+	mario->SetAnimId(mario->GetAnimId() + ID_ANIM_MARIO_WALK);
+	mario->SetAnimation(mario->GetAnimId(), true);
+	Log(__FUNCTION__, "Mario walk, anim id: " + std::to_string(mario->GetAnimId()));
 }
 
-void MarioWalkState::Exit()
+void MarioWalkState::Exit(Mario* mario)
 {
+	mario->SetAnimId(mario->GetAnimId() - ID_ANIM_MARIO_WALK);
 }
 
 MarioMovementState* MarioRunState::HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState)
@@ -134,12 +143,14 @@ void MarioRunState::Update(Mario* mario, float dt)
 
 void MarioRunState::Enter(Mario* mario)
 {
-	OutputDebugString(L"Mario has entered the run state.\n");
+	mario->SetAnimId(mario->GetAnimId() + ID_ANIM_MARIO_RUN);
+	mario->SetAnimation(mario->GetAnimId(), true);
+	Log(__FUNCTION__, "Mario run, anim id: " + std::to_string(mario->GetAnimId()));
 }
 
-void MarioRunState::Exit()
+void MarioRunState::Exit(Mario* mario)
 {
-	// Clean up running-specific properties
+	mario->SetAnimId(mario->GetAnimId() - ID_ANIM_MARIO_RUN);
 }
 
 MarioMovementState* MarioSkidState::HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState)
@@ -160,12 +171,14 @@ void MarioSkidState::Update(Mario* mario, float dt)
 
 void MarioSkidState::Enter(Mario* mario)
 {
-	OutputDebugString(L"Mario has entered the skid state.\n");
+	mario->SetAnimId(mario->GetAnimId() + ID_ANIM_MARIO_SKID);
+	mario->SetAnimation(mario->GetAnimId(), true);
+	Log(__FUNCTION__, "Mario skid, anim id: " + std::to_string(mario->GetAnimId()));
 }
 
-void MarioSkidState::Exit()
+void MarioSkidState::Exit(Mario* mario)
 {
-	// Clean up skidding-specific properties
+	mario->SetAnimId(mario->GetAnimId() - ID_ANIM_MARIO_SKID);
 }
 
 MarioMovementState* MarioJumpState::HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState)
@@ -186,12 +199,14 @@ void MarioJumpState::Update(Mario* mario, float dt)
 
 void MarioJumpState::Enter(Mario* mario)
 {
-	OutputDebugString(L"Mario has entered the jump state.\n");
+	mario->SetAnimId(mario->GetAnimId() + ID_ANIM_MARIO_JUMP);
+	mario->SetAnimation(mario->GetAnimId(), true);
+	Log(__FUNCTION__, "Mario jump, anim id: " + std::to_string(mario->GetAnimId()));
 }
 
-void MarioJumpState::Exit()
+void MarioJumpState::Exit(Mario* mario)
 {
-	// Clean up jumping-specific properties
+	mario->SetAnimId(mario->GetAnimId() - ID_ANIM_MARIO_JUMP);
 }
 
 MarioMovementState* MarioSitState::HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState)
@@ -204,17 +219,19 @@ MarioMovementState* MarioSitState::HandleInput(Mario* mario, KBState::KeyboardSt
 
 void MarioSitState::Update(Mario* mario, float dt)
 {
-	// Update Mario's sitting animation
+	
 }
 
 void MarioSitState::Enter(Mario* mario)
 {
-	OutputDebugString(L"Mario has entered the sit state.\n");
+	mario->SetAnimId(mario->GetAnimId() + ID_ANIM_MARIO_SIT);
+	mario->SetAnimation(mario->GetAnimId(), true);
+	Log(__FUNCTION__, "Mario sit, anim id: " + std::to_string(mario->GetAnimId()));
 }
 
-void MarioSitState::Exit()
+void MarioSitState::Exit(Mario* mario)
 {
-	// Clean up sitting-specific properties
+	mario->SetAnimId(mario->GetAnimId() - ID_ANIM_MARIO_SIT);
 }
 
 int MarioStateBase::GetDirection() const

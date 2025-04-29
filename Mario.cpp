@@ -1,17 +1,21 @@
 #pragma once
 #include "pch.h"
 #include "Mario.h"
+#include "AssetIDs.h"
 
-Mario::Mario(Vector2 position, int lives, int score, int coins)
-	: Entity(position), m_lives(lives), m_score(score), m_coins(coins)
+Mario::Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spriteSheet)
+	: Entity(position, spriteSheet), m_lives(lives), m_score(score), m_coins(coins)
 {
 	this->m_movementSM = new MarioIdleState(1);
+	this->SetAnimId(ID_ANIM_MARIO_IDLE + ID_ANIM_MARIO_SMALL);
 }
 
 void Mario::HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbState) {
 	MarioMovementState* mState = m_movementSM->HandleInput(this, kbState);
 	/*m_powerupSM->HandleInput(kbState);*/
 	if (mState != nullptr) {
+		m_movementSM->Exit(this);
+
 		delete m_movementSM;
 		m_movementSM = mState;
 
@@ -22,10 +26,11 @@ void Mario::HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbState) {
 void Mario::Update(float dt)
 {
 	m_movementSM->Update(this, dt);
+	m_animator->Update(dt, m_vel.x);
 }
 
-void Mario::Render() {
-
+void Mario::Render(DirectX::SpriteBatch* spriteBatch) {
+	Entity::Render(spriteBatch);
 }
 
 bool Mario::IsGrounded() const {

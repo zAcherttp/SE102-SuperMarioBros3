@@ -4,14 +4,14 @@
 
 using namespace DirectX::SimpleMath;
 
-class Mario : protected Entity
+class Mario : public Entity
 {
 public:
-	Mario(Vector2 position, int lives, int score, int coins);
+	Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spriteSheet);
 	~Mario() = default;
 
 	void Update(float dt) override;
-	void Render() override;
+	void Render(DirectX::SpriteBatch* spriteBatch) override;
 	void HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbState);
 
 	bool IsGrounded() const override;

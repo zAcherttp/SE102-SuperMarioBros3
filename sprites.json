@@ -1,0 +1,30 @@
+[
+  {
+    "type": 0,
+    "sprites": [
+      {
+        "id": 10011,
+        "name": "mario_small_idle",
+        "frames": [ "small_idle" ],
+        "loop": false
+      },
+      {
+        "id": 10021,
+        "name": "mario_small_walk",
+        "frames": [ "small_idle", "small_walk" ],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.05,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 1.0
+      },
+      {
+        "id": 10051,
+        "name": "mario_small_jump",
+        "frames": [ "small_jump" ],
+        "loop": false
+      }
+    ]
+  }
+]

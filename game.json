@@ -6,6 +6,10 @@
       "height": 240,
       "world": {
         "startWorldId": 1
+      },
+      "sprite": {
+        "path": "sprites.png",
+        "data": "sprites.txt"
       }
     },
     "window": {

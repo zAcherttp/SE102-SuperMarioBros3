@@ -1,80 +1,189 @@
+#pragma once
 #include "pch.h"
 #include "World.h"
 #include "Mario.h"
-#include <vector>
+#include "Debug.h"
+#include "AssetIDs.h"
+#include "Game.h"
+#include "SpriteSheet.h"
 
 using namespace DirectX;
 using Keys = Keyboard::Keys;
 
-World::World() {
-    m_name = "";
-    m_path = "";
-    m_gravity = 0;
-    m_entities = {};
-    m_player = nullptr;
+World::World(std::string wPath, std::string name)
+{
+	m_path = wPath;
+	m_name = name;
+	m_player = nullptr;
+	m_entities = {};
+	m_gravity = 0;
+	m_background = {};
+	m_height = m_width = 0;
 }
 
 World::~World()
 {
-    if (m_player)
-    {
-        delete m_player;
-        m_player = nullptr;
-    }
+	if (m_player)
+	{
+		delete m_player;
+		m_player = nullptr;
+	}
 
-    for (auto entity : m_entities)
-    {
-        delete entity;
-    }
-    m_entities.clear();
+	for (auto entity : m_entities)
+	{
+		delete entity;
+	}
+	m_entities.clear();
 }
 
 void World::HandleInput(Keyboard::KeyboardStateTracker* kbTracker) {
-    if (!m_player || !m_player->IsActive()) return;
-    Mario* mario = dynamic_cast<Mario*>(m_player);
-    if (!mario) return;
+	if (!m_player || !m_player->IsActive()) return;
+	Mario* mario = dynamic_cast<Mario*>(m_player);
+	if (!mario) return;
 
 	mario->HandleInput(kbTracker);
 }
 
 void World::Update(float dt) {
-    dt;
+	m_player->Update(dt);
+	for (auto e : m_entities) {
+		e->Update(dt);
+	}
 }
 
-void World::Render() {
-
+void World::Render(DirectX::SpriteBatch* spriteBatch) {
+	m_player->Render(spriteBatch);
+	for (auto e : m_entities) {
+		e->Render(spriteBatch);
+	}
 }
 
 void World::Reset() {
 
 }
 
-bool World::Load()
+void World::Load(SpriteSheet* spriteSheet)
 {
-    return false;
+	try {
+		std::ifstream worldFile(m_path);
+		if (!worldFile.is_open()) {
+			Log(__FUNCTION__, "Failed to open file: " + m_path);
+			return;
+		}
+		json data{};
+		worldFile >> data;
+
+		std::string p_animations = data["sprites"];
+		std::ifstream animsFile(p_animations);
+
+		if (!animsFile.is_open()) {
+			Log(__FUNCTION__, "Failed to open file: " + p_animations);
+			return;
+		}
+		json anim{};
+		animsFile >> anim;
+
+
+		m_width = data["width"];
+		m_height = data["height"];
+
+		json& c = data["background"];
+		m_background = { c["r"], c["b"], c["g"], c["a"] };
+
+		Entity* ent = nullptr;
+
+		for (const auto& e : data["entities"]) {
+			int type = e["type"];
+			switch (type) {
+			case ENT_TYPE_MARIO:
+				if (m_player) {
+					Log(__FUNCTION__, "Mario has already been created!");
+					break;
+				}
+				ent = new Mario(Vector2(e["x"], e["y"]), 0, 0, 0, spriteSheet);
+				m_player = (Mario*)ent;
+				Log(__FUNCTION__, "Mario has been created!");
+				break;
+			
+			
+			case ENT_TYPE_BRICK: 
+				break;
+			}
+
+			for (const auto& sequence : anim[type]["sprites"])  {
+                int animId = sequence.contains("id") ? sequence["id"].get<int>() : -1;  
+                if (animId == -1) continue;
+
+
+				std::vector<const wchar_t*> frameNames;
+
+				// Convert frame names from json array to wchar_t* vector
+				for (const auto& frame : anim["frames"]) {
+					// Convert string to wstring and store in a map for persistence
+					std::string frameName = frame;
+					static std::map<std::string, std::wstring> frameNameCache;
+
+					if (frameNameCache.find(frameName) == frameNameCache.end()) {
+						frameNameCache[frameName] = std::wstring(frameName.begin(), frameName.end());
+					}
+
+					// Use the cached wstring's c_str()
+					frameNames.push_back(frameNameCache[frameName].c_str());
+				}
+
+
+                bool loop = sequence.contains("loop") ? sequence["loop"].get<bool>() : false;
+				float timePerFrame = anim.contains("timePerFrame") ? anim["timePerFrame"].get<float>() : 0.1f;
+				bool useVelocityScaling = anim.contains("useVelocityScaling") ? anim["useVelocityScaling"].get<bool>() : false;
+				float minTimePerFrame = anim.contains("minTimePerFrame") ? anim["minTimePerFrame"].get<float>() : 0.05f;
+				float maxTimePerFrame = anim.contains("maxTimePerFrame") ? anim["maxTimePerFrame"].get<float>() : 0.2f;
+				float velocityScaleFactor = anim.contains("velocityScaleFactor") ? anim["velocityScaleFactor"].get<float>() : 1.0f;
+
+				ent->DefineAnimation(
+					animId,
+					frameNames,
+					loop,
+					timePerFrame,
+					useVelocityScaling,
+					minTimePerFrame,
+					maxTimePerFrame,
+					velocityScaleFactor);
+			}
+		}
+	}
+	catch (const std::exception& e) {
+		Log(__FUNCTION__, "Exception occurred: " + std::string(e.what()));
+	}
+
+	return;
 }
 
-bool World::Unload()
+void World::Unload()
 {
-    if (m_player)
-    {
-        delete m_player;
-        m_player = nullptr;
-    }
-    for (auto entity : m_entities)
-    {
-        delete entity;
-    }
+	if (m_player)
+	{
+		delete m_player;
+		m_player = nullptr;
+	}
+	for (auto entity : m_entities)
+	{
+		delete entity;
+	}
 	m_entities.clear();
-    m_gravity = 0;
+	m_gravity = 0;
 
-    m_name = "";
-    m_path = "";
+	m_name = "";
+	m_path = "";
 
-	return true;
+	return;
 }
 
-std::string World::GetName()
+XMVECTORF32 World::GetColor() const
 {
-    return m_name;
+	return m_background;
+}
+
+std::string World::GetName() const
+{
+	return m_name;
 }

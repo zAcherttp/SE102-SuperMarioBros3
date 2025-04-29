@@ -7,65 +7,42 @@
 #include <SpriteBatch.h>
 #include "SpriteSheet.h"
 
-struct AnimationSequence
-{
-    std::vector<const SpriteSheet::SpriteFrame*> frames{};
-    bool loop{};
-    float baseTimePerFrame{};
-    float minTimePerFrame{};
-    float maxTimePerFrame{};
-    bool useVelocityScaling{};
-    float velocityScaleFactor{};
+struct AnimationSequence {
+    std::vector<const SpriteSheet::SpriteFrame*> frames;
+    bool loop = true;                  
+    float baseTimePerFrame = 0.1f; 
+    float minTimePerFrame = 0.05f;
+    float maxTimePerFrame = 0.2f;         
+    bool useVelocityScaling = false;
+    float velocityScaleFactor = 1.0f;     
 };
 
-class Animator
-{
+class Animator {
 public:
+    Animator() = default;
 
-    Animator() noexcept :
-        mCurrentSequence(""),
-        mCurrentFrame(0),
-        mTotalElapsed(0.f),
-        mPaused(false),
-        mEffects(DirectX::SpriteEffects_None),
-        mDepth(0.f),
-        mRotation(0.f),
-        mScale(1.f, 1.f)
-    {
+    ~Animator() {
+        if (m_ownsSpriteSheet && m_spriteSheet) {
+            delete m_spriteSheet;
+        }
     }
 
-    void LoadSpriteSheet(ID3D11ShaderResourceView* texture, const wchar_t* sheetDataFile);
+    void SetSpriteSheet(SpriteSheet* spriteSheet);
 
-    void DefineAnimation(const std::string& name,
-        const std::vector<const wchar_t*>& frameNames,
-        bool loop = true,
-        float baseTimePerFrame = 0.1f,
-        bool useVelocityScaling = false,
-        float minTimePerFrame = 0.03f,
-        float maxTimePerFrame = 0.2f,
-        float velocityScaleFactor = 1.0f);
+    void DefineAnimation(const int& name, const std::vector<const wchar_t*>& frameNames,
+        bool loop = true, float baseTimePerFrame = 0.1f,
+        bool useVelocityScaling = false, float minTimePerFrame = 0.05f,
+        float maxTimePerFrame = 0.2f, float velocityScaleFactor = 1.0f);
 
-    // Set the current animation and optionally reset it
-    void SetAnimation(const std::string& name, bool reset = true);
-
-    // Update the animation based on elapsed time and current velocity
+    void SetAnimation(const int& id, bool reset = false);
     void Update(float elapsed, float velocity = 0.0f);
-
-    // Draw the current animation frame
     void Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& position);
 
-    // Direct access to sprite effects for flipping
     void SetFlipHorizontal(bool flip);
-
     void SetFlipVertical(bool flip);
-
     bool IsFlippedHorizontally() const;
-
     bool IsFlippedVertically() const;
-
-    // Allow direct access to sprite effects for advanced usage
     void SetSpriteEffects(DirectX::SpriteEffects effects);
-
     DirectX::SpriteEffects GetSpriteEffects() const;
 
     void SetDirection(int direction);
@@ -78,29 +55,29 @@ public:
     void SetScale(float scale);
     void SetScale(float scaleX, float scaleY);
     void SetRotation(float rotation);
+    void SetDepth(float depth) { m_depth = depth; }
+    float GetDepth() const { return m_depth; }
 
     // Status methods
     bool IsPaused() const;
-    std::string GetCurrentAnimation() const;
+    int GetCurrentAnimation() const;
     int GetCurrentFrame() const;
     bool IsFinished() const;
-
-    const std::map<std::string, AnimationSequence>& GetAnimations() const;
-
-    bool HasAnimation(const std::string& name) const;
-
+    const std::map<int, AnimationSequence>& GetAnimations() const;
+    bool HasAnimation(const int& id) const;
 
 private:
-    std::unique_ptr<SpriteSheet> mSpriteSheet;
-    std::map<std::string, AnimationSequence> mAnimations;
+    SpriteSheet* m_spriteSheet = nullptr;
+    bool m_ownsSpriteSheet = false;  
 
-    DirectX::FXMVECTOR mColor = DirectX::Colors::White;
-    DirectX::SpriteEffects mEffects;
-    DirectX::XMFLOAT2 mScale;
-    std::string mCurrentSequence;
-    int mCurrentFrame;
-    float mTotalElapsed;
-    bool mPaused;
-    float mDepth;
-    float mRotation;
+    std::map<int, AnimationSequence> m_animations;
+    int m_currentSequence = -1;
+    int m_currentFrame = 0;
+    float m_totalElapsed = 0.0f;
+    bool m_paused = false;
+
+    DirectX::SpriteEffects m_spriteEffects = DirectX::SpriteEffects_None;
+    DirectX::XMFLOAT2 m_scale = { 1.0f, 1.0f };
+    float m_rotation = 0.0f;
+    float m_depth = 0.0f;
 };

@@ -1,13 +1,23 @@
 {
   "width": 800,
   "height": 800,
-  "background": [0, 255, 0],
+  "background": {
+    "r": 0.392,
+    "b": 0.584,
+    "g": 0.929,
+    "a": 1
+  },
+  "sprites": "sprites.json",
   "entities": [
-    { "type": "mario", "x": 0, "y": 200 },
     {
-      "type": "brick",
-      "x": 0,
-      "y": 180,
+      "type": 0,
+      "x": 0.0,
+      "y": 200.0
+    },
+    {
+      "type": 5,
+      "x": 0.0,
+      "y": 180.0,
       "solid": true
     }
   ]

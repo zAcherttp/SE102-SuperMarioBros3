@@ -25,6 +25,7 @@ public:
 	virtual MarioMovementState* HandleInput(Mario* mario, DirectX::Keyboard::KeyboardStateTracker* kbStates) override = 0;
 	virtual void Update(Mario* mario, float dt) override = 0;
 	virtual void Enter(Mario* mario) override = 0;
+	virtual void Exit(Mario* mario) override = 0;
 };
 
 using KBState = DirectX::Keyboard;
@@ -35,7 +36,7 @@ public:
 	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
 	void Update(Mario* mario, float dt) override;
 	void Enter(Mario* mario) override;
-	void Exit() override;
+	void Exit(Mario* mario) override;
 };
 
 class MarioWalkState : public MarioMovementState {
@@ -44,7 +45,7 @@ public:
 	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
 	void Update(Mario* mario, float dt) override;
 	void Enter(Mario* mario) override;
-	void Exit() override;
+	void Exit(Mario* mario) override;
 };
 
 class MarioRunState : public MarioMovementState {
@@ -53,7 +54,7 @@ public:
 	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
 	void Update(Mario* mario, float dt) override;
 	void Enter(Mario* mario) override;
-	void Exit() override;
+	void Exit(Mario* mario) override;
 };
 
 class MarioSkidState : public MarioMovementState {
@@ -62,7 +63,7 @@ public:
 	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
 	void Update(Mario* mario, float dt) override;
 	void Enter(Mario* mario) override;
-	void Exit() override;
+	void Exit(Mario* mario) override;
 };
 
 class MarioJumpState : public MarioMovementState {
@@ -71,7 +72,7 @@ public:
 	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
 	void Update(Mario* mario, float dt) override;
 	void Enter(Mario* mario) override;
-	void Exit() override;
+	void Exit(Mario* mario) override;
 };	
 
 class MarioSitState : public MarioMovementState {
@@ -80,5 +81,5 @@ public:
 	MarioMovementState* HandleInput(Mario* mario, KBState::KeyboardStateTracker* kbState) override;
 	void Update(Mario* mario, float dt) override;
 	void Enter(Mario* mario) override;
-	void Exit() override;
+	void Exit(Mario* mario) override;
 };

@@ -7,6 +7,6 @@ public:
     virtual ~State() = default;
 
     virtual void Enter(EntityType* entity) = 0;
-    virtual void Exit() = 0;
+    virtual void Exit(EntityType* entity) = 0;
     virtual void Update(EntityType* entity, float dt) = 0;
 };

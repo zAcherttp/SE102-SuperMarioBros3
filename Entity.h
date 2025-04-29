@@ -2,56 +2,69 @@
 #include "State.h"
 #include "Animator.h"
 #include "CollisionEvent.h"
+#include "Game.h"
 
 class Entity
 {
 public:
-	Entity(DirectX::SimpleMath::Vector2 pos)
-		: m_pos(pos) {
-	}
-	Entity(DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMath::Vector2 size)
-		: m_pos(pos), m_size(size) {
-	}
+	Entity(DirectX::SimpleMath::Vector2 pos, SpriteSheet* spriteSheet);
+	Entity(DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMath::Vector2 size, SpriteSheet* spriteSheet);
+	
 	virtual ~Entity() = default;
 
 	virtual void Update(float dt) = 0;
-	virtual void Render() = 0;
+	virtual void Render(DirectX::SpriteBatch* spriteBatch) = 0;
 
+	DirectX::SimpleMath::Vector2 GetSize() const;
+	void SetSize(const DirectX::SimpleMath::Vector2& size);
 
-	DirectX::SimpleMath::Vector2 GetSize() const { return m_size; }
-	void SetSize(const DirectX::SimpleMath::Vector2& size) { m_size = size; }
+	DirectX::SimpleMath::Vector2 GetPosition() const;
+	void SetPosition(const DirectX::SimpleMath::Vector2& pos);
 
-	DirectX::SimpleMath::Vector2 GetPosition() const { return m_pos; }
-	void SetPosition(const DirectX::SimpleMath::Vector2& pos) { m_pos = pos; }
+	DirectX::SimpleMath::Vector2 GetVelocity() const;
+	void SetVelocity(const DirectX::SimpleMath::Vector2& vel);
 
-	DirectX::SimpleMath::Vector2 GetVelocity() const { return m_vel; }
-	void SetVelocity(const DirectX::SimpleMath::Vector2& vel) { m_vel = vel; }
+	DirectX::SimpleMath::Vector2 GetAcceleration() const;
+	void SetAcceleration(const DirectX::SimpleMath::Vector2& accel);
 
-	DirectX::SimpleMath::Vector2 GetAcceleration() const { return m_accel; }
-	void SetAcceleration(const DirectX::SimpleMath::Vector2& accel) { m_accel = accel; }
+	bool IsActive() const;
+	bool IsCollidable() const;
 
-	bool IsActive() const { return m_isActive; }
-	bool IsCollidable() const { return m_isCollidable; }
+	void DefineAnimation(int animId, const std::vector<const wchar_t*>& frameNames,
+		bool loop = true, float timePerFrame = 0.1f,
+		bool useVelocity = false, float minTime = 0.05f,
+		float maxTime = 0.2f, float velocityFactor = 1.0f);
 
-	virtual void OnCollision(const CollisionEvent& event) {
-		event;
-	}
+	void SetAnimation(int animId, bool reset = false);
 
-	virtual bool IsGrounded() const {
-		return false;
-	}
+	void SetDirection(int direction);
+
+	int GetAnimId() const;
+	void SetAnimId(const int& id);
+
+	Animator* GetAnimator();
+
+	bool GetIsVisible() const;
+	void SetIsVisible(const bool& isVis);
+
+	virtual void OnCollision(const CollisionEvent& event);
+
+	virtual bool IsGrounded() const;
+
 protected:
-	/// <summary>
-	/// Smart pointer for entity animator.
-	/// </summary>
-	std::unique_ptr<Animator> m_animator;
 
 	DirectX::SimpleMath::Vector2 m_size;
 	DirectX::SimpleMath::Vector2 m_pos;
 	DirectX::SimpleMath::Vector2 m_vel;
 	DirectX::SimpleMath::Vector2 m_accel;
 
+	//physics
 	bool m_isActive = true;
 	bool m_isCollidable = true;
+
+	//sprite
+	int m_animId = 0;
+	std::unique_ptr<Animator> m_animator;
+	bool m_visible = true;
 };
 

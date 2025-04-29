@@ -15,9 +15,11 @@ using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
 using Microsoft::WRL::ComPtr;
+Game* Game::s_instance = nullptr;
 
 Game::Game() noexcept(false)
 {
+	s_instance = this;
 	m_deviceResources = std::make_unique<DX::DeviceResources>(DXGI_FORMAT_B8G8R8A8_UNORM,
 		DXGI_FORMAT_UNKNOWN);
 	// TODO: Provide parameters for swapchain format, depth/stencil format, and backbuffer count.
@@ -27,9 +29,11 @@ Game::Game() noexcept(false)
 	m_gameView = {};
 	m_gameViewRect = {};
 	m_gameHeight = m_gameWidth = m_wndHeight = m_wndWidth = 0;
-	m_currentWorldId = m_nextWorldId = 0;
+	m_currentWorldId = m_nextWorldId = -1;
 	m_gameTitle = L"";
 }
+
+Game* Game::GetInstance() { return s_instance; }
 
 // Initialize the Direct3D resources required to run.
 void Game::Initialize(HWND window, int width, int height) {
@@ -78,6 +82,7 @@ void Game::Update(DX::StepTimer const& timer) {
 		m_worlds[m_currentWorldId]->Update(elapsedTime);
 	}
 
+	if (m_nextWorldId != m_currentWorldId) SwitchWorld();
 }
 #pragma endregion
 
@@ -130,7 +135,7 @@ void Game::Render() {
 		context->RSSetViewports(1, &m_gameView);
 
 		context->ClearRenderTargetView(m_gameRenderTargetView.Get(),
-			Colors::CornflowerBlue);
+			GetCurrentWorld()->GetColor());
 
 		// Render the game world to the render target
 		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
@@ -147,6 +152,8 @@ void Game::Render() {
 			m_spriteSheet->Draw(m_spriteBatch.get(), *frame1,
 				Vector2(m_gameWidth / 2.f, m_gameHeight / 2.f + 32.f));
 		// endblock
+
+		GetCurrentWorld()->Render(m_spriteBatch.get());
 
 		m_spriteBatch->End();
 
@@ -176,7 +183,7 @@ void Game::Render() {
 
 		m_primitiveBatch->Begin();
 
-		 DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), Vector2(m_gameWidth
+		DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), Vector2(m_gameWidth
 		 / 2.f, m_gameHeight / 2.f), Vector2(16, 16), Colors::Lime);
 		DebugOverlay::DrawCollisionBox(m_primitiveBatch.get(), { 0, 0, m_gameWidth, m_gameHeight }, Colors::Lime);
 		m_primitiveBatch->End();
@@ -271,6 +278,7 @@ void Game::GetDefaultGameTitle(LPCWSTR& title) const noexcept {
 
 #pragma endregion
 
+#pragma region Game Loading
 World* Game::GetCurrentWorld()
 {
 	return m_worlds[m_currentWorldId];
@@ -289,6 +297,7 @@ bool Game::LoadGame(const std::string& filePath)
 		gameFile >> gameData;
 
 		LoadGameConfig(gameData["config"]);
+		LoadWorldConfig(gameData["worlds"]);
 	}
 	catch (const std::exception& e) {
 		Log(__FUNCTION__, "Exception occurred: " + std::string(e.what()));
@@ -304,7 +313,37 @@ void Game::LoadGameConfig(const json& config)
 	m_wndWidth = config["window"]["width"];
 	m_wndHeight = config["window"]["height"];
 
+	m_nextWorldId = config["game"]["world"]["startWorldId"];
+
+	m_spritePath = config["game"]["sprite"]["path"];
+	m_spriteDataPath = config["game"]["sprite"]["data"];
+
+	std::string title(config["game"]["title"]);
+	std::wstring wstr(title.begin(), title.end());
+
+	// Allocate new memory for m_gameTitle
+	m_gameTitle = new wchar_t[wstr.size() + 1]; // +1 for null terminator
+	wcscpy_s(const_cast<wchar_t*>(m_gameTitle), wstr.size() + 1, wstr.c_str());
+
 	Log(__FUNCTION__, "Window size set to: " + std::to_string(m_wndWidth) + "x" + std::to_string(m_wndHeight));
+	Log(__FUNCTION__, "Window title set to: " + title);
+	Log(__FUNCTION__, "Start world id: " + std::to_string(m_nextWorldId));
+}
+
+void Game::LoadWorldConfig(const json& config) {
+	if (!config.is_array()) {
+		throw std::runtime_error("Worlds config must be an array");
+	}
+
+	for (const auto& w : config) {
+
+		int id = w["id"].get<int>();
+		std::string path = w["path"].get<std::string>();
+		std::string name = w["name"].get<std::string>();
+
+		m_worlds[id] = new World(path, name);
+		Log(__FUNCTION__, "World loaded: " + name);
+	}
 }
 
 void Game::SetNextWorldId(int id)
@@ -312,21 +351,32 @@ void Game::SetNextWorldId(int id)
 	m_nextWorldId = id;
 }
 
+SpriteSheet* Game::GetSpriteSheet() const
+{
+	return m_spriteSheet.get();
+}
+
+SpriteBatch* Game::GetSpriteBatch() const
+{
+	return m_spriteBatch.get();
+}
+
 void Game::SwitchWorld()
 {
-	if (m_nextWorldId < 0 || m_nextWorldId == m_currentWorldId) return;
-
+	if (m_nextWorldId < 0) return;
 	if (m_worlds[m_currentWorldId] != NULL)
 		m_worlds[m_currentWorldId]->Unload();
-	m_currentWorldId = m_nextWorldId;
+		m_currentWorldId = m_nextWorldId;
 
-	//TODO: clean up sprites/anims 
+	Log(__FUNCTION__, "Loading into world id: " + std::to_string(m_currentWorldId));
+	//TODO: clean up sprites/anims
 
-	World* world = m_worlds[m_nextWorldId];
+	World* world = m_worlds[m_currentWorldId];
 	Log(__FUNCTION__, "Loading into world: " + world->GetName());
 
-	world->Load();
+	world->Load(m_spriteSheet.get());
 }
+#pragma endregion
 
 #pragma region Direct3D Resources
 // These are the resources that depend on the device.
