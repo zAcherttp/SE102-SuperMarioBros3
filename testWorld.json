@@ -7,7 +7,7 @@
     "g": 0.929,
     "a": 1
   },
-  "sprites": "sprites.json",
+  "spritesData": "sprites.json",
   "entities": [
     {
       "type": 0,

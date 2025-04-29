@@ -29,13 +29,13 @@ void Mario::HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbState) {
 
 void Mario::ItsAMe()
 {
-	Log(LOG_INFO, "It's A Me, Mario");
 	// small temporary, powerup states will set these later on
 	this->SetSize(Vector2(16, 16));
 	this->SetAnimId(ID_ANIM_MARIO_SMALL);
 	this->m_movementSM = new MarioIdleState(1);
 	this->m_movementSM->Enter(this);
-	Log(LOG_INFO, "Mario animId set to:" + std::to_string(this->GetAnimId()));
+
+	Log(LOG_INFO, "It's A Me, Mario");
 }
 
 void Mario::Update(float dt)

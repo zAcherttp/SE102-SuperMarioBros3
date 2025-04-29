@@ -32,5 +32,12 @@ public:
 	std::string GetName() const;
 
 	void HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbTracker);
+
+	//Modules of the load function
+	json LoadJsonFile(const std::string& filePath);
+	void LoadWorldConfig(const json& data);
+	void LoadEntities(const json& data, const json& anim, SpriteSheet* spriteSheet);
+	Entity* CreateEntity(int entityType, const json& entityData, SpriteSheet* spriteSheet);
+	void LoadAnimationsForEntity(Entity* entity, int entityType, const json& animData);
 };
 
