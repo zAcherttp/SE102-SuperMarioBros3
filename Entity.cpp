@@ -1,6 +1,7 @@
+#pragma once
 #include "pch.h"
 #include "Entity.h"
-
+#include "Debug.h"
 
 
 Entity::Entity(DirectX::SimpleMath::Vector2 position, SpriteSheet* spriteSheet) {

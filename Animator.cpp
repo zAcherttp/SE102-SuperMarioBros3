@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Debug.h"
 #include "Animator.h"
 
 void Animator::SetSpriteSheet(SpriteSheet* spriteSheet)
@@ -19,15 +20,24 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 	// Load all frames from the sprite sheet
 	for (auto frameName : frameNames)
 	{
+		//std::wstring name = std::wstring(frameName);
+		//std::string str = std::string(name.begin(), name.end());
+		//Log(__FUNCTION__, "Finding frame: " + str); // Updated to use 'str' instead of 'name.c_str()'
 		auto frame = m_spriteSheet->Find(frameName);
 		if (frame)
 		{
+			//Log(__FUNCTION__, "Found frame:" + str);
 			sequence.frames.push_back(frame);
+		} else {
+			//Log(__FUNCTION__, "Frame not found");
 		}
 	}
 
 	// Save the animation
 	m_animations[name] = sequence;
+
+	Log(__FUNCTION__, "Loaded animation: " + std::to_string(name));
+	
 }
 
 // Set the current animation and optionally reset it
@@ -37,15 +47,18 @@ void Animator::SetAnimation(const int& id, bool reset)
 	if (m_currentSequence == id && !reset)
 		return;
 
+	// Find the animation in the unordered map
 	auto it = m_animations.find(id);
 	if (it != m_animations.end())
 	{
 		m_currentSequence = id;
+		Log(__FUNCTION__, "Animation set: " + std::to_string(id));
 
 		if (reset)
 		{
 			m_currentFrame = 0;
 			m_totalElapsed = 0.f;
+			m_paused = false;
 		}
 	}
 }
@@ -104,17 +117,22 @@ void Animator::Update(float elapsed, float velocity)
 void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& position)
 {
 	if (m_currentSequence < 0 || !m_spriteSheet)
-		return;
-
+	return;
+	
 	auto it = m_animations.find(m_currentSequence);
+
+	if(it->second.frames.empty())
+	//Log(__FUNCTION__, "Animation frames empty for: " + std::to_string(m_currentSequence));
+
 	if (it == m_animations.end() || it->second.frames.empty())
-		return;
-
+	return;
+	
 	const AnimationSequence& sequence = it->second;
-
+	
+	//Log(__FUNCTION__, "drawing current frame ");
 	if (m_currentFrame < 0 || m_currentFrame >= sequence.frames.size())
-		return;
-
+	return;
+	
 	// Get the current frame to draw
 	const SpriteSheet::SpriteFrame* frame = sequence.frames[m_currentFrame];
 
@@ -210,7 +228,7 @@ bool Animator::IsFinished() const
 	return !it->second.loop && m_currentFrame == it->second.frames.size() - 1;
 }
 
-const std::map<int, AnimationSequence>& Animator::GetAnimations() const
+const std::unordered_map<int, AnimationSequence>& Animator::GetAnimations() const
 {
 	return m_animations;
 }

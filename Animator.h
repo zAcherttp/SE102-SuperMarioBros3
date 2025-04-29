@@ -63,14 +63,14 @@ public:
     int GetCurrentAnimation() const;
     int GetCurrentFrame() const;
     bool IsFinished() const;
-    const std::map<int, AnimationSequence>& GetAnimations() const;
+    const std::unordered_map<int, AnimationSequence>& GetAnimations() const;
     bool HasAnimation(const int& id) const;
 
 private:
     SpriteSheet* m_spriteSheet = nullptr;
     bool m_ownsSpriteSheet = false;  
 
-    std::map<int, AnimationSequence> m_animations;
+    std::unordered_map<int, AnimationSequence> m_animations;
     int m_currentSequence = -1;
     int m_currentFrame = 0;
     float m_totalElapsed = 0.0f;

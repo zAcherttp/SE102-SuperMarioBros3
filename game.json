@@ -7,9 +7,10 @@
       "world": {
         "startWorldId": 1
       },
-      "sprite": {
+      "sprites": {
         "path": "sprites.png",
-        "data": "sprites.txt"
+        "data": "sprites.txt",
+        "font": "textures/mario.spritefont"
       }
     },
     "window": {

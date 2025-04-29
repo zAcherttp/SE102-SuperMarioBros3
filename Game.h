@@ -101,6 +101,7 @@ private:
     
     std::unique_ptr<DirectX::SpriteFont> m_font;
     DirectX::SimpleMath::Vector2 m_fontPos;
+    std::wstring m_spriteFontPath;
 
 	std::unique_ptr<SpriteSheet> m_spriteSheet;
     std::string m_spritePath;

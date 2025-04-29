@@ -98,14 +98,12 @@ void World::Load(SpriteSheet* spriteSheet)
 			case ENT_TYPE_MARIO:
 				if (m_player) {
 					Log(__FUNCTION__, "Mario has already been created!");
-					break;
+					break;	
 				}
 				ent = new Mario(Vector2(e["x"], e["y"]), 0, 0, 0, spriteSheet);
 				m_player = (Mario*)ent;
 				Log(__FUNCTION__, "Mario has been created!");
 				break;
-			
-			
 			case ENT_TYPE_BRICK: 
 				break;
 			}
@@ -114,11 +112,12 @@ void World::Load(SpriteSheet* spriteSheet)
                 int animId = sequence.contains("id") ? sequence["id"].get<int>() : -1;  
                 if (animId == -1) continue;
 
+				//Log(__FUNCTION__, "Entity ID: " + std::to_string(type) + " Animation ID: " + std::to_string(animId) + " Frames: " + std::to_string(sequence["frames"].size()));
 
 				std::vector<const wchar_t*> frameNames;
 
 				// Convert frame names from json array to wchar_t* vector
-				for (const auto& frame : anim["frames"]) {
+				for (const auto& frame : sequence["frames"]) {
 					// Convert string to wstring and store in a map for persistence
 					std::string frameName = frame;
 					static std::map<std::string, std::wstring> frameNameCache;
@@ -130,14 +129,19 @@ void World::Load(SpriteSheet* spriteSheet)
 					// Use the cached wstring's c_str()
 					frameNames.push_back(frameNameCache[frameName].c_str());
 				}
+				bool loop = sequence.contains("loop") ? sequence["loop"].get<bool>() : false;
+				float timePerFrame = sequence.contains("timePerFrame") ? sequence["timePerFrame"].get<float>() : 0.1f;
+				bool useVelocityScaling = sequence.contains("useVelocityScaling") ? sequence["useVelocityScaling"].get<bool>() : false;
+				float minTimePerFrame = sequence.contains("minTimePerFrame") ? sequence["minTimePerFrame"].get<float>() : 0.05f;
+				float maxTimePerFrame = sequence.contains("maxTimePerFrame") ? sequence["maxTimePerFrame"].get<float>() : 0.2f;				
+				float velocityScaleFactor = sequence.contains("velocityScaleFactor") ? sequence["velocityScaleFactor"].get<float>() : 1.0f;
 
-
-                bool loop = sequence.contains("loop") ? sequence["loop"].get<bool>() : false;
-				float timePerFrame = anim.contains("timePerFrame") ? anim["timePerFrame"].get<float>() : 0.1f;
-				bool useVelocityScaling = anim.contains("useVelocityScaling") ? anim["useVelocityScaling"].get<bool>() : false;
-				float minTimePerFrame = anim.contains("minTimePerFrame") ? anim["minTimePerFrame"].get<float>() : 0.05f;
-				float maxTimePerFrame = anim.contains("maxTimePerFrame") ? anim["maxTimePerFrame"].get<float>() : 0.2f;
-				float velocityScaleFactor = anim.contains("velocityScaleFactor") ? anim["velocityScaleFactor"].get<float>() : 1.0f;
+				/*Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - timePerFrame: " + (sequence.contains("timePerFrame") ? "found" : "using default"));
+				Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - loop: " + (sequence.contains("loop") ? "found" : "using default"));
+				Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - useVelocityScaling: " + (sequence.contains("useVelocityScaling") ? "found" : "using default"));
+				Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - minTimePerFrame: " + (sequence.contains("minTimePerFrame") ? "found" : "using default"));
+				Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - maxTimePerFrame: " + (sequence.contains("maxTimePerFrame") ? "found" : "using default"));
+				Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - velocityScaleFactor: " + (sequence.contains("velocityScaleFactor") ? "found" : "using default"));*/
 
 				ent->DefineAnimation(
 					animId,

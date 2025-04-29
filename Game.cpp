@@ -141,18 +141,6 @@ void Game::Render() {
 		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
 			m_states->PointClamp());
 
-		// block TODO: move this block into World rendering
-		auto frame = m_spriteSheet->Find(L"walk2");
-		if (frame != 0)
-			m_spriteSheet->Draw(m_spriteBatch.get(), *frame,
-				Vector2(m_gameWidth / 2.f, m_gameHeight / 2.f));
-
-		auto frame1 = m_spriteSheet->Find(L"jump");
-		if (frame1 != 0)
-			m_spriteSheet->Draw(m_spriteBatch.get(), *frame1,
-				Vector2(m_gameWidth / 2.f, m_gameHeight / 2.f + 32.f));
-		// endblock
-
 		GetCurrentWorld()->Render(m_spriteBatch.get());
 
 		m_spriteBatch->End();
@@ -312,22 +300,23 @@ void Game::LoadGameConfig(const json& config)
 
 	m_wndWidth = config["window"]["width"];
 	m_wndHeight = config["window"]["height"];
+	Log(__FUNCTION__, "Window size set to: " + std::to_string(m_wndWidth) + "x" + std::to_string(m_wndHeight));
 
 	m_nextWorldId = config["game"]["world"]["startWorldId"];
+	Log(__FUNCTION__, "Start world id: " + std::to_string(m_nextWorldId));
 
-	m_spritePath = config["game"]["sprite"]["path"];
-	m_spriteDataPath = config["game"]["sprite"]["data"];
-
+	m_spritePath = config["game"]["sprites"]["path"];
+	m_spriteDataPath = config["game"]["sprites"]["data"];
+	std::string fontPath = config["game"]["sprites"]["font"];
+	m_spriteFontPath = std::wstring(fontPath.begin(), fontPath.end());
+	
 	std::string title(config["game"]["title"]);
 	std::wstring wstr(title.begin(), title.end());
-
+	
 	// Allocate new memory for m_gameTitle
 	m_gameTitle = new wchar_t[wstr.size() + 1]; // +1 for null terminator
 	wcscpy_s(const_cast<wchar_t*>(m_gameTitle), wstr.size() + 1, wstr.c_str());
-
-	Log(__FUNCTION__, "Window size set to: " + std::to_string(m_wndWidth) + "x" + std::to_string(m_wndHeight));
 	Log(__FUNCTION__, "Window title set to: " + title);
-	Log(__FUNCTION__, "Start world id: " + std::to_string(m_nextWorldId));
 }
 
 void Game::LoadWorldConfig(const json& config) {
@@ -424,7 +413,7 @@ void Game::CreateDeviceDependentResources() {
 	DX::ThrowIfFailed(CreateInputLayoutFromEffect<VertexPositionColor>(
 		device, m_effect.get(), m_inputLayout.ReleaseAndGetAddressOf()));
 
-	m_font = std::make_unique<SpriteFont>(device, L"textures/mario.spritefont");
+	m_font = std::make_unique<SpriteFont>(device, m_spriteFontPath.c_str());
 	m_spriteSheet = std::make_unique<SpriteSheet>();
 
 	// uncomment to see the defined symbols, might not cover all symbols
