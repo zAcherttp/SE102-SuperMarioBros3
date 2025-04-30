@@ -109,8 +109,14 @@ json World::LoadJsonFile(const std::string& filePath)
 		Log(__FUNCTION__, "Failed to open file: " + filePath);
 		return json{};
 	}
+	if (file.fail()) {
+		Log(__FUNCTION__, "Failed to parse JSON from file: " + filePath);
+		file.close();
+		return json{};
+	}
 	json data{};
 	file >> data;
+	file.close();
 	return data;
 }
 

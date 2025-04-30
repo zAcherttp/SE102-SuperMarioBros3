@@ -58,11 +58,11 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         wcex.style = CS_HREDRAW | CS_VREDRAW;
         wcex.lpfnWndProc = WndProc;
         wcex.hInstance = hInstance;
-        wcex.hIcon = LoadIconW(hInstance, L"IDI_ICON");
+        wcex.hIcon = LoadIconW(hInstance, MAKEINTRESOURCE(101));
         wcex.hCursor = LoadCursorW(nullptr, IDC_ARROW);
         wcex.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
         wcex.lpszClassName = L"SMB3WindowClass";
-        wcex.hIconSm = LoadIconW(wcex.hInstance, L"IDI_ICON");
+        wcex.hIconSm = LoadIconW(wcex.hInstance, MAKEINTRESOURCE(101));
         if (!RegisterClassExW(&wcex))
             return 1;
 

@@ -44,6 +44,7 @@
     <ClInclude Include="MarioMovementStates.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="AssetIDs.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -75,9 +76,6 @@
     <ClCompile Include="MarioMovementStates.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="AssetIDs.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">
@@ -113,6 +111,9 @@
     <Image Include="textures\tiles.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="SMB3.ico">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest">
@@ -141,5 +142,8 @@
     <Text Include="textures\readme.txt">
       <Filter>Assets</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
   </ItemGroup>
 </Project>
