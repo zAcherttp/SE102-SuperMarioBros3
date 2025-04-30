@@ -74,6 +74,26 @@ bool Entity::GetIsVisible() const { return m_visible; }
 
 void Entity::SetIsVisible(const bool& isVis) { m_visible = isVis; }
 
+bool Entity::GetIsActive() const
+{
+	return m_isActive;
+}
+
+void Entity::SetIsActive(const bool& IsActive)
+{
+	m_isActive = IsActive;
+}
+
+bool Entity::GetIsCollidable() const
+{
+	return m_isCollidable;
+}
+
+void Entity::SetIsCollidable(const bool& isCollidable)
+{
+	m_isCollidable = isCollidable;
+}
+
 void Entity::OnCollision(const CollisionEvent& event) {
 	event;
 }

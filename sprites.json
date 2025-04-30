@@ -3,13 +3,13 @@
     "type": 0,
     "sprites": [
       {
-        "id": 10011,
+        "id": 111,
         "name": "mario_small_idle",
         "frames": [ "small_idle" ],
         "loop": false
       },
       {
-        "id": 10021,
+        "id": 121,
         "name": "mario_small_walk",
         "frames": [ "small_idle", "small_walk" ],
         "loop": true,
@@ -20,11 +20,14 @@
         "velocityScaleFactor": 1.0
       },
       {
-        "id": 10051,
+        "id": 151,
         "name": "mario_small_jump",
         "frames": [ "small_jump" ],
         "loop": false
       }
     ]
+  },
+  {
+    "type": 5
   }
 ]

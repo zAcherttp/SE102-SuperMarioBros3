@@ -45,6 +45,8 @@
     <ClInclude Include="Debug.h" />
     <ClInclude Include="AssetIDs.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Block.h" />
+    <ClInclude Include="Ground.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -76,6 +78,8 @@
     <ClCompile Include="MarioMovementStates.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="AssetIDs.cpp" />
+    <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Ground.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">

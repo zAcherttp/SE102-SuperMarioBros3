@@ -47,6 +47,12 @@ public:
 	bool GetIsVisible() const;
 	void SetIsVisible(const bool& isVis);
 
+	bool GetIsActive() const;
+	void SetIsActive(const bool& IsActive);
+
+	bool GetIsCollidable() const;
+	void SetIsCollidable(const bool& isCollidable);
+
 	virtual void OnCollision(const CollisionEvent& event);
 
 	virtual bool IsGrounded() const;

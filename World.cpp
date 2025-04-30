@@ -146,7 +146,7 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 	Vector2 position(data["x"], data["y"]);
 
 	switch (type) {
-	case ENT_TYPE_MARIO:
+	case ID_ENT_MARIO:
 		if (m_player) {
 			Log(__FUNCTION__, "Mario has already been created!");
 			return nullptr;
@@ -155,7 +155,7 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 		m_player = (Mario*)entity;
 		Log(__FUNCTION__, "Mario has been created!");
 		break;
-	case ENT_TYPE_BRICK:
+	case ID_ENT_BRICK:
 		break;
 	default:
 		Log(__FUNCTION__, "Unknown entity type: " + std::to_string(type));
@@ -167,11 +167,17 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 
 void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 {
-	if (!anim[type].contains("type") || !anim[type].contains("sprites")) {
+	auto typeIt = std::find_if(anim.begin(), anim.end(),
+		[type](const json& item) {
+			return item.contains("type") && item["type"] == type;
+		});
+
+	if (typeIt == anim.end() || !typeIt->contains("sprites")) {
+		Log(__FUNCTION__, "No animation data found for entity type: " + std::to_string(type));
 		return;
 	}
 
-	for (const auto& sequence : anim[type]["sprites"]) {
+	for (const auto& sequence : (*typeIt)["sprites"]) {
 		int animId = sequence.contains("id") ? sequence["id"].get<int>() : -1;
 		if (animId == -1) continue;
 
