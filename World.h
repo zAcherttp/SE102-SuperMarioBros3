@@ -31,7 +31,7 @@ public:
 	DirectX::XMVECTORF32 GetBackgroundColor() const;
 	std::string GetName() const;
 
-	void HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbTracker);
+	void HandleInput(DirectX::Keyboard::State* kbState, DirectX::Keyboard::KeyboardStateTracker* kbsTracker);
 
 	//Modules of the load function
 	json LoadJsonFile(const std::string& filePath);

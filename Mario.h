@@ -16,7 +16,7 @@ public:
 
 	void Update(float dt) override;
 	void Render(DirectX::SpriteBatch* spriteBatch) override;
-	void HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbState);
+	void HandleInput(DirectX::Keyboard::State* kbState, DirectX::Keyboard::KeyboardStateTracker* kbsTracker);
 
 	bool IsGrounded() const override;
 

@@ -47,6 +47,7 @@ void Game::Initialize(HWND window, int width, int height) {
 	CreateWindowSizeDependentResources();
 
 	m_keyboard = std::make_unique<Keyboard>();
+	m_keys = std::make_unique<Keyboard::KeyboardStateTracker>();
 
 	m_gameView.TopLeftX = 0.0f;
 	m_gameView.TopLeftY = 0.0f;
@@ -56,8 +57,8 @@ void Game::Initialize(HWND window, int width, int height) {
 	m_gameView.MaxDepth = 1.0f;
 
 	// uncomment to use the fixed timestep
-	/*m_timer.SetFixedTimeStep(true);
-	m_timer.SetTargetElapsedSeconds(1.0 / 60);*/
+	//m_timer.SetFixedTimeStep(true);
+	//m_timer.SetTargetElapsedSeconds(1.0 / 60);
 }
 
 #pragma region Frame Update
@@ -87,20 +88,20 @@ void Game::Update(DX::StepTimer const& timer) {
 #pragma endregion
 
 void Game::HandleInput() {
-	auto kb = m_keyboard->GetState();
-	m_keys.Update(kb);
-	DebugOverlay::UpdateInput(&kb);
-	if (m_keys.IsKeyPressed(Keyboard::Escape)) {
+	auto kbs = m_keyboard->GetState();
+	m_keys->Update(kbs);
+	DebugOverlay::UpdateInput(&kbs);
+	if (m_keys->IsKeyPressed(Keyboard::Escape)) {
 		ExitGame();
 	}
-	if (m_keys.IsKeyPressed(Keyboard::F3)) {
+	if (m_keys->IsKeyPressed(Keyboard::F3)) {
 		DebugOverlay::ToggleFPSCounter();
 	}
-	if (m_keys.IsKeyPressed(Keyboard::F4)) {
+	if (m_keys->IsKeyPressed(Keyboard::F4)) {
 		DebugOverlay::ToggleCollisionBox();
 	}
 	if (m_worlds[m_currentWorldId]) {
-		m_worlds[m_currentWorldId]->HandleInput(&m_keys);
+		m_worlds[m_currentWorldId]->HandleInput(&kbs, m_keys.get());
 	}
 }
 

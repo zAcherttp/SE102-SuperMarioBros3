@@ -49,7 +49,7 @@ Vector2 Entity::GetPosition() const
 
 void Entity::SetPosition(const Vector2& pos)
 {
-	m_collisionComponent->SetSize(pos);
+	m_collisionComponent->SetPosition(pos);
 }
 
 Vector2 Entity::GetVelocity() const
@@ -82,7 +82,7 @@ void Entity::SetAnimation(int animId, bool reset) {
 
 void Entity::SetDirection(int direction) {
 	// Direction: -1 = left, 1 = right
-	m_animator->SetFlipHorizontal(direction < 0);
+	m_animator->SetFlipHorizontal(direction > 0);
 }
 
 int Entity::GetAnimId() const {

@@ -108,7 +108,7 @@ private:
     std::string m_spriteDataPath;
 
     std::unique_ptr<DirectX::Keyboard> m_keyboard;
-    DirectX::Keyboard::KeyboardStateTracker m_keys;
+    std::unique_ptr<DirectX::Keyboard::KeyboardStateTracker> m_keys;
 
     DirectX::SimpleMath::Vector2 m_screenPos;
     DirectX::SimpleMath::Vector2 m_origin;

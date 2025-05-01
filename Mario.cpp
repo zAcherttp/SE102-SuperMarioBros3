@@ -5,6 +5,7 @@
 #include "Debug.h"
 
 using namespace DirectX::SimpleMath;
+using Keyboard = DirectX::Keyboard;
 
 Mario::Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spriteSheet)
 	: Entity(position, spriteSheet), m_lives(lives), m_score(score), m_coins(coins)
@@ -12,10 +13,10 @@ Mario::Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spr
 	this->m_movementSM = nullptr;
 }
 
-void Mario::HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbState) {
+void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker* kbsTracker) {
 	if (!m_movementSM) return;
 
-	MarioMovementState* mState = m_movementSM->HandleInput(this, kbState);
+	MarioMovementState* mState = m_movementSM->HandleInput(this, kbState, kbsTracker);
 	/*m_powerupSM->HandleInput(kbState);*/
 	if (mState != nullptr) {
 		m_movementSM->Exit(this);

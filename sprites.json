@@ -15,9 +15,9 @@
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
-        "minTimePerFrame": 0.01,
+        "minTimePerFrame": 0.05,
         "maxTimePerFrame": 0.2,
-        "velocityScaleFactor": 1.0
+        "velocityScaleFactor": 0.02
       },
       {
         "id": 151,

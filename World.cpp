@@ -36,12 +36,12 @@ World::~World()
 	m_entities.clear();
 }
 
-void World::HandleInput(Keyboard::KeyboardStateTracker* kbTracker) {
+void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker* kbsTracker) {
 	if (!m_player || !m_player->IsActive()) return;
 	Mario* mario = dynamic_cast<Mario*>(m_player);
 	if (!mario) return;
 
-	mario->HandleInput(kbTracker);
+	mario->HandleInput(kbState, kbsTracker);
 }
 
 void World::Update(float dt) {

@@ -122,7 +122,9 @@ void DebugOverlay::DrawBoundingBox(PrimitiveBatch<VertexPositionColor>* primitiv
 	}
 	world->GetPlayer()->GetCollisionComponent()->RenderDebug(primitiveBatch, color);
 	Vector2 pos = world->GetPlayer()->GetPosition();
+	Vector2 vel = world->GetPlayer()->GetVelocity();
 	//DrawLine(primitiveBatch, Vector2(pos.x, pos.y - 10), Vector2(pos.x, pos.y + 10), color);
+	DrawLine(primitiveBatch, pos, pos + vel, Colors::Yellow);
 }
 
 void DebugOverlay::DrawQuad(PrimitiveBatch<VertexPositionColor> *primitiveBatch,
