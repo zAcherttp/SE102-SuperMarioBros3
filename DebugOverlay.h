@@ -43,6 +43,13 @@ public:
     static void DrawBoundingBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch,
         World* world,
         GXMVECTOR color = Colors::White);
+    static void DrawQuad(PrimitiveBatch<VertexPositionColor>* primitiveBatch,
+        Vector2 position,
+        Vector2 size,
+        GXMVECTOR color = Colors::White);
+    static void DrawQuad(PrimitiveBatch<VertexPositionColor>* primitiveBatch,
+        RECT rect,
+        GXMVECTOR color = Colors::White);
     static void ToggleFPSCounter();
 	static void ToggleCollisionBox();
 };

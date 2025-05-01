@@ -135,7 +135,7 @@ void Game::Render() {
 		context->RSSetViewports(1, &m_gameView);
 
 		context->ClearRenderTargetView(m_gameRenderTargetView.Get(),
-			GetCurrentWorld()->GetColor());
+			GetCurrentWorld()->GetBackgroundColor());
 
 		// Render the game world to the render target
 		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),

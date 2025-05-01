@@ -10,6 +10,8 @@ public:
 	Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spriteSheet);
 	~Mario() = default;
 
+	std::vector<std::pair<InteractionPointType, Vector2>> GetInteractionPoints() const override;
+
 	void ItsAMe();
 
 	void Update(float dt) override;
@@ -32,5 +34,9 @@ private:
 
 	MarioMovementState* m_movementSM;
 	/*MarioPowerUpState* m_powerupSM;*/
+
+	std::vector<std::pair<InteractionPointType, Vector2>> GetSmallMarioInteractionPoints() const;
+	std::vector<std::pair<InteractionPointType, Vector2>> GetBigMarioInteractionPoints() const;
+	std::vector<std::pair<InteractionPointType, Vector2>> GetBigMarioSitInteractionPoints() const;
 };
 

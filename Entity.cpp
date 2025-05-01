@@ -3,16 +3,21 @@
 #include "Entity.h"
 #include "Debug.h"
 
+using namespace DirectX::SimpleMath;
 
-Entity::Entity(DirectX::SimpleMath::Vector2 position, SpriteSheet* spriteSheet) {
-	m_pos = position;
+Entity::Entity(Vector2 position, SpriteSheet* spriteSheet) {
+	m_collisionComponent = std::make_unique<CollisionComponent>(this);
+	Log(LOG_INFO, "Creating Entity at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
+	m_collisionComponent->SetPosition(position);
 	m_animator = std::make_unique<Animator>();
 	m_animator->SetSpriteSheet(spriteSheet);
+
 }
 
 Entity::Entity(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 size, SpriteSheet* spriteSheet) {
-	m_pos = position;
-	m_size = size;
+	m_collisionComponent = std::make_unique<CollisionComponent>(this);
+	m_collisionComponent->SetPosition(position);
+	m_collisionComponent->SetSize(size);
 	m_animator = std::make_unique<Animator>();
 	m_animator->SetSpriteSheet(spriteSheet);
 }
@@ -23,25 +28,43 @@ void Entity::Update(float deltaTime) {
 
 void Entity::Render(DirectX::SpriteBatch* spriteBatch) {
 	if (m_visible) {
-		m_animator->Draw(spriteBatch, m_pos);
+		m_animator->Draw(spriteBatch, m_collisionComponent->GetPosition());
 	}
 }
 
-DirectX::SimpleMath::Vector2 Entity::GetSize() const { return m_size; }
+Vector2 Entity::GetSize() const
+{
+	return m_collisionComponent->GetSize();
+}
 
-void Entity::SetSize(const DirectX::SimpleMath::Vector2& size) { m_size = size; }
+void Entity::SetSize(const Vector2& size)
+{
+	m_collisionComponent->SetSize(size);
+}
 
-DirectX::SimpleMath::Vector2 Entity::GetPosition() const { return m_pos; }
+Vector2 Entity::GetPosition() const
+{
+	return m_collisionComponent->GetPosition();
+}
 
-void Entity::SetPosition(const DirectX::SimpleMath::Vector2& pos) { m_pos = pos; }
+void Entity::SetPosition(const Vector2& pos)
+{
+	m_collisionComponent->SetSize(pos);
+}
 
-DirectX::SimpleMath::Vector2 Entity::GetVelocity() const { return m_vel; }
+Vector2 Entity::GetVelocity() const
+{
+	return m_vel;
+}
 
-void Entity::SetVelocity(const DirectX::SimpleMath::Vector2& vel) { m_vel = vel; }
+void Entity::SetVelocity(const Vector2& vel) 
+{ 
+	m_vel = vel;
+}
 
-DirectX::SimpleMath::Vector2 Entity::GetAcceleration() const { return m_accel; }
+Vector2 Entity::GetAcceleration() const { return m_accel; }
 
-void Entity::SetAcceleration(const DirectX::SimpleMath::Vector2& accel) { m_accel = accel; }
+void Entity::SetAcceleration(const Vector2& accel) { m_accel = accel; }
 
 bool Entity::IsActive() const { return m_isActive; }
 

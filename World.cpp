@@ -234,7 +234,7 @@ Entity* World::GetPlayer()
 	return m_player;
 }
 
-XMVECTORF32 World::GetColor() const
+XMVECTORF32 World::GetBackgroundColor() const
 {
 	return m_background;
 }

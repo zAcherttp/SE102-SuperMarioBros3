@@ -47,6 +47,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="CollisionComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -80,6 +81,7 @@
     <ClCompile Include="AssetIDs.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="CollisionComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">

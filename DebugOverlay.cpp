@@ -118,18 +118,33 @@ void DebugOverlay::DrawBoundingBox(PrimitiveBatch<VertexPositionColor>* primitiv
 {
 	for (auto e : world->GetEntities())
 	{
-		DebugOverlay::DrawBoundingBox(
-			primitiveBatch,
-			e->GetPosition(),
-			e->GetSize(),
-			Colors::Lime);
+		e->GetCollisionComponent()->RenderDebug(primitiveBatch, color);
 	}
-	DebugOverlay::DrawBoundingBox(
-		primitiveBatch,
-		world->GetPlayer()->GetPosition(),
-		world->GetPlayer()->GetSize(),
-		Colors::Lime);
+	world->GetPlayer()->GetCollisionComponent()->RenderDebug(primitiveBatch, color);
+	Vector2 pos = world->GetPlayer()->GetPosition();
+	//DrawLine(primitiveBatch, Vector2(pos.x, pos.y - 10), Vector2(pos.x, pos.y + 10), color);
 }
+
+void DebugOverlay::DrawQuad(PrimitiveBatch<VertexPositionColor> *primitiveBatch,
+                            Vector2 position, Vector2 size, GXMVECTOR color)
+{
+	if (!m_drawCollisionBox) return;
+	VertexPositionColor topLeft(position - size / 2, color);
+	VertexPositionColor topRight(position + Vector2(size.x / 2, -size.y / 2), color);
+	VertexPositionColor bottomLeft(position + Vector2(-size.x / 2, size.y / 2), color);
+	VertexPositionColor bottomRight(position + size / 2, color);
+	primitiveBatch->DrawQuad(topLeft, topRight, bottomRight, bottomLeft);
+}
+
+void DebugOverlay::DrawQuad(PrimitiveBatch<VertexPositionColor> *primitiveBatch, RECT rect, GXMVECTOR color)
+{
+	if (!m_drawCollisionBox) return;
+	VertexPositionColor topLeft(Vector2((float)rect.left, (float)rect.top), color);
+	VertexPositionColor topRight(Vector2((float)rect.right, (float)rect.top), color);
+	VertexPositionColor bottomLeft(Vector2((float)rect.left, (float)rect.bottom), color);
+	VertexPositionColor bottomRight(Vector2((float)rect.right, (float)rect.bottom), color);
+	primitiveBatch->DrawQuad(topLeft, topRight, bottomRight, bottomLeft);
+}		
 
 void DebugOverlay::ToggleCollisionBox()
 {

@@ -183,6 +183,7 @@
     <ClInclude Include="Animator.h" />
     <ClInclude Include="AssetIDs.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionEvent.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DebugOverlay.h" />
@@ -205,6 +206,7 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="AssetIDs.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionEvent.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DebugOverlay.cpp" />

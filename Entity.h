@@ -2,6 +2,7 @@
 #include "State.h"
 #include "Animator.h"
 #include "CollisionEvent.h"
+#include "CollisionComponent.h"
 #include "Game.h"
 
 class Entity
@@ -53,24 +54,28 @@ public:
 	bool GetIsCollidable() const;
 	void SetIsCollidable(const bool& isCollidable);
 
-	virtual void OnCollision(const CollisionEvent& event);
+	// Get the collision component
+	CollisionComponent* GetCollisionComponent() const { return m_collisionComponent.get(); }
+	virtual std::vector<std::pair<InteractionPointType, DirectX::SimpleMath::Vector2>> GetInteractionPoints() const {
+		return m_collisionComponent->GetInteractionPoints();
+	}
 
+	// Handle collision - one generic function that can be overridden or multiple specific functions
+	virtual void OnCollision(const CollisionEvent& event);
 	virtual bool IsGrounded() const;
 
 protected:
-
-	DirectX::SimpleMath::Vector2 m_size;
-	DirectX::SimpleMath::Vector2 m_pos;
 	DirectX::SimpleMath::Vector2 m_vel;
 	DirectX::SimpleMath::Vector2 m_accel;
 
 	//physics
+	std::unique_ptr<CollisionComponent> m_collisionComponent;
 	bool m_isActive = true;
 	bool m_isCollidable = true;
 
 	//sprite
-	int m_animId = 0;
 	std::unique_ptr<Animator> m_animator;
+	int m_animId = 0;
 	bool m_visible = true;
 };
 

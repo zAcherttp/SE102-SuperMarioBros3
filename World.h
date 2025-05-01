@@ -28,7 +28,7 @@ public:
 	std::vector<Entity*>& GetEntities();
 	Entity* GetPlayer();
 
-	DirectX::XMVECTORF32 GetColor() const;
+	DirectX::XMVECTORF32 GetBackgroundColor() const;
 	std::string GetName() const;
 
 	void HandleInput(DirectX::Keyboard::KeyboardStateTracker* kbTracker);
