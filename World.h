@@ -1,12 +1,36 @@
 #pragma once
 #include <vector>
+#include <memory>
 #include "json.hpp"
-using json = nlohmann::json;
 
+using json = nlohmann::json;
 class Entity;
+class Collision;
 
 class World
 {
+public:
+	World(std::string worldPath, std::string name);
+	~World();
+
+	void Update(float dt);
+	void Render(DirectX::SpriteBatch* spriteBatch);
+	void RenderDebug(DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionColor>* primitiveBatch);
+
+	void Load(SpriteSheet* spriteSheet);
+	void Unload();
+	void Reset();
+
+	std::vector<Entity*>& GetEntities();
+	Entity* GetPlayer();
+
+	DirectX::XMVECTORF32 GetBackgroundColor() const;
+	std::string GetName() const;
+	int GetWidth() const;
+	int GetHeight() const;
+
+	void HandleInput(DirectX::Keyboard::State* kbState, DirectX::Keyboard::KeyboardStateTracker* kbsTracker);
+
 private:
 	std::string m_path;
 	std::string m_name;
@@ -15,23 +39,8 @@ private:
 	int m_width;
 	int m_height;
 	DirectX::XMVECTORF32 m_background;
-	float m_gravity;
-public:
-	World(std::string worldPath, std::string name);
-	~World();
-	void Update(float dt);
-	void Render(DirectX::SpriteBatch* spriteBatch);
-	void Reset();
-	void Load(SpriteSheet* spriteSheet);
-	void Unload();
 
-	std::vector<Entity*>& GetEntities();
-	Entity* GetPlayer();
-
-	DirectX::XMVECTORF32 GetBackgroundColor() const;
-	std::string GetName() const;
-
-	void HandleInput(DirectX::Keyboard::State* kbState, DirectX::Keyboard::KeyboardStateTracker* kbsTracker);
+	std::unique_ptr<Collision> m_collisionSystem;
 
 	//Modules of the load function
 	json LoadJsonFile(const std::string& filePath);

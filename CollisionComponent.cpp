@@ -59,16 +59,8 @@ bool CollisionComponent::ContainsRectangle(const RECT& rect) const
 
 std::vector<std::pair<InteractionPointType, Vector2>> CollisionComponent::GetInteractionPoints() const
 {
-    //return default top left right and two feets if entity implement this function
-    std::vector<std::pair<InteractionPointType, Vector2>> points;
-
-    points.emplace_back(InteractionPointType::TopHead, Vector2(0, -m_size.y / 2.f));
-    points.emplace_back(InteractionPointType::LeftMiddle, Vector2(-m_size.x / 2.f, 0));
-    points.emplace_back(InteractionPointType::RightMiddle, Vector2(m_size.x / 2.f, 0));
-    points.emplace_back(InteractionPointType::LeftFoot, Vector2(-m_size.x / 2.f, m_size.y / 2.f));
-    points.emplace_back(InteractionPointType::RightFoot, Vector2(m_size.x / 2.f, m_size.y / 2.f));
-
-    return points;
+	//return default empty vector if entity didnt define any interaction points
+    return std::vector<std::pair<InteractionPointType, Vector2>>{};
 }
 
 void CollisionComponent::RenderDebug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* primitiveBatch,

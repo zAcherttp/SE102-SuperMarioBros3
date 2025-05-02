@@ -102,6 +102,7 @@ void Game::HandleInput() {
 	}
 	if (m_worlds[m_currentWorldId]) {
 		m_worlds[m_currentWorldId]->HandleInput(&kbs, m_keys.get());
+		DebugOverlay::UpdateMarioState((Mario*)m_worlds[m_currentWorldId]->GetPlayer());
 	}
 }
 
@@ -172,8 +173,7 @@ void Game::Render() {
 
 		m_primitiveBatch->Begin();
 
-		//loops through all entities to render bounding box
-		DebugOverlay::DrawBoundingBox(m_primitiveBatch.get(), GetCurrentWorld(), Colors::Lime);
+		GetCurrentWorld()->RenderDebug(m_primitiveBatch.get());
 		
 		m_primitiveBatch->End();
 
@@ -183,6 +183,7 @@ void Game::Render() {
 		DebugOverlay::DrawFPSCounter(m_spriteBatch.get(), m_font.get(),
 			m_timer.GetFramesPerSecond());
 		DebugOverlay::DrawInput(m_spriteBatch.get(), m_font.get());
+		DebugOverlay::DrawMarioState(m_spriteBatch.get(), m_font.get());
 
 		m_spriteBatch->End();
 
@@ -262,7 +263,7 @@ void Game::GetDefaultGameSize(int& width, int& height) const noexcept {
 }
 
 void Game::GetDefaultGameTitle(LPCWSTR& title) const noexcept {
-	title = m_gameTitle	;
+	title = m_gameTitle.c_str()	;
 }
 
 #pragma endregion
@@ -306,17 +307,18 @@ void Game::LoadGameConfig(const json& config)
 	m_nextWorldId = config["game"]["world"]["startWorldId"];
 	Log(__FUNCTION__, "Start world id: " + std::to_string(m_nextWorldId));
 
-	m_spritePath = config["game"]["sprites"]["path"];
-	m_spriteDataPath = config["game"]["sprites"]["data"];
+	std::string spritePath = config["game"]["sprites"]["path"];
+	m_spritePath = std::wstring(spritePath.begin(), spritePath.end());
+
+	std::string spriteDataPath = config["game"]["sprites"]["data"];
+	m_spriteDataPath = std::wstring(spriteDataPath.begin(), spriteDataPath.end());
+
 	std::string fontPath = config["game"]["sprites"]["font"];
 	m_spriteFontPath = std::wstring(fontPath.begin(), fontPath.end());
 	
 	std::string title(config["game"]["title"]);
-	std::wstring wstr(title.begin(), title.end());
-	
-	// Allocate new memory for m_gameTitle
-	m_gameTitle = new wchar_t[wstr.size() + 1]; // +1 for null terminator
-	wcscpy_s(const_cast<wchar_t*>(m_gameTitle), wstr.size() + 1, wstr.c_str());
+	m_gameTitle = std::wstring(title.begin(), title.end());
+
 	Log(__FUNCTION__, "Window title set to: " + title);
 }
 
@@ -421,29 +423,16 @@ void Game::CreateDeviceDependentResources() {
 
 	ComPtr<ID3D11Resource> resource;
 
-	/*DX::ThrowIfFailed(
-			CreateDDSTextureFromFile(device, L"textures/tiles.dds",
-					resource.GetAddressOf(),
-					m_texture.ReleaseAndGetAddressOf()));*/
-
-	//TODO: put this into game.json
 	DX::ThrowIfFailed(CreateWICTextureFromFile(
-		device, L"textures/mario/mario.png", resource.GetAddressOf(),
+		device, m_spritePath.c_str(), resource.GetAddressOf(),
 		m_texture.ReleaseAndGetAddressOf()));
-	m_spriteSheet->Load(m_texture.Get(), L"textures/mario/mario.txt");
+	m_spriteSheet->Load(m_texture.Get(), m_spriteDataPath.c_str());
 
 	ComPtr<ID3D11Texture2D> tiles;
 	DX::ThrowIfFailed(resource.As(&tiles));
 
 	CD3D11_TEXTURE2D_DESC tilesDesc;
 	tiles->GetDesc(&tilesDesc);
-
-	/*DX::ThrowIfFailed(CreateWICTextureFromFile(device,
-	L"textures/shipanimated.png", nullptr, m_texture.ReleaseAndGetAddressOf()));
-
-	m_ship = std::make_unique<AnimatedTexture>();
-	m_ship->Load(m_texture.Get(), 4,60)*/
-	;
 
 	m_origin.x = float(tilesDesc.Width / 2);
 	m_origin.y = float(tilesDesc.Height / 2);

@@ -32,9 +32,9 @@ constexpr auto ID_ENT_PIPE                          = 27;
 constexpr auto ID_ENT_COIN                          = 28;
 
 //Entities' animation IDs
-constexpr auto ID_ANIM_MARIO_SMALL                  = 101;
-constexpr auto ID_ANIM_MARIO_BIG                    = 102;
-constexpr auto ID_ANIM_MARIO_RACCOON                = 103;
+constexpr auto ID_ANIM_MARIO_SMALL                  = 100;
+constexpr auto ID_ANIM_MARIO_BIG                    = 101;
+constexpr auto ID_ANIM_MARIO_RACCOON                = 102;
 
 constexpr auto ID_ANIM_MARIO_IDLE                   = 10;
 constexpr auto ID_ANIM_MARIO_WALK                   = 20;
@@ -44,3 +44,7 @@ constexpr auto ID_ANIM_MARIO_JUMP                   = 50;
 constexpr auto ID_ANIM_MARIO_SIT                    = 60;
 constexpr auto ID_ANIM_MARIO_FLY                    = 70;
 constexpr auto ID_ANIM_MARIO_HOLD                   = 80;
+
+constexpr auto ID_SPRITE_GROUND_TOP_LEFT            = 1000;
+constexpr auto ID_SPRITE_GROUND_TOP_MID				= 1010;
+constexpr auto ID_SPRITE_GROUND_TOP_RIGHT			= 1020;

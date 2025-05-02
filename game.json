@@ -8,8 +8,8 @@
         "startWorldId": 1
       },
       "sprites": {
-        "path": "sprites.png",
-        "data": "sprites.txt",
+        "path": "textures/sprites.png",
+        "data": "textures/sprites.txt",
         "font": "textures/mario.spritefont"
       }
     },

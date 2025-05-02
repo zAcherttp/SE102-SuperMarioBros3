@@ -3,15 +3,15 @@
     "type": 0,
     "sprites": [
       {
-        "id": 111,
+        "id": 110,
         "name": "mario_small_idle",
-        "frames": [ "small_idle" ],
+        "frames": [ "small-idle" ],
         "loop": false
       },
       {
-        "id": 121,
+        "id": 120,
         "name": "mario_small_walk",
-        "frames": [ "small_idle", "small_walk" ],
+        "frames": [ "small-walk", "small-idle" ],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
@@ -20,14 +20,40 @@
         "velocityScaleFactor": 0.02
       },
       {
-        "id": 151,
+        "id": 140,
+        "name": "mario_small_skid",
+        "frames": [ "small-skid" ],
+        "loop": false
+      },
+      {
+        "id": 150,
         "name": "mario_small_jump",
-        "frames": [ "small_jump" ],
+        "frames": [ "small-jump" ],
         "loop": false
       }
     ]
   },
   {
-    "type": 5
+    "type": 10,
+    "sprites": [
+      {
+        "id": 1000,
+        "name": "ground_top_left",
+        "frames": [ "platform-top-left" ],
+        "loop": false
+      },
+      {
+        "id": 1010,
+        "name": "ground_top_mid",
+        "frames": [ "platform-top-mid" ],
+        "loop": false
+      },
+      {
+        "id": 1020,
+        "name": "ground_top_right",
+        "frames": [ "platform-top-right" ],
+        "loop": false
+      }
+    ]
   }
 ]

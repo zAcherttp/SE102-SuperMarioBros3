@@ -7,7 +7,7 @@ class Block : public Entity {
 public:
     Block(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);
     Block(Vector2 position, SpriteSheet* spriteSheet);
-    virtual ~Block() = default;
+    ~Block() = default;
 
     bool IsSolid() const { return m_isSolid; }
     void SetSolid(bool solid) { m_isSolid = solid; }

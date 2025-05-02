@@ -3,6 +3,9 @@
 #include "World.h"
 #include "Mario.h"
 #include "Debug.h"
+#include "Collision.h"
+#include "Ground.h"
+#include "DebugOverlay.h"
 #include "AssetIDs.h"
 #include "Game.h"
 #include "SpriteSheet.h"
@@ -16,7 +19,6 @@ World::World(std::string wPath, std::string name)
 	m_name = name;
 	m_player = nullptr;
 	m_entities = {};
-	m_gravity = 0;
 	m_background = {};
 	m_height = m_width = 0;
 }
@@ -42,12 +44,31 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 	if (!mario) return;
 
 	mario->HandleInput(kbState, kbsTracker);
+
+	if(kbsTracker->IsKeyPressed(Keys::R)) {
+		Reset();
+	}
 }
 
 void World::Update(float dt) {
 	m_player->Update(dt);
 	for (auto e : m_entities) {
 		e->Update(dt);
+	}
+
+	if (m_collisionSystem) {
+
+		if (m_player) {
+			m_collisionSystem->UpdateEntity(m_player);
+		}
+
+		for (auto e : m_entities) {
+			if (!e->IsStatic()) {
+				m_collisionSystem->UpdateEntity(e);
+			}
+		}
+
+		m_collisionSystem->ProcessCollisions(dt);
 	}
 }
 
@@ -58,8 +79,24 @@ void World::Render(DirectX::SpriteBatch* spriteBatch) {
 	}
 }
 
-void World::Reset() {
+void World::RenderDebug(DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionColor>* primitiveBatch)
+{
+	if (m_collisionSystem) {
+		m_collisionSystem->RenderDebug(primitiveBatch);
+	}
+	for (auto e : m_entities)
+	{
+		e->GetCollisionComponent()->RenderDebug(primitiveBatch, Colors::Lime);
+	}
+	m_player->GetCollisionComponent()->RenderDebug(primitiveBatch, Colors::Lime);
+	Vector2 pos = m_player->GetPosition();
+	Vector2 vel = m_player->GetVelocity();
+	DebugOverlay::DrawLine(primitiveBatch, pos, pos + vel, Colors::Yellow);
+}
 
+void World::Reset() {
+	m_player->SetPosition(Vector2(120, 120));
+	m_player->SetVelocity(Vector2::Zero);
 }
 
 void World::Load(SpriteSheet* spriteSheet)
@@ -70,6 +107,16 @@ void World::Load(SpriteSheet* spriteSheet)
 
 		LoadWorldConfig(data);
 		LoadEntities(data, anim, spriteSheet);
+
+		m_collisionSystem = std::make_unique<Collision>(m_width, m_height);
+
+		if (m_player) {
+			m_collisionSystem->AddEntity(m_player);
+		}
+
+		for (auto& entity : m_entities) {
+			m_collisionSystem->AddEntity(entity);
+		}
 	}
 	catch (const std::exception& e) {
 		Log(__FUNCTION__, "Exception occurred: " + std::string(e.what()));
@@ -84,22 +131,23 @@ void World::Load(SpriteSheet* spriteSheet)
 
 void World::Unload()
 {
-	if (m_player)
-	{
+	if (m_collisionSystem) {
+		m_collisionSystem->Clear();
+		m_collisionSystem.reset();
+	}
+
+	if (m_player) {
 		delete m_player;
 		m_player = nullptr;
 	}
-	for (auto entity : m_entities)
-	{
+
+	for (auto entity : m_entities) {
 		delete entity;
 	}
 	m_entities.clear();
-	m_gravity = 0;
 
 	m_name = "";
 	m_path = "";
-
-	return;
 }
 
 json World::LoadJsonFile(const std::string& filePath)
@@ -152,14 +200,31 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 			return nullptr;
 		}
 		entity = new Mario(position, 0, 0, 0, spriteSheet);
-		m_player = (Mario*)entity;
-		Log(__FUNCTION__, "Mario has been created!");
 		break;
-	case ID_ENT_BRICK:
-		break;
-	default:
+		case ID_ENT_GROUND:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			int countX = data["countX"];
+			int countY = data["countY"];
+			bool isSolid = data["solid"];
+			entity = new Ground(position, Vector2(width, height), countX, countY, isSolid, spriteSheet);
+			break;
+		}
+		default:
 		Log(__FUNCTION__, "Unknown entity type: " + std::to_string(type));
 		break;;
+	}
+	
+	if(dynamic_cast<Mario*>(entity)) {
+		m_player = dynamic_cast<Mario*>(entity);
+		Log(__FUNCTION__, "Mario has been created!");
+	} else if (entity) {
+		m_entities.push_back(entity);
+	} else {
+		Log(__FUNCTION__, "Failed to create entity of type: " + std::to_string(type));
+		delete entity;
+		return nullptr;
 	}
 
 	return entity;
@@ -243,3 +308,7 @@ std::string World::GetName() const
 {
 	return m_name;
 }
+
+inline int World::GetWidth() const { return m_width; }
+
+inline int World::GetHeight() const { return m_height; }

@@ -11,13 +11,37 @@
   "entities": [
     {
       "type": 0,
-      "x": 50.0,
-      "y": 200.0
+      "x": 16.0,
+      "y": 160.0
     },
     {
-      "type": 5,
-      "x": 0.0,
-      "y": 180.0,
+      "type": 10,
+      "x": 16.0,
+      "y": 192.0,
+      "width": 16,
+      "height": 16,
+      "countX": 16,
+      "countY": 1,
+      "solid": true
+    },
+    {
+      "type": 10,
+      "x": 16.0,
+      "y": 112.0,
+      "width": 16,
+      "height": 16,
+      "countX": 5,
+      "countY": 1,
+      "solid": true
+    },
+    {
+      "type": 10,
+      "x": 128.0,
+      "y": 132.0,
+      "width": 16,
+      "height": 16,
+      "countX": 8,
+      "countY": 1,
       "solid": true
     }
   ]

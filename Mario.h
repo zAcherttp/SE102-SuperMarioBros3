@@ -4,6 +4,16 @@
 
 using namespace DirectX::SimpleMath;
 
+struct InputState {
+	bool isLeftPressed = false;
+	bool isRightPressed = false;
+	bool isUpPressed = false;
+	bool isDownPressed = false;
+	bool isAPressed = false;
+	bool isBPressed = false;
+};
+	
+
 class Mario : public Entity
 {
 public:
@@ -11,14 +21,14 @@ public:
 	~Mario() = default;
 
 	std::vector<std::pair<InteractionPointType, Vector2>> GetInteractionPoints() const override;
+	bool UsesInteractionPoints() const override;
 
 	void ItsAMe();
 
 	void Update(float dt) override;
 	void Render(DirectX::SpriteBatch* spriteBatch) override;
 	void HandleInput(DirectX::Keyboard::State* kbState, DirectX::Keyboard::KeyboardStateTracker* kbsTracker);
-
-	bool IsGrounded() const override;
+	const InputState* GetInput() const { return m_inputState; }
 
 	int GetLives() const { return m_lives; }
 	void SetLives(int lives) { m_lives = lives; }
@@ -27,10 +37,21 @@ public:
 	int GetCoins() const { return m_coins; }
 	void SetCoins(int coins) { m_coins = coins; }
 
+	std::string GetCurrentStateName() const { return m_movementSM->GetStateName(); }
+
+	void OnCollision(const CollisionEvent& event) override;
+	void OnNoCollision() override;
+	void OnTopHeadCollision(Entity* other, const Vector2& normal) override;
+	void OnFootCollision(Entity* other, const Vector2& normal) override;
+	void OnLeftSideCollision(Entity* other, const Vector2& normal) override;
+	void OnRightSideCollision(Entity* other, const Vector2& normal) override;
+
 private:
 	int m_lives;
 	int m_score;
 	int m_coins;
+
+	InputState* m_inputState;
 
 	MarioMovementState* m_movementSM;
 	/*MarioPowerUpState* m_powerupSM;*/

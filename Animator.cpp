@@ -52,7 +52,7 @@ void Animator::SetAnimation(const int& id, bool reset)
 	if (it != m_animations.end())
 	{
 		m_currentSequence = id;
-		Log(__FUNCTION__, "Animation set: " + std::to_string(id));
+		//Log(__FUNCTION__, "Animation set: " + std::to_string(id));
 
 		if (reset)
 		{
@@ -137,6 +137,29 @@ void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& positi
 	const SpriteSheet::SpriteFrame* frame = sequence.frames[m_currentFrame];
 
 	// Draw the sprite with current effects (flipping)
+	m_spriteSheet->Draw(batch, *frame, position, DirectX::Colors::White,
+		m_rotation, m_scale, m_spriteEffects, m_depth);
+}
+
+/// <summary>
+/// Draws an animation frame from a sprite sheet at a specified position (default = 0).
+/// </summary>
+/// <param name="batch">A pointer to the DirectX::SpriteBatch used for rendering.</param>
+/// <param name="id">The identifier of the animation sequence to draw.</param>
+/// <param name="position">The position on the screen where the animation frame should be drawn.</param>
+void Animator::Draw(DirectX::SpriteBatch* batch, const int& id, const DirectX::XMFLOAT2& position)
+{
+	if (!m_spriteSheet)
+		return;
+
+	auto it = m_animations.find(id);
+
+	if (it == m_animations.end() || it->second.frames.empty())
+		return;
+
+	const AnimationSequence& sequence = it->second;
+	const SpriteSheet::SpriteFrame* frame = sequence.frames[0];
+
 	m_spriteSheet->Draw(batch, *frame, position, DirectX::Colors::White,
 		m_rotation, m_scale, m_spriteEffects, m_depth);
 }

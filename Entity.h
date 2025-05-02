@@ -1,35 +1,38 @@
 #pragma once
 #include "State.h"
 #include "Animator.h"
-#include "CollisionEvent.h"
+#include "Collision.h"
 #include "CollisionComponent.h"
 #include "Game.h"
+
+using namespace DirectX::SimpleMath;
 
 class Entity
 {
 public:
-	Entity(DirectX::SimpleMath::Vector2 pos, SpriteSheet* spriteSheet);
-	Entity(DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMath::Vector2 size, SpriteSheet* spriteSheet);
+	Entity(Vector2 pos, SpriteSheet* spriteSheet);
+	Entity(Vector2 pos, Vector2 size, SpriteSheet* spriteSheet);
 	
 	virtual ~Entity() = default;
 
 	virtual void Update(float dt) = 0;
 	virtual void Render(DirectX::SpriteBatch* spriteBatch) = 0;
 
-	DirectX::SimpleMath::Vector2 GetSize() const;
-	void SetSize(const DirectX::SimpleMath::Vector2& size);
+	Vector2 GetSize() const;
+	void SetSize(const Vector2& size);
 
-	DirectX::SimpleMath::Vector2 GetPosition() const;
-	void SetPosition(const DirectX::SimpleMath::Vector2& pos);
+	Vector2 GetPosition() const;
+	void SetPosition(const Vector2& pos);
 
-	DirectX::SimpleMath::Vector2 GetVelocity() const;
-	void SetVelocity(const DirectX::SimpleMath::Vector2& vel);
+	Vector2 GetVelocity() const;
+	void SetVelocity(const Vector2& vel);
 
-	DirectX::SimpleMath::Vector2 GetAcceleration() const;
-	void SetAcceleration(const DirectX::SimpleMath::Vector2& accel);
+	Vector2 GetAcceleration() const;
+	void SetAcceleration(const Vector2& accel);
 
 	bool IsActive() const;
 	bool IsCollidable() const;
+	bool IsStatic() const;
 
 	void DefineAnimation(int animId, const std::vector<const wchar_t*>& frameNames,
 		bool loop = true, float timePerFrame = 0.1f,
@@ -54,24 +57,29 @@ public:
 	bool GetIsCollidable() const;
 	void SetIsCollidable(const bool& isCollidable);
 
-	// Get the collision component
-	CollisionComponent* GetCollisionComponent() const { return m_collisionComponent.get(); }
-	virtual std::vector<std::pair<InteractionPointType, DirectX::SimpleMath::Vector2>> GetInteractionPoints() const {
-		return m_collisionComponent->GetInteractionPoints();
-	}
+	// Get the collision component, use interaction points if entity defined it, otherwise default bbox
+	CollisionComponent* GetCollisionComponent() const;
+	virtual std::vector<std::pair<InteractionPointType, Vector2>> GetInteractionPoints() const;
+	virtual bool UsesInteractionPoints() const;
 
-	// Handle collision - one generic function that can be overridden or multiple specific functions
 	virtual void OnCollision(const CollisionEvent& event);
+	virtual void OnNoCollision();
+
+	virtual void OnTopHeadCollision(Entity* other, const Vector2& normal);
+	virtual void OnFootCollision(Entity* other, const Vector2& normal);
+	virtual void OnLeftSideCollision(Entity* other, const Vector2& normal);
+	virtual void OnRightSideCollision(Entity* other, const Vector2& normal);
 	virtual bool IsGrounded() const;
 
 protected:
-	DirectX::SimpleMath::Vector2 m_vel;
-	DirectX::SimpleMath::Vector2 m_accel;
+	Vector2 m_vel;
+	Vector2 m_accel;
 
 	//physics
 	std::unique_ptr<CollisionComponent> m_collisionComponent;
 	bool m_isActive = true;
 	bool m_isCollidable = true;
+	bool m_isStatic = false;
 
 	//sprite
 	std::unique_ptr<Animator> m_animator;

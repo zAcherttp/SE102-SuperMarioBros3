@@ -7,16 +7,35 @@
 using namespace DirectX::SimpleMath;
 using Keyboard = DirectX::Keyboard;
 
+#define UP			Keyboard::W
+#define DOWN		Keyboard::S
+#define LEFT		Keyboard::A
+#define RIGHT		Keyboard::D
+
+#define START		Keyboard::I
+
+#define B_BTN		Keyboard::J
+#define A_BTN		Keyboard::K
+
 Mario::Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spriteSheet)
 	: Entity(position, spriteSheet), m_lives(lives), m_score(score), m_coins(coins)
 {
 	this->m_movementSM = nullptr;
+	this->m_inputState = new InputState();
 }
 
 void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker* kbsTracker) {
+
+	m_inputState->isUpPressed = kbState->IsKeyDown(UP);
+	m_inputState->isDownPressed = kbState->IsKeyDown(DOWN);
+	m_inputState->isLeftPressed = kbState->IsKeyDown(LEFT);
+	m_inputState->isRightPressed = kbState->IsKeyDown(RIGHT);
+	m_inputState->isAPressed = kbState->IsKeyDown(A_BTN);
+	m_inputState->isBPressed = kbState->IsKeyDown(B_BTN);
+
 	if (!m_movementSM) return;
 
-	MarioMovementState* mState = m_movementSM->HandleInput(this, kbState, kbsTracker);
+	MarioMovementState* mState = m_movementSM->HandleInput(this);
 	/*m_powerupSM->HandleInput(kbState);*/
 	if (mState != nullptr) {
 		m_movementSM->Exit(this);
@@ -41,12 +60,17 @@ std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetInteractionPoint
 	return GetSmallMarioInteractionPoints();
 }
 
+bool Mario::UsesInteractionPoints() const
+{
+	return true;
+}
+
 void Mario::ItsAMe()
 {
 	// small temporary, powerup states will set these later on
 	this->SetSize(Vector2(12, 15));
 	this->SetAnimId(ID_ANIM_MARIO_SMALL);
-	this->m_movementSM = new MarioIdleState(1);
+	this->m_movementSM = new MarioIdleState(Direction::Right);
 	this->m_movementSM->Enter(this);
 
 	Log(LOG_INFO, "Mario position: " + std::to_string(this->GetPosition().x) + ", " + std::to_string(this->GetPosition().y));
@@ -63,10 +87,6 @@ void Mario::Update(float dt)
 
 void Mario::Render(DirectX::SpriteBatch* spriteBatch) {
 	Entity::Render(spriteBatch);
-}
-
-bool Mario::IsGrounded() const {
-	return true;
 }
 
 std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetSmallMarioInteractionPoints() const
@@ -104,4 +124,41 @@ std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetBigMarioInteract
 std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetBigMarioSitInteractionPoints() const
 {
 	return std::vector<std::pair<InteractionPointType, Vector2>>();
+}
+
+void Mario::OnCollision(const CollisionEvent& event) {
+	if (UsesInteractionPoints()) {
+		switch (event.pointType) {
+		case InteractionPointType::TopHead:
+			OnTopHeadCollision(event.collidedWith, event.normal);
+			break;
+		case InteractionPointType::LeftFoot:
+		case InteractionPointType::RightFoot:
+			OnFootCollision(event.collidedWith, event.normal);
+			break;
+		case InteractionPointType::LeftMiddle:
+			OnLeftSideCollision(event.collidedWith, event.normal);
+			break;
+		case InteractionPointType::RightMiddle:
+			OnRightSideCollision(event.collidedWith, event.normal);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void Mario::OnNoCollision() {
+}
+
+void Mario::OnFootCollision(Entity* other, const Vector2& normal) {
+}
+
+void Mario::OnTopHeadCollision(Entity* other, const Vector2& normal) {
+}
+
+void Mario::OnRightSideCollision(Entity* other, const Vector2& normal) {
+}
+
+void Mario::OnLeftSideCollision(Entity* other, const Vector2& normal) {
 }

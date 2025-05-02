@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "DebugOverlay.h"
 #include "Entity.h"
+#include "Mario.h"
 
 bool DebugOverlay::m_drawFPSCounter = true;
 bool DebugOverlay::m_drawCollisionBox = true;
 bool DebugOverlay::m_keyState[7] = { false };
+std::pair<std::string, bool> DebugOverlay::m_marioState = { "", false };
 
 /// <summary>
 /// Draws an FPS (frames per second) counter on the screen using a sprite batch and font.
@@ -61,6 +63,23 @@ void DebugOverlay::DrawInput(SpriteBatch* spriteBatch, SpriteFont* font)
 	font->DrawString(spriteBatch, string, Vector2(10, 30), Colors::White, 0.f, Vector2::Zero, 2.f);
 }
 
+void DebugOverlay::DrawMarioState(SpriteBatch* spriteBatch, SpriteFont* font)
+{
+	if (!m_drawFPSCounter) return;
+	wchar_t string[128]{};
+	if (m_marioState.second) {
+		wcsncat_s(string, L"grounded yes\n", 14);
+	}
+	else {
+		wcsncat_s(string, L"grounded no\n", 13);
+	}
+	std::wstring state = std::wstring(m_marioState.first.begin(), m_marioState.first.end());
+	wcsncat_s(string, L"state ", 7);
+	wcsncat_s(string, state.c_str(), state.length() + 1);
+
+	font->DrawString(spriteBatch, string, Vector2(10, 150), Colors::White, 0.f, Vector2::Zero, 2.f);
+}
+
 void DebugOverlay::DrawLine(PrimitiveBatch<VertexPositionColor>* primitiveBatch, Vector2 start, Vector2 end, GXMVECTOR color)
 {
 	if (!m_drawCollisionBox) return;
@@ -79,6 +98,12 @@ void DebugOverlay::UpdateInput(Keyboard::State* kbState)
 	m_keyState[4] = kbState->J;
 	m_keyState[5] = kbState->K;
 	m_keyState[6] = kbState->I;
+}
+
+void DebugOverlay::UpdateMarioState(Mario* mario)
+{
+	m_marioState.first = mario->GetCurrentStateName();
+	m_marioState.second = mario->IsGrounded();
 }
 
 /// <summary>
@@ -112,19 +137,6 @@ void DebugOverlay::DrawBoundingBox(PrimitiveBatch<VertexPositionColor>* primitiv
 	primitiveBatch->DrawLine(topRight, bottomRight);
 	primitiveBatch->DrawLine(bottomRight, bottomLeft);
 	primitiveBatch->DrawLine(bottomLeft, topLeft);
-}
-
-void DebugOverlay::DrawBoundingBox(PrimitiveBatch<VertexPositionColor>* primitiveBatch, World* world, GXMVECTOR color)
-{
-	for (auto e : world->GetEntities())
-	{
-		e->GetCollisionComponent()->RenderDebug(primitiveBatch, color);
-	}
-	world->GetPlayer()->GetCollisionComponent()->RenderDebug(primitiveBatch, color);
-	Vector2 pos = world->GetPlayer()->GetPosition();
-	Vector2 vel = world->GetPlayer()->GetVelocity();
-	//DrawLine(primitiveBatch, Vector2(pos.x, pos.y - 10), Vector2(pos.x, pos.y + 10), color);
-	DrawLine(primitiveBatch, pos, pos + vel, Colors::Yellow);
 }
 
 void DebugOverlay::DrawQuad(PrimitiveBatch<VertexPositionColor> *primitiveBatch,

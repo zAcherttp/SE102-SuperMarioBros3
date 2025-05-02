@@ -39,7 +39,6 @@
     <ClInclude Include="Animator.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="State.h" />
-    <ClInclude Include="CollisionEvent.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="MarioMovementStates.h" />
     <ClInclude Include="Debug.h" />
@@ -48,6 +47,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="Collision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -74,7 +74,6 @@
       <Filter>Stable</Filter>
     </ClCompile>
     <ClCompile Include="Animator.cpp" />
-    <ClCompile Include="CollisionEvent.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="MarioMovementStates.cpp" />
     <ClCompile Include="Debug.cpp" />
@@ -82,6 +81,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
+    <ClCompile Include="Collision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">
@@ -120,6 +120,9 @@
     <Image Include="SMB3.ico">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="textures\sprites.png">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest">
@@ -146,6 +149,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="textures\readme.txt">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="textures\sprites.txt">
       <Filter>Assets</Filter>
     </Text>
   </ItemGroup>

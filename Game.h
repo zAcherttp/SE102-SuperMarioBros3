@@ -104,8 +104,8 @@ private:
     std::wstring m_spriteFontPath;
 
 	std::unique_ptr<SpriteSheet> m_spriteSheet;
-    std::string m_spritePath;
-    std::string m_spriteDataPath;
+    std::wstring m_spritePath;
+    std::wstring m_spriteDataPath;
 
     std::unique_ptr<DirectX::Keyboard> m_keyboard;
     std::unique_ptr<DirectX::Keyboard::KeyboardStateTracker> m_keys;
@@ -114,7 +114,7 @@ private:
     DirectX::SimpleMath::Vector2 m_origin;
     D3D11_VIEWPORT m_gameView;
     RECT m_gameViewRect;
-    LPCWSTR m_gameTitle;
+    std::wstring m_gameTitle;
 	int m_gameWidth;
 	int m_gameHeight;
 	int m_wndWidth;
