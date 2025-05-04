@@ -31,8 +31,8 @@ void Entity::Render(DirectX::SpriteBatch* spriteBatch) {
 	if (m_visible) {
 		// round the position to the nearest pixel
 		Vector2 pos = m_collisionComponent->GetPosition();
-		pos.x = static_cast<int>(pos.x + 0.5f);
-		pos.y = static_cast<int>(pos.y + 0.5f);
+		/*pos.x = static_cast<int>(pos.x + 0.5f);
+		pos.y = static_cast<int>(pos.y + 0.5f);*/
 		m_animator->Draw(spriteBatch, pos);
 	}
 }

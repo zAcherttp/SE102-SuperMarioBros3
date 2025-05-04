@@ -52,6 +52,17 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 
 void World::Update(float dt) {
 	m_player->Update(dt);
+
+	Vector2 pos = m_player->GetPosition();
+	int gameWidth, gameHeight;
+	Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
+	Vector2 cameraPos = pos - Vector2(gameWidth / 2, 0);
+	//clamp position to nearest pixel to avoid pixel rendering artifacts
+	cameraPos.x = static_cast<int>(cameraPos.x + 0.5f);
+	cameraPos.y = 0;
+
+	Game::GetInstance()->SetCameraPosition(cameraPos, true);
+
 	for (auto e : m_entities) {
 		e->Update(dt);
 	}

@@ -7,6 +7,7 @@
 #include "DeviceResources.h"
 #include "SpriteSheet.h"
 #include "Animator.h"
+#include "Camera.h"
 #include "World.h"
 #include "StepTimer.h"
 #include "json.hpp"
@@ -59,6 +60,8 @@ public:
     void SwitchWorld();
     void SetNextWorldId(int id);
 
+    void SetCameraPosition(const DirectX::SimpleMath::Vector2 & pos, bool oneAxis);
+
     SpriteSheet* GetSpriteSheet() const;
     DirectX::SpriteBatch* GetSpriteBatch() const;
 private:
@@ -87,6 +90,9 @@ private:
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_gameRenderTargetView;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_gameShaderResource;
 
+    // Camera
+    std::unique_ptr<Camera> m_camera;
+
     // Textures
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
 
@@ -113,7 +119,6 @@ private:
     DirectX::SimpleMath::Vector2 m_screenPos;
     DirectX::SimpleMath::Vector2 m_origin;
     D3D11_VIEWPORT m_gameView;
-    RECT m_gameViewRect;
     std::wstring m_gameTitle;
 	int m_gameWidth;
 	int m_gameHeight;

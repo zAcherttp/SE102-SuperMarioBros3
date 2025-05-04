@@ -27,8 +27,6 @@ Game::Game() noexcept(false)
 	//   Add DX::DeviceResources::c_EnableHDR for HDR10 display.
 	m_deviceResources->RegisterDeviceNotify(this);
 	m_gameView = {};
-	m_gameViewRect = {};
-	m_gameHeight = m_gameWidth = m_wndHeight = m_wndWidth = 0;
 	m_currentWorldId = m_nextWorldId = -1;
 	m_gameTitle = L"";
 }
@@ -141,7 +139,7 @@ void Game::Render() {
 
 		// Render the game world to the render target
 		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
-			m_states->PointClamp());
+			m_states->PointClamp(), nullptr, nullptr, nullptr, m_camera->GetGameViewMatrix());
 
 		GetCurrentWorld()->Render(m_spriteBatch.get());
 
@@ -163,10 +161,13 @@ void Game::Render() {
 			m_states->PointClamp());
 
 		// Draw the game render target to the screen
-		m_spriteBatch->Draw(m_gameShaderResource.Get(), m_gameViewRect);
+		m_spriteBatch->Draw(m_gameShaderResource.Get(), m_camera->GetGameViewRect());
 
 
 		m_spriteBatch->End();
+
+		m_effect->SetView(m_camera->GetDebugViewMatrix());
+		m_effect->SetProjection(m_camera->GetDebugProjectionMatrix());
 
 		m_effect->Apply(context);
 		context->IASetInputLayout(m_inputLayout.Get());
@@ -343,6 +344,11 @@ void Game::SetNextWorldId(int id)
 	m_nextWorldId = id;
 }
 
+void Game::SetCameraPosition(const Vector2& pos, bool oneAxis)
+{
+	m_camera->SetPosition(pos, oneAxis);
+}
+
 SpriteSheet* Game::GetSpriteSheet() const
 {
 	return m_spriteSheet.get();
@@ -375,6 +381,8 @@ void Game::CreateDeviceDependentResources() {
 	auto device = m_deviceResources->GetD3DDevice();
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
+	m_camera = std::make_unique<Camera>(m_gameWidth, m_gameHeight);
+
 	D3D11_TEXTURE2D_DESC rtDesc = {};
 	rtDesc.Width = m_gameWidth;
 	rtDesc.Height = m_gameHeight;
@@ -400,17 +408,13 @@ void Game::CreateDeviceDependentResources() {
 		m_gameShaderResource.ReleaseAndGetAddressOf()));
 
 	m_spriteBatch = std::make_unique<SpriteBatch>(context);
-	m_primitiveBatch =
-		std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
-	m_states = std::make_unique<CommonStates>(device);
-	m_effect = std::make_unique<BasicEffect>(device);
+	m_primitiveBatch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(context);
 
-	auto size = m_deviceResources->GetOutputSize();
-	m_effect->SetProjection(XMMatrixOrthographicOffCenterRH(
-		0.0f, static_cast<float>(size.right),
-		static_cast<float>(size.bottom), 0.0f,
-		0.0f, 1.0f));
+	m_states = std::make_unique<CommonStates>(device);
+
+	m_effect = std::make_unique<BasicEffect>(device);
 	m_effect->SetVertexColorEnabled(true);
+	m_effect->SetWorld(Matrix::Identity);
 
 	DX::ThrowIfFailed(CreateInputLayoutFromEffect<VertexPositionColor>(
 		device, m_effect.get(), m_inputLayout.ReleaseAndGetAddressOf()));
@@ -445,58 +449,12 @@ void Game::CreateWindowSizeDependentResources() {
 	float windowWidth = static_cast<float>(size.right);
 	float windowHeight = static_cast<float>(size.bottom);
 
-	// Calculate aspect ratios
-	const float gameAspectRatio = static_cast<float>(m_gameWidth) / static_cast<float>(m_gameHeight);
-	const float windowAspectRatio = windowWidth / windowHeight;
-
-	// Center positions for UI elements
-	m_screenPos = { windowWidth / 2.f, windowHeight / 2.f };
-	m_fontPos = m_screenPos;
-
-	// Calculate letterbox/pillarbox dimensions
-	float viewWidth, viewHeight;
-	float viewX, viewY;
-
-	if (windowAspectRatio > gameAspectRatio) {
-		// Window is wider than game - pillarboxing (black bars on sides)
-		viewHeight = windowHeight;
-		viewWidth = viewHeight * gameAspectRatio;
-		viewY = 0.0f;
-		viewX = (windowWidth - viewWidth) / 2.0f;
-	}
-	else {
-		// Window is taller than game - letterboxing (black bars on top/bottom)
-		viewWidth = windowWidth;
-		viewHeight = viewWidth / gameAspectRatio;
-		viewX = 0.0f;
-		viewY = (windowHeight - viewHeight) / 2.0f;
+	if (m_camera) {
+		m_camera->UpdateWindowSizeDependentMatrices(windowWidth, windowHeight);
 	}
 
-	// Set the game view rectangle
-	m_gameViewRect = {
-		static_cast<LONG>(viewX),
-		static_cast<LONG>(viewY),
-		static_cast<LONG>(viewX + viewWidth),
-		static_cast<LONG>(viewY + viewHeight)
-	};
-
-	// Calculate scale factor to maintain proper aspect ratio
-	float scale = std::min(viewWidth / m_gameWidth, viewHeight / m_gameHeight);
-
-	// Create transformation matrices
-	XMMATRIX projectionMatrix = XMMatrixOrthographicOffCenterRH(
-		0.0f, windowWidth, windowHeight, 0.0f, 0.0f, 1.0f);
-
-	XMMATRIX transformMatrix = XMMatrixScaling(scale, scale, 1.0f) *
-		XMMatrixTranslation(viewX, viewY, 0.0f);
-
-	// Apply matrices to effect
-	m_effect->SetView(transformMatrix);
-	m_effect->SetProjection(projectionMatrix);
-
-	OutputDebugStringA(("[GameView] Scale: " + std::to_string(scale) +
-		", Translation X: " + std::to_string(viewX) +
-		", Translation Y: " + std::to_string(viewY) + "\n").c_str());
+	m_effect->SetView(m_camera->GetDebugViewMatrix());
+	m_effect->SetProjection(m_camera->GetDebugProjectionMatrix());
 }
 
 void Game::OnDeviceLost() {
