@@ -5,13 +5,13 @@
       {
         "id": 110,
         "name": "mario_small_idle",
-        "frames": [ "small-idle" ],
+        "frames": ["small-idle"],
         "loop": false
       },
       {
         "id": 120,
         "name": "mario_small_walk",
-        "frames": [ "small-walk", "small-idle" ],
+        "frames": ["small-walk", "small-idle"],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
@@ -22,13 +22,13 @@
       {
         "id": 140,
         "name": "mario_small_skid",
-        "frames": [ "small-skid" ],
+        "frames": ["small-skid"],
         "loop": false
       },
       {
         "id": 150,
         "name": "mario_small_jump",
-        "frames": [ "small-jump" ],
+        "frames": ["small-jump"],
         "loop": false
       }
     ]
@@ -39,19 +39,179 @@
       {
         "id": 1000,
         "name": "ground_top_left",
-        "frames": [ "platform-top-left" ],
+        "frames": ["platform-top-left"],
         "loop": false
       },
       {
         "id": 1010,
         "name": "ground_top_mid",
-        "frames": [ "platform-top-mid" ],
+        "frames": ["platform-top-mid"],
         "loop": false
       },
       {
         "id": 1020,
         "name": "ground_top_right",
-        "frames": [ "platform-top-right" ],
+        "frames": ["platform-top-right"],
+        "loop": false
+      },
+      {
+        "id": 1030,
+        "name": "ground_bot_left",
+        "frames": ["platform-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 1040,
+        "name": "ground_bot_mid",
+        "frames": ["platform-bot-mid"],
+        "loop": false
+      },
+      {
+        "id": 1050,
+        "name": "ground_bot_right",
+        "frames": ["platform-bot-right"],
+        "loop": false
+      },
+      {
+        "id": 1060,
+        "name": "independent-platform",
+        "frames": ["independent-platform"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 11,
+    "sprites": [
+      {
+        "id": 1100,
+        "name": "bush",
+        "frames": ["bush"],
+        "loop": false
+      },
+      {
+        "id": 1110,
+        "name": "bush-2",
+        "frames": ["cactus-left-side"],
+        "loop": false
+      },
+      {
+        "id": 1120,
+        "name": "bush-3",
+        "frames": ["cactus-right-side"],
+        "loop": false
+      },
+      {
+        "id": 1130,
+        "name": "bush-4",
+        "frames": ["cactus-mid"],
+        "loop": false
+      },
+      {
+        "id": 1140,
+        "name": "bush-5",
+        "frames": ["cactus-outer-top-left"],
+        "loop": false
+      },
+      {
+        "id": 1150,
+        "name": "bush-6",
+        "frames": ["cactus-outer-top-right"],
+        "loop": false
+      },
+      {
+        "id": 1160,
+        "name": "bush-7",
+        "frames": ["inner-cactus-top-left"],
+        "loop": false
+      },
+      {
+        "id": 1170,
+        "name": "bush-8",
+        "frames": ["inner-cactus-top-right"],
+        "loop": false
+      },
+      {
+        "id": 1101,
+        "name": "bush-9",
+        "frames": ["end-cactus-left-side"],
+        "loop": false
+      },
+      {
+        "id": 1111,
+        "name": "bush-10",
+        "frames": ["end-cactus-right-side"],
+        "loop": false
+      },
+      {
+        "id": 1121,
+        "name": "bush-11",
+        "frames": ["end-cactus-top-left"],
+        "loop": false
+      },
+      {
+        "id": 1131,
+        "name": "bush-12",
+        "frames": ["end-cactus-top-right"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 15,
+    "sprites": [
+      {
+        "id": 1500,
+        "name": "cloud-00",
+        "frames": ["cloud-00"],
+        "loop": false
+      },
+      {
+        "id": 1510,
+        "name": "cloud-10",
+        "frames": ["cloud-10"],
+        "loop": false
+      },
+      {
+        "id": 1520,
+        "name": "cloud-20",
+        "frames": ["cloud-20"],
+        "loop": false
+      },
+      {
+        "id": 1530,
+        "name": "cloud-01",
+        "frames": ["cloud-01"],
+        "loop": false
+      },
+      {
+        "id": 1540,
+        "name": "cloud-11",
+        "frames": ["cloud-11"],
+        "loop": false
+      },
+      {
+        "id": 1550,
+        "name": "cloud-21",
+        "frames": ["cloud-21"],
+        "loop": false
+      },
+      {
+        "id": 1501,
+        "name": "cloud-flower",
+        "frames": ["cloud-flower"],
+        "loop": false
+      },
+      {
+        "id": 1502,
+        "name": "cloud-star",
+        "frames": ["cloud-star"],
+        "loop": false
+      },
+      {
+        "id": 1503,
+        "name": "cloud-mushroom",
+        "frames": ["cloud-mushroom"],
         "loop": false
       }
     ]

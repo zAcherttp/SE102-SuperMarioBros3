@@ -114,7 +114,7 @@ void Animator::Update(float elapsed, float velocity)
 	}
 }
 
-void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& position)
+void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& position, const float& depth )
 {
 	if (m_currentSequence < 0 || !m_spriteSheet)
 	return;
@@ -138,7 +138,7 @@ void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& positi
 
 	// Draw the sprite with current effects (flipping)
 	m_spriteSheet->Draw(batch, *frame, position, DirectX::Colors::White,
-		m_rotation, m_scale, m_spriteEffects, m_depth);
+		m_rotation, m_scale, m_spriteEffects, depth == 1.0f ? m_depth : depth);
 }
 
 /// <summary>
@@ -147,7 +147,7 @@ void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& positi
 /// <param name="batch">A pointer to the DirectX::SpriteBatch used for rendering.</param>
 /// <param name="id">The identifier of the animation sequence to draw.</param>
 /// <param name="position">The position on the screen where the animation frame should be drawn.</param>
-void Animator::Draw(DirectX::SpriteBatch* batch, const int& id, const DirectX::XMFLOAT2& position)
+void Animator::Draw(DirectX::SpriteBatch* batch, const int& id, const DirectX::XMFLOAT2& position, const float& depth)
 {
 	if (!m_spriteSheet)
 		return;
@@ -161,8 +161,9 @@ void Animator::Draw(DirectX::SpriteBatch* batch, const int& id, const DirectX::X
 	const SpriteSheet::SpriteFrame* frame = sequence.frames[0];
 
 	m_spriteSheet->Draw(batch, *frame, position, DirectX::Colors::White,
-		m_rotation, m_scale, m_spriteEffects, m_depth);
+		m_rotation, m_scale, m_spriteEffects, depth == 10.0f ? m_depth : depth);
 }
+
 
 void Animator::SetFlipHorizontal(bool flip)
 {

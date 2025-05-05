@@ -21,8 +21,8 @@
   "worlds": [
     {
       "id": 1,
-      "name": "testWorld",
-      "path": "testWorld.json"
+      "name": "World_1-1",
+      "path": "world_1-1.json"
     }
   ]
 }

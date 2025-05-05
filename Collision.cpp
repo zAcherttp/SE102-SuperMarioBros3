@@ -459,7 +459,9 @@ void Collision::Raycast(const Entity *entity,
             if (other != entity) {
                 RECT otherBox = other->GetCollisionComponent()->GetBoundingBox();
                 float t_entry, t_exit;
-                if (RayVsRect(start, end, otherBox, t_entry, t_exit) && t_entry < 1.0f) {
+                if (RayVsRect(start, end, otherBox, t_entry, t_exit) && t_entry < 1.0f ) {
+                    if(!other->IsCollidable())
+                    continue;
                     hitEntities.push_back(other);
                 }
             }

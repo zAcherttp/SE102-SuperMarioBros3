@@ -183,7 +183,9 @@
     <ClInclude Include="Animator.h" />
     <ClInclude Include="AssetIDs.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Bush.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cloud.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="Debug.h" />
@@ -207,7 +209,9 @@
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="AssetIDs.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Bush.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cloud.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="Debug.cpp" />

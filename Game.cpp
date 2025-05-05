@@ -138,7 +138,7 @@ void Game::Render() {
 			GetCurrentWorld()->GetBackgroundColor());
 
 		// Render the game world to the render target
-		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
+		m_spriteBatch->Begin(SpriteSortMode_BackToFront, m_states->NonPremultiplied(),
 			m_states->PointClamp(), nullptr, nullptr, nullptr, m_camera->GetGameViewMatrix());
 
 		GetCurrentWorld()->Render(m_spriteBatch.get());

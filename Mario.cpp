@@ -26,12 +26,21 @@ Mario::Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spr
 
 void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker* kbsTracker) {
 
-	m_inputState->isUpPressed = kbState->IsKeyDown(UP);
-	m_inputState->isDownPressed = kbState->IsKeyDown(DOWN);
-	m_inputState->isLeftPressed = kbState->IsKeyDown(LEFT);
-	m_inputState->isRightPressed = kbState->IsKeyDown(RIGHT);
-	m_inputState->isAPressed = kbState->IsKeyDown(A_BTN);
-	m_inputState->isBPressed = kbState->IsKeyDown(B_BTN);
+
+	m_inputState->isUpDown = kbState->IsKeyDown(UP);
+	m_inputState->isDownDown = kbState->IsKeyDown(DOWN);
+	m_inputState->isLeftDown = kbState->IsKeyDown(LEFT);
+	m_inputState->isRightDown = kbState->IsKeyDown(RIGHT);
+	m_inputState->isADown = kbState->IsKeyDown(A_BTN);
+	m_inputState->isBDown = kbState->IsKeyDown(B_BTN);
+
+	m_inputState->isStartPressed = kbsTracker->IsKeyPressed(START);
+	m_inputState->isLeftPressed = kbsTracker->IsKeyPressed(LEFT);
+	m_inputState->isRightPressed = kbsTracker->IsKeyPressed(RIGHT);
+	m_inputState->isUpPressed = kbsTracker->IsKeyPressed(UP);
+	m_inputState->isDownPressed = kbsTracker->IsKeyPressed(DOWN);
+	m_inputState->isAPressed = kbsTracker->IsKeyPressed(A_BTN);
+	m_inputState->isBPressed = kbsTracker->IsKeyPressed(B_BTN);
 
 	if (!m_movementSM) return;
 
@@ -86,7 +95,13 @@ void Mario::Update(float dt)
 }
 
 void Mario::Render(DirectX::SpriteBatch* spriteBatch) {
-	Entity::Render(spriteBatch);
+		if (m_visible) {
+		// round the position to the nearest pixel
+		Vector2 pos = m_collisionComponent->GetPosition();
+		/*pos.x = static_cast<int>(pos.x + 0.5f);
+		pos.y = static_cast<int>(pos.y + 0.5f);*/
+		m_animator->Draw(spriteBatch, pos, 0.0f);
+	}
 }
 
 std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetSmallMarioInteractionPoints() const
@@ -155,6 +170,9 @@ void Mario::OnFootCollision(Entity* other, const Vector2& normal) {
 }
 
 void Mario::OnTopHeadCollision(Entity* other, const Vector2& normal) {
+	if (other->IsCollidable()) {
+		Log(LOG_INFO, "Mario hit the top of " + other->GetAnimId());
+	}
 }
 
 void Mario::OnRightSideCollision(Entity* other, const Vector2& normal) {

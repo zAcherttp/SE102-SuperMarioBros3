@@ -5,12 +5,20 @@
 using namespace DirectX::SimpleMath;
 
 struct InputState {
+	bool isLeftDown = false;
+	bool isRightDown = false;
+	bool isUpDown = false;
+	bool isDownDown = false;
+	bool isADown = false;
+	bool isBDown = false;
+
 	bool isLeftPressed = false;
 	bool isRightPressed = false;
 	bool isUpPressed = false;
 	bool isDownPressed = false;
 	bool isAPressed = false;
 	bool isBPressed = false;
+	bool isStartPressed = false;
 };
 	
 
@@ -60,4 +68,3 @@ private:
 	std::vector<std::pair<InteractionPointType, Vector2>> GetBigMarioInteractionPoints() const;
 	std::vector<std::pair<InteractionPointType, Vector2>> GetBigMarioSitInteractionPoints() const;
 };
-

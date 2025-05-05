@@ -58,12 +58,13 @@ void MarioWalkState::Exit(Mario* mario)
 	mario->SetAnimId(mario->GetAnimId() - ID_ANIM_MARIO_WALK);
 }void MarioRunState::Enter(Mario* mario)
 {
-	SetAnimation(mario, ID_ANIM_MARIO_RUN);
+	SetAnimation(mario, ID_ANIM_MARIO_WALK);
 }
 
 void MarioRunState::Exit(Mario* mario)
 {
-	mario->SetAnimId(mario->GetAnimId() - ID_ANIM_MARIO_RUN);
+    // walk because it only changes to run when speed is enough
+	mario->SetAnimId(mario->GetAnimId() - ID_ANIM_MARIO_WALK);
 }
 void MarioSkidState::Enter(Mario* mario)
 {
@@ -107,15 +108,15 @@ void MarioMovementState::Update(Mario* mario, float dt)
     Vector2 vel = mario->GetVelocity();
 	auto input = mario->GetInput();
     
-    if (input->isRightPressed)
+    if (input->isRightDown)
         mario->SetDirection(1);
-    if (input->isLeftPressed)
+    if (input->isLeftDown)
         mario->SetDirection(-1);
 
     // If in air, apply appropriate gravity
     if (!mario->IsGrounded()) {
         // Determine gravity based on jump button and upward momentum
-        float gravity = (vel.y < -2.0f * 60.0f && input->isAPressed)
+        float gravity = (vel.y < -2.0f * 60.0f && input->isADown)
             ? PLAYER_GRAVITY_SLOW 
             : PLAYER_GRAVITY_FAST;
 
@@ -135,13 +136,13 @@ MarioMovementState* MarioIdleState::HandleInput(Mario* mario)
 {
     auto input = mario->GetInput();
 
-    if (input->isLeftPressed) {
+    if (input->isLeftDown && input->isRightDown == false) {
         return MarioStateFactory::CreateState(MarioMovementStateType::Walk, Direction::Left);
     }
-    if (input->isRightPressed) {
+    if (input->isRightDown && input->isLeftDown == false) {
         return MarioStateFactory::CreateState(MarioMovementStateType::Walk, Direction::Right);
     }
-    if (input->isDownPressed && mario->IsGrounded()) {
+    if (input->isDownDown && mario->IsGrounded()) {
         return MarioStateFactory::CreateState(MarioMovementStateType::Sit, GetDirection());
     }
     if (input->isAPressed && mario->IsGrounded()) {
@@ -181,19 +182,19 @@ MarioMovementState* MarioWalkState::HandleInput(Mario* mario)
 		}
 	}
 
-	 if (input->isLeftPressed) {
-	 	if (GetDirection() == Direction::Right && mario->IsGrounded()) {
-	 		return MarioStateFactory::CreateState(MarioMovementStateType::Skid, Direction::Right);
-	 	}
-	 }
+	if (input->isLeftDown && input->isRightDown == false) {
+	    if (GetDirection() == Direction::Right && mario->IsGrounded()) {
+	 	    return MarioStateFactory::CreateState(MarioMovementStateType::Skid, Direction::Right);
+	    }
+	}
 
-	 if (input->isRightPressed) {
-	 	if (GetDirection() == Direction::Left && mario->IsGrounded()) {
-	 		return MarioStateFactory::CreateState(MarioMovementStateType::Skid, Direction::Left);
-	 	}
-	 }
+	if (input->isRightDown && input->isLeftDown == false) {
+	    if (GetDirection() == Direction::Left && mario->IsGrounded()) {
+	 	    return MarioStateFactory::CreateState(MarioMovementStateType::Skid, Direction::Left);
+	    }
+	}
 
-	if (input->isBPressed) {
+	if (input->isBDown) {
 		return MarioStateFactory::CreateState(MarioMovementStateType::Run, GetDirection());
 	}
 
@@ -210,12 +211,12 @@ void MarioWalkState::Update(Mario* mario, float dt)
     bool isGrounded = mario->IsGrounded();
     auto input = mario->GetInput();
 
-	bool isLeftPressed = input->isLeftPressed;
-	bool isRightPressed = input->isRightPressed;
+	bool isLeftDown = input->isLeftDown;
+	bool isRightDown = input->isRightDown;
 
     // Handle horizontal movement
-    if (isLeftPressed != isRightPressed) {
-        Direction hitDir = isLeftPressed ? Direction::Left : Direction::Right;
+    if (isLeftDown != isRightDown) {
+        Direction hitDir = isLeftDown ? Direction::Left : Direction::Right;
         float absDX = std::abs(vel.x);
 
         if (absDX < PLAYER_TOPWALKSPEED) {
@@ -249,19 +250,19 @@ MarioMovementState* MarioRunState::HandleInput(Mario* mario)
 	if (input->isAPressed && mario->IsGrounded()) {
 		return MarioStateFactory::CreateState(MarioMovementStateType::Jump, GetDirection());
 	}
-	if (input->isLeftPressed) {
+	if (input->isLeftDown && input->isRightDown == false) {
 		if (GetDirection() == Direction::Right && mario->IsGrounded()) {
 			return MarioStateFactory::CreateState(MarioMovementStateType::Skid, Direction::Right);
 		}
 	}
 
-	if (input->isRightPressed) {
+	if (input->isRightDown && input->isLeftDown == false) {
 		if (GetDirection() == Direction::Left && mario->IsGrounded()) {
 			return MarioStateFactory::CreateState(MarioMovementStateType::Skid, Direction::Left);
 		}
 	}
 
-	if (input->isBPressed) {
+	if (!input->isBDown) {
 		return MarioStateFactory::CreateState(MarioMovementStateType::Walk, GetDirection());
 	}
 	return nullptr;
@@ -275,11 +276,11 @@ void MarioRunState::Update(Mario* mario, float dt)
     bool isGrounded = mario->IsGrounded();
     
     // Get current direction input
-    bool isLeftPressed = input->isLeftPressed;
-    bool isRightPressed = input->isRightPressed;
+    bool isLeftDown = input->isLeftDown;
+    bool isRightDown = input->isRightDown;
     
-    if (isLeftPressed != isRightPressed) {
-        Direction hitDir = isLeftPressed ? Direction::Left : Direction::Right;
+    if (isLeftDown != isRightDown) {
+        Direction hitDir = isLeftDown ? Direction::Left : Direction::Right;
         float absDX = std::abs(vel.x);
         
         // Accelerate up to run speed
@@ -318,7 +319,7 @@ MarioMovementState* MarioSkidState::HandleInput(Mario* mario)
 {
     auto input = mario->GetInput();
 
-	if (mario->GetVelocity().x == 0) {
+	if (mario->GetVelocity().x == 0 && GetDirection() != m_lastDir) {
 		return MarioStateFactory::CreateState(MarioMovementStateType::Walk, GetDirection());
 	}
 	
@@ -335,7 +336,7 @@ void MarioSkidState::Update(Mario* mario, float dt)
     // Check if we've fully stopped or changed direction
     if ((m_lastDir == Direction::Right && vel.x <= 0) || (m_lastDir == Direction::Left && vel.x >= 0)) {
         vel.x = 0;
-        m_dir = m_lastDir == Direction::Right ? Direction::Left : Direction::Right;
+        m_dir = (m_lastDir == Direction::Right) ? Direction::Left : Direction::Right;
     }
     
     mario->SetVelocity(vel);
@@ -346,9 +347,14 @@ void MarioSkidState::Update(Mario* mario, float dt)
 MarioMovementState* MarioJumpState::HandleInput(Mario* mario)
 {
     auto input = mario->GetInput();
+    auto vel = mario->GetVelocity();
+    auto absVelX = std::abs(vel.x);
 
-    if (mario->IsGrounded()) {
-        return MarioStateFactory::CreateState(MarioMovementStateType::Idle, GetDirection());
+    if (mario->IsGrounded() && absVelX < PLAYER_TOPWALKSPEED || absVelX >= PLAYER_TOPWALKSPEED && !input->isBDown) {
+        return MarioStateFactory::CreateState(MarioMovementStateType::Walk, GetDirection());
+    }
+    if (mario->IsGrounded() && absVelX >= PLAYER_TOPWALKSPEED && input->isBDown) {
+        return MarioStateFactory::CreateState(MarioMovementStateType::Run, GetDirection());
     }
 
 	return nullptr;
@@ -360,14 +366,20 @@ void MarioJumpState::Update(Mario* mario, float dt)
     Vector2 vel = mario->GetVelocity();
 
     // Handle horizontal movement in air
-    bool isLeftPressed = input->isLeftPressed;
-    bool isRightPressed = input->isRightPressed;
+    bool isLeftDown = input->isLeftDown;
+    bool isRightDown = input->isRightDown;
     
-    if (isLeftPressed != isRightPressed) {
-        Direction hitDir = isLeftPressed ? Direction::Left : Direction::Right;
+    if (isLeftDown != isRightDown) {
+        Direction hitDir = isLeftDown ? Direction::Left : Direction::Right;
         
-        // Apply air control - less control in air
+        float speedCap = input->isBDown ? PLAYER_TOPRUNSPEED : PLAYER_TOPWALKSPEED;
+
+        // Apply air control - same speed and accel as walk
         vel.x += (int)hitDir * PLAYER_ACCEL_NORMAL * dt;
+
+        if(std::abs(vel.x) > speedCap) {
+            vel.x -= (int)hitDir * PLAYER_ACCEL_FRIC * dt;
+        }
     }
     
     mario->SetVelocity(vel);
@@ -379,7 +391,7 @@ MarioMovementState* MarioSitState::HandleInput(Mario* mario)
 {
 	auto input = mario->GetInput();
 
-	if (!input->isAPressed) {
+	if (!input->isADown) {
 		return new MarioIdleState(GetDirection());
 	}
 	return nullptr;

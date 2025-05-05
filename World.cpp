@@ -9,6 +9,8 @@
 #include "AssetIDs.h"
 #include "Game.h"
 #include "SpriteSheet.h"
+#include "Bush.h"
+#include "Cloud.h"
 
 using namespace DirectX;
 using Keys = Keyboard::Keys;
@@ -42,7 +44,6 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 	if (!m_player || !m_player->IsActive()) return;
 	Mario* mario = dynamic_cast<Mario*>(m_player);
 	if (!mario) return;
-
 	mario->HandleInput(kbState, kbsTracker);
 
 	if(kbsTracker->IsKeyPressed(Keys::R)) {
@@ -56,12 +57,12 @@ void World::Update(float dt) {
 	Vector2 pos = m_player->GetPosition();
 	int gameWidth, gameHeight;
 	Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
-	Vector2 cameraPos = pos - Vector2(gameWidth / 2, 0);
+	Vector2 cameraPos = pos - Vector2(gameWidth / 2, gameHeight/2);
 	//clamp position to nearest pixel to avoid pixel rendering artifacts
-	cameraPos.x = static_cast<int>(cameraPos.x + 0.5f);
-	cameraPos.y = 0;
+cameraPos.x = static_cast<int>(cameraPos.x + 0.5f);
+	cameraPos.y = static_cast<int>(cameraPos.y + 0.5f);
 
-	Game::GetInstance()->SetCameraPosition(cameraPos, true);
+	Game::GetInstance()->SetCameraPosition(cameraPos, false);
 
 	for (auto e : m_entities) {
 		e->Update(dt);
@@ -222,6 +223,30 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 			entity = new Ground(position, Vector2(width, height), countX, countY, isSolid, spriteSheet);
 			break;
 		}
+		 case ID_ENT_BUSH:
+		 {
+		 	int brushType = data["brushType"];
+			if(brushType ==0)
+			{
+				int tileXcount = data["tileXcount"];
+				entity = new Bush(position, tileXcount, spriteSheet, brushType);
+			}
+			else entity = new Bush(position,1, spriteSheet, brushType);
+		 	break;
+		 }
+		 case ID_ENT_CLOUD:
+		 {
+		 	int cloudType = data["cloudType"];
+			if(cloudType == 0)
+			{
+				int count = data["count"];
+				entity = new Cloud(position, count, spriteSheet, cloudType);
+			}
+			else entity = new Cloud(position,0, spriteSheet, cloudType);
+		 	break;
+		 }
+
+		//// Add more entity types here as needed
 		default:
 		Log(__FUNCTION__, "Unknown entity type: " + std::to_string(type));
 		break;;

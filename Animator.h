@@ -36,8 +36,9 @@ public:
 
     void SetAnimation(const int& id, bool reset = false);
     void Update(float elapsed, float velocity = 0.0f);
-    void Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& position);
-    void Draw(DirectX::SpriteBatch* batch, const int& id , const DirectX::XMFLOAT2& position);
+    void Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& position, const float& depth = 10.0f);
+    void Draw(DirectX::SpriteBatch* batch, const int& id , const DirectX::XMFLOAT2& position, const float& depth = 1.0f);
+    void Draw(DirectX::SpriteBatch* batch, const int& id, const DirectX::XMFLOAT2& position, const DirectX::XMFLOAT2& size);
 
     void SetFlipHorizontal(bool flip);
     void SetFlipVertical(bool flip);

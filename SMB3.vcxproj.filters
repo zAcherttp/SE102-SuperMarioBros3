@@ -48,6 +48,9 @@
     <ClInclude Include="Ground.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Bush.h" />
+    <ClInclude Include="Cloud.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -82,6 +85,9 @@
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Bush.cpp" />
+    <ClCompile Include="Cloud.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">
