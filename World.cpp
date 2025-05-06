@@ -14,6 +14,9 @@
 #include "ScrewBlock.h" 
 #include "Pipe.h"
 #include "Brick.h"
+#include "Coin.h"
+#include "SkyPlatform.h"
+#include "LuckyBlock.h"
 
 using namespace DirectX;
 using Keys = Keyboard::Keys;
@@ -278,6 +281,31 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 			int height = data["height"];
 			bool isSolid = data["solid"];
 			entity = new Brick(position, Vector2(width, height), isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_COIN:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			bool isSolid = data["solid"];
+			entity = new Coin(position, Vector2(width, height), isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_SKY_PLATFORM:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			int countX = data["countX"];
+			bool isSolid = data["solid"];
+			entity = new SkyPlatform(position, Vector2(width, height), countX, isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_LUCKY_BLOCK:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			bool isSolid = data["solid"];
+			entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet);
 			break;
 		}
 	

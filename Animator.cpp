@@ -43,30 +43,29 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 // Set the current animation and optionally reset it
 void Animator::SetAnimation(const int& id, bool reset)
 {
-	if(id == 240)
-	{
-		Log(__FUNCTION__, "skibidi - 1");
-	}
+
 	// Don't change if it's the same animation unless reset is requested
 	if (m_currentSequence == id && !reset)
 	{
 		return;
 	}
-
 	
 	// Find the animation in the unordered map
 	auto it = m_animations.find(id);
 
+
 		m_currentSequence = id;
 		Log(__FUNCTION__, "Animation set: " + std::to_string(id));
 		Log(__FUNCTION__, "Animation frames: " + std::to_string(m_animations[id].frames.size()));
+	
+
+	
 		if (reset)
 		{
 			m_currentFrame = 0;
 			m_totalElapsed = 0.f;
 			m_paused = false;
 		}
-
 }
 
 // Update the animation based on elapsed time and current velocity

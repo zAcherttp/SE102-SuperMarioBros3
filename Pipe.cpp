@@ -42,5 +42,5 @@ void Pipe::Render(DirectX::SpriteBatch* spriteBatch)
 
 void Pipe::Update(float dt)
 {
-	m_animator->Update(dt);
+    //do nothing
 }

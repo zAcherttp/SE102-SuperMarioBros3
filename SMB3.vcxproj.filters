@@ -54,6 +54,9 @@
     <ClInclude Include="ScrewBlock.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="Coin.h" />
+    <ClInclude Include="SkyPlatform.h" />
+    <ClInclude Include="LuckyBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -94,6 +97,9 @@
     <ClCompile Include="ScrewBlock.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="Coin.cpp" />
+    <ClCompile Include="SkyPlatform.cpp" />
+    <ClCompile Include="LuckyBlock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">

@@ -16,13 +16,13 @@ constexpr auto ID_ENT_GROUND                        = 10;
 constexpr auto ID_ENT_BUSH                          = 11;
 
 constexpr auto ID_ENT_CLOUD                         = 15;
-constexpr auto ID_ENT_BG_CLOUD_BIG                  = 16;
+constexpr auto ID_ENT_SKY_PLATFORM                  = 16;
 
 constexpr auto ID_ENT_BG_LIL_CLOUD                  = 17;
 constexpr auto ID_ENT_BG_WIDE_CLOUD                 = 18;
 constexpr auto ID_ENT_BG_GOAL                       = 19;
 constexpr auto ID_ENT_GOAL_CARD                     = 20;
-constexpr auto ID_ENT_QUESTION_BOX                  = 21;
+constexpr auto ID_ENT_LUCKY_BLOCK                   = 21;
 
 constexpr auto ID_ENT_GRASS_BLOCK                   = 23;
 constexpr auto ID_ENT_BRICK                         = 24;
@@ -47,6 +47,12 @@ constexpr auto ID_ANIM_MARIO_HOLD                   = 80;
 
 // Brick
 constexpr auto ID_ANIM_BRICK            	    	= 240;
+
+// Coin
+constexpr auto ID_ANIM_COIN            	        	= 280;
+
+// Lucky Block
+constexpr auto ID_ANIM_LUCKY_BLOCK               	= 210;
 
 
 //Entities's Sprite IDs
@@ -146,5 +152,8 @@ constexpr auto ID_SPRITE_PIPE_TOP_LEFT			= 2700;
 constexpr auto ID_SPRITE_PIPE_TOP_RIGHT	    	= 2710;
 constexpr auto ID_SPRITE_PIPE_BOT_LEFT	    	= 2720;
 constexpr auto ID_SPRITE_PIPE_BOT_RIGHT			= 2730;
+
+//Sky Platform
+constexpr auto ID_SPRITE_SKY_PLATFORM		= 1600;
 
 

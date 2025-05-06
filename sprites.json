@@ -396,11 +396,42 @@
         "name": "brick",
         "frames": ["brick1", "brick2", "brick3", "brick4"],
         "loop": true,
-        "timePerFrame": 0.1,
-        "useVelocityScaling": false,
-        "minTimePerFrame": 0.05,
-        "maxTimePerFrame": 0.2,
-        "velocityScaleFactor": 0.02
+        "timePerFrame": 0.3
+      }
+    ]
+  },
+  {
+    "type": 28,
+    "sprites": [
+      {
+        "id": 280,
+        "name": "coin",
+        "frames": ["coin-1", "coin-2", "coin-3", "coin-4"],
+        "loop": true,
+        "timePerFrame": 0.3
+      }
+    ]
+  },
+  {
+    "type": 16,
+    "sprites": [
+      {
+        "id": 1600,
+        "name": "sky-platform",
+        "frames": "sky-platform",
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 21,
+    "sprites": [
+      {
+        "id": 210,
+        "name": "lucky-block",
+        "frames": ["lucky-box-1", "lucky-box-2", "lucky-box-3", "lucky-box-4"],
+        "loop": true,
+        "timePerFrame": 0.3
       }
     ]
   }
