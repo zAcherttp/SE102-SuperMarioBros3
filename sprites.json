@@ -215,5 +215,193 @@
         "loop": false
       }
     ]
+  },
+  {
+    "type": 25,
+    "sprites": [
+      {
+        "id": 2513,
+        "name": "pink-mid-left",
+        "frames": ["pink-mid-left"],
+        "loop": false
+      },
+      {
+        "id": 2515,
+        "name": "pink-mid-right",
+        "frames": ["pink-mid-right"],
+        "loop": false
+      },
+      {
+        "id": 2514,
+        "name": "pink-mid-mid",
+        "frames": ["pink-mid-mid"],
+        "loop": false
+      },
+      {
+        "id": 2510,
+        "name": "pink-top-left",
+        "frames": ["pink-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2512,
+        "name": "pink-top-right",
+        "frames": ["pink-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2511,
+        "name": "pink-top-mid",
+        "frames": ["pink-top-mid"],
+        "loop": false
+      },
+      {
+        "id": 2516,
+        "name": "pink-bot-left",
+        "frames": ["pink-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2518,
+        "name": "pink-bot-right",
+        "frames": ["pink-bot-right"],
+        "loop": false
+      },
+      {
+        "id": 2517,
+        "name": "pink-bot-mid",
+        "frames": ["pink-bot-mid"],
+        "loop": false
+      },
+      {
+        "id": 2503,
+        "name": "white-mid-left",
+        "frames": ["white-mid-left"],
+        "loop": false
+      },
+      {
+        "id": 2505,
+        "name": "white-mid-right",
+        "frames": ["white-mid-right"],
+        "loop": false
+      },
+      {
+        "id": 2504,
+        "name": "white-mid-mid",
+        "frames": ["white-mid-mid"],
+        "loop": false
+      },
+      {
+        "id": 2500,
+        "name": "white-top-left",
+        "frames": ["white-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2502,
+        "name": "white-top-right",
+        "frames": ["white-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2501,
+        "name": "white-top-mid",
+        "frames": ["white-top-mid"],
+        "loop": false
+      },
+      {
+        "id": 2506,
+        "name": "white-bot-left",
+        "frames": ["white-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2508,
+        "name": "white-bot-right",
+        "frames": ["white-bot-right"],
+        "loop": false
+      },
+      {
+        "id": 2507,
+        "name": "white-bot-mid",
+        "frames": ["white-bot-mid"],
+        "loop": false
+      },
+      {
+        "id": 2550,
+        "name": "shade-left",
+        "frames": ["shade-left"],
+        "loop": false
+      },
+      {
+        "id": 2551,
+        "name": "shade-top",
+        "frames": ["shade-top"],
+        "loop": false
+      },
+      {
+        "id": 2552,
+        "name": "shade-bot-left",
+        "frames": ["shade-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2553,
+        "name": "shade-top-left",
+        "frames": ["shade-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2554,
+        "name": "shade-top-right",
+        "frames": ["shade-top-right"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 27,
+    "sprites": [
+      {
+        "id": 2700,
+        "name": "pipe-top-left",
+        "frames": ["pipe-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2710,
+        "name": "pipe-top-right",
+        "frames": ["pipe-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2720,
+        "name": "pipe-bot-left",
+        "frames": ["pipe-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2730,
+        "name": "pipe-bot-right",
+        "frames": ["pipe-bot-right"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 24,
+    "sprites": [
+      {
+        "id": 240,
+        "name": "brick",
+        "frames": ["brick1", "brick2", "brick3", "brick4"],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": false,
+        "minTimePerFrame": 0.05,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.02
+      }
+    ]
   }
 ]

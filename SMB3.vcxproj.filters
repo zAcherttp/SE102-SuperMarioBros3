@@ -51,6 +51,9 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Bush.h" />
     <ClInclude Include="Cloud.h" />
+    <ClInclude Include="ScrewBlock.h" />
+    <ClInclude Include="Pipe.h" />
+    <ClInclude Include="Brick.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -88,6 +91,9 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Bush.cpp" />
     <ClCompile Include="Cloud.cpp" />
+    <ClCompile Include="ScrewBlock.cpp" />
+    <ClCompile Include="Pipe.cpp" />
+    <ClCompile Include="Brick.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">

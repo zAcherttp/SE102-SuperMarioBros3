@@ -11,6 +11,9 @@
 #include "SpriteSheet.h"
 #include "Bush.h"
 #include "Cloud.h"
+#include "ScrewBlock.h" 
+#include "Pipe.h"
+#include "Brick.h"
 
 using namespace DirectX;
 using Keys = Keyboard::Keys;
@@ -107,7 +110,7 @@ void World::RenderDebug(DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionCol
 }
 
 void World::Reset() {
-	m_player->SetPosition(Vector2(120, 120));
+	m_player->SetPosition(Vector2(16, 400));
 	m_player->SetVelocity(Vector2::Zero);
 }
 
@@ -205,7 +208,7 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 	Entity* entity = nullptr;
 	Vector2 position(data["x"], data["y"]);
 
-	switch (type) {
+	switch (type) {		
 	case ID_ENT_MARIO:
 		if (m_player) {
 			Log(__FUNCTION__, "Mario has already been created!");
@@ -242,9 +245,42 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 				int count = data["count"];
 				entity = new Cloud(position, count, spriteSheet, cloudType);
 			}
-			else entity = new Cloud(position,0, spriteSheet, cloudType);
+			else entity = new Cloud(position, 0, spriteSheet, cloudType);
 		 	break;
 		 }
+		 case ID_ENT_SCREW_BLOCK:
+		 {
+			int width = data["width"];
+			int height = data["height"];
+			int countX = data["countX"];
+			int countY = data["countY"];
+			bool isSolid = data["solid"];
+			bool isFloating = data["floating"];
+			int color = data["color"];
+			float depth = data["depth"];
+			entity = new ScrewBlock(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, depth, color, isFloating);
+			break;
+		}	
+		case ID_ENT_PIPE:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			int countX = data["countX"];
+			int countY = data["countY"];
+			bool isSolid = data["solid"];
+			bool hasHead = data["hasHead"];
+			entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, hasHead);
+			break;
+		}
+		case ID_ENT_BRICK:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			bool isSolid = data["solid"];
+			entity = new Brick(position, Vector2(width, height), isSolid, spriteSheet);
+			break;
+		}
+	
 
 		//// Add more entity types here as needed
 		default:
@@ -282,7 +318,7 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 		int animId = sequence.contains("id") ? sequence["id"].get<int>() : -1;
 		if (animId == -1) continue;
 
-		//Log(__FUNCTION__, "Entity ID: " + std::to_string(type) + " Animation ID: " + std::to_string(animId) + " Frames: " + std::to_string(sequence["frames"].size()));
+		Log(__FUNCTION__, "Entity ID: " + std::to_string(type) + " Animation ID: " + std::to_string(animId) + " Frames: " + std::to_string(sequence["frames"].size()));
 
 		std::vector<const wchar_t*> frameNames;
 
@@ -306,12 +342,12 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 		float maxTimePerFrame = sequence.contains("maxTimePerFrame") ? sequence["maxTimePerFrame"].get<float>() : 0.2f;
 		float velocityScaleFactor = sequence.contains("velocityScaleFactor") ? sequence["velocityScaleFactor"].get<float>() : 1.0f;
 
-		/*Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - timePerFrame: " + (sequence.contains("timePerFrame") ? "found" : "using default"));
-		Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - loop: " + (sequence.contains("loop") ? "found" : "using default"));
-		Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - useVelocityScaling: " + (sequence.contains("useVelocityScaling") ? "found" : "using default"));
-		Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - minTimePerFrame: " + (sequence.contains("minTimePerFrame") ? "found" : "using default"));
-		Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - maxTimePerFrame: " + (sequence.contains("maxTimePerFrame") ? "found" : "using default"));
-		Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - velocityScaleFactor: " + (sequence.contains("velocityScaleFactor") ? "found" : "using default"));*/
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - timePerFrame: " + (sequence.contains("timePerFrame") ? "found" : "using default"));
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - loop: " + (sequence.contains("loop") ? "found" : "using default"));
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - useVelocityScaling: " + (sequence.contains("useVelocityScaling") ? "found" : "using default"));
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - minTimePerFrame: " + (sequence.contains("minTimePerFrame") ? "found" : "using default"));
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - maxTimePerFrame: " + (sequence.contains("maxTimePerFrame") ? "found" : "using default"));
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - velocityScaleFactor: " + (sequence.contains("velocityScaleFactor") ? "found" : "using default"));
 
 		entity->DefineAnimation(
 			animId,

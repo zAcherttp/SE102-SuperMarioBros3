@@ -96,7 +96,9 @@ void Entity::DefineAnimation(int animId, const std::vector<const wchar_t*>& fram
 }
 
 void Entity::SetAnimation(int animId, bool reset) {
+	Log(LOG_INFO, "Setting animation: " + std::to_string(animId) + " for entity: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
 	m_animator->SetAnimation(animId, reset);
+
 }
 
 void Entity::SetDirection(int direction) {

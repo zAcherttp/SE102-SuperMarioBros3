@@ -15,8 +15,6 @@ constexpr auto ID_ENT_GROUND                        = 10;
 
 constexpr auto ID_ENT_BUSH                          = 11;
 
-constexpr auto ID_ENT_SCREW_BLOCK                   = 25;
-
 constexpr auto ID_ENT_CLOUD                         = 15;
 constexpr auto ID_ENT_BG_CLOUD_BIG                  = 16;
 
@@ -28,6 +26,7 @@ constexpr auto ID_ENT_QUESTION_BOX                  = 21;
 
 constexpr auto ID_ENT_GRASS_BLOCK                   = 23;
 constexpr auto ID_ENT_BRICK                         = 24;
+constexpr auto ID_ENT_SCREW_BLOCK                   = 25;
 constexpr auto ID_ENT_SCREW_BLOCK_HOVER_PLATFORM           = 26;
 constexpr auto ID_ENT_PIPE                          = 27;
 constexpr auto ID_ENT_COIN                          = 28;
@@ -45,6 +44,12 @@ constexpr auto ID_ANIM_MARIO_JUMP                   = 50;
 constexpr auto ID_ANIM_MARIO_SIT                    = 60;
 constexpr auto ID_ANIM_MARIO_FLY                    = 70;
 constexpr auto ID_ANIM_MARIO_HOLD                   = 80;
+
+// Brick
+constexpr auto ID_ANIM_BRICK            	    	= 240;
+
+
+//Entities's Sprite IDs
 
 constexpr auto ID_SPRITE_GROUND_TOP_LEFT            = 1000;
 constexpr auto ID_SPRITE_GROUND_TOP_MID				= 1010;
@@ -72,61 +77,57 @@ constexpr auto ID_SPRITE_END_BUSH_RIGHT_SIDE	    = 1111;
 constexpr auto ID_SPRITE_END_BUSH_TOP_LEFT	        = 1121;
 constexpr auto ID_SPRITE_END_BUSH_TOP_RIGHT 	    = 1131;
 
-//platforms
-/// pink
-constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_MID_LEFT	       = 2510;
-constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_MID_RIGHT	       = 2520;
-constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_MID_MID		   = 2530;
-constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_TOP_LEFT		   = 2540;
-constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_TOP_RIGHT	       = 2550;
-constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_TOP_MID		   = 2560;
-constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_BOT_LEFT		   = 2570;
-constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_BOT_RIGHT	       = 2580;
-constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_BOT_MID		   = 2590;
+//Screw Block
+/// white (color 0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_TOP_LEFT        = 2500; // (0,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_TOP_MID         = 2501; // (0,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_TOP_RIGHT       = 2502; // (0,2)
+constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_MID_LEFT        = 2503; // (1,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_MID_MID         = 2504; // (1,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_MID_RIGHT       = 2505; // (1,2)
+constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_BOT_LEFT        = 2506; // (2,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_BOT_MID         = 2507; // (2,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_BOT_RIGHT       = 2508; // (2,2)
 
+/// pink (color 1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_TOP_LEFT         = 2510; // (0,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_TOP_MID          = 2511; // (0,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_TOP_RIGHT        = 2512; // (0,2)
+constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_MID_LEFT         = 2513; // (1,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_MID_MID          = 2514; // (1,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_MID_RIGHT        = 2515; // (1,2)
+constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_BOT_LEFT         = 2516; // (2,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_BOT_MID          = 2517; // (2,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_PINK_BOT_RIGHT        = 2518; // (2,2)
 
-/// blue
-constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_MID_LEFT         = 2511;
-constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_MID_RIGHT        = 2521;
-constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_MID_MID          = 2531;
-constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_TOP_LEFT         = 2541;
-constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_TOP_RIGHT        = 2551;
-constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_TOP_MID          = 2561;
-constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_BOT_LEFT         = 2571;
-constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_BOT_RIGHT        = 2581;
-constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_BOT_MID          = 2591;
+/// blue (color 2)
+constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_TOP_LEFT         = 2520; // (0,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_TOP_MID          = 2521; // (0,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_TOP_RIGHT        = 2522; // (0,2)
+constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_MID_LEFT         = 2523; // (1,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_MID_MID          = 2524; // (1,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_MID_RIGHT        = 2525; // (1,2)
+constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_BOT_LEFT         = 2526; // (2,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_BOT_MID          = 2527; // (2,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_BLUE_BOT_RIGHT        = 2528; // (2,2)
 
+/// green (color 3)
+constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_TOP_LEFT        = 2530; // (0,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_TOP_MID         = 2531; // (0,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_TOP_RIGHT       = 2532; // (0,2)
+constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_MID_LEFT        = 2533; // (1,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_MID_MID         = 2534; // (1,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_MID_RIGHT       = 2535; // (1,2)
+constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_BOT_LEFT        = 2536; // (2,0)
+constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_BOT_MID         = 2537; // (2,1)
+constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_BOT_RIGHT       = 2538; // (2,2)
 
-/// green
-constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_MID_LEFT        = 2512;
-constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_MID_RIGHT       = 2522;
-constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_MID_MID         = 2532;
-constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_TOP_LEFT        = 2542;
-constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_TOP_RIGHT       = 2552;
-constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_TOP_MID         = 2562;
-constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_BOT_LEFT        = 2572;
-constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_BOT_RIGHT       = 2582;
-constexpr auto ID_SPRITE_SCREW_BLOCK_GREEN_BOT_MID         = 2592;
-
-/// white
-constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_MID_LEFT        = 2513;
-constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_MID_RIGHT       = 2523;
-constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_MID_MID         = 2533;
-constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_TOP_LEFT        = 2543;
-constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_TOP_RIGHT       = 2553;
-constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_TOP_MID         = 2563;
-constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_BOT_LEFT        = 2573;
-constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_BOT_RIGHT       = 2583;
-constexpr auto ID_SPRITE_SCREW_BLOCK_WHITE_BOT_MID         = 2593;
-
-/// shade
-constexpr auto ID_SPRITE_SCREW_BLOCK_SHADE_LEFT            = 2514;
-constexpr auto ID_SPRITE_SCREW_BLOCK_SHADE_TOP             = 2524;
-constexpr auto ID_SPRITE_SCREW_BLOCK_SHADE_BOT_LEFT        = 2534;
-constexpr auto ID_SPRITE_SCREW_BLOCK_SHADE_TOP_LEFT        = 2544;
+/// shade (keeping these unchanged since they don't follow the same pattern)
+constexpr auto ID_SPRITE_SCREW_BLOCK_SHADE_LEFT            = 2550;
+constexpr auto ID_SPRITE_SCREW_BLOCK_SHADE_TOP             = 2551;
+constexpr auto ID_SPRITE_SCREW_BLOCK_SHADE_BOT_LEFT        = 2552;
+constexpr auto ID_SPRITE_SCREW_BLOCK_SHADE_TOP_LEFT        = 2553;
 constexpr auto ID_SPRITE_SCREW_BLOCK_SHADE_TOP_RIGHT       = 2554;
-
-// end of shade
 
 //Clouds
 constexpr auto ID_SPRITE_CLOUD_TOP_LEFT			= 1500;
@@ -139,4 +140,11 @@ constexpr auto ID_SPRITE_CLOUD_BOT_RIGHT		= 1550;
 constexpr auto ID_SPRITE_CLOUD_FLOWER	    	= 1501;
 constexpr auto ID_SPRITE_CLOUD_STAR			    = 1502;
 constexpr auto ID_SPRITE_CLOUD_MUSHROOM		    = 1503;
+
+///Pipe
+constexpr auto ID_SPRITE_PIPE_TOP_LEFT			= 2700;
+constexpr auto ID_SPRITE_PIPE_TOP_RIGHT	    	= 2710;
+constexpr auto ID_SPRITE_PIPE_BOT_LEFT	    	= 2720;
+constexpr auto ID_SPRITE_PIPE_BOT_RIGHT			= 2730;
+
 
