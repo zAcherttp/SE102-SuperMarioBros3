@@ -13,7 +13,7 @@ Coin::Coin(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteShee
 
 	// update the collision box to match the size of the ground
 	Vector2 curSize = m_collisionComponent->GetSize();
-	Vector2 newSize = Vector2(curSize.x * m_tileXcount, curSize.y);
+	Vector2 newSize = Vector2(curSize.x * m_tileXcount, curSize.y * m_tileYcount);
 	m_collisionComponent->SetSize(newSize);
 	// update the position as size is the center of the entity
 	m_collisionComponent->SetPosition(position + Vector2(newSize.x / 2 , newSize.y / 2));

@@ -145,7 +145,7 @@ void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& positi
 	// Draw the sprite with current effects (flipping)
 	m_spriteSheet->Draw(batch, *frame, position, DirectX::Colors::White,
 		m_rotation, m_scale, m_spriteEffects, depth == 1.0f ? m_depth : depth);
-	// Log(LOG_INFO, "Drawing frame: " + std::to_string(m_currentFrame) + " of animation: " + std::to_string(m_currentSequence) + " at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
+	//  Log(LOG_INFO, "Drawing frame: " + std::to_string(m_currentFrame) + " of animation: " + std::to_string(m_currentSequence) + " at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
 }
 
 /// <summary>
@@ -168,7 +168,7 @@ void Animator::Draw(DirectX::SpriteBatch* batch, const int& id, const DirectX::X
 	const SpriteSheet::SpriteFrame* frame = sequence.frames[0];
 
 	m_spriteSheet->Draw(batch, *frame, position, DirectX::Colors::White,
-		m_rotation, m_scale, m_spriteEffects, depth == 10.0f ? m_depth : depth);
+		m_rotation, m_scale, m_spriteEffects, depth);
 }
 
 

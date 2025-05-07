@@ -18,16 +18,17 @@ constexpr auto ID_ENT_BUSH                          = 11;
 constexpr auto ID_ENT_CLOUD                         = 15;
 constexpr auto ID_ENT_SKY_PLATFORM                  = 16;
 
-constexpr auto ID_ENT_BG_LIL_CLOUD                  = 17;
+constexpr auto ID_ENT_BLACK_BACKGROUND              = 17;
+
 constexpr auto ID_ENT_BG_WIDE_CLOUD                 = 18;
 constexpr auto ID_ENT_BG_GOAL                       = 19;
-constexpr auto ID_ENT_GOAL_CARD                     = 20;
+constexpr auto ID_ENT_END_PORTAL                    = 22;
 constexpr auto ID_ENT_LUCKY_BLOCK                   = 21;
 
 constexpr auto ID_ENT_GRASS_BLOCK                   = 23;
 constexpr auto ID_ENT_BRICK                         = 24;
 constexpr auto ID_ENT_SCREW_BLOCK                   = 25;
-constexpr auto ID_ENT_SCREW_BLOCK_HOVER_PLATFORM           = 26;
+constexpr auto ID_ENT_SCREW_BLOCK_HOVER_PLATFORM    = 26;
 constexpr auto ID_ENT_PIPE                          = 27;
 constexpr auto ID_ENT_COIN                          = 28;
 
@@ -54,6 +55,8 @@ constexpr auto ID_ANIM_COIN            	        	= 280;
 // Lucky Block
 constexpr auto ID_ANIM_LUCKY_BLOCK               	= 210;
 
+// End Portal
+constexpr auto ID_ANIM_END_PORTAL               	= 220;
 
 //Entities's Sprite IDs
 
@@ -156,4 +159,17 @@ constexpr auto ID_SPRITE_PIPE_BOT_RIGHT			= 2730;
 //Sky Platform
 constexpr auto ID_SPRITE_SKY_PLATFORM		= 1600;
 
+//Black Background
+constexpr auto ID_SPRITE_BLACK_BACKGROUND_SOLID	    = 1700;
+constexpr auto ID_SPRITE_BLACK_BACKGROUND_BARRIER	= 1710;
 
+// end portal
+constexpr auto ID_SPRITE_END_PORTAL_TOP_LEFT		= 2200;
+constexpr auto ID_SPRITE_END_PORTAL_TOP_MID		    = 2210;
+constexpr auto ID_SPRITE_END_PORTAL_TOP_RIGHT	    = 2220;
+constexpr auto ID_SPRITE_END_PORTAL_MID_LEFT		= 2230;
+constexpr auto ID_SPRITE_END_PORTAL_MID_MID		    = 2240;
+constexpr auto ID_SPRITE_END_PORTAL_MID_RIGHT	    = 2250;
+constexpr auto ID_SPRITE_END_PORTAL_BOT_LEFT		= 2260;
+constexpr auto ID_SPRITE_END_PORTAL_BOT_MID	    	= 2270;
+constexpr auto ID_SPRITE_END_PORTAL_BOT_RIGHT	    = 2280;

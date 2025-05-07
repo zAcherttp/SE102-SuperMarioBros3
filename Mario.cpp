@@ -100,7 +100,7 @@ void Mario::Render(DirectX::SpriteBatch* spriteBatch) {
 		Vector2 pos = m_collisionComponent->GetPosition();
 		/*pos.x = static_cast<int>(pos.x + 0.5f);
 		pos.y = static_cast<int>(pos.y + 0.5f);*/
-		m_animator->Draw(spriteBatch, pos, 0.0f);
+		m_animator->Draw(spriteBatch, pos, 0.1f);
 	}
 }
 

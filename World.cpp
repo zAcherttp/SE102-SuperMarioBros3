@@ -17,6 +17,8 @@
 #include "Coin.h"
 #include "SkyPlatform.h"
 #include "LuckyBlock.h"
+#include "BlackBackground.h"
+#include "EndPortal.h"
 
 using namespace DirectX;
 using Keys = Keyboard::Keys;
@@ -54,6 +56,9 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 
 	if(kbsTracker->IsKeyPressed(Keys::R)) {
 		Reset();
+	}
+	if(kbsTracker->IsKeyPressed(Keys::T)) {
+		Teleport();
 	}
 }
 
@@ -115,6 +120,11 @@ void World::RenderDebug(DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionCol
 void World::Reset() {
 	m_player->SetPosition(Vector2(16, 400));
 	m_player->SetVelocity(Vector2::Zero);
+}
+
+void World::Teleport() {
+		m_player->SetPosition(Vector2(2500, 400));
+		m_player->SetVelocity(Vector2::Zero);
 }
 
 void World::Load(SpriteSheet* spriteSheet)
@@ -306,6 +316,24 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 			int height = data["height"];
 			bool isSolid = data["solid"];
 			entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_BLACK_BACKGROUND:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			int countX = data["countX"];
+			int countY = data["countY"];
+			int type = data["bgtype"];
+			float depth = data["depth"];
+			entity = new BlackBackground(position, Vector2(width, height), countX, countY, spriteSheet, type, depth);
+			break;
+		}
+		case ID_ENT_END_PORTAL:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			entity = new EndPortal(position, Vector2(width, height), spriteSheet);
 			break;
 		}
 	

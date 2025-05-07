@@ -1251,6 +1251,46 @@
       "width": 16,
       "height": 16,
       "solid": false
+    },
+    {
+      "type": 17,
+      "x": 0.0,
+      "y": 432.0,
+      "width": 16,
+      "height": 16,
+      "countX": 176,
+      "countY": 12,
+      "bgtype": 0,
+      "depth": 0.0
+    },
+    {
+      "type": 17,
+      "x": 2480.0,
+      "y": 0.0,
+      "width": 16,
+      "height": 16,
+      "countX": 1,
+      "countY": 26,
+      "bgtype": 1,
+      "depth": 1.0
+    },
+    {
+      "type": 17,
+      "x": 2496.0,
+      "y": 0.0,
+      "width": 16,
+      "height": 16,
+      "countX": 20,
+      "countY": 26,
+      "bgtype": 0,
+      "depth": 1.0
+    },
+    {
+      "type": 22,
+      "x": 2688.0,
+      "y": 336.0,
+      "width": 16,
+      "height": 16
     }
   ]
 }

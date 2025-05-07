@@ -434,5 +434,88 @@
         "timePerFrame": 0.3
       }
     ]
+  },
+  {
+    "type": 17,
+    "sprites": [
+      {
+        "id": 1700,
+        "name": "end-background",
+        "frames": "end-background",
+        "loop": false
+      },
+      {
+        "id": 1710,
+        "name": "end-barrier",
+        "frames": "end-barrier",
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 22,
+    "sprites": [
+      {
+        "id": 220,
+        "name": "end-portal",
+        "frames": ["mushroom", "leaf"],
+        "loop": true,
+        "timePerFrame": 0.3
+      },
+      {
+        "id": 2200,
+        "name": "end-portal-top-left",
+        "frames": ["end-portal-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2210,
+        "name": "end-portal-top-mid",
+        "frames": ["end-portal-top-mid"],
+        "loop": false
+      },
+      {
+        "id": 2220,
+        "name": "end-portal-top-right",
+        "frames": ["end-portal-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2230,
+        "name": "end-portal-mid-left",
+        "frames": ["end-portal-mid-left"],
+        "loop": false
+      },
+      {
+        "id": 2240,
+        "name": "end-portal-mid-mid",
+        "frames": ["end-portal-mid-mid"],
+        "loop": false
+      },
+      {
+        "id": 2250,
+        "name": "end-portal-mid-right",
+        "frames": ["end-portal-mid-right"],
+        "loop": false
+      },
+      {
+        "id": 2260,
+        "name": "end-portal-bot-left",
+        "frames": ["end-portal-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2270,
+        "name": "end-portal-bot-mid",
+        "frames": ["end-portal-bot-mid"],
+        "loop": false
+      },
+      {
+        "id": 2280,
+        "name": "end-portal-bot-right",
+        "frames": ["end-portal-bot-right"],
+        "loop": false
+      }
+    ]
   }
 ]
