@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "World.h"
 #include "StepTimer.h"
+#include "HeadUpDisplay.h"
 #include "json.hpp"
 
 using json = nlohmann::json;
@@ -61,6 +62,7 @@ public:
     void SetNextWorldId(int id);
 
     void SetCameraPosition(const DirectX::SimpleMath::Vector2 & pos, bool oneAxis);
+    void MoveCamera(const DirectX::SimpleMath::Vector2& delta);
 
     SpriteSheet* GetSpriteSheet() const;
     DirectX::SpriteBatch* GetSpriteBatch() const;
@@ -108,6 +110,8 @@ private:
     std::unique_ptr<DirectX::SpriteFont> m_font;
     DirectX::SimpleMath::Vector2 m_fontPos;
     std::wstring m_spriteFontPath;
+
+    std::unique_ptr<HeadUpDisplay> m_hud;
 
 	std::unique_ptr<SpriteSheet> m_spriteSheet;
     std::wstring m_spritePath;

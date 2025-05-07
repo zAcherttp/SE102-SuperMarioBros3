@@ -72,6 +72,12 @@ void CollisionComponent::RenderDebug(DirectX::PrimitiveBatch<DirectX::VertexPosi
     // Draw bounding box
     DebugOverlay::DrawBoundingBox(primitiveBatch, GetBoundingBox(), boundingBoxColor);
 
+    RECT bbox = GetBoundingBox();
+    Vector2 pos = GetPosition();
+    Vector2 size = GetSize();
+
+    DebugOverlay::DrawLine(primitiveBatch, Vector2(pos.x, pos.y - size.y / 2.f), Vector2(pos.x + size.x, pos.y - size.y / 2.f), Colors::Cyan);
+
     // Draw interaction points
     for (const auto& [type, pointPos] : m_owner->GetInteractionPoints()) {
         Vector2 worldPos = pointPos + m_owner->GetPosition();

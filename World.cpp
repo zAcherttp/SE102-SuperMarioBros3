@@ -31,6 +31,7 @@ World::World(std::string wPath, std::string name)
 	m_entities = {};
 	m_background = {};
 	m_height = m_width = 0;
+	m_isPaused = false;
 }
 
 World::~World()
@@ -49,7 +50,14 @@ World::~World()
 }
 
 void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker* kbsTracker) {
-	if (!m_player || !m_player->IsActive()) return;
+	if(kbsTracker->IsKeyPressed(Keys::R)) {
+		Reset();
+	}
+	if(kbsTracker->IsKeyPressed(Keys::I)) {
+		TogglePause();
+	}
+
+	if (!m_player || !m_player->IsActive() || m_isPaused) return;
 	Mario* mario = dynamic_cast<Mario*>(m_player);
 	if (!mario) return;
 	mario->HandleInput(kbState, kbsTracker);
@@ -63,6 +71,9 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 }
 
 void World::Update(float dt) {
+
+	if (m_isPaused) return;
+
 	m_player->Update(dt);
 
 	Vector2 pos = m_player->GetPosition();
@@ -74,6 +85,7 @@ cameraPos.x = static_cast<int>(cameraPos.x + 0.5f);
 	cameraPos.y = static_cast<int>(cameraPos.y + 0.5f);
 
 	Game::GetInstance()->SetCameraPosition(cameraPos, false);
+	//Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
 
 	for (auto e : m_entities) {
 		e->Update(dt);
@@ -127,6 +139,11 @@ void World::Teleport() {
 		m_player->SetVelocity(Vector2::Zero);
 }
 
+void World::TogglePause()
+{
+	m_isPaused = !m_isPaused;
+}
+
 void World::Load(SpriteSheet* spriteSheet)
 {
 	try {
@@ -153,6 +170,8 @@ void World::Load(SpriteSheet* spriteSheet)
 
 	if(m_player)
 		dynamic_cast<Mario*>(m_player)->ItsAMe();
+
+	HeadUpDisplay::GetInstance()->StartTimer();
 
 	return;
 }

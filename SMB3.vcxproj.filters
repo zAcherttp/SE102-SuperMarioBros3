@@ -59,6 +59,11 @@
     <ClInclude Include="LuckyBlock.h" />
     <ClInclude Include="BlackBackground.h" />
     <ClInclude Include="EndPortal.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="HeadUpDisplay.h" />
+    <ClInclude Include="MarioPowerUpStates.h" />
+    <ClInclude Include="MarioStateBase.h" />
+    <ClInclude Include="MarioStateFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -104,6 +109,11 @@
     <ClCompile Include="LuckyBlock.cpp" />
     <ClCompile Include="BlackBackground.cpp" />
     <ClCompile Include="EndPortal.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="HeadUpDisplay.cpp" />
+    <ClCompile Include="MarioPowerUpStates.cpp" />
+    <ClCompile Include="MarioStateBase.cpp" />
+    <ClCompile Include="MarioStateFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">

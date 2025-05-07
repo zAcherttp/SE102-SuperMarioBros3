@@ -16,6 +16,9 @@ void Log(const int& labelType, std::string value)
 	case 1:
 		lbl = "WARN";
 		break;
+	case 2:
+		lbl = "ERROR";
+		break;
 	default:
 		lbl = "LOG";
 		break;

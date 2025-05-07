@@ -6,14 +6,17 @@
 
 enum class InteractionPointType {
     TopHead,
+
     LeftUpper,
-    LeftMiddle,
     LeftLower,
+
     RightUpper,
-    RightMiddle,
     RightLower,
+
     LeftFoot,
     RightFoot,
+
+    None,
 };
 
 class Entity;

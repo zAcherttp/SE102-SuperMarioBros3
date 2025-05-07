@@ -46,6 +46,7 @@ void Game::Initialize(HWND window, int width, int height) {
 
 	m_keyboard = std::make_unique<Keyboard>();
 	m_keys = std::make_unique<Keyboard::KeyboardStateTracker>();
+	m_hud = std::make_unique<HeadUpDisplay>();
 
 	m_gameView.TopLeftX = 0.0f;
 	m_gameView.TopLeftY = 0.0f;
@@ -82,6 +83,8 @@ void Game::Update(DX::StepTimer const& timer) {
 	}
 
 	if (m_nextWorldId != m_currentWorldId) SwitchWorld();
+
+	m_hud->Update(elapsedTime);
 }
 #pragma endregion
 
@@ -161,8 +164,11 @@ void Game::Render() {
 			m_states->PointClamp());
 
 		// Draw the game render target to the screen
-		m_spriteBatch->Draw(m_gameShaderResource.Get(), m_camera->GetGameViewRect());
-
+		const RECT& gameRect = m_camera->GetGameViewRect();
+		m_spriteBatch->Draw(m_gameShaderResource.Get(), gameRect);
+		//Log(LOG_INFO, "HUD position: " + std::to_string(m_gameView.TopLeftX) + ", " + std::to_string(m_gameView.TopLeftY));
+		// Draw HUD
+		m_hud->Render(m_spriteBatch.get(), m_font.get(), gameRect);
 
 		m_spriteBatch->End();
 
@@ -347,6 +353,11 @@ void Game::SetNextWorldId(int id)
 void Game::SetCameraPosition(const Vector2& pos, bool oneAxis)
 {
 	m_camera->SetPosition(pos, oneAxis);
+}
+
+void Game::MoveCamera(const DirectX::SimpleMath::Vector2& delta)
+{
+	m_camera->Move(delta);
 }
 
 SpriteSheet* Game::GetSpriteSheet() const
