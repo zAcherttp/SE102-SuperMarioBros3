@@ -20,6 +20,7 @@ public:
 	void Load(SpriteSheet* spriteSheet);
 	void Unload();
 	void Reset();
+	void TogglePause();
 
 	std::vector<Entity*>& GetEntities();
 	Entity* GetPlayer();
@@ -39,6 +40,8 @@ private:
 	int m_width;
 	int m_height;
 	DirectX::XMVECTORF32 m_background;
+
+	bool m_isPaused;
 
 	std::unique_ptr<Collision> m_collisionSystem;
 

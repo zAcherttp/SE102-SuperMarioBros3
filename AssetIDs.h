@@ -33,7 +33,7 @@ constexpr auto ID_ENT_COIN                          = 28;
 
 //Entities' animation IDs
 constexpr auto ID_ANIM_MARIO_SMALL                  = 100;
-constexpr auto ID_ANIM_MARIO_BIG                    = 101;
+constexpr auto ID_ANIM_MARIO_SUPER	                = 101;
 constexpr auto ID_ANIM_MARIO_RACCOON                = 102;
 
 constexpr auto ID_ANIM_MARIO_IDLE                   = 10;

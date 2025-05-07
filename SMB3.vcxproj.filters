@@ -48,6 +48,11 @@
     <ClInclude Include="Ground.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="HeadUpDisplay.h" />
+    <ClInclude Include="MarioPowerUpStates.h" />
+    <ClInclude Include="MarioStateBase.h" />
+    <ClInclude Include="MarioStateFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -82,6 +87,11 @@
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="HeadUpDisplay.cpp" />
+    <ClCompile Include="MarioPowerUpStates.cpp" />
+    <ClCompile Include="MarioStateBase.cpp" />
+    <ClCompile Include="MarioStateFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico">

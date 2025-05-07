@@ -1,18 +1,26 @@
 #pragma once
 #include "Entity.h"
 #include "MarioMovementStates.h"
+#include "MarioPowerUpStates.h"
 
 using namespace DirectX::SimpleMath;
 
 struct InputState {
+	bool isLeftDown = false;
+	bool isRightDown = false;
+	bool isUpDown = false;
+	bool isDownDown = false;
+	bool isADown = false;
+	bool isBDown = false;
+
 	bool isLeftPressed = false;
 	bool isRightPressed = false;
 	bool isUpPressed = false;
 	bool isDownPressed = false;
 	bool isAPressed = false;
 	bool isBPressed = false;
+	bool isStartPressed = false;
 };
-	
 
 class Mario : public Entity
 {
@@ -37,14 +45,17 @@ public:
 	int GetCoins() const { return m_coins; }
 	void SetCoins(int coins) { m_coins = coins; }
 
-	std::string GetCurrentStateName() const { return m_movementSM->GetStateName(); }
+	std::string GetCurrentMStateName() const { return m_movementSM->GetStateName(); }
+	std::string GetCurrentPStateName() const { return m_powerupSM->GetStateName(); }
 
-	void OnCollision(const CollisionEvent& event) override;
-	void OnNoCollision() override;
-	void OnTopHeadCollision(Entity* other, const Vector2& normal) override;
-	void OnFootCollision(Entity* other, const Vector2& normal) override;
-	void OnLeftSideCollision(Entity* other, const Vector2& normal) override;
-	void OnRightSideCollision(Entity* other, const Vector2& normal) override;
+	int GetCurrentMStateAnimValue() const { return m_movementSM->GetStateAnimValue(); }
+	int GetCurrentPStateAnimValue() const { return m_powerupSM->GetStateAnimValue(); }
+
+	void OnCollision(const CollisionResult& event) override;
+	void OnTopHeadCollision(const CollisionResult& event) override;
+	void OnFootCollision(const CollisionResult& event) override;
+	void OnLeftSideCollision(const CollisionResult& event) override;
+	void OnRightSideCollision(const CollisionResult& event) override;
 
 private:
 	int m_lives;
@@ -54,7 +65,7 @@ private:
 	InputState* m_inputState;
 
 	MarioMovementState* m_movementSM;
-	/*MarioPowerUpState* m_powerupSM;*/
+	MarioPowerUpState* m_powerupSM;
 
 	std::vector<std::pair<InteractionPointType, Vector2>> GetSmallMarioInteractionPoints() const;
 	std::vector<std::pair<InteractionPointType, Vector2>> GetBigMarioInteractionPoints() const;

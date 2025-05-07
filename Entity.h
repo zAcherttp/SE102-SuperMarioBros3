@@ -62,13 +62,12 @@ public:
 	virtual std::vector<std::pair<InteractionPointType, Vector2>> GetInteractionPoints() const;
 	virtual bool UsesInteractionPoints() const;
 
-	virtual void OnCollision(const CollisionEvent& event);
-	virtual void OnNoCollision();
+	virtual void OnCollision(const CollisionResult& event);
 
-	virtual void OnTopHeadCollision(Entity* other, const Vector2& normal);
-	virtual void OnFootCollision(Entity* other, const Vector2& normal);
-	virtual void OnLeftSideCollision(Entity* other, const Vector2& normal);
-	virtual void OnRightSideCollision(Entity* other, const Vector2& normal);
+	virtual void OnTopHeadCollision(const CollisionResult& event);
+	virtual void OnFootCollision(const CollisionResult& event);
+	virtual void OnLeftSideCollision(const CollisionResult& event);
+	virtual void OnRightSideCollision(const CollisionResult& event);
 	virtual bool IsGrounded() const;
 
 protected:
@@ -80,6 +79,7 @@ protected:
 	bool m_isActive = true;
 	bool m_isCollidable = true;
 	bool m_isStatic = false;
+	bool m_isGrounded = false;
 
 	//sprite
 	std::unique_ptr<Animator> m_animator;

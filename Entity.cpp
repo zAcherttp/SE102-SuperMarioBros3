@@ -31,8 +31,8 @@ void Entity::Render(DirectX::SpriteBatch* spriteBatch) {
 	if (m_visible) {
 		// round the position to the nearest pixel
 		Vector2 pos = m_collisionComponent->GetPosition();
-		/*pos.x = static_cast<int>(pos.x + 0.5f);
-		pos.y = static_cast<int>(pos.y + 0.5f);*/
+		pos.x = static_cast<int>(pos.x + 0.5f);
+		pos.y = static_cast<int>(pos.y + 0.5f);
 		m_animator->Draw(spriteBatch, pos);
 	}
 }
@@ -152,21 +152,23 @@ bool Entity::UsesInteractionPoints() const
 	return false;
 }
 
-void Entity::OnCollision(const CollisionEvent& event) {
+void Entity::OnCollision(const CollisionResult& result) {
 	if (UsesInteractionPoints()) {
-		switch (event.pointType) {
+		switch (result.pointType) {
 		case InteractionPointType::TopHead:
-			OnTopHeadCollision(event.collidedWith, event.normal);
+			OnTopHeadCollision(result);
 			break;
 		case InteractionPointType::LeftFoot:
 		case InteractionPointType::RightFoot:
-			OnFootCollision(event.collidedWith, event.normal);
+			OnFootCollision(result);
 			break;
-		case InteractionPointType::LeftMiddle:
-			OnLeftSideCollision(event.collidedWith, event.normal);
+		case InteractionPointType::LeftUpper:
+		case InteractionPointType::LeftLower:
+			OnLeftSideCollision(result);
 			break;
-		case InteractionPointType::RightMiddle:
-			OnRightSideCollision(event.collidedWith, event.normal);
+		case InteractionPointType::RightUpper:
+		case InteractionPointType::RightLower:
+			OnRightSideCollision(result);
 			break;
 		default:
 			break;
@@ -174,21 +176,12 @@ void Entity::OnCollision(const CollisionEvent& event) {
 	}
 }
 
-void Entity::OnNoCollision() {
+void Entity::OnTopHeadCollision(const CollisionResult& event) {}
+void Entity::OnFootCollision(const CollisionResult& event) {
 }
-
-void Entity::OnTopHeadCollision(Entity* other, const Vector2& normal) {}
-void Entity::OnFootCollision(Entity* other, const Vector2& normal) {
-}
-void Entity::OnLeftSideCollision(Entity* other, const Vector2& normal) {}
-void Entity::OnRightSideCollision(Entity* other, const Vector2& normal) {}
+void Entity::OnLeftSideCollision(const CollisionResult& event) {}
+void Entity::OnRightSideCollision(const CollisionResult& event) {}
 
 bool Entity::IsGrounded() const {
-	Vector2 pos = m_collisionComponent->GetPosition();
-	Vector2 size = m_collisionComponent->GetSize();
-	std::vector<Entity*> m_hitEntities;
-
-	Collision::GetInstance()->Raycast(this, pos, pos + Vector2(0, size.y / 2 ), m_hitEntities);
-
-	return !m_hitEntities.empty();
+	return m_isGrounded;
 }

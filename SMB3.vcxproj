@@ -191,10 +191,14 @@
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="HeadUpDisplay.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="MarioMovementStates.h" />
+    <ClInclude Include="MarioPowerUpStates.h" />
+    <ClInclude Include="MarioStateBase.h" />
+    <ClInclude Include="MarioStateFactory.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SpriteSheet.h" />
@@ -215,10 +219,14 @@
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="HeadUpDisplay.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="MarioMovementStates.cpp" />
+    <ClCompile Include="MarioPowerUpStates.cpp" />
+    <ClCompile Include="MarioStateBase.cpp" />
+    <ClCompile Include="MarioStateFactory.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
