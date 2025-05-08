@@ -240,8 +240,10 @@ void Mario::OnTopHeadCollision(const CollisionResult& result) {
 	bool pointInside = otherTopLeft.x <= result.pos.x && result.pos.x <= otherBottomRight.x &&
 		otherTopLeft.y <= result.pos.y && result.pos.y <= otherBottomRight.y;
 
+	Block* block = dynamic_cast<Block*>(result.collidedWith);
+
 	// Handle push down
-	if (pointInside) {
+	if (block && block->IsSolid() && pointInside) {
 		m_vel.y = PUSH_VELOCITY_Y;
 		//Log(LOG_INFO, "Push up: " + std::to_string(m_vel.y));
 		// Check if we're fully out of the bottom edge
@@ -267,8 +269,10 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 	bool pointInside = otherTopLeft.x <= result.pos.x && result.pos.x <= otherBottomRight.x &&
 		otherTopLeft.y <= result.pos.y && result.pos.y <= otherBottomRight.y;
 
+	Block* block = dynamic_cast<Block*>(result.collidedWith);
+
 	// Handle push left
-	if (pointInside) {
+	if (block && block->IsSolid() && pointInside) {
 		m_vel.x = -PUSH_VELOCITY_X;
 		// Check if we're fully out of the right edge
 		if (marioBottomRight.x <= otherTopLeft.x) {
@@ -296,8 +300,10 @@ void Mario::OnLeftSideCollision(const CollisionResult& result) {
 	bool pointInside = otherTopLeft.x <= result.pos.x && result.pos.x <= otherBottomRight.x &&
 		otherTopLeft.y <= result.pos.y && result.pos.y <= otherBottomRight.y;
 
+	Block* block = dynamic_cast<Block*>(result.collidedWith);
+
 	// Handle push right
-	if (pointInside) {
+	if (block && block->IsSolid() && pointInside) {
 		m_vel.x = PUSH_VELOCITY_X;
 		//Log(LOG_INFO, "Push right: " + std::to_string(m_vel.x));
 		// Check if we're fully out of the left edge
