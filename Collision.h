@@ -45,7 +45,7 @@ struct RaycastResult {
 
 class Collision {
 public:
-    Collision(int worldWidth, int worldHeight, int cellSize = 16);
+    Collision(int worldWidth, int worldHeight, int cellSize = 27);
     ~Collision();
 
     Collision(const Collision&) = delete;

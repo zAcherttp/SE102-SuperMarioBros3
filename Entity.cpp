@@ -187,3 +187,7 @@ void Entity::OnRightSideCollision(const CollisionResult& event) {}
 bool Entity::IsGrounded() const {
 	return m_isGrounded;
 }
+
+void Entity::Die()
+{
+}

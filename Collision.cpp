@@ -327,15 +327,16 @@ CollisionResult Collision::CheckCollision(Entity* movingEntity, Entity* staticEn
 }
 
 void Collision::ResolveCollision(Entity* entity, const CollisionResult& result, float dt)
-{
+{   
+    Vector2 velocity = entity->GetVelocity();
+    Vector2 position = entity->GetPosition() + velocity * dt * result.entryTime;
+
     if (!result.collided) return;
 
     // Calculate remaining movement after collision
     float remainingTime = 1.0f - result.entryTime;
 
     // Get velocity and current position
-    Vector2 velocity = entity->GetVelocity();
-    Vector2 position = entity->GetPosition() + velocity * dt * result.entryTime;
 
     // Add collision to debug visualization
     DebugCollisionInfo info;

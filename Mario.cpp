@@ -1,4 +1,4 @@
-#pragma once
+	#pragma once
 #include "pch.h"
 #include "Mario.h"
 #include "AssetIDs.h"
@@ -219,16 +219,16 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 	}
 
 	// Handle push up
-	if (pointInside) {
-		m_vel.y = -PUSH_VELOCITY_Y;
+	// if (pointInside) {
+	// 	m_vel.y = -PUSH_VELOCITY_Y;
 		//Log(LOG_INFO, "Push up: " + std::to_string(m_vel.y));
 		// Check if we're fully out of the top edge
-		if (marioBottomRight.y <= otherTopLeft.y) {
-			m_vel.y = 0.0f;
-			//clamp at ground to avoid bouncing
-			SetPosition(Vector2(GetPosition().x, otherTopLeft.y - size.y / 2));
-		}
-	}
+		// if (marioBottomRight.y <= otherTopLeft.y) {
+		// 	m_vel.y = 0.0f;
+		// 	//clamp at ground to avoid bouncing
+		// 	SetPosition(Vector2(GetPosition().x, otherTopLeft.y - size.y / 2));
+	// 	}
+	// }
 }
 
 void Mario::OnTopHeadCollision(const CollisionResult& result) {
