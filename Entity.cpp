@@ -32,8 +32,8 @@ void Entity::Render(DirectX::SpriteBatch* spriteBatch) {
 		// Get the position
 		Vector2 pos = m_collisionComponent->GetPosition();
 
-		pos.x = (int)(pos.x + 0.5f);
-		pos.y = (int)(pos.y + 0.5f);
+		pos.x = (float)(int)(pos.x + 0.5f);
+		pos.y = (float)(int)(pos.y - 0.5f);
 		
 		m_animator->Draw(spriteBatch, pos);
 	}
@@ -148,17 +148,29 @@ bool Entity::UsesInteractionPoints() const
 }
 
 void Entity::OnCollision(const CollisionResult& result) {
+	result;
 }
 
-void Entity::OnNoCollision(float dt, Axis axis)
-{
+void Entity::OnNoCollision(float dt, Axis axis) {
+	dt;
+	axis;
 }
 
-void Entity::OnTopHeadCollision(const CollisionResult& event) {}
+void Entity::OnTopHeadCollision(const CollisionResult& event) {
+	event;
+}
+
 void Entity::OnFootCollision(const CollisionResult& event) {
+	event;
 }
-void Entity::OnLeftSideCollision(const CollisionResult& event) {}
-void Entity::OnRightSideCollision(const CollisionResult& event) {}
+
+void Entity::OnLeftSideCollision(const CollisionResult& event) {
+	event;
+}
+
+void Entity::OnRightSideCollision(const CollisionResult& event) {
+	event;
+}
 
 bool Entity::IsGrounded() const {
 	return m_isGrounded;

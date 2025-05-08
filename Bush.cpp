@@ -6,7 +6,8 @@
 Bush::Bush(Vector2 position, int tileXcount, SpriteSheet* spriteSheet, int type)
 	: Block(position, spriteSheet), m_type(type)
 {
-
+    m_tileXcount = tileXcount;
+    m_tileYcount = 1;
 	m_isStatic = true;
     m_isCollidable = false;
     m_isSolid = false;
@@ -20,38 +21,38 @@ Bush::Bush(Vector2 position, int tileXcount, SpriteSheet* spriteSheet, int type)
 
     switch(type){
         case 0:
-                m_tileXcount = tileXcount;
-                m_tileYcount = 1;
-                newSize = Vector2(16 * tileXcount, 16);
+            m_tileXcount = tileXcount;
+            m_tileYcount = 1;
+            newSize = Vector2(16.f * tileXcount, 16.f);
             break;
         case 1: //small
             m_tileXcount = 4;
             m_tileYcount = 3;
-            newSize = Vector2(64,48);
+            newSize = Vector2(64.f,48.f);
             break;
         case 2: //mid
             m_tileXcount = 5;
             m_tileYcount = 4;
-            newSize = Vector2(80,64);
+            newSize = Vector2(80.f,64.f);
             break;
         case 3: //big
             m_tileXcount = 6;
             m_tileYcount = 8;
-            newSize = Vector2(96,128);
+            newSize = Vector2(96.f,128.f);
             break;
         case 4: // big black bush
             m_tileXcount = 5;
             m_tileYcount = 6;
-            newSize = Vector2(80,96);
+            newSize = Vector2(80.f,96.f);
             break;
         case 5: //small black bush
             m_tileXcount = 3;
             m_tileYcount = 3;
-            newSize = Vector2(48,48);
+            newSize = Vector2(48.f,48.f);
             break;
         default:
             Log(__FUNCTION__, "Unknown bush type: " + std::to_string(m_type));
-            newSize = Vector2(16, 16);
+            newSize = Vector2(16.f, 16.f);
             break;
 }
 
@@ -178,4 +179,5 @@ void Bush::Render(DirectX::SpriteBatch* spriteBatch)
 void Bush::Update(float dt)
 {
 	//do nothing
+    dt;
 }

@@ -79,10 +79,10 @@ void World::Update(float dt) {
 	Vector2 pos = m_player->GetPosition();
 	int gameWidth, gameHeight;
 	Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
-	Vector2 cameraPos = pos - Vector2(gameWidth / 2, gameHeight/2);
+	Vector2 cameraPos = pos - Vector2(gameWidth / 2.f, gameHeight/2.f);
 	//clamp position to nearest pixel to avoid pixel rendering artifacts
 	//cameraPos.x = (int)(cameraPos.x + 0.5f);
-	cameraPos.y = 0;
+	cameraPos.y = 250;
 
 	Game::GetInstance()->SetCameraPosition(cameraPos, false);
 	//Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
@@ -235,12 +235,12 @@ void World::LoadEntities(const json& data, const json& anim, SpriteSheet* sprite
 	}
 }
 
-Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet)
+Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSheet)
 {
 	Entity* entity = nullptr;
 	Vector2 position(data["x"], data["y"]);
 
-	switch (type) {		
+	switch (entType) {
 	case ID_ENT_MARIO:
 		if (m_player) {
 			Log(__FUNCTION__, "Mario has already been created!");
@@ -250,8 +250,8 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 		break;
 		case ID_ENT_GROUND:
 		{
-			int width = data["width"];
-			int height = data["height"];
+			float width = data["width"];
+			float height = data["height"];
 			int countX = data["countX"];
 			int countY = data["countY"];
 			bool isSolid = data["solid"];
@@ -282,8 +282,8 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 		 }
 		 case ID_ENT_SCREW_BLOCK:
 		 {
-			int width = data["width"];
-			int height = data["height"];
+			float width = data["width"];
+			float height = data["height"];
 			int countX = data["countX"];
 			int countY = data["countY"];
 			bool isSolid = data["solid"];
@@ -295,8 +295,8 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 		}	
 		case ID_ENT_PIPE:
 		{
-			int width = data["width"];
-			int height = data["height"];
+			float width = data["width"];
+			float height = data["height"];
 			int countX = data["countX"];
 			int countY = data["countY"];
 			bool isSolid = data["solid"];
@@ -306,24 +306,24 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 		}
 		case ID_ENT_BRICK:
 		{
-			int width = data["width"];
-			int height = data["height"];
+			float width = data["width"];
+			float height = data["height"];
 			bool isSolid = data["solid"];
 			entity = new Brick(position, Vector2(width, height), isSolid, spriteSheet);
 			break;
 		}
 		case ID_ENT_COIN:
 		{
-			int width = data["width"];
-			int height = data["height"];
+			float width = data["width"];
+			float height = data["height"];
 			bool isSolid = data["solid"];
 			entity = new Coin(position, Vector2(width, height), isSolid, spriteSheet);
 			break;
 		}
 		case ID_ENT_SKY_PLATFORM:
 		{
-			int width = data["width"];
-			int height = data["height"];
+			float width = data["width"];
+			float height = data["height"];
 			int countX = data["countX"];
 			bool isSolid = data["solid"];
 			entity = new SkyPlatform(position, Vector2(width, height), countX, isSolid, spriteSheet);
@@ -331,27 +331,27 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 		}
 		case ID_ENT_LUCKY_BLOCK:
 		{
-			int width = data["width"];
-			int height = data["height"];
+			float width = data["width"];
+			float height = data["height"];
 			bool isSolid = data["solid"];
 			entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet);
 			break;
 		}
 		case ID_ENT_BLACK_BACKGROUND:
 		{
-			int width = data["width"];
-			int height = data["height"];
+			float width = data["width"];
+			float height = data["height"];
 			int countX = data["countX"];
 			int countY = data["countY"];
-			int type = data["bgtype"];
+			int bgtype = data["bgtype"];
 			float depth = data["depth"];
-			entity = new BlackBackground(position, Vector2(width, height), countX, countY, spriteSheet, type, depth);
+			entity = new BlackBackground(position, Vector2(width, height), countX, countY, spriteSheet, bgtype, depth);
 			break;
 		}
 		case ID_ENT_END_PORTAL:
 		{
-			int width = data["width"];
-			int height = data["height"];
+			float width = data["width"];
+			float height = data["height"];
 			entity = new EndPortal(position, Vector2(width, height), spriteSheet);
 			break;
 		}
@@ -359,7 +359,7 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 
 		//// Add more entity types here as needed
 		default:
-		Log(__FUNCTION__, "Unknown entity type: " + std::to_string(type));
+		Log(__FUNCTION__, "Unknown entity type: " + std::to_string(entType));
 		break;;
 	}
 	
@@ -369,7 +369,7 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 	} else if (entity) {
 		m_entities.push_back(entity);
 	} else {
-		Log(__FUNCTION__, "Failed to create entity of type: " + std::to_string(type));
+		Log(__FUNCTION__, "Failed to create entity of type: " + std::to_string(entType));
 		delete entity;
 		return nullptr;
 	}

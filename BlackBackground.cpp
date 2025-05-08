@@ -56,4 +56,5 @@ void BlackBackground::Render(DirectX::SpriteBatch* spriteBatch)
 void BlackBackground::Update(float dt)
 {
 	//do nothing
+    dt;
 }

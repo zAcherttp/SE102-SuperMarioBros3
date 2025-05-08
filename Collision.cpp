@@ -617,8 +617,8 @@ void Collision::RenderDebug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor
     if (!primitiveBatch)
         return;
 
-    XMVECTORF32 color = Colors::Yellow;
-    color.f[3] = 0.3f; // Alpha for transparency
+    XMVECTORF32 color = Colors::Black;
+    color.f[3] = 0.8f; // Alpha for transparency
 
     // Draw cells around all checked entities
     for(auto& pair : m_entityCells) {
