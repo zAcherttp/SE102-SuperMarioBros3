@@ -20,6 +20,7 @@ public:
 	void Load(SpriteSheet* spriteSheet);
 	void Unload();
 	void Reset();
+	void Teleport();
 	void TogglePause();
 
 	std::vector<Entity*>& GetEntities();

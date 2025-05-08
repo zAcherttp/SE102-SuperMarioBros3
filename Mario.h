@@ -83,4 +83,3 @@ private:
 	std::vector<std::pair<InteractionPointType, Vector2>> GetBigMarioInteractionPoints() const;
 	std::vector<std::pair<InteractionPointType, Vector2>> GetBigMarioSitInteractionPoints() const;
 };
-

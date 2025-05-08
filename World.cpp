@@ -9,6 +9,16 @@
 #include "AssetIDs.h"
 #include "Game.h"
 #include "SpriteSheet.h"
+#include "Bush.h"
+#include "Cloud.h"
+#include "ScrewBlock.h" 
+#include "Pipe.h"
+#include "Brick.h"
+#include "Coin.h"
+#include "SkyPlatform.h"
+#include "LuckyBlock.h"
+#include "BlackBackground.h"
+#include "EndPortal.h"
 
 using namespace DirectX;
 using Keys = Keyboard::Keys;
@@ -50,8 +60,14 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 	if (!m_player || !m_player->IsActive() || m_isPaused) return;
 	Mario* mario = dynamic_cast<Mario*>(m_player);
 	if (!mario) return;
-
 	mario->HandleInput(kbState, kbsTracker);
+
+	if(kbsTracker->IsKeyPressed(Keys::R)) {
+		Reset();
+	}
+	if(kbsTracker->IsKeyPressed(Keys::T)) {
+		Teleport();
+	}
 }
 
 void World::Update(float dt) {
@@ -63,12 +79,12 @@ void World::Update(float dt) {
 	Vector2 pos = m_player->GetPosition();
 	int gameWidth, gameHeight;
 	Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
-	Vector2 cameraPos = pos - Vector2(gameWidth / 2, 0);
+	Vector2 cameraPos = pos - Vector2(gameWidth / 2, gameHeight/2);
 	//clamp position to nearest pixel to avoid pixel rendering artifacts
 	//cameraPos.x = (int)(cameraPos.x + 0.5f);
 	cameraPos.y = 0;
 
-	Game::GetInstance()->SetCameraPosition(cameraPos, true);
+	Game::GetInstance()->SetCameraPosition(cameraPos, false);
 	//Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
 
 	for (auto e : m_entities) {
@@ -114,8 +130,13 @@ void World::RenderDebug(DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionCol
 }
 
 void World::Reset() {
-	m_player->SetPosition(Vector2(120, 120));
+	m_player->SetPosition(Vector2(16, 400));
 	m_player->SetVelocity(Vector2::Zero);
+}
+
+void World::Teleport() {
+		m_player->SetPosition(Vector2(2500, 400));
+		m_player->SetVelocity(Vector2::Zero);
 }
 
 void World::TogglePause()
@@ -219,7 +240,7 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 	Entity* entity = nullptr;
 	Vector2 position(data["x"], data["y"]);
 
-	switch (type) {
+	switch (type) {		
 	case ID_ENT_MARIO:
 		if (m_player) {
 			Log(__FUNCTION__, "Mario has already been created!");
@@ -237,6 +258,106 @@ Entity* World::CreateEntity(int type, const json& data, SpriteSheet* spriteSheet
 			entity = new Ground(position, Vector2(width, height), countX, countY, isSolid, spriteSheet);
 			break;
 		}
+		 case ID_ENT_BUSH:
+		 {
+		 	int brushType = data["brushType"];
+			if(brushType ==0)
+			{
+				int tileXcount = data["tileXcount"];
+				entity = new Bush(position, tileXcount, spriteSheet, brushType);
+			}
+			else entity = new Bush(position,1, spriteSheet, brushType);
+		 	break;
+		 }
+		 case ID_ENT_CLOUD:
+		 {
+		 	int cloudType = data["cloudType"];
+			if(cloudType == 0)
+			{
+				int count = data["count"];
+				entity = new Cloud(position, count, spriteSheet, cloudType);
+			}
+			else entity = new Cloud(position, 0, spriteSheet, cloudType);
+		 	break;
+		 }
+		 case ID_ENT_SCREW_BLOCK:
+		 {
+			int width = data["width"];
+			int height = data["height"];
+			int countX = data["countX"];
+			int countY = data["countY"];
+			bool isSolid = data["solid"];
+			bool isFloating = data["floating"];
+			int color = data["color"];
+			float depth = data["depth"];
+			entity = new ScrewBlock(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, depth, color, isFloating);
+			break;
+		}	
+		case ID_ENT_PIPE:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			int countX = data["countX"];
+			int countY = data["countY"];
+			bool isSolid = data["solid"];
+			bool hasHead = data["hasHead"];
+			entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, hasHead);
+			break;
+		}
+		case ID_ENT_BRICK:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			bool isSolid = data["solid"];
+			entity = new Brick(position, Vector2(width, height), isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_COIN:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			bool isSolid = data["solid"];
+			entity = new Coin(position, Vector2(width, height), isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_SKY_PLATFORM:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			int countX = data["countX"];
+			bool isSolid = data["solid"];
+			entity = new SkyPlatform(position, Vector2(width, height), countX, isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_LUCKY_BLOCK:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			bool isSolid = data["solid"];
+			entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_BLACK_BACKGROUND:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			int countX = data["countX"];
+			int countY = data["countY"];
+			int type = data["bgtype"];
+			float depth = data["depth"];
+			entity = new BlackBackground(position, Vector2(width, height), countX, countY, spriteSheet, type, depth);
+			break;
+		}
+		case ID_ENT_END_PORTAL:
+		{
+			int width = data["width"];
+			int height = data["height"];
+			entity = new EndPortal(position, Vector2(width, height), spriteSheet);
+			break;
+		}
+	
+
+		//// Add more entity types here as needed
 		default:
 		Log(__FUNCTION__, "Unknown entity type: " + std::to_string(type));
 		break;;
@@ -272,7 +393,7 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 		int animId = sequence.contains("id") ? sequence["id"].get<int>() : -1;
 		if (animId == -1) continue;
 
-		//Log(__FUNCTION__, "Entity ID: " + std::to_string(type) + " Animation ID: " + std::to_string(animId) + " Frames: " + std::to_string(sequence["frames"].size()));
+		Log(__FUNCTION__, "Entity ID: " + std::to_string(type) + " Animation ID: " + std::to_string(animId) + " Frames: " + std::to_string(sequence["frames"].size()));
 
 		std::vector<const wchar_t*> frameNames;
 
@@ -296,12 +417,12 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 		float maxTimePerFrame = sequence.contains("maxTimePerFrame") ? sequence["maxTimePerFrame"].get<float>() : 0.2f;
 		float velocityScaleFactor = sequence.contains("velocityScaleFactor") ? sequence["velocityScaleFactor"].get<float>() : 1.0f;
 
-		/*Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - timePerFrame: " + (sequence.contains("timePerFrame") ? "found" : "using default"));
-		Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - loop: " + (sequence.contains("loop") ? "found" : "using default"));
-		Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - useVelocityScaling: " + (sequence.contains("useVelocityScaling") ? "found" : "using default"));
-		Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - minTimePerFrame: " + (sequence.contains("minTimePerFrame") ? "found" : "using default"));
-		Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - maxTimePerFrame: " + (sequence.contains("maxTimePerFrame") ? "found" : "using default"));
-		Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - velocityScaleFactor: " + (sequence.contains("velocityScaleFactor") ? "found" : "using default"));*/
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - timePerFrame: " + (sequence.contains("timePerFrame") ? "found" : "using default"));
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - loop: " + (sequence.contains("loop") ? "found" : "using default"));
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - useVelocityScaling: " + (sequence.contains("useVelocityScaling") ? "found" : "using default"));
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - minTimePerFrame: " + (sequence.contains("minTimePerFrame") ? "found" : "using default"));
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - maxTimePerFrame: " + (sequence.contains("maxTimePerFrame") ? "found" : "using default"));
+		// Log(__FUNCTION__, "Animation " + std::to_string(animId) + " - velocityScaleFactor: " + (sequence.contains("velocityScaleFactor") ? "found" : "using default"));
 
 		entity->DefineAnimation(
 			animId,

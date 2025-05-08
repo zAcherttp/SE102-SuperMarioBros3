@@ -124,7 +124,13 @@ void Mario::Update(float dt)
 }
 
 void Mario::Render(DirectX::SpriteBatch* spriteBatch) {
-	Entity::Render(spriteBatch);
+		if (m_visible) {
+		// round the position to the nearest pixel
+		Vector2 pos = m_collisionComponent->GetPosition();
+		/*pos.x = static_cast<int>(pos.x + 0.5f);
+		pos.y = static_cast<int>(pos.y + 0.5f);*/
+		m_animator->Draw(spriteBatch, pos, 0.1f);
+	}
 }
 
 std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetSmallMarioInteractionPoints() const
