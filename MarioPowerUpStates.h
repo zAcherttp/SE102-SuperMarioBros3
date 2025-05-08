@@ -13,7 +13,6 @@ public:
 	void Update(Mario* mario, float dt) override = 0;
 	void Enter(Mario* mario) override;
 	void Exit(Mario* mario) override;
-	virtual Vector2 GetSize() const = 0;
 };
 
 class MarioSmallState : public MarioPowerUpState {
@@ -23,7 +22,7 @@ public:
 	void Update(Mario* mario, float dt) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
-	Vector2 GetSize() const override;
+	Vector2 GetStateSizeOffset() const override;
 };
 
 class MarioSuperState : public MarioPowerUpState {
@@ -33,7 +32,7 @@ public:
 	void Update(Mario* mario, float dt) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
-	Vector2 GetSize() const override;
+	Vector2 GetStateSizeOffset() const override;
 };
 
 class MarioRaccoonState : public MarioPowerUpState {
@@ -43,5 +42,5 @@ public:
 	void Update(Mario* mario, float dt) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
-	Vector2 GetSize() const override;
+	Vector2 GetStateSizeOffset() const override;
 };

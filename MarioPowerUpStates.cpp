@@ -12,13 +12,19 @@ int MarioSmallState::GetStateAnimValue() const { return ID_ANIM_MARIO_SMALL; }
 int MarioSuperState::GetStateAnimValue() const { return ID_ANIM_MARIO_SUPER; }
 int MarioRaccoonState::GetStateAnimValue() const { return ID_ANIM_MARIO_RACCOON; }
 
+Vector2 MarioSmallState::GetStateSizeOffset() const { return Vector2(12, 15); }
+Vector2 MarioSuperState::GetStateSizeOffset() const { return Vector2(12, 15); }
+Vector2 MarioRaccoonState::GetStateSizeOffset() const { return Vector2(12, 15); }
+
 void MarioPowerUpState::Enter(Mario* mario)
 {
+    mario->SetSize(mario->GetCurrentMStateSizeOffset() + mario->GetCurrentPStateSizeOffset());
     SetAnimation(mario, mario->GetCurrentMStateAnimValue() + mario->GetCurrentPStateAnimValue());
 }
 
 void MarioPowerUpState::Exit(Mario* mario)
 {
+    mario->SetSize(mario->GetCurrentMStateSizeOffset() - mario->GetCurrentPStateSizeOffset());
     SetAnimation(mario, mario->GetCurrentMStateAnimValue() - mario->GetCurrentPStateAnimValue());
 }
 
@@ -33,13 +39,6 @@ void MarioSmallState::Update(Mario* mario, float dt)
     // also do absolutely nothing
 }
 
-Vector2 MarioSmallState::GetSize() const {
-
-    // TODO: size is different when jumping
-
-    return Vector2(12, 15);
-}
-
 MarioPowerUpState* MarioSuperState::HandleInput(Mario* mario)
 {
     // do absolutely nothing
@@ -51,13 +50,6 @@ void MarioSuperState::Update(Mario* mario, float dt)
     // also do absolutely nothing
 }
 
-Vector2 MarioSuperState::GetSize() const {
-
-    // TODO: size is different when jumping
-
-    return Vector2(12, 15);
-}
-
 MarioPowerUpState* MarioRaccoonState::HandleInput(Mario* mario)
 {
     // do absolutely nothing
@@ -67,11 +59,4 @@ MarioPowerUpState* MarioRaccoonState::HandleInput(Mario* mario)
 void MarioRaccoonState::Update(Mario* mario, float dt)
 {
     // also do absolutely nothing
-}
-
-Vector2 MarioRaccoonState::GetSize() const {
-
-    // TODO: size is different when jumping
-
-    return Vector2(12, 15);
 }

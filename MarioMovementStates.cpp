@@ -40,11 +40,20 @@ int MarioSkidState::GetStateAnimValue() const { return ID_ANIM_MARIO_SKID; }
 int MarioJumpState::GetStateAnimValue() const { return ID_ANIM_MARIO_JUMP; }
 int MarioSitState::GetStateAnimValue() const { return ID_ANIM_MARIO_SIT; }
 
+Vector2 MarioIdleState::GetStateSizeOffset() const { return Vector2(0, 0); }
+Vector2 MarioWalkState::GetStateSizeOffset() const { return Vector2(0, 0); }
+Vector2 MarioRunState::GetStateSizeOffset() const { return Vector2(0, 0); }
+Vector2 MarioSkidState::GetStateSizeOffset() const { return Vector2(0, 0); }
+Vector2 MarioJumpState::GetStateSizeOffset() const { return Vector2(0, 0); }
+Vector2 MarioSitState::GetStateSizeOffset() const { return Vector2(0, 0); }
+
 void MarioMovementState::Enter(Mario* mario) {
+    mario->SetSize(mario->GetCurrentPStateSizeOffset() + mario->GetCurrentMStateSizeOffset());
     SetAnimation(mario, mario->GetCurrentPStateAnimValue() + mario->GetCurrentMStateAnimValue());
 }
 
 void MarioMovementState::Exit(Mario* mario) {
+    mario->SetSize(mario->GetCurrentPStateSizeOffset() - mario->GetCurrentMStateSizeOffset());
     SetAnimation(mario, mario->GetCurrentPStateAnimValue() - mario->GetCurrentMStateAnimValue());
 }
 
@@ -58,46 +67,79 @@ void MarioJumpState::Enter(Mario* mario)
     mario->SetVelocity(Vector2(mario->GetVelocity().x, PLAYER_JUMP_FORCE[speedIndex]));
     
     // Set animation
+    mario->SetSize(mario->GetCurrentPStateSizeOffset() + mario->GetCurrentMStateSizeOffset());
     SetAnimation(mario, mario->GetCurrentPStateAnimValue() + mario->GetCurrentMStateAnimValue());
 }
 
 void MarioMovementState::Update(Mario* mario, float dt)
 {
-    // Apply universal forces on mario based on grounded state
+    // Apply universal forces
     Vector2 vel = mario->GetVelocity();
 	auto input = mario->GetInput();
     
     if (input->isRightDown)
-        mario->SetDirection(1);
+        mario->SetDirection((int)Direction::Right);
     if (input->isLeftDown)
-        mario->SetDirection(-1);
+        mario->SetDirection((int)Direction::Left);
 
-    // If in air, apply appropriate gravity
-    if (!mario->IsGrounded()) {
-        // Determine gravity based on jump button and upward momentum
+    // Determine gravity based on jump button and upward momentum
+    if (!mario->IsGrounded())
+    {
         float gravity = (vel.y < -2.0f * 60.0f && input->isADown)
-            ? PLAYER_GRAVITY_SLOW 
-            : PLAYER_GRAVITY_FAST;
+        ? PLAYER_GRAVITY_SLOW
+        : PLAYER_GRAVITY_FAST;
 
-        mario->SetVelocity(vel + Vector2(0, gravity * dt));
+        vel.y += gravity * dt;
     }
+    /*if(input->isUpDown) {
+        vel.y -= PLAYER_ACCEL_NORMAL * dt;
+    }
+    if(input->isDownDown) {
+        vel.y += PLAYER_ACCEL_NORMAL * dt;
+    }
+    if(input->isLeftDown) {
+        vel.x -= PLAYER_ACCEL_NORMAL * dt;
+    }
+    if(input->isRightDown) {
+        vel.x += PLAYER_ACCEL_NORMAL * dt;
+    }
+
+    if(!input->isUpDown && !input->isDownDown) {
+        if (vel.y < 0) {
+            vel.y += PLAYER_ACCEL_FRIC * dt;
+            if (vel.y > 0) vel.y = 0;
+        } else if (vel.y > 0) {
+            vel.y -= PLAYER_ACCEL_FRIC * dt;
+            if (vel.y < 0) vel.y = 0;
+        }
+    }
+    if(!input->isLeftDown && !input->isRightDown) {
+        if (vel.x < 0) {
+            vel.x += PLAYER_ACCEL_FRIC * dt;
+            if (vel.x > 0) vel.x = 0;
+        } else if (vel.x > 0) {
+            vel.x -= PLAYER_ACCEL_FRIC * dt;
+            if (vel.x < 0) vel.x = 0;
+        }
+    }*/
 
     // Ensure mario's velocity doesn't exceed maximum speed
     if (vel.x > PLAYER_TOP_SPEED) vel.x = PLAYER_TOP_SPEED;
+    if (vel.y > PLAYER_TOP_SPEED) vel.y = PLAYER_TOP_SPEED;
     if (vel.x < -PLAYER_TOP_SPEED) vel.x = -PLAYER_TOP_SPEED;
+    if (vel.y < -PLAYER_TOP_SPEED) vel.y = -PLAYER_TOP_SPEED;
     
-    // Update position based on velocity
-    mario->SetPosition(mario->GetPosition() + vel * dt);
+    mario->SetVelocity(vel);
 }
 
 MarioMovementState* MarioIdleState::HandleInput(Mario* mario)
 {
     auto input = mario->GetInput();
 
-    if (input->isLeftDown && input->isRightDown == false) {
+    if (input->isLeftDown && !input->isRightDown) {
         return MarioStateFactory::CreateState(MarioMovementStateType::Walk, Direction::Left);
     }
-    if (input->isRightDown && input->isLeftDown == false) {
+    if (input->isRightDown && !input->isLeftDown) {
         return MarioStateFactory::CreateState(MarioMovementStateType::Walk, Direction::Right);
     }
     if (input->isDownDown && mario->IsGrounded()) {
@@ -153,7 +195,8 @@ MarioMovementState* MarioWalkState::HandleInput(Mario* mario)
 		return MarioStateFactory::CreateState(MarioMovementStateType::Run, GetDirection());
 	}
 
-	if (mario->GetVelocity().x == 0 && mario->IsGrounded()) {
+	if (!input->isLeftDown && !input->isRightDown && mario->GetVelocity().x == 0 && mario->IsGrounded() ||
+        input->isLeftDown && input->isRightDown && mario->GetVelocity().x == 0) {
 		return MarioStateFactory::CreateState(MarioMovementStateType::Idle, GetDirection());
 	}
 
@@ -347,7 +390,7 @@ void MarioJumpState::Update(Mario* mario, float dt)
         vel.x += (int)hitDir * PLAYER_ACCEL_NORMAL * dt;
 
         if(std::abs(vel.x) > speedCap) {
-            vel.x -= (int)hitDir * PLAYER_ACCEL_FRIC * dt;
+            vel.x -= (vel.x > 0 ? 1 : -1) * PLAYER_ACCEL_FRIC * dt;
         }
     }
     

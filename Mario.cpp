@@ -18,11 +18,6 @@ using Keyboard = DirectX::Keyboard;
 #define B_BTN		Keyboard::J
 #define A_BTN		Keyboard::K
 
-constexpr float PLATFORM_COLLISION_TOP_PADDING = 5.f;
-constexpr float PUSH_VELOCITY_X = 20.f;
-constexpr float PUSH_VELOCITY_Y = 60.f;
-
-
 Mario::Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spriteSheet)
 	: Entity(position, spriteSheet), m_lives(lives), m_score(score), m_coins(coins)
 {
@@ -33,18 +28,24 @@ Mario::Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spr
 
 void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker* kbsTracker) {
 
-	m_inputState->isUpDown = kbState->IsKeyDown(UP);
-	m_inputState->isDownDown = kbState->IsKeyDown(DOWN);
-	m_inputState->isLeftDown = kbState->IsKeyDown(LEFT);
-	m_inputState->isRightDown = kbState->IsKeyDown(RIGHT);
+	if (!m_collisionComponent->GetIsPushed()) {
+		m_inputState->isUpDown = kbState->IsKeyDown(UP);
+		m_inputState->isDownDown = kbState->IsKeyDown(DOWN);
+		m_inputState->isLeftDown = kbState->IsKeyDown(LEFT);
+		m_inputState->isRightDown = kbState->IsKeyDown(RIGHT);
+		m_inputState->isUpPressed = kbsTracker->IsKeyPressed(UP);
+		m_inputState->isDownPressed = kbsTracker->IsKeyPressed(DOWN);
+		m_inputState->isLeftPressed = kbsTracker->IsKeyPressed(LEFT);
+		m_inputState->isRightPressed = kbsTracker->IsKeyPressed(RIGHT);
+	}
+	else {
+		m_inputState->ResetDirectionals();
+	}
 	m_inputState->isADown = kbState->IsKeyDown(A_BTN);
 	m_inputState->isBDown = kbState->IsKeyDown(B_BTN);
 
 	m_inputState->isStartPressed = kbsTracker->IsKeyPressed(START);
-	m_inputState->isLeftPressed = kbsTracker->IsKeyPressed(LEFT);
-	m_inputState->isRightPressed = kbsTracker->IsKeyPressed(RIGHT);
-	m_inputState->isUpPressed = kbsTracker->IsKeyPressed(UP);
-	m_inputState->isDownPressed = kbsTracker->IsKeyPressed(DOWN);
+
 	m_inputState->isAPressed = kbsTracker->IsKeyPressed(A_BTN);
 	m_inputState->isBPressed = kbsTracker->IsKeyPressed(B_BTN);
 
@@ -109,14 +110,14 @@ void Mario::Update(float dt)
 
 	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
 
+	m_collisionComponent->Update(dt);
+
 	m_powerupSM->Update(this, dt);
 	m_movementSM->Update(this, dt);
-	m_animator->Update(dt, m_vel.x);
-
-	if (m_powerupSM) SetSize(m_powerupSM->GetSize());
+	m_animator->Update(dt, m_collisionComponent->GetVelocity().x);
 
 	HeadUpDisplay::GetInstance()->UpdatePMeter(
-		m_vel.Length(),
+		m_collisionComponent->GetVelocity().Length(),
 		IsGrounded(),
 		m_inputState->isBDown,
 		m_inputState->isLeftDown || m_inputState->isRightDown);
@@ -131,7 +132,7 @@ std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetSmallMarioIntera
 	std::vector<std::pair<InteractionPointType, Vector2>> points;
 	Vector2 size = GetCollisionComponent()->GetSize();
 
-	points.push_back({ InteractionPointType::TopHead, Vector2(0, -size.y / 2 - 1) });
+	points.push_back({ InteractionPointType::TopHead, Vector2(0, -size.y / 2) });
 	points.push_back({ InteractionPointType::LeftUpper, Vector2(-size.x / 2, -size.y / 4) });
 	points.push_back({ InteractionPointType::LeftLower, Vector2(-size.x / 2, size.y / 4) });
 	points.push_back({ InteractionPointType::RightUpper, Vector2(size.x / 2, -size.y / 4) });
@@ -164,62 +165,55 @@ std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetBigMarioSitInter
 }
 
 void Mario::OnCollision(const CollisionResult& result) {
+	/*if (!result.collidedWith) return;
+
+	if (result.contactNormal.Dot(Vector2(0, 1)) == 0) {
+		SetVelocity(Vector2(0, GetVelocity().y));
+	}
+	if(result.contactNormal.Dot(Vector2(1, 0)) == 0) {
+		SetVelocity(Vector2(GetVelocity().x, 0));
+	}*/
+}
+
+void Mario::OnNoCollision(float dt, Axis axis) {
+	Vector2 vel = GetVelocity();
+	if(axis == Axis::X) {
+		SetPosition(GetPosition() + Vector2(vel.x * dt, 0));
+	}
+	else {
+		SetPosition(GetPosition() + Vector2(0, vel.y * dt));
+	}
 }
 
 void Mario::OnFootCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
-	Vector2 pos = m_collisionComponent->GetPosition();
-	Vector2 size = GetSize();
-	Vector2 otherPos = result.collidedWith->GetPosition();
-	Vector2 otherSize = result.collidedWith->GetSize();
-
-	// Calculate corners since positions are at the center
-	Vector2 marioTopLeft = Vector2(pos.x - size.x / 2, pos.y - size.y / 2);
-	Vector2 marioBottomRight = Vector2(pos.x + size.x / 2, pos.y + size.y / 2);
-	Vector2 otherTopLeft = Vector2(otherPos.x - otherSize.x / 2, otherPos.y - otherSize.y / 2);
-	Vector2 otherBottomRight = Vector2(otherPos.x + otherSize.x / 2, otherPos.y + otherSize.y / 2);
-
-	bool fullyInside =
-		marioTopLeft.x >= otherTopLeft.x &&
-		marioBottomRight.x <= otherBottomRight.x &&
-		marioTopLeft.y >= otherTopLeft.y &&
-		marioBottomRight.y <= otherBottomRight.y;
-
-	bool pointInside = otherTopLeft.x <= result.pos.x && result.pos.x <= otherBottomRight.x &&
-		otherTopLeft.y <= result.pos.y && result.pos.y <= otherBottomRight.y;
-
-	// Check if Mario is landing on top of something
-	if (result.normal.y < 0.0f) {
-		Block* block = dynamic_cast<Block*>(result.collidedWith);
-		if (block && !block->IsSolid() && !fullyInside
-			// check if collision is within the vertical bounds of the block
-			&& (otherTopLeft.x < result.pos.x && result.pos.x < otherBottomRight.x)
-			// check if collision is on top of the block
-			&& result.pos.y <= otherTopLeft.y)
+	Block* block = dynamic_cast<Block*>(result.collidedWith);
+	if (result.contactNormal.y < 0) {
+		if (block)
 		{
-			//Log(LOG_INFO, "Collision pos: " + std::to_string(result.pos.x) + ", " + std::to_string(result.pos.y));
-			if (m_vel.y > 0) {
-				m_vel.y = 0;
-			}
-		}
-		else if (block && block->IsSolid()) {
-			m_vel.y = 0;
+			Vector2 vel = GetVelocity();
+			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
+			SetVelocity(vel);
 		}
 		else {
 			// stomp enemies
 		}
 	}
+	else if (result.contactNormal.x != 0) {
+		if (block && block->IsSolid())
+		{
+			Vector2 otherSize = result.collidedWith->GetSize();
+			Vector2 otherPos = result.collidedWith->GetPosition();
+			Vector2 pos = GetPosition();
+			Vector2 size = GetSize();
+			float pushDistance = (size.x + otherSize.x) / 2;
+			if(result.contactNormal.x > 0)
+				pushDistance -= (pos.x - otherPos.x);
+			if(result.contactNormal.x < 0)
+				pushDistance -= (otherPos.x - pos.x);
 
-	// Handle push up
-	if (pointInside) {
-		m_vel.y = -PUSH_VELOCITY_Y;
-		//Log(LOG_INFO, "Push up: " + std::to_string(m_vel.y));
-		// Check if we're fully out of the top edge
-		if (marioBottomRight.y <= otherTopLeft.y) {
-			m_vel.y = 0.0f;
-			//clamp at ground to avoid bouncing
-			SetPosition(Vector2(GetPosition().x, otherTopLeft.y - size.y / 2));
+			m_collisionComponent->Push(Vector2(pushDistance, 0), 0.1);
 		}
 	}
 }
@@ -227,28 +221,32 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 void Mario::OnTopHeadCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
-	Vector2 pos = m_collisionComponent->GetPosition();
-	Vector2 size = GetSize();
-	Vector2 otherPos = result.collidedWith->GetPosition();
-	Vector2 otherSize = result.collidedWith->GetSize();
-
-	Vector2 marioTopLeft = Vector2(pos.x - size.x / 2, pos.y - size.y / 2);
-	Vector2 marioBottomRight = Vector2(pos.x + size.x / 2, pos.y + size.y / 2);
-	Vector2 otherTopLeft = Vector2(otherPos.x - otherSize.x / 2, otherPos.y - otherSize.y / 2);
-	Vector2 otherBottomRight = Vector2(otherPos.x + otherSize.x / 2, otherPos.y + otherSize.y / 2);
-
-	bool pointInside = otherTopLeft.x <= result.pos.x && result.pos.x <= otherBottomRight.x &&
-		otherTopLeft.y <= result.pos.y && result.pos.y <= otherBottomRight.y;
-
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+	if (result.contactNormal.y > 0) {
+		if (block && block->IsSolid())
+		{
+			Vector2 vel = GetVelocity();
+			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
+			SetVelocity(vel);
+		}
+		else {
+			// bump lucky block
+		}
+	}
+	else if (result.contactNormal.x != 0) {
+		if (block && block->IsSolid())
+		{
+			Vector2 otherSize = result.collidedWith->GetSize();
+			Vector2 otherPos = result.collidedWith->GetPosition();
+			Vector2 pos = GetPosition();
+			Vector2 size = GetSize();
+			float pushDistance;
+			if (result.contactNormal.x > 0)
+				pushDistance = (size.x + otherSize.x) / 2 - (pos.x - otherPos.x);
+			if (result.contactNormal.x < 0)
+				pushDistance = (otherPos.x - pos.x) - (size.x + otherSize.x) / 2;
 
-	// Handle push down
-	if (block && block->IsSolid() && pointInside) {
-		m_vel.y = PUSH_VELOCITY_Y;
-		//Log(LOG_INFO, "Push up: " + std::to_string(m_vel.y));
-		// Check if we're fully out of the bottom edge
-		if (marioBottomRight.y <= otherTopLeft.y) {
-			m_vel.y = 0.0f;
+			m_collisionComponent->Push(Vector2(pushDistance, 0), 0.1);
 		}
 	}
 }
@@ -256,30 +254,27 @@ void Mario::OnTopHeadCollision(const CollisionResult& result) {
 void Mario::OnRightSideCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
-	Vector2 pos = m_collisionComponent->GetPosition();
-	Vector2 size = GetSize();
-	Vector2 otherPos = result.collidedWith->GetPosition();
-	Vector2 otherSize = result.collidedWith->GetSize();
-
-	Vector2 marioTopLeft = Vector2(pos.x - size.x / 2, pos.y - size.y / 2);
-	Vector2 marioBottomRight = Vector2(pos.x + size.x / 2, pos.y + size.y / 2);
-	Vector2 otherTopLeft = Vector2(otherPos.x - otherSize.x / 2, otherPos.y - otherSize.y / 2);
-	Vector2 otherBottomRight = Vector2(otherPos.x + otherSize.x / 2, otherPos.y + otherSize.y / 2);
-
-	bool pointInside = otherTopLeft.x <= result.pos.x && result.pos.x <= otherBottomRight.x &&
-		otherTopLeft.y <= result.pos.y && result.pos.y <= otherBottomRight.y;
-
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+	if (result.contactNormal.x < 0) {
+		if (block && block->IsSolid())
+		{
+			Vector2 vel = GetVelocity();
+			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
+			SetVelocity(vel);
+		}
+		else {
 
-	// Handle push left
-	if (block && block->IsSolid() && pointInside) {
-		m_vel.x = -PUSH_VELOCITY_X;
-		// Check if we're fully out of the right edge
-		if (marioBottomRight.x <= otherTopLeft.x) {
-			m_vel.x = 0.0f;
-			Log(LOG_INFO, "STOPPED");
-			//clamp at edge to stop further moving
-			SetPosition(Vector2(otherTopLeft.x - size.x / 2, GetPosition().y));
+		}
+	}
+	else if (result.contactNormal.y != 0) {
+		if (block && block->IsSolid())
+		{
+			Vector2 otherSize = result.collidedWith->GetSize();
+			Vector2 otherPos = result.collidedWith->GetPosition();
+			
+			float pushDistance = otherPos.x - otherSize.x / 2 - result.contactPoint.x;
+
+			m_collisionComponent->Push(Vector2(pushDistance, 0), 0.1);
 		}
 	}
 }
@@ -287,32 +282,27 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 void Mario::OnLeftSideCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
-	Vector2 pos = m_collisionComponent->GetPosition();
-	Vector2 size = GetSize();
-	Vector2 otherPos = result.collidedWith->GetPosition();
-	Vector2 otherSize = result.collidedWith->GetSize();
-
-	Vector2 marioTopLeft = Vector2(pos.x - size.x / 2, pos.y - size.y / 2);
-	Vector2 marioBottomRight = Vector2(pos.x + size.x / 2, pos.y + size.y / 2);
-	Vector2 otherTopLeft = Vector2(otherPos.x - otherSize.x / 2, otherPos.y - otherSize.y / 2);
-	Vector2 otherBottomRight = Vector2(otherPos.x + otherSize.x / 2, otherPos.y + otherSize.y / 2);
-
-	bool pointInside = otherTopLeft.x <= result.pos.x && result.pos.x <= otherBottomRight.x &&
-		otherTopLeft.y <= result.pos.y && result.pos.y <= otherBottomRight.y;
-
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+	if (result.contactNormal.x > 0) {
+		if (block && block->IsSolid())
+		{
+			Vector2 vel = GetVelocity();
+			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
+			SetVelocity(vel);
+		}
+		else {
 
-	// Handle push right
-	if (block && block->IsSolid() && pointInside) {
-		m_vel.x = PUSH_VELOCITY_X;
-		//Log(LOG_INFO, "Push right: " + std::to_string(m_vel.x));
-		// Check if we're fully out of the left edge
+		}
+	}
+	else if (result.contactNormal.y != 0) {
+		if (block && block->IsSolid())
+		{
+			Vector2 otherSize = result.collidedWith->GetSize();
+			Vector2 otherPos = result.collidedWith->GetPosition();
 
+			float pushDistance = otherPos.x + otherSize.x / 2 - result.contactPoint.x;
 
-		//TODO: somehow clamp mario pos to entity edge || call this function when no collision happens
-		if (marioTopLeft.x >= otherBottomRight.x) {
-			m_vel.x = 0.0f;
-			SetPosition(Vector2(otherBottomRight.x + size.x / 2, GetPosition().y));
+			m_collisionComponent->Push(Vector2(pushDistance, 0), 0.1);
 		}
 	}
 }

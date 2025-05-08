@@ -20,6 +20,13 @@ struct InputState {
 	bool isAPressed = false;
 	bool isBPressed = false;
 	bool isStartPressed = false;
+
+	void ResetDirectionals() {
+		isLeftDown = isLeftPressed = false;
+		isRightDown = isRightPressed = false;
+		isUpDown = isUpPressed = false;
+		isDownDown = isDownPressed = false;
+	}
 };
 
 class Mario : public Entity
@@ -51,7 +58,12 @@ public:
 	int GetCurrentMStateAnimValue() const { return m_movementSM->GetStateAnimValue(); }
 	int GetCurrentPStateAnimValue() const { return m_powerupSM->GetStateAnimValue(); }
 
+	Vector2 GetCurrentMStateSizeOffset() const { return m_movementSM->GetStateSizeOffset(); }
+	Vector2 GetCurrentPStateSizeOffset() const { return m_powerupSM->GetStateSizeOffset(); }
+
 	void OnCollision(const CollisionResult& event) override;
+	void OnNoCollision(float dt, Axis axis) override;
+
 	void OnTopHeadCollision(const CollisionResult& event) override;
 	void OnFootCollision(const CollisionResult& event) override;
 	void OnLeftSideCollision(const CollisionResult& event) override;

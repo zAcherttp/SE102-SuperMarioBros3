@@ -27,9 +27,6 @@ public:
 	Vector2 GetVelocity() const;
 	void SetVelocity(const Vector2& vel);
 
-	Vector2 GetAcceleration() const;
-	void SetAcceleration(const Vector2& accel);
-
 	bool IsActive() const;
 	bool IsCollidable() const;
 	bool IsStatic() const;
@@ -63,6 +60,7 @@ public:
 	virtual bool UsesInteractionPoints() const;
 
 	virtual void OnCollision(const CollisionResult& event);
+	virtual void OnNoCollision(float dt, Axis axis);
 
 	virtual void OnTopHeadCollision(const CollisionResult& event);
 	virtual void OnFootCollision(const CollisionResult& event);
@@ -71,9 +69,6 @@ public:
 	virtual bool IsGrounded() const;
 
 protected:
-	Vector2 m_vel;
-	Vector2 m_accel;
-
 	//physics
 	std::unique_ptr<CollisionComponent> m_collisionComponent;
 	bool m_isActive = true;

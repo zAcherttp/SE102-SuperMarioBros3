@@ -56,16 +56,26 @@ std::pair<int, int> Collision::GetCellCoords(const Vector2& position)
     return { cellX, cellY };
 }
 
-std::vector<std::pair<int, int>> Collision::GetEntityCells(const Entity* entity)
+std::vector<std::pair<int, int>> Collision::GetEntityCells(const Entity* entity, float dt)
 {
     std::vector<std::pair<int, int>> cells;
 
     // Get entity's bounding box
-    RECT bbox = entity->GetCollisionComponent()->GetBoundingBox();
+    RECT bbox = entity->GetCollisionComponent()->GetRect();
+    Vector2 velocity = entity->GetVelocity() * dt;
+
+    // Expand bbox by velocity
+    RECT sweptBbox = bbox;
+    sweptBbox.left = std::min(bbox.left, bbox.left + (LONG)velocity.x);
+    sweptBbox.right = std::max(bbox.right, bbox.right + (LONG)velocity.x);
+    sweptBbox.top = std::min(bbox.top, bbox.top + (LONG)velocity.y);
+    sweptBbox.bottom = std::max(bbox.bottom, bbox.bottom + (LONG)velocity.y);
 
     // Get cells for all corners of the bounding box
-    std::pair<int, int> topLeft = GetCellCoords(Vector2(static_cast<float>(bbox.left), static_cast<float>(bbox.top)));
-    std::pair<int, int> bottomRight = GetCellCoords(Vector2(static_cast<float>(bbox.right), static_cast<float>(bbox.bottom)));
+    std::pair<int, int> topLeft
+        = GetCellCoords(Vector2(static_cast<float>(sweptBbox.left), static_cast<float>(sweptBbox.top)));
+    std::pair<int, int> bottomRight
+        = GetCellCoords(Vector2(static_cast<float>(sweptBbox.right), static_cast<float>(sweptBbox.bottom)));
 
     // Add all cells that the entity occupies
     for (int x = topLeft.first; x <= bottomRight.first; x++) {
@@ -79,12 +89,12 @@ std::vector<std::pair<int, int>> Collision::GetEntityCells(const Entity* entity)
     return cells;
 }
 
-void Collision::AddEntity(Entity* entity)
+void Collision::AddEntity(Entity* entity, float dt)
 {
     if (!entity) return;
 
     // Get all cells the entity occupies
-    std::vector<std::pair<int, int>> cells = GetEntityCells(entity);
+    std::vector<std::pair<int, int>> cells = GetEntityCells(entity, dt);
 
     // Add entity to each cell
     for (const auto& cell : cells) {
@@ -112,13 +122,13 @@ void Collision::RemoveEntity(Entity* entity)
     m_entityCells.erase(entity);
 }
 
-void Collision::UpdateEntity(Entity* entity)
+void Collision::UpdateEntity(Entity* entity, float dt)
 {
     // Remove entity from current cells
     RemoveEntity(entity);
 
     // Add entity to new cells based on updated position
-    AddEntity(entity);
+    AddEntity(entity, dt);
 }
 
 std::vector<Entity*> Collision::GetPotentialCollisions(Entity* entity)
@@ -147,86 +157,36 @@ std::vector<Entity*> Collision::GetPotentialCollisions(Entity* entity)
     return potentialCollisions;
 }
 
-void Collision::SweptAABB(Entity* movingEntity, Entity* staticEntity, float dt, CollisionResult& result)
+void Collision::SweptAABB(Entity* movingEntity, Entity* staticEntity, float dt, CollisionResult& result, Axis axis)
 {
-    // Get bounding boxes
-    RECT movingBox = movingEntity->GetCollisionComponent()->GetBoundingBox();
-    RECT staticBox = staticEntity->GetCollisionComponent()->GetBoundingBox();
+    result.collided = false;
 
-    // Get entity velocities
-    Vector2 velocity = movingEntity->GetVelocity() * dt;
-    Vector2 relativeVelocity = velocity;
-
-    // If the second entity is also moving, use relative velocity
-    if (!staticEntity->IsStatic()) {
-        relativeVelocity = velocity - staticEntity->GetVelocity() * dt;
-    }
-
-    // If not moving, no collision will occur
-    if (relativeVelocity.x == 0 && relativeVelocity.y == 0) {
-        return;
-    }
-
-    // Calculate entry and exit times for x and y
-    float entryTimeX, entryTimeY;
-    float exitTimeX, exitTimeY;
-
-    // Calculate entry and exit times for X axis
-    if (relativeVelocity.x > 0) {
-        entryTimeX = (staticBox.left - movingBox.right) / relativeVelocity.x;
-        exitTimeX = (staticBox.right - movingBox.left) / relativeVelocity.x;
-    }
-    else if (relativeVelocity.x < 0) {
-        entryTimeX = (staticBox.right - movingBox.left) / relativeVelocity.x;
-        exitTimeX = (staticBox.left - movingBox.right) / relativeVelocity.x;
-    }
-    else {
-        entryTimeX = -std::numeric_limits<float>::infinity();
-        exitTimeX = std::numeric_limits<float>::infinity();
-    }
-
-    // Calculate entry and exit times for Y axis
-    if (relativeVelocity.y > 0) {
-        entryTimeY = (staticBox.top - movingBox.bottom) / relativeVelocity.y;
-        exitTimeY = (staticBox.bottom - movingBox.top) / relativeVelocity.y;
-    }
-    else if (relativeVelocity.y < 0) {
-        entryTimeY = (staticBox.bottom - movingBox.top) / relativeVelocity.y;
-        exitTimeY = (staticBox.top - movingBox.bottom) / relativeVelocity.y;
-    }
-    else {
-        entryTimeY = -std::numeric_limits<float>::infinity();
-        exitTimeY = std::numeric_limits<float>::infinity();
-    }
-
-    // Find the latest entry time and earliest exit time
-    float entryTime = std::max(entryTimeX, entryTimeY);
-    float exitTime = std::min(exitTimeX, exitTimeY);
-
-    // Check if collision occurs within this frame
-    if (entryTime > exitTime || (entryTimeX < 0.0f && entryTimeY < 0.0f) || entryTime > 1.0f) {
-        return; // No collision
-    }
-
-    // Collision detected
-    result.collided = true;
-    result.entryTime = entryTime;
-    result.exitTime = exitTime;
-    result.pos = Vector2(movingBox.left + relativeVelocity.x * entryTime,
-                         movingBox.top + relativeVelocity.y * entryTime);
-    result.collidedWith = staticEntity;
-
-    // Calculate collision normal
-    if (entryTimeX > entryTimeY) {
-        result.normal = Vector2(relativeVelocity.x < 0 ? 1.0f : -1.0f, 0.0f);
-    }
-    else {
-        result.normal = Vector2(0.0f, relativeVelocity.y < 0 ? 1.0f : -1.0f);
+    if (RayEntVsEnt(*movingEntity, *staticEntity, result.contactPoint, result.contactNormal, result.contactTime, dt, axis)) {
+        // Collision detected
+        result.collided = true;
+        result.collidedWith = staticEntity;
     }
 }
 
-void Collision::CheckInteractionPointCollision(Entity* entity, Entity* other, float dt, CollisionResult& result)
+void Collision::CheckInteractionPointCollision(Entity* entity, Entity* other, float dt, CollisionResult& result, Axis axis)
 {
+    // Get entity velocities
+    Vector2 velocity = entity->GetVelocity() * dt;
+    Vector2 relativeVelocity = velocity;
+
+    // If the second entity is also moving, use relative velocity
+    if (!other->IsStatic()) {
+        relativeVelocity = velocity - other->GetVelocity() * dt;
+    }
+
+    axis == Axis::X ? relativeVelocity.y = 0 : relativeVelocity.x = 0;
+
+    // If not moving, no collision will occur
+    if (relativeVelocity.x == 0 && relativeVelocity.y == 0) {
+        result.collided = false;
+        return;
+    }
+
     // Check if entity implements interaction points
     auto points = entity->GetInteractionPoints();
     if (points.empty()) {
@@ -234,121 +194,62 @@ void Collision::CheckInteractionPointCollision(Entity* entity, Entity* other, fl
     }
 
     // Get other entity's bounding box
-    RECT otherBox = other->GetCollisionComponent()->GetBoundingBox();
-
-    // Get entity velocity
-    Vector2 velocity = entity->GetVelocity() * dt;
-
+    RECT otherBox = other->GetCollisionComponent()->GetRect();
+    
+    // Convert RECT to Rectangle
+    Rectangle rectangle;
+    rectangle.x = static_cast<float>(otherBox.left);
+    rectangle.y = static_cast<float>(otherBox.top);
+    rectangle.width = static_cast<float>(otherBox.right - otherBox.left);
+    rectangle.height = static_cast<float>(otherBox.bottom - otherBox.top);
     // Check each interaction point
-    bool collision = false;
-    float earliestEntryTime = 1.0f;
-
-    InteractionPointType earliestPointType = InteractionPointType::None;
-    Vector2 earliestCollisionPos;
-    Vector2 earliestCollisionNormal;
+    InteractionPointType pointType = InteractionPointType::None;
 
     for (const auto& [type, localPoint] : points) {
         // Convert to world space
         Vector2 worldPointStart = localPoint + entity->GetPosition();
-        Vector2 worldPointEnd = worldPointStart + velocity;
+        Vector2 worldPointEnd = worldPointStart + relativeVelocity;
+        Vector2 contactPoint, contactNormal;
+        float contactTime;
 
-        // Calculate entry time for this point
-        float entryTimeX, entryTimeY;
-
-        if (RayVsRect(worldPointStart, worldPointEnd, otherBox, entryTimeX, entryTimeY)) {
-
-            if (entryTimeX < earliestEntryTime && entryTimeX <= 1.0f) {
-                collision = true;
-                earliestEntryTime = entryTimeX;
-
-                // Store details for this specific point's collision
-                earliestPointType = type;
-                earliestCollisionPos = Vector2(worldPointStart.x + velocity.x * earliestEntryTime,
-                    worldPointStart.y + velocity.y * earliestEntryTime);
-
-                // Log which point is causing the update
-                //Log(LOG_INFO, "Collision candidate: point type: " + std::to_string(static_cast<int>(type)) +
-                //    " at entry time: " + std::to_string(earliestEntryTime) +
-                //    " Entity: " + std::to_string(entity->GetAnimId()) +
-                //    " Other: " + std::to_string(other->GetAnimId()));
-
-
-                switch (type) {
-                case InteractionPointType::TopHead:   
-                    earliestCollisionNormal = Vector2(0, 1);
-                    break;
-                case InteractionPointType::LeftFoot:
-                case InteractionPointType::RightFoot:
-                    earliestCollisionNormal = Vector2(0, -1);
-                    break;
-                case InteractionPointType::LeftUpper:
-                case InteractionPointType::LeftLower:
-                    earliestCollisionNormal = Vector2(1, 0);
-                    break;
-                case InteractionPointType::RightUpper:
-                case InteractionPointType::RightLower:
-                    earliestCollisionNormal = Vector2(-1, 0);
-                    break;
-                default:
-                    earliestCollisionNormal = Vector2(0, 0);
-                    break;
-                }
-            }
+        if (RayVsRect(worldPointStart, worldPointEnd, rectangle, contactPoint, contactNormal, contactTime) 
+        && (contactTime >= 0.0f && contactTime < 1.0f)) {
+            result.collided = true;
+            result.collidedWith = other;
+            result.pointType = type;
+            result.contactNormal = contactNormal;
+            result.contactPoint = contactPoint;
+            result.contactTime = contactTime;
         }
-    }
-
-    if (collision) {
-        result.collided = true;
-        result.entryTime = earliestEntryTime;
-        result.collidedWith = other;
-        result.pointType = earliestPointType;
-        result.pos = earliestCollisionPos;
-        result.normal = earliestCollisionNormal;
-        //Log(LOG_INFO, "Final Collision: point type: " + std::to_string(static_cast<int>(result.pointType)) +
-        //    " at entry time: " + std::to_string(result.entryTime));
-    }
-    else {
-        result.collided = false;
     }
 }
 
-CollisionResult Collision::CheckCollision(Entity* movingEntity, Entity* staticEntity, float dt)
+CollisionResult Collision::CheckCollision(Entity* movingEntity, Entity* staticEntity, float dt, Axis axis)
 {
     // Try interaction point collision first if entity is flagged for it
     CollisionResult result;
     if (movingEntity->UsesInteractionPoints()) {
-        //Log(LOG_INFO, "Checking interaction point collision for entity: " + std::to_string(movingEntity->GetAnimId()));
-        CheckInteractionPointCollision(movingEntity, staticEntity, dt, result);
+        CheckInteractionPointCollision(movingEntity, staticEntity, dt, result, axis);
         return result;
     }
     // Fall back to Swept AABB collision
-    SweptAABB(movingEntity, staticEntity, dt, result);
+    SweptAABB(movingEntity, staticEntity, dt, result, axis);
     return result;
 }
 
-void Collision::ResolveCollision(Entity* entity, const CollisionResult& result, float dt)
+void Collision::ResolveCollision(Entity* entity, const CollisionResult& result, float dt, Axis axis)
 {
     if (!result.collided) return;
 
-    // Calculate remaining movement after collision
-    float remainingTime = 1.0f - result.entryTime;
-
-    // Get velocity and current position
-    Vector2 velocity = entity->GetVelocity();
-    Vector2 position = entity->GetPosition() + velocity * dt * result.entryTime;
-
     // Add collision to debug visualization
     DebugCollisionInfo info;
-    info.position = result.pos;
-    info.normal = result.normal;
+    info.position = result.contactPoint;
+    info.normal = result.contactNormal;
     info.timeToLive = DEBUG_COLLISION_TTL;
     m_debugCollisions.push_back(info);
 
     // Different collision handling based on entity type
     if (entity->UsesInteractionPoints()) {
-        // Apply updated velocity and position
-        entity->SetPosition(position);
-        entity->OnCollision(result);
 
         // Delegate collision handling to entity based on point type
         switch (result.pointType) {
@@ -368,32 +269,41 @@ void Collision::ResolveCollision(Entity* entity, const CollisionResult& result, 
             entity->OnRightSideCollision(result);
             break;
         }
+
+        Vector2 velocity = entity->GetVelocity();
+        Vector2 position = entity->GetPosition();
+        if(axis == Axis::X) {
+            position.x += velocity.x * dt;
+        } else {
+            position.y += velocity.y * dt;
+        }
+        entity->SetPosition(position);
     }
     else {
-        // Standard collision resolution for non-interaction point entities
-        // Handle velocity changes based on collision normal
-        if (std::abs(result.normal.x) > 0.0f) {
-            // Horizontal collision, zero out x velocity
-            velocity.x = 0;
-        }
+        // Notify the entity about the collision
+        entity->OnCollision(result);
+        Vector2 velocity = entity->GetVelocity();
+        Vector2 position = entity->GetPosition();
 
-        if (std::abs(result.normal.y) > 0.0f) {
-            velocity.y = 0;
+        // general collision resolution
+        if(axis == Axis::X) {
+            velocity.x = result.contactNormal.x * std::abs(velocity.x) * (1.0f - result.contactTime);
+            position.x += velocity.x * dt;
+        } else {
+            velocity.y = result.contactNormal.y * std::abs(velocity.y) * (1.0f - result.contactTime);
+            position.y += velocity.y * dt;
         }
 
         // Apply updated velocity and position
         entity->SetVelocity(velocity);
         entity->SetPosition(position);
-
-        // Notify the entity about the collision
-        entity->OnCollision(result);
     }
 
     // Notify the other entity (if not static)
     if (!result.collidedWith->IsStatic()) {
         CollisionResult otherEvent = result;
         otherEvent.collidedWith = entity;
-        otherEvent.normal = -result.normal; // Reverse normal for the other entity
+        otherEvent.contactNormal = -result.contactNormal; // Reverse normal for the other entity
         result.collidedWith->OnCollision(otherEvent);
     }
 }
@@ -402,7 +312,7 @@ void Collision::ProcessCollisions(float dt)
 {
     UpdateDebugInfo(dt);
 
-    // Process movement-based collisions for all entities
+    // Process X-axis collisions
     for (auto& pair : m_entityCells) {
         Entity* entity = pair.first;
 
@@ -416,12 +326,9 @@ void Collision::ProcessCollisions(float dt)
 
         //Log(LOG_INFO, std::to_string(potentialCollisions.size()));
 
-        // Track if any collision occurred
-        bool hasCollidedThisStep = false;
-
         // Find earliest collision
         CollisionResult earliestCollision;
-        earliestCollision.entryTime = 1.0f;
+        earliestCollision.contactTime = 1.0f;
         earliestCollision.collided = false;
 
         for (Entity* other : potentialCollisions) {
@@ -429,21 +336,41 @@ void Collision::ProcessCollisions(float dt)
             if (!other->IsActive() || !other->IsCollidable()) {
                 continue;
             }
-
             // Check collision
-            CollisionResult result = CheckCollision(entity, other, dt);
-
+            CollisionResult result = CheckCollision(entity, other, dt, Axis::X);
+            
             // Keep track of the earliest collision
-            if (result.collided && result.entryTime < earliestCollision.entryTime) {
+            if (result.collided && result.contactTime < earliestCollision.contactTime) {
                 earliestCollision = result;
-                hasCollidedThisStep = true;
             }
         }
-
         // Resolve the earliest collision
-        if (hasCollidedThisStep) {
-            ResolveCollision(entity, earliestCollision, dt);
+        if (earliestCollision.collided) {
+            ResolveCollision(entity, earliestCollision, dt, Axis::X);
         }
+        else {
+            entity->OnNoCollision(dt, Axis::X);
+        }
+    }
+
+    // Process Y-axis collisions
+    for (auto& pair : m_entityCells) {
+        Entity* entity = pair.first;
+        if (entity->IsStatic() || !entity->IsActive() || !entity->IsCollidable()) continue;
+        std::vector<Entity*> potentialCollisions = GetPotentialCollisions(entity);
+        CollisionResult earliestCollision;
+        earliestCollision.contactTime = 1.0f;
+        earliestCollision.collided = false;
+        for (Entity* other : potentialCollisions) {
+            if (!other->IsActive() || !other->IsCollidable()) continue;
+            CollisionResult result = CheckCollision(entity, other, dt, Axis::Y);
+            if (result.collided && result.contactTime < earliestCollision.contactTime)
+                earliestCollision = result;
+        }
+        if (earliestCollision.collided)
+            ResolveCollision(entity, earliestCollision, dt, Axis::Y);
+        else
+            entity->OnNoCollision(dt, Axis::Y);
     }
 }
 
@@ -461,24 +388,6 @@ void Collision::UpdateDebugInfo(float dt)
     }
 }
 
-void Collision::Raycast(const Entity *entity, const Vector2 &start, const Vector2 &end, std::vector<Entity *> &hitEntities)
-{
-    hitEntities.clear();
-
-    std::vector<std::pair<int, int>> cells = GetEntityCells(entity);
-    for (const auto& cell : cells) {
-        for (Entity* other : m_grid[cell.first][cell.second].entities) {
-            if (other != entity) {
-                RECT otherBox = other->GetCollisionComponent()->GetBoundingBox();
-                float t_entry, t_exit;
-                if (RayVsRect(start, end, otherBox, t_entry, t_exit) && t_entry < 1.0f) {
-                    hitEntities.push_back(other);
-                }
-            }
-        }
-    }
-}
-
 bool Collision::GroundCheck(const Entity* entity, float dt)
 {
     Vector2 pos = entity->GetPosition();
@@ -486,34 +395,33 @@ bool Collision::GroundCheck(const Entity* entity, float dt)
     Vector2 velocity = entity->GetVelocity();
 
     // Calculate how far the entity will move in the next frame
-    float verticalDistanceNextFrame = velocity.y * dt;
+    float rayLength = std::abs(velocity.y * dt);
 
     // Use a minimum distance to check even when velocity is small or zero
-    float minCheckDistance = size.y / 2 + 2.0f;
+    float minRayLength = size.y / 2 + 0.1f;
 
-    // Use the greater of the calculated distance or minimum distance
-    // Add some extra margin for safety
-    float checkDistance = std::max(std::abs(verticalDistanceNextFrame) * 1.5f, minCheckDistance);
+    rayLength = std::max(rayLength, minRayLength);
 
-    // Get cells that might contain ground objects
-    std::vector<std::pair<int, int>> cells = GetEntityCells(entity);
+    // Get cells around the entity
+    std::vector<std::pair<int, int>> cells = GetEntityCells(entity, dt);
 
     for (const auto& cell : cells) {
         for (Entity* other : m_grid[cell.first][cell.second].entities) {
             // Skip if it's the same entity or not a static object (potential ground)
             if (other != entity && other->IsStatic() && other->IsActive() && other->IsCollidable()) {
-                RECT otherBox = other->GetCollisionComponent()->GetBoundingBox();
+                Rectangle otherRect = other->GetCollisionComponent()->GetRectangle();
+                Vector2 rayStart = pos;
+                Vector2 rayEnd = pos + Vector2(0, rayLength);
+                Vector2 contactPoint, contactNormal;
+                float contactTime;
+                // only check if rayStart is above the other entity
+                if (rayStart.y > otherRect.y) continue;
 
-                // Only check objects below us
-                if (otherBox.top >= pos.y) {
-                    float t_entry, t_exit;
-
-                    // Cast a ray downward with our calculated check distance
-                    if (RayVsRect(pos, pos + Vector2(0, checkDistance), otherBox, t_entry, t_exit)
-                        && t_entry < 1.0f) {
-                        // We've hit ground
-                        return true;
-                    }
+                // Cast a ray downward with our calculated check distance
+                if (RayVsRect(rayStart, rayEnd, otherRect, contactPoint, contactNormal, contactTime)
+                    && contactTime < 1.0f) {
+                    // We've hit ground
+                    return true;
                 }
             }
         }
@@ -522,57 +430,190 @@ bool Collision::GroundCheck(const Entity* entity, float dt)
     return false;
 }
 
-bool Collision::RayVsRect(const Vector2 &start, const Vector2 &end, const RECT &rect, float& t_entry, float& t_exit) {
-    // Handle edge case of zero-length ray
-    if ((start - end).LengthSquared() < 0.0001f) {
-        // Check if point is inside rect
-        if (start.x >= rect.left && start.x <= rect.right &&
-            start.y >= rect.top && start.y <= rect.bottom) {
-            t_entry = t_exit = 0.0f;
-            return true;
-        }
-        return false;
-    }
+bool Collision::RayVsRect(const Vector2& origin, const Vector2& end, const Rectangle& rect, Vector2& contactPoint, Vector2& contactNormal, float& contactTime) {
+    contactNormal = { 0, 0 };
+    contactPoint = { 0, 0 };
 
-    // Calculate inverse direction for efficient division
-    Vector2 invDir;
-    invDir.x = end.x - start.x != 0 ? 1.0f / (end.x - start.x) : std::numeric_limits<float>::infinity();
-    invDir.y = end.y - start.y != 0 ? 1.0f / (end.y - start.y) : std::numeric_limits<float>::infinity();
+    // Calculate ray direction
+    Vector2 rayDir = end - origin;
+
+    // Cache division
+    Vector2 invdir = Vector2(
+        rayDir.x != 0 ? 1.0f / rayDir.x : std::numeric_limits<float>::infinity(),
+        rayDir.y != 0 ? 1.0f / rayDir.y : std::numeric_limits<float>::infinity()
+    );
 
     // Calculate intersections with rectangle bounding axes
-    float t1 = (rect.left - start.x) * invDir.x;
-    float t2 = (rect.right - start.x) * invDir.x;
-    float t3 = (rect.top - start.y) * invDir.y;
-    float t4 = (rect.bottom - start.y) * invDir.y;
+    Vector2 tNear = Vector2(
+        (rect.x - origin.x) * invdir.x,
+        (rect.y - origin.y) * invdir.y
+    );
+    Vector2 tFar = Vector2(
+        (rect.x + rect.width - origin.x) * invdir.x,
+        (rect.y + rect.height - origin.y) * invdir.y
+    );
 
-    // Find the entrance and exit points
-    float tmin = std::max(std::min(t1, t2), std::min(t3, t4));
-    float tmax = std::min(std::max(t1, t2), std::max(t3, t4));
+    if (std::isnan(tFar.y) || std::isnan(tFar.x)) return false;
+    if (std::isnan(tNear.y) || std::isnan(tNear.x)) return false;
 
-    // If tmax < 0, ray is intersecting AABB, but the whole AABB is behind us
-    if (tmax < 0) {
+    // Sort distances
+    if (tNear.x > tFar.x) std::swap(tNear.x, tFar.x);
+    if (tNear.y > tFar.y) std::swap(tNear.y, tFar.y);
+
+    // Early rejection
+    if (tNear.x > tFar.y || tNear.y > tFar.x) return false;
+
+    // Closest 'time' will be the first contact
+    contactTime = std::max(tNear.x, tNear.y);
+
+    // Furthest 'time' is contact on opposite side of target
+    float tHitFar = std::min(tFar.x, tFar.y);
+
+    // Reject if ray direction is pointing away from object
+    if (tHitFar < 0)
         return false;
+
+    // Contact point of collision from parametric line equation
+    contactPoint = origin + rayDir * contactTime;
+
+    if (tNear.x > tNear.y) {
+        if (invdir.x < 0)
+            contactNormal = { 1, 0 };
+        else
+            contactNormal = { -1, 0 };
+    }
+    else if (tNear.x < tNear.y) {
+        if (invdir.y < 0)
+            contactNormal = { 0, 1 };
+        else
+            contactNormal = { 0, -1 };
     }
 
-    // If tmin > tmax, ray doesn't intersect AABB
-    if (tmin > tmax) {
-        return false;
-    }
-
-    // If tmin < 0 then the ray origin is inside the AABB
-    if (tmin < 0) {
-        t_entry = 0;
-    }
-    else {
-        t_entry = tmin;
-    }
-
-    t_exit = tmax;
+    // If tNear == tFar, collision is principally in a diagonal
+    // so pointless to resolve. By returning a CN={0,0} even though it's
+    // considered a hit, the resolver won't change anything.
     return true;
 }
 
-void Collision::RenderDebug(
-    DirectX::PrimitiveBatch<DirectX::VertexPositionColor> *primitiveBatch) {
+bool Collision::RayEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt, Axis axis) {
+    // Check if dynamic entity is actually moving
+    Vector2 inVel = in.GetVelocity();
+    axis == Axis::X ? inVel.y = 0 : inVel.x = 0;
+    if (inVel.x == 0 && inVel.y == 0)
+        return false;
+
+    Vector2 inPos = in.GetPosition();
+    Vector2 inSize = in.GetSize();
+    Vector2 tarPos = target.GetPosition();
+    Vector2 tarSize = target.GetSize();
+
+    // Expand target rectangle by source dimensions
+    Rectangle expandedRect;
+    expandedRect.x = tarPos.x - std::floor(inSize.x / 2) - std::floor(tarSize.x / 2);
+    expandedRect.y = tarPos.y - std::floor(inSize.y / 2) - std::floor(tarSize.y / 2);
+    expandedRect.width = tarSize.x + inSize.x;
+    expandedRect.height = tarSize.y + inSize.y;
+
+    Vector2 rayOrigin = inPos;
+    Vector2 rayEnd = rayOrigin + inVel * dt;
+
+    // Check if ray intersects with expanded rectangle
+    if (RayVsRect(rayOrigin, rayEnd, expandedRect, contactPoint, contactNormal, contactTime))
+        return (contactTime >= 0.0f && contactTime < 1.0f);
+    else
+        return false;
+}
+
+bool Collision::SweptEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt)
+{
+    Vector2 inVel = in.GetVelocity();
+    if (inVel.x == 0 && inVel.y == 0)
+        return false;
+
+    Vector2 inPos = in.GetPosition();
+    Vector2 inSize = in.GetSize();
+    Vector2 tarPos = target.GetPosition();
+    Vector2 tarSize = target.GetSize();
+
+    Vector2 velDt = inVel * dt; // Distance traveled in this frame
+    Rectangle broadRect;
+    broadRect.x = std::min(inPos.x - inSize.x / 2, inPos.x - inSize.x / 2 + velDt.x);
+    broadRect.y = std::min(inPos.y - inSize.y / 2, inPos.y - inSize.y / 2 + velDt.y);
+    broadRect.width = inSize.x + std::abs(velDt.x);
+    broadRect.height = inSize.y + std::abs(velDt.y);
+
+    // Calculate expanded target bounds
+    Rectangle tarRect = target.GetCollisionComponent()->GetRectangle();
+
+    // Check broad - phase overlap
+    bool broadPhaseHit = broadRect.x < tarRect.x + tarRect.width &&
+        broadRect.x + broadRect.width > tarRect.x &&
+        broadRect.y < tarRect.y + tarRect.height &&
+        broadRect.y + broadRect.height > tarRect.y;
+    if (!broadPhaseHit) {
+        return false;
+    }
+    
+    // Narrow phase: Compute time of impact
+    Vector2 tNear, tFar;
+
+    // X-axis
+    if (inVel.x == 0) {
+        // No movement along x, check if already overlapping
+        if (inPos.x + inSize.x / 2 <= tarRect.x || inPos.x - inSize.x / 2 >= tarRect.x + tarRect.width) {
+            return false;
+        }
+        tNear.x = -std::numeric_limits<float>::infinity();
+        tFar.x = std::numeric_limits<float>::infinity();
+    }
+    else {
+        float invVx = 1.0f / inVel.x;
+        tNear.x = (tarRect.x - (inPos.x + inSize.x / 2)) * invVx;
+        tFar.x = (tarRect.x + tarRect.width - (inPos.x - inSize.x / 2)) * invVx;
+        if (inVel.x < 0) {
+            std::swap(tNear.x, tFar.x);
+        }
+    }
+
+    // Y-axis
+    if (inVel.y == 0) {
+        // No movement along y, check if already overlapping
+        if (inPos.y + inSize.y / 2 <= tarRect.y || inPos.y - inSize.y / 2 >= tarRect.y + tarRect.height) {
+            return false;
+        }
+        tNear.y = -std::numeric_limits<float>::infinity();
+        tFar.y = std::numeric_limits<float>::infinity();
+    }
+    else {
+        float invVy = 1.0f / inVel.y;
+        tNear.y = (tarRect.y - (inPos.y + inSize.y / 2)) * invVy;
+        tFar.y = (tarRect.y + tarRect.height - (inPos.y - inSize.y / 2)) * invVy;
+        if (inVel.y < 0) {
+            std::swap(tNear.y, tFar.y);
+        }
+    }
+    
+    // Find entry and exit times
+    contactTime = std::max(tNear.x, tNear.y);
+    float exitTime = std::min(tFar.x, tFar.y);
+    
+    // Check if collision occurs
+    if (contactTime <= exitTime && contactTime >= 0.0f && contactTime < 1.0f) {
+        contactPoint = inPos + inVel * contactTime;
+        
+        // Determine collision normal
+        if (tNear.x > tNear.y) {
+            contactNormal = inVel.x > 0 ? Vector2(-1, 0) : Vector2(1, 0);
+        } else {
+            contactNormal = inVel.y > 0 ? Vector2(0, -1) : Vector2(0, 1);
+        }
+        return true;
+    }
+    
+    return false;
+}
+
+void Collision::RenderDebug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor> *primitiveBatch) {
     if (!primitiveBatch)
         return;
 

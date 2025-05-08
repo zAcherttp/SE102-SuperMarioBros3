@@ -24,15 +24,17 @@ Entity::Entity(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vecto
 }
 
 void Entity::Update(float deltaTime) {
-	m_animator->Update(deltaTime, m_vel.x);
+	m_animator->Update(deltaTime, m_collisionComponent->GetVelocity().x);
 }
 
 void Entity::Render(DirectX::SpriteBatch* spriteBatch) {
 	if (m_visible) {
-		// round the position to the nearest pixel
+		// Get the position
 		Vector2 pos = m_collisionComponent->GetPosition();
-		pos.x = static_cast<int>(pos.x + 0.5f);
-		pos.y = static_cast<int>(pos.y + 0.5f);
+
+		pos.x = (int)(pos.x + 0.5f);
+		pos.y = (int)(pos.y + 0.5f);
+		
 		m_animator->Draw(spriteBatch, pos);
 	}
 }
@@ -49,8 +51,7 @@ void Entity::SetSize(const Vector2& size)
 
 Vector2 Entity::GetPosition() const
 {
-	Vector2 pos = m_collisionComponent->GetPosition();
-	return pos;
+	return m_collisionComponent->GetPosition();
 }
 
 void Entity::SetPosition(const Vector2& pos)
@@ -60,20 +61,12 @@ void Entity::SetPosition(const Vector2& pos)
 
 Vector2 Entity::GetVelocity() const
 {
-	return m_vel;
+	return m_collisionComponent->GetVelocity();
 }
 
 void Entity::SetVelocity(const Vector2& vel) 
 { 
-	m_vel = vel;
-}
-
-Vector2 Entity::GetAcceleration() const {
-	return m_accel;
-}
-
-void Entity::SetAcceleration(const Vector2& accel) {
-	m_accel = accel;
+	m_collisionComponent->SetVelocity(vel);
 }
 
 bool Entity::IsActive() const {
@@ -153,27 +146,10 @@ bool Entity::UsesInteractionPoints() const
 }
 
 void Entity::OnCollision(const CollisionResult& result) {
-	if (UsesInteractionPoints()) {
-		switch (result.pointType) {
-		case InteractionPointType::TopHead:
-			OnTopHeadCollision(result);
-			break;
-		case InteractionPointType::LeftFoot:
-		case InteractionPointType::RightFoot:
-			OnFootCollision(result);
-			break;
-		case InteractionPointType::LeftUpper:
-		case InteractionPointType::LeftLower:
-			OnLeftSideCollision(result);
-			break;
-		case InteractionPointType::RightUpper:
-		case InteractionPointType::RightLower:
-			OnRightSideCollision(result);
-			break;
-		default:
-			break;
-		}
-	}
+}
+
+void Entity::OnNoCollision(float dt, Axis axis)
+{
 }
 
 void Entity::OnTopHeadCollision(const CollisionResult& event) {}

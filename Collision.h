@@ -4,7 +4,7 @@
 #include <vector>
 #include <unordered_map>
 
-constexpr float DEBUG_COLLISION_TTL = 0.1f;
+constexpr float DEBUG_COLLISION_TTL = 2.f;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
@@ -22,10 +22,9 @@ struct DebugCollisionInfo {
 
 struct CollisionResult {
     bool collided = false;
-    float entryTime = 1.0f;
-    float exitTime = 0.0f;
-    Vector2 normal = Vector2(0, 0);
-    Vector2 pos = Vector2(0, 0);
+    float contactTime = 1.0f;
+    Vector2 contactNormal = Vector2(0, 0);
+    Vector2 contactPoint = Vector2(0, 0);
     Entity* collidedWith = nullptr;
     InteractionPointType pointType = InteractionPointType::None;
 };
@@ -43,6 +42,8 @@ struct RaycastResult {
     std::vector<RaycastHit> hits;
 };
 
+enum class Axis { X, Y };
+
 class Collision {
 public:
     Collision(int worldWidth, int worldHeight, int cellSize = 16);
@@ -52,9 +53,9 @@ public:
 
     Collision& operator=(const Collision&) = delete;
 
-    void AddEntity(Entity* entity);
+    void AddEntity(Entity* entity, float dt);
     void RemoveEntity(Entity* entity);
-    void UpdateEntity(Entity* entity);
+    void UpdateEntity(Entity* entity, float dt);
 
     // Clear all entities from the spatial grid
     void Clear();
@@ -63,13 +64,12 @@ public:
     std::vector<Entity*> GetPotentialCollisions(Entity* entity);
 
     // Check for collision between two entities using Swept AABB (narrow phase)
-    CollisionResult CheckCollision(Entity* movingEntity, Entity* staticEntity, float dt);
+    CollisionResult CheckCollision(Entity* movingEntity, Entity* staticEntity, float dt, Axis axis);
 
     // Process all collisions for a frame
     void ProcessCollisions(float dt);
     void UpdateDebugInfo(float dt);
 
-    void Raycast(const Entity* entity, const Vector2& start, const Vector2& end, std::vector<Entity*>& hitEntities);
     bool GroundCheck(const Entity* entity, float dt = 0.0f);
 
     void RenderDebug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* primitiveBatch);
@@ -77,11 +77,13 @@ public:
     static Collision* GetInstance();
 private:
     std::pair<int, int> GetCellCoords(const Vector2& position);
-    std::vector<std::pair<int, int>> GetEntityCells(const Entity* entity);
-    void SweptAABB(Entity* movingEntity, Entity* staticEntity, float dt, CollisionResult& result);
-    void CheckInteractionPointCollision(Entity* entity, Entity* other, float dt, CollisionResult& result);
-    void ResolveCollision(Entity* entity, const CollisionResult& result, float dt);
-    bool RayVsRect(const Vector2& start, const Vector2& end, const RECT& rect, float& t_entry, float& t_exit);
+    std::vector<std::pair<int, int>> GetEntityCells(const Entity* entity, float dt);
+    void SweptAABB(Entity* movingEntity, Entity* staticEntity, float dt, CollisionResult& result, Axis axis);
+    void CheckInteractionPointCollision(Entity* entity, Entity* other, float dt, CollisionResult& result, Axis axis);
+    void ResolveCollision(Entity* entity, const CollisionResult& result, float dt, Axis axis);
+    bool RayEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt, Axis axis);
+    bool SweptEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt);
+    bool RayVsRect(const Vector2& origin, const Vector2& end, const Rectangle& rect, Vector2& contactPoint, Vector2& contactNormal, float& contactTime);
 
 private:
     static Collision* s_instance;

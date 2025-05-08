@@ -22,27 +22,27 @@
       "height": 16,
       "countX": 50,
       "countY": 1,
-      "solid": true
+      "solid": false
     },
     {
       "type": 10,
-      "x": 16.0,
+      "x": 80.0,
       "y": 112.0,
       "width": 16,
       "height": 16,
       "countX": 5,
       "countY": 3,
-      "solid": true
+      "solid": false
     },
     {
       "type": 10,
       "x": 128.0,
-      "y": 132.0,
+      "y": 147.0,
       "width": 16,
       "height": 16,
       "countX": 8,
       "countY": 3,
-      "solid": true
+      "solid": false
     }
   ]
 }

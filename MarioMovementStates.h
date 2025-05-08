@@ -31,6 +31,7 @@ public:
 	void Update(Mario* mario, float dt) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 };
 
 class MarioWalkState : public MarioMovementState {
@@ -40,6 +41,7 @@ public:
 	void Update(Mario* mario, float dt) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 };
 
 class MarioRunState : public MarioMovementState {
@@ -49,6 +51,7 @@ public:
 	void Update(Mario* mario, float dt) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 private:
 	bool m_isSprinting = false;
 };
@@ -60,6 +63,7 @@ public:
 	void Update(Mario* mario, float dt) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 private:
 	Direction m_lastDir;
 };
@@ -72,6 +76,7 @@ public:
 	void Enter(Mario* mario) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 };	
 
 class MarioSitState : public MarioMovementState {
@@ -81,4 +86,5 @@ public:
 	void Update(Mario* mario, float dt) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 };

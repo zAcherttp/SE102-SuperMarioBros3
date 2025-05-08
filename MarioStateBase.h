@@ -1,6 +1,8 @@
 #pragma once
 #include "State.h"
 
+using namespace DirectX::SimpleMath;
+
 class Mario;
 
 enum class MarioMovementStateType {
@@ -29,6 +31,7 @@ public:
 	virtual void Exit(Mario* mario) override = 0;
 	virtual std::string GetStateName() const = 0;
 	virtual int GetStateAnimValue() const = 0;
+	virtual Vector2 GetStateSizeOffset() const = 0;
 	void SetAnimation(Mario* mario, int animId) const;
 };
 

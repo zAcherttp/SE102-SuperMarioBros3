@@ -65,7 +65,7 @@ void World::Update(float dt) {
 	Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
 	Vector2 cameraPos = pos - Vector2(gameWidth / 2, 0);
 	//clamp position to nearest pixel to avoid pixel rendering artifacts
-	cameraPos.x = static_cast<int>(cameraPos.x + 0.5f);
+	//cameraPos.x = (int)(cameraPos.x + 0.5f);
 	cameraPos.y = 0;
 
 	Game::GetInstance()->SetCameraPosition(cameraPos, true);
@@ -78,12 +78,12 @@ void World::Update(float dt) {
 	if (m_collisionSystem) {
 
 		if (m_player) {
-			m_collisionSystem->UpdateEntity(m_player);
+			m_collisionSystem->UpdateEntity(m_player, dt);
 		}
 
 		for (auto e : m_entities) {
 			if (!e->IsStatic()) {
-				m_collisionSystem->UpdateEntity(e);
+				m_collisionSystem->UpdateEntity(e, dt);
 			}
 		}
 
@@ -135,11 +135,11 @@ void World::Load(SpriteSheet* spriteSheet)
 		m_collisionSystem = std::make_unique<Collision>(m_width, m_height);
 
 		if (m_player) {
-			m_collisionSystem->AddEntity(m_player);
+			m_collisionSystem->AddEntity(m_player, 0.f);
 		}
 
 		for (auto& entity : m_entities) {
-			m_collisionSystem->AddEntity(entity);
+			m_collisionSystem->AddEntity(entity, 0.f);
 		}
 	}
 	catch (const std::exception& e) {

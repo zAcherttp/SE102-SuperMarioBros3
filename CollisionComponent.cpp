@@ -8,11 +8,17 @@ using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
 CollisionComponent::CollisionComponent(Entity* owner)
-	: m_owner(owner), m_size(0, 0), m_pos(0, 0)
+	: m_owner(owner),
+    m_size(0, 0),
+    m_pos(0, 0),
+    m_pushVector((0, 0)),
+    m_isBeingPushed(false),
+    m_pushVel((0, 0)),
+    m_pushedDistance(0)
 {
 }
 
-RECT CollisionComponent::GetBoundingBox() const
+RECT CollisionComponent::GetRect() const
 {
     RECT rect{};    
     rect.left = static_cast<LONG>(m_pos.x - m_size.x / 2.f);
@@ -21,6 +27,11 @@ RECT CollisionComponent::GetBoundingBox() const
     rect.bottom = static_cast<LONG>(m_pos.y + m_size.y / 2.f);
 
     return rect;
+}
+
+Rectangle CollisionComponent::GetRectangle() const
+{
+    return Rectangle(GetRect());
 }
 
 Vector2 CollisionComponent::GetSize() const
@@ -43,19 +54,49 @@ void CollisionComponent::SetPosition(DirectX::SimpleMath::Vector2 position)
     m_pos = position;
 }
 
-bool CollisionComponent::ContainsPoint(const Vector2& point) const
+Vector2 CollisionComponent::GetVelocity() const
 {
-    RECT rect = GetBoundingBox();
-	return (point.x >= rect.left && point.x <= rect.right &&
-        point.y >= rect.top && point.y <= rect.bottom);
+    return m_vel;
 }
 
-bool CollisionComponent::ContainsRectangle(const RECT& rect) const
+void CollisionComponent::SetVelocity(DirectX::SimpleMath::Vector2 velocity)
 {
-    RECT thisRect = GetBoundingBox();
-    return (rect.left >= thisRect.left && rect.right <= thisRect.right &&
-        rect.top >= thisRect.top && rect.bottom <= thisRect.bottom);
+    m_vel = velocity;
 }
+
+void CollisionComponent::Update(float dt) {
+    // consume push
+    if(m_isBeingPushed) {
+        Vector2 delta = m_pushVel * dt;
+        m_pos += delta;
+        m_pushedDistance += delta.Length();
+
+        // Log(LOG_INFO, "Pushing entity " + std::to_string(m_owner->GetAnimId()) + " with distance: " +
+        //     std::to_string(m_pushVector.x) + ", " + std::to_string(m_pushVector.y) +
+        //     " over time: " + std::to_string(m_pushTime) + " seconds.");
+        if (m_pushVector.Length() - m_pushedDistance <= 0) {
+            m_isBeingPushed = false;
+            m_pushVector = Vector2(0, 0);
+            m_pushVel = Vector2(0, 0);
+            m_pushedDistance = 0;
+        }
+    }
+}
+
+void CollisionComponent::Push(Vector2 distance, float span)
+{
+    if (distance.Length() == 0 || span < 0) return;
+
+    m_pushVector = distance;
+    m_pushedDistance = 0;
+    m_pushVel = Vector2(m_pushVector.x / span, m_pushVector.y / span);
+    m_isBeingPushed = true;
+    /*Log(LOG_INFO, "Pushing entity " + std::to_string(m_owner->GetAnimId()) + " with distance: " +
+             std::to_string(m_pushVector.x) + ", " + std::to_string(m_pushVector.y) +
+             " over time: " + std::to_string(m_pushTime) + " seconds.");*/
+}
+
+bool CollisionComponent::GetIsPushed() const { return m_isBeingPushed; }
 
 std::vector<std::pair<InteractionPointType, Vector2>> CollisionComponent::GetInteractionPoints() const
 {
@@ -70,9 +111,8 @@ void CollisionComponent::RenderDebug(DirectX::PrimitiveBatch<DirectX::VertexPosi
     if (!primitiveBatch) return;
 
     // Draw bounding box
-    DebugOverlay::DrawBoundingBox(primitiveBatch, GetBoundingBox(), boundingBoxColor);
+    DebugOverlay::DrawBoundingBox(primitiveBatch, GetRect(), boundingBoxColor);
 
-    RECT bbox = GetBoundingBox();
     Vector2 pos = GetPosition();
     Vector2 size = GetSize();
 
