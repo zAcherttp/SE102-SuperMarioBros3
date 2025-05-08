@@ -266,10 +266,8 @@
     <Image Include="textures\font.png" />
     <Image Include="textures\hud.png" />
     <Image Include="textures\mario.png" />
-    <Image Include="textures\shipanimated.png" />
     <Image Include="textures\smb3_enemies_sheet_2.png" />
     <Image Include="textures\sprites.png" />
-    <Image Include="textures\tiles.dds" />
     <Image Include="textures\tiles.png" />
   </ItemGroup>
   <ItemGroup>
@@ -279,9 +277,9 @@
     <None Include="sprites.json" />
     <None Include="game.json" />
     <None Include="packages.config" />
-    <None Include="testWorld.json" />
     <None Include="textures\mario.spritefont" />
     <None Include="textures\sfmono.spritefont" />
+    <None Include="world_1-1.json" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="textures\readme.txt" />
