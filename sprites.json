@@ -34,7 +34,7 @@
       {
         "id": 170,
         "name": "mario_small_sprint",
-        "frames": [ "small-walk", "small-idle" ],
+        "frames": ["small-walk", "small-idle"],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
@@ -525,6 +525,24 @@
         "id": 2280,
         "name": "end-portal-bot-right",
         "frames": ["end-portal-bot-right"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 5,
+    "sprites": [
+      {
+        "id": 500,
+        "name": "goomba_walk",
+        "frames": ["yellow-goomba-walk"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 510,
+        "name": "goomba_die",
+        "frames": ["yellow-goomba-stepped"],
         "loop": false
       }
     ]

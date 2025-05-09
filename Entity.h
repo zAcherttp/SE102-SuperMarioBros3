@@ -30,6 +30,7 @@ public:
 	bool IsActive() const;
 	bool IsCollidable() const;
 	bool IsStatic() const;
+	bool IsDead() const;
 
 	void DefineAnimation(int animId, const std::vector<const wchar_t*>& frameNames,
 		bool loop = true, float timePerFrame = 0.1f,
@@ -67,6 +68,8 @@ public:
 	virtual void OnLeftSideCollision(const CollisionResult& event);
 	virtual void OnRightSideCollision(const CollisionResult& event);
 	virtual bool IsGrounded() const;
+
+	virtual void Die();
 
 protected:
 	//physics

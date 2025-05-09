@@ -46,6 +46,12 @@ constexpr auto ID_ANIM_MARIO_SIT                    = 60;
 constexpr auto ID_ANIM_MARIO_FLY                    = 70;
 constexpr auto ID_ANIM_MARIO_HOLD                   = 80;
 
+// Goomba
+constexpr auto ID_ANIM_GOOMBA_WALK                  = 500;
+constexpr auto ID_ANIM_GOOMBA_DIE                   = 510;
+
+// Paragoomba
+constexpr auto ID_ANIM_PARAGOOMBA_WALK              = 600;
 // Brick
 constexpr auto ID_ANIM_BRICK            	    	= 240;
 

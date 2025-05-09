@@ -19,6 +19,7 @@
 #include "LuckyBlock.h"
 #include "BlackBackground.h"
 #include "EndPortal.h"
+#include "Goomba.h"
 
 using namespace DirectX;
 using Keys = Keyboard::Keys;
@@ -87,6 +88,12 @@ void World::Update(float dt) {
 	Game::GetInstance()->SetCameraPosition(cameraPos, false);
 	//Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
 
+	m_entities.erase(
+	std::remove_if(m_entities.begin(), m_entities.end(),
+		[](Entity* e) { return e == nullptr || !e->IsActive(); }),
+	m_entities.end()
+    );
+	
 	for (auto e : m_entities) {
 		e->Update(dt);
 	}
@@ -109,24 +116,26 @@ void World::Update(float dt) {
 
 void World::Render(DirectX::SpriteBatch* spriteBatch) {
 	m_player->Render(spriteBatch);
-	for (auto e : m_entities) {
-		e->Render(spriteBatch);
-	}
+    for (auto e : m_entities) {
+        e->Render(spriteBatch);
+    }
 }
 
-void World::RenderDebug(DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionColor>* primitiveBatch)
-{
-	if (m_collisionSystem) {
-		m_collisionSystem->RenderDebug(primitiveBatch);
-	}
-	for (auto e : m_entities)
-	{
-		e->GetCollisionComponent()->RenderDebug(primitiveBatch, Colors::Lime);
-	}
-	m_player->GetCollisionComponent()->RenderDebug(primitiveBatch, Colors::Lime);
-	Vector2 pos = m_player->GetPosition();
-	Vector2 vel = m_player->GetVelocity();
-	DebugOverlay::DrawLine(primitiveBatch, pos, pos + vel, Colors::Yellow);
+void World::RenderDebug(DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionColor>* primitiveBatch) {
+    if (m_collisionSystem) {
+        m_collisionSystem->RenderDebug(primitiveBatch);
+    }
+    
+    for (auto e : m_entities) {
+        if (e != nullptr && e->GetCollisionComponent()) {
+            e->GetCollisionComponent()->RenderDebug(primitiveBatch, Colors::Lime);
+        }
+    }
+    
+    m_player->GetCollisionComponent()->RenderDebug(primitiveBatch, Colors::Lime);
+    Vector2 pos = m_player->GetPosition();
+    Vector2 vel = m_player->GetVelocity();
+    DebugOverlay::DrawLine(primitiveBatch, pos, pos + vel, Colors::Yellow);
 }
 
 void World::Reset() {
@@ -248,6 +257,12 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		}
 		entity = new Mario(position, 0, 0, 0, spriteSheet);
 		break;
+		case ID_ENT_GOOMBA:
+		{
+			entity = new Goomba(position, Vector2(GOOMBA_WIDTH,GOOMBA_HEIGHT), spriteSheet);
+			Log(__FUNCTION__, "Goomba created at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
+			break;
+		}
 		case ID_ENT_GROUND:
 		{
 			float width = data["width"];
@@ -388,12 +403,26 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 		Log(__FUNCTION__, "No animation data found for entity type: " + std::to_string(type));
 		return;
 	}
+	
+	// Special debugging for Goomba
+	if (type == ID_ENT_GOOMBA) {
+		Log(__FUNCTION__, "Found animation data for Goomba (type " + std::to_string(type) + ")");
+	}
 
 	for (const auto& sequence : (*typeIt)["sprites"]) {
 		int animId = sequence.contains("id") ? sequence["id"].get<int>() : -1;
 		if (animId == -1) continue;
 
-		Log(__FUNCTION__, "Entity ID: " + std::to_string(type) + " Animation ID: " + std::to_string(animId) + " Frames: " + std::to_string(sequence["frames"].size()));
+		// Enhanced logging for Goomba animations
+		if (type == ID_ENT_GOOMBA) {
+			Log(__FUNCTION__, "Loading Goomba animation ID: " + std::to_string(animId) + 
+				" Name: " + sequence["name"].get<std::string>() +
+				" Frames: " + std::to_string(sequence["frames"].size()));
+		}
+		else {
+			Log(__FUNCTION__, "Entity ID: " + std::to_string(type) + " Animation ID: " + 
+				std::to_string(animId) + " Frames: " + std::to_string(sequence["frames"].size()));
+		}
 
 		std::vector<const wchar_t*> frameNames;
 
@@ -409,7 +438,13 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 
 			// Use the cached wstring's c_str()
 			frameNames.push_back(frameNameCache[frameName].c_str());
+			
+			// Log frame names for Goomba
+			if (type == ID_ENT_GOOMBA) {
+				Log(__FUNCTION__, "Goomba frame: " + frameName);
+			}
 		}
+		
 		bool loop = sequence.contains("loop") ? sequence["loop"].get<bool>() : false;
 		float timePerFrame = sequence.contains("timePerFrame") ? sequence["timePerFrame"].get<float>() : 0.1f;
 		bool useVelocityScaling = sequence.contains("useVelocityScaling") ? sequence["useVelocityScaling"].get<bool>() : false;

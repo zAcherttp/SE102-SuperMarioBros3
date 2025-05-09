@@ -1,4 +1,4 @@
-#pragma once
+	#pragma once
 #include "pch.h"
 #include "Mario.h"
 #include "AssetIDs.h"
