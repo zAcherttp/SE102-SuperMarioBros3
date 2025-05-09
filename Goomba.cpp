@@ -20,7 +20,7 @@ Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     m_isDying = false; // Initialize dying state
     
     // Set initial velocity - slow movement to the left
-    m_vel = Vector2(-GameConfig::Enemies::Goomba::WALK_SPEED, 0.0f);
+    SetVelocity(Vector2(-GameConfig::Enemies::Goomba::WALK_SPEED, 0.0f));
     
     // Setup collision component
     SetupCollisionComponent();
@@ -41,12 +41,12 @@ void Goomba::OnCollision(const CollisionResult& event)
 {
     // Handle general collision
     Log("GoombaCollision", "Collision detected");
-    Log("GoombaCollision", "Collision normal: " + std::to_string(event.normal.x) + ", " + std::to_string(event.normal.y));
+    Log("GoombaCollision", "Collision normal: " + std::to_string(event.contactNormal.x) + ", " + std::to_string(event.contactNormal.y));
     
     // Check if the collision is with Mario
     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
     
-    if (event.normal.y > 0) // Collision from above
+    if (event.contactNormal.y > 0) // Collision from above
     {
         Log("GoombaCollision", "Collision from above detected");
         
@@ -60,7 +60,7 @@ void Goomba::OnCollision(const CollisionResult& event)
             mario->SetVelocity(vel);
         }
     }
-    else if (event.normal.x != 0) // Collision from the sides
+    else if (event.contactNormal.x != 0) // Collision from the sides
     {
         Log("GoombaCollision", "Collision from the side detected");
         
@@ -109,7 +109,7 @@ void Goomba::Update(float dt)
         }
     }
 
-    SetPosition(GetPosition() + m_vel * dt);
+    SetPosition(GetPosition() + GetVelocity() * dt);
     // Update other properties
     Entity::Update(dt);
 }

@@ -41,9 +41,11 @@
     <Filter Include="Source\Physics">
       <UniqueIdentifier>{91f8fd95-f3ef-489a-9220-1ad929c60f13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Entity\Enemies">
+      <UniqueIdentifier>{d74bf14b-1525-4e2d-923e-3225d9124068}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="DeviceResources.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -180,13 +182,20 @@
     <ClInclude Include="MarioPowerUpStates.h" />
     <ClInclude Include="MarioStateBase.h" />
     <ClInclude Include="MarioStateFactory.h" />
-    <ClInclude Include="Goomba.h" />
-    <ClInclude Include="GameConfig.h" />
-    <ClInclude Include="Paragoomba.h" />
+    <ClInclude Include="GameConfig.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Goomba.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Paragoomba.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="DeviceResources.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
@@ -308,8 +317,18 @@
     <ClCompile Include="MarioPowerUpStates.cpp" />
     <ClCompile Include="MarioStateBase.cpp" />
     <ClCompile Include="MarioStateFactory.cpp" />
-    <ClCompile Include="Goomba.cpp" />
-    <ClCompile Include="Paragoomba.cpp" />
+    <ClCompile Include="Goomba.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Paragoomba.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">
@@ -347,7 +366,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="game.json">
       <Filter>Resources\Assets</Filter>
     </None>
@@ -362,6 +380,9 @@
     </None>
     <None Include="world_1-1.json">
       <Filter>Resources\Assets</Filter>
+    </None>
+    <None Include="packages.config">
+      <Filter>Source\Core</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

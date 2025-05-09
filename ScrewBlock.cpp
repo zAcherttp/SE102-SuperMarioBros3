@@ -9,7 +9,7 @@ ScrewBlock::ScrewBlock(Vector2 position, Vector2 size, int countX, int countY, b
 {
 	m_tileXcount = countX;
 	m_tileYcount = countY;
-	m_isSolid = true;
+	m_isSolid = false;
 	m_isStatic = true;
 	m_depth = depth;
     m_color = color;
