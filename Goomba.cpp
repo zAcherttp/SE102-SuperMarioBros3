@@ -5,6 +5,7 @@
 #include "Mario.h"
 #include "MarioStateFactory.h"
 #include "GameConfig.h"
+#include "ParaGoomba.h"
 
 Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     : Entity(position,size, spriteSheet)
@@ -13,8 +14,7 @@ Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     , m_flipFrame(false)
 {
     // Define the animation using the single frame we have
-    std::vector<const wchar_t*> walkFrames = { L"red-goomba-walk" };
-    DefineAnimation(ID_ANIM_GOOMBA_WALK, walkFrames, true, m_frameTime);
+
     SetAnimation(ID_ANIM_GOOMBA_WALK, true);
     m_visible = true; // Set visibility to true
     m_isDying = false; // Initialize dying state
@@ -29,11 +29,6 @@ Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 
 void Goomba::Render(DirectX::SpriteBatch* spriteBatch)
 {
-    // Debugging render information
-    // Log("GoombaRender", "Rendering at position (" + 
-    //     std::to_string(GetPosition().x) + ", " + 
-    //     std::to_string(GetPosition().y) + ")");
-        
     Entity::Render(spriteBatch);
 }
 
@@ -45,7 +40,18 @@ void Goomba::OnCollision(const CollisionResult& event)
     
     // Check if the collision is with Mario
     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
-    
+    ParaGoomba* paraGoomba = dynamic_cast<ParaGoomba*>(event.collidedWith);
+
+    if (event.contactNormal.x != 0 && !mario && !paraGoomba) // Collision from the sides
+    {
+
+            // If hitting a wall (not Mario), reverse direction and maintain standard speed
+            float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
+            Vector2 vel = GetVelocity();
+            vel.x = (vel.x > 0) ? -targetSpeed : targetSpeed;
+            SetVelocity(vel);
+        
+    }
     if (event.contactNormal.y > 0) // Collision from above
     {
         Log("GoombaCollision", "Collision from above detected");
@@ -56,18 +62,16 @@ void Goomba::OnCollision(const CollisionResult& event)
             
             // Make Mario bounce a bit
             Vector2 vel = mario->GetVelocity();
-            vel.y = GameConfig::Mario::STANDARD_JUMP_FORCE; // Use Mario's standard jump force
+            vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
             mario->SetVelocity(vel);
         }
     }
-    else if (event.contactNormal.x != 0) // Collision from the sides
-    {
-        Log("GoombaCollision", "Collision from the side detected");
-        
-        // If Mario hit the Goomba from the side
-        if (mario) {
-            Log("GoombaCollision", "Mario collided with Goomba from the side");
-        }
+    else if (event.contactNormal.y < 0 && event.collidedWith != mario) {
+        // If hitting ground, immediately stop vertical velocity
+        Vector2 vel = GetVelocity();
+        vel.y = 0.0f;
+        SetVelocity(vel);
+        m_isGrounded = true;
     }
 }
 
@@ -91,8 +95,27 @@ void Goomba::Update(float dt)
             m_isActive = false;
             m_visible = false;
             Log("GoombaDie", "Goomba deactivated after death animation");
+
         }
         return; // Skip normal updates when dying
+    }
+    
+    // Check if entity is on ground - important for physics
+    m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
+    
+    // Apply gravity only if in the air
+    if (!m_isGrounded) {
+        Vector2 vel = GetVelocity();
+        vel.y += GameConfig::Physics::GRAVITY * dt;
+        SetVelocity(vel);
+    }
+    
+    float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
+    Vector2 vel = GetVelocity();
+    // If horizontal speed has deviated from target, restore it
+    if (std::abs(vel.x) != targetSpeed) {
+        vel.x = (vel.x >= 0) ? targetSpeed : -targetSpeed;
+        SetVelocity(vel);
     }
 
     // Handle flip animation

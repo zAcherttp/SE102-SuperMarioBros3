@@ -398,7 +398,7 @@ bool Collision::GroundCheck(const Entity* entity, float dt)
     float rayLength = std::abs(velocity.y * dt);
 
     // Use a minimum distance to check even when velocity is small or zero
-    float minRayLength = size.y / 2 + 0.1f;
+    float minRayLength = size.y / 2 + 0.5f;
 
     rayLength = std::max(rayLength, minRayLength);
 

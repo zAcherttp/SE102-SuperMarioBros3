@@ -194,6 +194,9 @@
     <ClInclude Include="Camera.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Wings.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -328,6 +331,9 @@
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Wings.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

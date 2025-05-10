@@ -22,7 +22,7 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 	{
 		std::wstring name = std::wstring(frameName);
 		std::string str = std::string(name.begin(), name.end());
-		// Log(__FUNCTION__, "Finding frame: " + str); // Updated to use 'str' instead of 'name.c_str()'
+		Log(__FUNCTION__, "Finding frame: " + str); // Updated to use 'str' instead of 'name.c_str()'
 		auto frame = m_spriteSheet->Find(frameName);
 		if (frame)
 		{
@@ -36,8 +36,7 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 	// Save the animation
 	m_animations[name] = sequence;
 
-	//  Log(__FUNCTION__, "Loaded animation: " + std::to_string(name));
-	
+	Log(__FUNCTION__, "Loaded animation: " + std::to_string(name));
 }
 
 // Set the current animation and optionally reset it

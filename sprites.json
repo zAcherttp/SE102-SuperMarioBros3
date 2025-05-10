@@ -546,5 +546,47 @@
         "loop": false
       }
     ]
+  },
+  {
+    "type": 12,
+    "sprites": [
+      {
+        "id": 1200,
+        "name": "wings_flap",
+        "frames": ["wing-opem", "wing-closed"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 1210,
+        "name": "wings_open",
+        "frames": ["wing-opem"],
+        "loop": false
+      },
+      {
+        "id": 1220,
+        "name": "wings_closed",
+        "frames": ["wing-closed"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 6,
+    "sprites": [
+      {
+        "id": 600,
+        "name": "paragoomba_walk",
+        "frames": ["red-goomba-walk"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 610,
+        "name": "paragoomba_die",
+        "frames": ["red-goomba-stepped"],
+        "loop": false
+      }
+    ]
   }
 ]

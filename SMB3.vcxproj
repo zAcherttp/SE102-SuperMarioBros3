@@ -218,6 +218,7 @@
     <ClInclude Include="State.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="Wings.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
@@ -260,6 +261,7 @@
     <ClCompile Include="SkyPlatform.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Wings.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>

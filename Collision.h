@@ -46,7 +46,7 @@ enum class Axis { X, Y };
 
 class Collision {
 public:
-    Collision(int worldWidth, int worldHeight, int cellSize = 27 );
+    Collision(int worldWidth, int worldHeight, int cellSize = 313 );
     ~Collision();
 
     Collision(const Collision&) = delete;

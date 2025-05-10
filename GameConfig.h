@@ -8,6 +8,7 @@ namespace GameConfig
         constexpr float STANDARD_JUMP_FORCE = -3.5f * 60.0f;
         constexpr float GRAVITY_SLOW = 6.0f * 60.0f;
         constexpr float GRAVITY_FAST = 12.0f * 60.0f;
+        constexpr float BOUNCE_FORCE = -300.0f;
     }
 
     namespace Enemies

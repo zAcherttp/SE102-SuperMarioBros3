@@ -20,12 +20,17 @@
 #include "BlackBackground.h"
 #include "EndPortal.h"
 #include "Goomba.h"
+#include "ParaGoomba.h"
 
 using namespace DirectX;
 using Keys = Keyboard::Keys;
 
+World* World::s_instance = nullptr;
+
 World::World(std::string wPath, std::string name)
 {
+	s_instance = this; // singleton instance
+
 	m_path = wPath;
 	m_name = name;
 	m_player = nullptr;
@@ -37,6 +42,9 @@ World::World(std::string wPath, std::string name)
 
 World::~World()
 {
+	if (s_instance == this)
+	s_instance = nullptr;
+
 	if (m_player)
 	{
 		delete m_player;
@@ -94,10 +102,6 @@ void World::Update(float dt) {
 	m_entities.end()
     );
 	
-	for (auto e : m_entities) {
-		e->Update(dt);
-	}
-
 	if (m_collisionSystem) {
 
 		if (m_player) {
@@ -112,6 +116,11 @@ void World::Update(float dt) {
 
 		m_collisionSystem->ProcessCollisions(dt);
 	}
+	
+	for (auto e : m_entities) {
+		e->Update(dt);
+	}
+
 }
 
 void World::Render(DirectX::SpriteBatch* spriteBatch) {
@@ -260,7 +269,11 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		case ID_ENT_GOOMBA:
 		{
 			entity = new Goomba(position, Vector2(GOOMBA_WIDTH,GOOMBA_HEIGHT), spriteSheet);
-			Log(__FUNCTION__, "Goomba created at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
+			break;
+		}
+		case ID_ENT_PARAGOOMBA:
+		{
+			entity = new ParaGoomba(position, Vector2(GOOMBA_WIDTH,GOOMBA_HEIGHT), spriteSheet);
 			break;
 		}
 		case ID_ENT_GROUND:
@@ -494,3 +507,8 @@ std::string World::GetName() const
 inline int World::GetWidth() const { return m_width; }
 
 inline int World::GetHeight() const { return m_height; }
+
+World* World::GetInstance()
+{
+	return s_instance;
+}
