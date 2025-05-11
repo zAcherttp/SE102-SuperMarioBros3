@@ -53,4 +53,5 @@ void Ground::Render(DirectX::SpriteBatch* spriteBatch)
 void Ground::Update(float dt)
 {
 	//do nothing
+    dt;
 }

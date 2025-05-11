@@ -11,9 +11,9 @@ CollisionComponent::CollisionComponent(Entity* owner)
 	: m_owner(owner),
     m_size(0, 0),
     m_pos(0, 0),
-    m_pushVector((0, 0)),
+    m_pushVector((0.f, 0.f)),
     m_isBeingPushed(false),
-    m_pushVel((0, 0)),
+    m_pushVel((0.f, 0.f)),
     m_pushedDistance(0)
 {
 }
@@ -85,7 +85,7 @@ void CollisionComponent::Update(float dt) {
 
 void CollisionComponent::Push(Vector2 distance, float span)
 {
-    if (distance.Length() == 0 || span < 0) return;
+    if (distance.Length() == 0 || span < 0) return; 
 
     m_pushVector = distance;
     m_pushedDistance = 0;

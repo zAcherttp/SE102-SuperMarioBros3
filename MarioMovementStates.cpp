@@ -337,6 +337,8 @@ MarioMovementState* MarioSkidState::HandleInput(Mario* mario)
 		return MarioStateFactory::CreateState(MarioMovementStateType::Walk, GetDirection());
 	}
 	
+    input;
+
 	return nullptr;
 }
 

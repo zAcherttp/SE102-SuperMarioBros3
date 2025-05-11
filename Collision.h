@@ -17,7 +17,7 @@ struct SpatialGridCell {
 struct DebugCollisionInfo {
     Vector2 position;
     Vector2 normal;
-    float timeToLive;
+    float timeToLive = DEBUG_COLLISION_TTL;
 };
 
 struct CollisionResult {

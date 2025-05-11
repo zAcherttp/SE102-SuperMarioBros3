@@ -31,32 +31,38 @@ void MarioPowerUpState::Exit(Mario* mario)
 MarioPowerUpState* MarioSmallState::HandleInput(Mario* mario)
 {
     // do absolutely nothing
+    mario;
     return nullptr;
 }
 
 void MarioSmallState::Update(Mario* mario, float dt)
 {
     // also do absolutely nothing
+    mario, dt;
 }
 
 MarioPowerUpState* MarioSuperState::HandleInput(Mario* mario)
 {
     // do absolutely nothing
+	mario;
     return nullptr;
 }
 
 void MarioSuperState::Update(Mario* mario, float dt)
 {
     // also do absolutely nothing
+	mario, dt;
 }
 
 MarioPowerUpState* MarioRaccoonState::HandleInput(Mario* mario)
 {
     // do absolutely nothing
+	mario;
     return nullptr;
 }
 
 void MarioRaccoonState::Update(Mario* mario, float dt)
 {
     // also do absolutely nothing
+	mario, dt;
 }

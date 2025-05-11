@@ -20,9 +20,9 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 	// Load all frames from the sprite sheet
 	for (auto frameName : frameNames)
 	{
-		std::wstring name = std::wstring(frameName);
-		std::string str = std::string(name.begin(), name.end());
-		// Log(__FUNCTION__, "Finding frame: " + str); // Updated to use 'str' instead of 'name.c_str()'
+		//std::wstring fname = std::wstring(frameName);
+		//std::string fstr = std::string(fname.begin(), fname.end());
+		// Log(__FUNCTION__, "Finding frame: " + fstr); // Updated to use 'fstr' instead of 'name.c_str()'
 		auto frame = m_spriteSheet->Find(frameName);
 		if (frame)
 		{

@@ -198,13 +198,12 @@ void Collision::CheckInteractionPointCollision(Entity* entity, Entity* other, fl
     
     // Convert RECT to Rectangle
     Rectangle rectangle;
-    rectangle.x = static_cast<float>(otherBox.left);
-    rectangle.y = static_cast<float>(otherBox.top);
-    rectangle.width = static_cast<float>(otherBox.right - otherBox.left);
-    rectangle.height = static_cast<float>(otherBox.bottom - otherBox.top);
-    // Check each interaction point
-    InteractionPointType pointType = InteractionPointType::None;
+    rectangle.x = static_cast<long>(otherBox.left);
+    rectangle.y = static_cast<long>(otherBox.top);
+    rectangle.width = static_cast<long>(otherBox.right - otherBox.left);
+    rectangle.height = static_cast<long>(otherBox.bottom - otherBox.top);
 
+    // Check each interaction point
     for (const auto& [type, localPoint] : points) {
         // Convert to world space
         Vector2 worldPointStart = localPoint + entity->GetPosition();
@@ -509,10 +508,10 @@ bool Collision::RayEntVsEnt(const Entity& in, const Entity& target, Vector2& con
 
     // Expand target rectangle by source dimensions
     Rectangle expandedRect;
-    expandedRect.x = tarPos.x - std::floor(inSize.x / 2) - std::floor(tarSize.x / 2);
-    expandedRect.y = tarPos.y - std::floor(inSize.y / 2) - std::floor(tarSize.y / 2);
-    expandedRect.width = tarSize.x + inSize.x;
-    expandedRect.height = tarSize.y + inSize.y;
+    expandedRect.x = (long)(tarPos.x - std::floor(inSize.x / 2) - std::floor(tarSize.x / 2));
+    expandedRect.y = (long)(tarPos.y - std::floor(inSize.y / 2) - std::floor(tarSize.y / 2));
+    expandedRect.width = (long)(tarSize.x + inSize.x);
+    expandedRect.height = (long)(tarSize.y + inSize.y);
 
     Vector2 rayOrigin = inPos;
     Vector2 rayEnd = rayOrigin + inVel * dt;
@@ -537,10 +536,10 @@ bool Collision::SweptEntVsEnt(const Entity& in, const Entity& target, Vector2& c
 
     Vector2 velDt = inVel * dt; // Distance traveled in this frame
     Rectangle broadRect;
-    broadRect.x = std::min(inPos.x - inSize.x / 2, inPos.x - inSize.x / 2 + velDt.x);
-    broadRect.y = std::min(inPos.y - inSize.y / 2, inPos.y - inSize.y / 2 + velDt.y);
-    broadRect.width = inSize.x + std::abs(velDt.x);
-    broadRect.height = inSize.y + std::abs(velDt.y);
+    broadRect.x = (long)std::min(inPos.x - inSize.x / 2, inPos.x - inSize.x / 2 + velDt.x);
+    broadRect.y = (long)std::min(inPos.y - inSize.y / 2, inPos.y - inSize.y / 2 + velDt.y);
+    broadRect.width = (long)(inSize.x + std::abs(velDt.x));
+    broadRect.height = (long)(inSize.y + std::abs(velDt.y));
 
     // Calculate expanded target bounds
     Rectangle tarRect = target.GetCollisionComponent()->GetRectangle();

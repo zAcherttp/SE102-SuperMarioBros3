@@ -9,7 +9,7 @@ Pipe::Pipe(Vector2 position, Vector2 size, int countX, int countY, bool isSolid,
 {
 	m_tileXcount = countX;
 	m_tileYcount = countY;
-	m_isSolid = true;
+	m_isSolid = isSolid;
 	m_isStatic = true;
     m_hasHead = hasHead;
 
@@ -43,4 +43,5 @@ void Pipe::Render(DirectX::SpriteBatch* spriteBatch)
 void Pipe::Update(float dt)
 {
     //do nothing
+    dt;
 }

@@ -470,7 +470,7 @@ void Game::CreateWindowSizeDependentResources() {
 	float windowHeight = static_cast<float>(size.bottom);
 
 	if (m_camera) {
-		m_camera->UpdateWindowSizeDependentMatrices(windowWidth, windowHeight);
+		m_camera->UpdateWindowSizeDependentMatrices((int)windowWidth, (int)windowHeight);
 	}
 
 	m_effect->SetView(m_camera->GetDebugViewMatrix());

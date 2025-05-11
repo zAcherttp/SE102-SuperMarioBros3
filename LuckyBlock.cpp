@@ -10,7 +10,7 @@ LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet
 {
 	m_tileXcount = 1;
 	m_tileYcount = 1; // LuckyBlock is always 1 tile high
-	m_isSolid = true;
+	m_isSolid = isSolid;
 	m_isStatic = false;
 	m_isClaiming = false;
 	m_isClaimed = false;

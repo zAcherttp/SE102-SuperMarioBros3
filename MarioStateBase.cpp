@@ -10,4 +10,5 @@ void MarioStateBase::SetAnimation(Mario* mario, int animId) const {
 
 void MarioStateBase::Enter(Mario* mario) {
     Log("State Machine", "Entering state: " + GetStateName());
+    mario;
 }

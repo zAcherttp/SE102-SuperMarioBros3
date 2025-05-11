@@ -179,6 +179,7 @@ void Mario::OnCollision(const CollisionResult& result) {
 	if(result.contactNormal.Dot(Vector2(1, 0)) == 0) {
 		SetVelocity(Vector2(GetVelocity().x, 0));
 	}*/
+	result;
 }
 
 void Mario::OnNoCollision(float dt, Axis axis) {
@@ -243,7 +244,7 @@ void Mario::OnTopHeadCollision(const CollisionResult& result) {
 			Vector2 otherPos = result.collidedWith->GetPosition();
 			Vector2 pos = GetPosition();
 			Vector2 size = GetSize();
-			float pushDistance;
+			float pushDistance = 0.f;
 			if (result.contactNormal.x > 0)
 				pushDistance = (size.x + otherSize.x) / 2 - (pos.x - otherPos.x);
 			if (result.contactNormal.x < 0)

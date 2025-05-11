@@ -39,4 +39,5 @@ void SkyPlatform::Render(DirectX::SpriteBatch* spriteBatch)
 void SkyPlatform::Update(float dt)
 {
     // do nothing
+	dt;
 }

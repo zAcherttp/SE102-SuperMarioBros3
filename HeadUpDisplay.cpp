@@ -46,7 +46,7 @@ void HeadUpDisplay::Render(DirectX::SpriteBatch* spriteBatch, DirectX::SpriteFon
 	int gameWidth, gameHeight;
 	Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
 	float scale = ((float)gameRect.right - (float)gameRect.left) / (float)gameWidth;
-	Vector2 topLeft(gameRect.left, gameRect.top);
+	Vector2 topLeft((float)gameRect.left, (float)gameRect.top);
 
 	Vector2 scorePos(64, 211);
 	Vector2 timerPos(136, 211);

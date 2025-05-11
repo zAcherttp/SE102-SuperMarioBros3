@@ -10,7 +10,7 @@ Cloud::Cloud(Vector2 position, int count, SpriteSheet* spriteSheet, int type)
 	m_isStatic = true;
     m_isCollidable = false;
     m_isSolid = false;
-
+    m_tileXcount = m_tileYcount = 0;
     m_type = type;
 
 	// update the collision box to match the size of the bush
@@ -22,24 +22,24 @@ Cloud::Cloud(Vector2 position, int count, SpriteSheet* spriteSheet, int type)
         case 0:
                 m_tileXcount = count + 2;
                 m_tileYcount = 2;
-                newSize = Vector2(16 * m_tileXcount , 16 * m_tileYcount);
+                newSize = Vector2(16.f * m_tileXcount , 16.f * m_tileYcount);
             break;
         case 1:
         case 2: 
         case 3: 
             m_tileXcount = 1;
             m_tileYcount = 1;
-            newSize = Vector2(16,16);
+            newSize = Vector2(16.f, 16.f);
             break;
         default:
             Log(__FUNCTION__, "Unknown cloud type: " + std::to_string(m_type));
-            newSize = Vector2(16, 16);
+            newSize = Vector2(16.f, 16.f);
             break;
 }
 
 	m_collisionComponent->SetSize(newSize);
     // update the position as size is the center of the entity
-	m_collisionComponent->SetPosition(position + Vector2(newSize.x / 2 , newSize.y / 2));
+	m_collisionComponent->SetPosition(position + Vector2(newSize.x / 2.f , newSize.y / 2.f));
 }
 
 
@@ -81,4 +81,5 @@ void Cloud::Render(DirectX::SpriteBatch* spriteBatch)
 void Cloud::Update(float dt)
 {
 	//do nothing
+    dt;
 }
