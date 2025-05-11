@@ -337,6 +337,9 @@
     <Image Include="SMB3.ico">
       <Filter>Resources\Texture</Filter>
     </Image>
+    <Image Include="textures\sprites.png">
+      <Filter>Resources\Texture</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="game.json">
@@ -358,6 +361,9 @@
   <ItemGroup>
     <Text Include="textures\readme.txt">
       <Filter>Resources</Filter>
+    </Text>
+    <Text Include="textures\sprites.txt">
+      <Filter>Resources\Assets</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
