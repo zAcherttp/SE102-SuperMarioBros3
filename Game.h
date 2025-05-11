@@ -132,4 +132,6 @@ private:
     std::unordered_map<int, World*> m_worlds;
     int m_currentWorldId;
     int m_nextWorldId;
+
+    bool m_isLoading;
 };

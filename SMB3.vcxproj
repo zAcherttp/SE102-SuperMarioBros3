@@ -263,7 +263,6 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="directx.ico" />
     <Image Include="SMB3.ico" />
     <Image Include="textures\bg-1-1.png" />
     <Image Include="textures\bg-1-4.png" />

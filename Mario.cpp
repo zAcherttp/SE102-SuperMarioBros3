@@ -202,9 +202,6 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
 			SetVelocity(vel);
 		}
-		else {
-			// stomp enemies
-		}
 	}
 	else if (result.contactNormal.x != 0) {
 		if (block && block->IsSolid())
@@ -231,12 +228,12 @@ void Mario::OnTopHeadCollision(const CollisionResult& result) {
 	if (result.contactNormal.y > 0) {
 		if (block && block->IsSolid())
 		{
+			// resolve velocity
 			Vector2 vel = GetVelocity();
 			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
 			SetVelocity(vel);
-		}
-		else {
-			// bump lucky block
+
+			block->Bump();
 		}
 	}
 	else if (result.contactNormal.x != 0) {

@@ -29,6 +29,8 @@ Game::Game() noexcept(false)
 	m_gameView = {};
 	m_currentWorldId = m_nextWorldId = -1;
 	m_gameTitle = L"";
+	m_gameWidth = m_gameHeight = m_wndHeight = m_wndWidth = 0;
+	m_isLoading = true;
 }
 
 Game* Game::GetInstance() { return s_instance; }
@@ -74,6 +76,9 @@ void Game::Tick()
 
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer) {
+
+	if (m_isLoading) return;
+
 	float elapsedTime = float(timer.GetElapsedSeconds());
 
 	HandleInput();
@@ -111,7 +116,7 @@ void Game::HandleInput() {
 // Draws the scene.
 void Game::Render() {
 	// Don't try to render anything before the first Update.
-	if (m_timer.GetFrameCount() == 0) {
+	if (m_timer.GetFrameCount() == 0 || m_isLoading) {
 		return;
 	}
 	auto context = m_deviceResources->GetD3DDeviceContext();
@@ -299,6 +304,7 @@ bool Game::LoadGame(const std::string& filePath)
 	catch (const std::exception& e) {
 		Log(__FUNCTION__, "Exception occurred: " + std::string(e.what()));
 	}
+	m_isLoading = false;
 	return true;
 }
 
@@ -373,16 +379,19 @@ SpriteBatch* Game::GetSpriteBatch() const
 void Game::SwitchWorld()
 {
 	if (m_nextWorldId < 0) return;
+	m_isLoading = true;
 	if (m_worlds[m_currentWorldId] != NULL)
 		m_worlds[m_currentWorldId]->Unload();
 		m_currentWorldId = m_nextWorldId;
 
 	//TODO: clean up sprites/anims
 
+	// Load world
 	World* world = m_worlds[m_currentWorldId];
 	Log(__FUNCTION__, "Loading into world: " + world->GetName());
-
 	world->Load(m_spriteSheet.get());
+
+	m_isLoading = false;
 }
 #pragma endregion
 

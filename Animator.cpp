@@ -27,7 +27,7 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 		if (frame)
 		{
 			sequence.frames.push_back(frame);
-			Log(__FUNCTION__, "Found frame:" + str);
+			//Log(__FUNCTION__, "Found frame:" + str);
 		} else {
 			// Log(__FUNCTION__, "Frame not found");
 		}
@@ -36,7 +36,7 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 	// Save the animation
 	m_animations[name] = sequence;
 
-	//  Log(__FUNCTION__, "Loaded animation: " + std::to_string(name));
+	// Log(__FUNCTION__, "Loaded animation: " + std::to_string(name));
 	
 }
 
@@ -55,8 +55,8 @@ void Animator::SetAnimation(const int& id, bool reset)
 
 
 		m_currentSequence = id;
-		Log(__FUNCTION__, "Animation set: " + std::to_string(id));
-		Log(__FUNCTION__, "Animation frames: " + std::to_string(m_animations[id].frames.size()));
+		//Log(__FUNCTION__, "Animation set: " + std::to_string(id));
+		//Log(__FUNCTION__, "Animation frames: " + std::to_string(m_animations[id].frames.size()));
 	
 
 	

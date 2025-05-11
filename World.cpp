@@ -75,19 +75,21 @@ void World::Update(float dt) {
 
 	if (m_isPaused) return;
 
-	m_player->Update(dt);
+	if(m_player) {
+		m_player->Update(dt);
+		Vector2 pos = m_player->GetPosition();
+		int gameWidth, gameHeight;
+		Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
+		Vector2 cameraPos = pos - Vector2(gameWidth / 2.f, gameHeight/2.f);
+		//clamp position to nearest pixel to avoid pixel rendering artifacts
+		//cameraPos.x = (int)(cameraPos.x + 0.5f);
+		cameraPos.y = 250;
 
-	Vector2 pos = m_player->GetPosition();
-	int gameWidth, gameHeight;
-	Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
-	Vector2 cameraPos = pos - Vector2(gameWidth / 2.f, gameHeight/2.f);
-	//clamp position to nearest pixel to avoid pixel rendering artifacts
-	//cameraPos.x = (int)(cameraPos.x + 0.5f);
-	cameraPos.y = 250;
+		Game::GetInstance()->SetCameraPosition(cameraPos, false);
+		//Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
+	}
 
-	Game::GetInstance()->SetCameraPosition(cameraPos, false);
-	//Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
-
+	
 	m_entities.erase(
 	std::remove_if(m_entities.begin(), m_entities.end(),
 		[](Entity* e) { return e == nullptr || !e->IsActive(); }),
@@ -115,7 +117,7 @@ void World::Update(float dt) {
 }
 
 void World::Render(DirectX::SpriteBatch* spriteBatch) {
-	m_player->Render(spriteBatch);
+	if(m_player) m_player->Render(spriteBatch);
     for (auto e : m_entities) {
         e->Render(spriteBatch);
     }
@@ -132,15 +134,17 @@ void World::RenderDebug(DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionCol
         }
     }
     
-    m_player->GetCollisionComponent()->RenderDebug(primitiveBatch, Colors::Lime);
-    Vector2 pos = m_player->GetPosition();
-    Vector2 vel = m_player->GetVelocity();
-    DebugOverlay::DrawLine(primitiveBatch, pos, pos + vel, Colors::Yellow);
+	if (m_player)
+	{
+		m_player->GetCollisionComponent()->RenderDebug(primitiveBatch, Colors::Lime);
+		Vector2 pos = m_player->GetPosition();
+		Vector2 vel = m_player->GetVelocity();
+		DebugOverlay::DrawLine(primitiveBatch, pos, pos + vel, Colors::Yellow);
+	}
 }
 
 void World::Reset() {
-	m_player->SetPosition(Vector2(16, 400));
-	m_player->SetVelocity(Vector2::Zero);
+	Game::GetInstance()->SwitchWorld();
 }
 
 void World::Teleport() {
@@ -180,8 +184,11 @@ void World::Load(SpriteSheet* spriteSheet)
 	if(m_player)
 		dynamic_cast<Mario*>(m_player)->ItsAMe();
 
+	// Reset HUD
+	// TODO: World saves mario state to Game, then after loading, set the properties
+	HeadUpDisplay::GetInstance()->SetTime(300);
 	HeadUpDisplay::GetInstance()->StartTimer();
-
+	
 	return;
 }
 
@@ -201,9 +208,6 @@ void World::Unload()
 		delete entity;
 	}
 	m_entities.clear();
-
-	m_name = "";
-	m_path = "";
 }
 
 json World::LoadJsonFile(const std::string& filePath)
@@ -405,16 +409,15 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 	}
 	
 	// Special debugging for Goomba
-	if (type == ID_ENT_GOOMBA) {
-		Log(__FUNCTION__, "Found animation data for Goomba (type " + std::to_string(type) + ")");
-	}
+	//if (type == ID_ENT_GOOMBA) {
+	//	Log(__FUNCTION__, "Found animation data for Goomba (type " + std::to_string(type) + ")");
+	//}
 
 	for (const auto& sequence : (*typeIt)["sprites"]) {
 		int animId = sequence.contains("id") ? sequence["id"].get<int>() : -1;
 		if (animId == -1) continue;
 
-		// Enhanced logging for Goomba animations
-		if (type == ID_ENT_GOOMBA) {
+		/*if (type == ID_ENT_GOOMBA) {
 			Log(__FUNCTION__, "Loading Goomba animation ID: " + std::to_string(animId) + 
 				" Name: " + sequence["name"].get<std::string>() +
 				" Frames: " + std::to_string(sequence["frames"].size()));
@@ -422,7 +425,7 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 		else {
 			Log(__FUNCTION__, "Entity ID: " + std::to_string(type) + " Animation ID: " + 
 				std::to_string(animId) + " Frames: " + std::to_string(sequence["frames"].size()));
-		}
+		}*/
 
 		std::vector<const wchar_t*> frameNames;
 
@@ -440,9 +443,9 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 			frameNames.push_back(frameNameCache[frameName].c_str());
 			
 			// Log frame names for Goomba
-			if (type == ID_ENT_GOOMBA) {
+			/*if (type == ID_ENT_GOOMBA) {
 				Log(__FUNCTION__, "Goomba frame: " + frameName);
-			}
+			}*/
 		}
 		
 		bool loop = sequence.contains("loop") ? sequence["loop"].get<bool>() : false;

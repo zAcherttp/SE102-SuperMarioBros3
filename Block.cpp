@@ -31,6 +31,7 @@ void Block::Collect()
 
 void Block::Bump()
 {
+	// bump
 }
 
 void Block::Break()

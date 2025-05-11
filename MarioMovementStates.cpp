@@ -262,10 +262,13 @@ MarioMovementState* MarioRunState::HandleInput(Mario* mario)
 	}
 
     if (isPMeterFull && !m_isSprinting) {
+        //log anim id
+        Log(LOG_INFO, std::to_string(mario->GetAnimId() - ID_ANIM_MARIO_WALK + ID_ANIM_MARIO_RUN));
         mario->SetAnimId(mario->GetAnimId() - ID_ANIM_MARIO_WALK + ID_ANIM_MARIO_RUN);
+        Log(LOG_INFO, "Mario is sprinting!");
         m_isSprinting = true;
     }
-    else if (m_isSprinting){
+    else if (!isPMeterFull && m_isSprinting){
         mario->SetAnimId(mario->GetAnimId() + ID_ANIM_MARIO_WALK - ID_ANIM_MARIO_RUN);
         m_isSprinting = false;
     }

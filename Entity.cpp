@@ -8,7 +8,7 @@ using namespace DirectX::SimpleMath;
 
 Entity::Entity(Vector2 position, SpriteSheet* spriteSheet) {
 	m_collisionComponent = std::make_unique<CollisionComponent>(this);
-	Log(LOG_INFO, "Creating Entity at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
+	//Log(LOG_INFO, "Creating Entity at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
 	m_collisionComponent->SetPosition(position);
 	m_animator = std::make_unique<Animator>();
 	m_animator->SetSpriteSheet(spriteSheet);
@@ -89,7 +89,7 @@ void Entity::DefineAnimation(int animId, const std::vector<const wchar_t*>& fram
 }
 
 void Entity::SetAnimation(int animId, bool reset) {
-	Log(LOG_INFO, "Setting animation: " + std::to_string(animId) + " for entity: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
+	//Log(LOG_INFO, "Setting animation: " + std::to_string(animId) + " for entity: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
 	m_animator->SetAnimation(animId, reset);
 
 }

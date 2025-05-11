@@ -6,8 +6,15 @@ namespace GameConfig
         constexpr float WALK_SPEED = 120.0f;
         constexpr float RUN_SPEED = 180.0f;
         constexpr float STANDARD_JUMP_FORCE = -3.5f * 60.0f;
-        constexpr float GRAVITY_SLOW = 6.0f * 60.0f;
-        constexpr float GRAVITY_FAST = 12.0f * 60.0f;
+        constexpr float GRAVITY_SLOW = 1.0f / 16.0f * 60.0f * 60.0f;   // Slow gravity when holding jump
+        constexpr float GRAVITY_FAST = 5.0f / 16.0f * 60.0f * 60.0f;   // Fast gravity when not holding jump
+    }
+
+    namespace Blocks {
+        namespace QuestionBlock {
+            constexpr float BUMP_TIME = 1.f;
+            constexpr float BUMP_VEL = 20.f;
+        }
     }
 
     namespace Enemies
