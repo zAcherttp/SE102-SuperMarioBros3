@@ -12,7 +12,7 @@ Bullet::Bullet(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, BulletD
     , m_currentRotationFrame(0)
     , m_isActive(true)
     , m_direction(direction)
-    , m_speed(30.0f)  // Pixels per second
+    , m_speed(50.0f)  // Pixels per second
 {
     m_doesNotContactWithSolidBlocks = true; // Ignore solid blocks
 
@@ -26,7 +26,7 @@ Bullet::Bullet(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, BulletD
     
     // Apply initial direction
     if (GetAnimator() ) {
-        GetAnimator()->SetFlipHorizontal((m_direction == TOP_RIGHT || m_direction == BOTTOM_RIGHT) ? true : false);
+        GetAnimator()->SetFlipHorizontal((m_direction == TOP_RIGHT_45 || m_direction == TOP_RIGHT_60 || m_direction == TOP_RIGHT_120 || m_direction == TOP_RIGHT_135) ? true : false);
     }
 
     Log(__FUNCTION__, "Bullet initialized with direction: " + std::to_string(static_cast<int>(m_direction)));
@@ -43,25 +43,43 @@ void Bullet::Update(float dt)
     Vector2 position = GetPosition();
     float velocityX = 0.0f;
     float velocityY = 0.0f;
-    
-    // Set velocity components based on direction
+      // Set velocity components based on direction
     switch (m_direction)
     {
-    case TOP_RIGHT:
-        velocityX = m_speed;
-        velocityY = -m_speed;
+    // Right side angles (clockwise from top)
+    case TOP_RIGHT_45:      // 45° angle (1, -1)
+        velocityX = m_speed * 0.7071f;  // cos(45°) = 0.7071
+        velocityY = m_speed * 0.7071f; // -sin(45°) = -0.7071
         break;
-    case TOP_LEFT:
-        velocityX = -m_speed;
-        velocityY = -m_speed;
+    case TOP_RIGHT_60:      // 60° angle (0.5, -0.866)
+        velocityX = m_speed * 0.866f;     // cos(60°) = 0.866
+        velocityY = m_speed * 0.5f;  // -sin(60°) = -0.5
         break;
-    case BOTTOM_RIGHT:
-        velocityX = m_speed;
-        velocityY = m_speed;
+    case TOP_RIGHT_120:     // 120° angle (0.5, 0.866)
+        velocityX = m_speed * 0.866f;     // cos(120°) = -0.5, but we want right direction
+        velocityY = -m_speed * 0.5f;   // sin(120°) = 0.866
         break;
-    case BOTTOM_LEFT:
-        velocityX = -m_speed;
-        velocityY = m_speed;
+    case TOP_RIGHT_135:     // 135° angle (0.7071, 0.7071)
+        velocityX = m_speed * 0.7071f;  // cos(135°) = -0.7071, but we want right direction
+        velocityY = -m_speed * 0.7071f;  // sin(135°) = 0.7071
+        break;
+    
+    // Left side angles (clockwise from top)
+    case TOP_LEFT_45:       // 45° angle (-0.7071, -0.7071)
+        velocityX = -m_speed * 0.7071f; // -cos(45°) = -0.7071
+        velocityY = m_speed * 0.7071f; // -sin(45°) = -0.7071
+        break;
+    case TOP_LEFT_60:       // 60° angle (-0.5, -0.866)
+        velocityX = -m_speed * 0.866f;    // -cos(60°) = -0.5
+        velocityY = m_speed * 0.5;  // -sin(60°) = -0.866
+        break;
+    case TOP_LEFT_120:      // 120° angle (-0.5, 0.866)
+        velocityX = -m_speed * 0.866f;    // -cos(60°) = -0.5 (mirrored from RIGHT_120)
+        velocityY = -m_speed * 0.5;   // sin(60°) = 0.866
+        break;
+    case TOP_LEFT_135:      // 135° angle (-0.7071, 0.7071)
+        velocityX = -m_speed * 0.7071f; // -cos(45°) = -0.7071
+        velocityY = -m_speed * 0.7071f;  // sin(45°) = 0.7071
         break;
     }
     
@@ -117,8 +135,13 @@ void Bullet::SetDirection(BulletDirection direction)
     // Apply the horizontal flip to the animator based on direction
     if (GetAnimator() != nullptr)
     {
-        // Flip horizontally for RIGHT directions
-        GetAnimator()->SetFlipHorizontal(m_direction == TOP_RIGHT || m_direction == BOTTOM_RIGHT);
+        // Check if it's a right-side direction (which should be flipped)
+        bool isRightDirection = (m_direction == TOP_RIGHT_45 || 
+                               m_direction == TOP_RIGHT_60 || 
+                               m_direction == TOP_RIGHT_120 || 
+                               m_direction == TOP_RIGHT_135);
+        
+        GetAnimator()->SetFlipHorizontal(isRightDirection);
     }
 }
 

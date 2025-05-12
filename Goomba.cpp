@@ -36,8 +36,8 @@ void Goomba::Render(DirectX::SpriteBatch* spriteBatch)
 void Goomba::OnCollision(const CollisionResult& event)
 {
     // Handle general collision
-    Log("GoombaCollision", "Collision detected");
-    Log("GoombaCollision", "Collision normal: " + std::to_string(event.contactNormal.x) + ", " + std::to_string(event.contactNormal.y));
+    // Log("GoombaCollision", "Collision detected");
+    // Log("GoombaCollision", "Collision normal: " + std::to_string(event.contactNormal.x) + ", " + std::to_string(event.contactNormal.y));
     
     // Check if the collision is with Mario
     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);

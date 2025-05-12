@@ -181,7 +181,7 @@ void FirePiranha::Render(DirectX::SpriteBatch* spriteBatch)
 
 void FirePiranha::OnCollision(const CollisionResult& event)
 {
-    Log(__FUNCTION__, "FirePiranha collision detected");
+    // Log(__FUNCTION__, "FirePiranha collision detected");
 
     Block* block = dynamic_cast<Block*>(event.collidedWith);
 
@@ -221,21 +221,45 @@ void FirePiranha::SetupCollisionComponent()
 
 BulletDirection FirePiranha::GetFireDirection() const
 {
-    if (m_isLookingUp)
-    {
-        if (m_isFlipped) 
-            return TOP_RIGHT;
-        else // Looking left
-            return TOP_LEFT;
+    if (m_mario == nullptr)
+        return m_isFlipped ? TOP_RIGHT_60 : TOP_LEFT_60; // Default direction
+        
+    Vector2 marioPos = m_mario->GetPosition();
+    Vector2 plantPos = GetPosition();
+    
+    // Calculate directional vector from plant to Mario
+    float dx = marioPos.x - plantPos.x;
+    float dy = marioPos.y - plantPos.y;
+    
+    // Calculate actual angle in degrees (atan2 gives angle in radians)
+    // atan2 returns angle in range [-π, π] where 0 is right, π/2 is up
+    float angleRad = atan2(dy, dx);
+    float angleDeg = angleRad * 180.0f / 3.14159f;
+    
+    // Normalize angle to [0, 360) range
+    if (angleDeg < 0) {
+        angleDeg += 360.0f;
     }
-    else 
-    {
-        if (m_isFlipped) 
-            return BOTTOM_RIGHT;
-        else 
-            return BOTTOM_LEFT;
+
+    angleDeg -= 90.0f; // Adjust to make 0 degrees point up
+
+    if(angleDeg > 180.0f) angleDeg -= (angleDeg - 180.0f) * 2; // Normalize to [-180, 0] range
+
+    angleDeg = abs(angleDeg); // Get absolute value
+    
+    Log(__FUNCTION__, "Mario angle from plant: " + std::to_string(angleDeg) + " degrees");
+    
+    if(angleDeg <= 50.0f) {
+        return m_isFlipped ? TOP_RIGHT_45 : TOP_LEFT_45; // Right
+    } else if(angleDeg <= 90.0f) {
+        return m_isFlipped ? TOP_RIGHT_60: TOP_LEFT_60; // Up
+    } else if( angleDeg < 125.0f) {
+        return m_isFlipped ? TOP_RIGHT_120 : TOP_LEFT_120; // Left
+    } else {
+        return m_isFlipped ? TOP_RIGHT_135 : TOP_LEFT_135; // Down
     }
 }
+
 
 void FirePiranha::Fire(BulletDirection direction)
 {

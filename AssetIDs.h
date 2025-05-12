@@ -13,7 +13,7 @@ constexpr auto ID_ENT_GREEN_PIRANHA_SPIT_FIRE       = 8;
 constexpr auto ID_ENT_RED_PIRANHA_SPIT_FIRE         = 9;
 constexpr auto ID_ENT_GROUND                        = 10;
 constexpr auto ID_ENT_WINGS                         = 12;
-constexpr auto ID_ENT_BULLET        = 13;
+constexpr auto ID_ENT_BULLET                        = 13;
 
 constexpr auto ID_ENT_BUSH                          = 11;
 

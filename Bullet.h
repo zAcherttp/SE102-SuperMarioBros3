@@ -5,16 +5,23 @@
 
 // Define directions for the bullet
 enum BulletDirection {
-    TOP_RIGHT = 0,
-    TOP_LEFT = 1,
-    BOTTOM_RIGHT = 2,
-    BOTTOM_LEFT = 3
+    // Right side angles (clockwise from top)
+    TOP_RIGHT_45 = 0,      // 45° angle (1, -1)
+    TOP_RIGHT_60 = 1,      // 60° angle (calculate vector)
+    TOP_RIGHT_120 = 2,     // 120° angle (calculate vector)
+    TOP_RIGHT_135 = 3,     // 135° angle (1, 1)
+    
+    // Left side angles (clockwise from top)
+    TOP_LEFT_45 = 4,       // 45° angle (-1, -1)
+    TOP_LEFT_60 = 5,       // 60° angle (calculate vector)
+    TOP_LEFT_120 = 6,      // 120° angle (calculate vector)
+    TOP_LEFT_135 = 7       // 135° angle (-1, 1)
 };
 
 class Bullet : public Entity
 {
 public:
-    Bullet(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, BulletDirection direction = BOTTOM_LEFT);
+    Bullet(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, BulletDirection direction = TOP_LEFT_45);
     ~Bullet() = default;
 
     // Implementation of Entity's pure virtual function
