@@ -61,6 +61,7 @@ public:
     void SwitchWorld();
     void SetNextWorldId(int id);
 
+	void SetWorldSize(int width, int height);
     void SetCameraPosition(const DirectX::SimpleMath::Vector2 & pos, bool oneAxis);
     void MoveCamera(const DirectX::SimpleMath::Vector2& delta);
 

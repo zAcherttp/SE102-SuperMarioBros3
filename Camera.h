@@ -10,6 +10,7 @@ public:
     void UpdateViewMatrix();
 
     void SetPosition(const DirectX::SimpleMath::Vector2& position, bool oneAxis);
+	void SetWorldSize(int width, int height);
     void Move(const DirectX::SimpleMath::Vector2& delta);
 
     const DirectX::SimpleMath::Matrix& GetGameViewMatrix() const { return m_gameViewMatrix; }
@@ -23,6 +24,9 @@ private:
     int m_gameHeight;
     int m_windowWidth;
     int m_windowHeight;
+
+	int m_gameWorldWidth;
+	int m_gameWorldHeight;
 
     DirectX::SimpleMath::Vector2 m_position;
 

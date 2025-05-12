@@ -232,6 +232,8 @@ void World::LoadWorldConfig(const json& data) {
 	m_width = data["width"];
 	m_height = data["height"];
 
+	Game::GetInstance()->SetWorldSize(m_width, m_height);
+
 	const json& c = data["background"];
 	m_background = { c["r"], c["b"], c["g"], c["a"] };
 }

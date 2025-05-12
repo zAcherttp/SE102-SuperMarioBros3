@@ -356,6 +356,11 @@ void Game::SetNextWorldId(int id)
 	m_nextWorldId = id;
 }
 
+void Game::SetWorldSize(int width, int height)
+{
+	m_camera->SetWorldSize(width, height);
+}
+
 void Game::SetCameraPosition(const Vector2& pos, bool oneAxis)
 {
 	m_camera->SetPosition(pos, oneAxis);

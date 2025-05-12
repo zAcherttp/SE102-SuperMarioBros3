@@ -89,19 +89,26 @@ void Camera::UpdateDebugMatrix() {
     m_debugViewMatrix = m_gameViewMatrix * m_screenTransformMatrix;
 }
 
+void Camera::SetWorldSize(int width, int height) {
+    m_gameWorldWidth = width;
+    m_gameWorldHeight = height;
+}
 
 void Camera::SetPosition(const Vector2& position, bool oneAxis = false) {
+	Vector2 clampedPosition = position;
     if (oneAxis) {
         if (position.x == 0) {
-            m_position.y = position.y;
+	        clampedPosition.y = std::max(0.0f, std::min(clampedPosition.y, static_cast<float>(m_gameWorldHeight - m_gameHeight)));
         }
         else {
-            m_position.x = position.x;
+	        clampedPosition.x = std::max(0.0f, std::min(clampedPosition.x, static_cast<float>(m_gameWorldWidth - m_gameWidth)));
         }
     }
     else {
-        m_position = position;
+		clampedPosition.x = std::max(0.0f, std::min(clampedPosition.x, static_cast<float>(m_gameWorldWidth - m_gameWidth)));
+		clampedPosition.y = std::max(0.0f, std::min(clampedPosition.y, static_cast<float>(m_gameWorldHeight - m_gameHeight)));
     }
+	m_position = clampedPosition;
     UpdateViewMatrix();
 }
 
