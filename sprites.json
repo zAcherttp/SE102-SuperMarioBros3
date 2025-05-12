@@ -534,39 +534,15 @@
     "sprites": [
       {
         "id": 500,
-        "name": "goomba_walk",
-        "frames": ["yellow-goomba-walk"],
+        "name": "goomba",
+        "frames": ["goomba"],
         "loop": true,
         "timePerFrame": 0.2
       },
       {
         "id": 510,
-        "name": "goomba_die",
-        "frames": ["yellow-goomba-stepped"],
-        "loop": false
-      }
-    ]
-  },
-  {
-    "type": 12,
-    "sprites": [
-      {
-        "id": 1200,
-        "name": "wings_flap",
-        "frames": ["wing-opem", "wing-closed"],
-        "loop": true,
-        "timePerFrame": 0.2
-      },
-      {
-        "id": 1210,
-        "name": "wings_open",
-        "frames": ["wing-opem"],
-        "loop": false
-      },
-      {
-        "id": 1220,
-        "name": "wings_closed",
-        "frames": ["wing-closed"],
+        "name": "goomba-stomp",
+        "frames": ["goomba-stomp"],
         "loop": false
       }
     ]
@@ -576,15 +552,46 @@
     "sprites": [
       {
         "id": 600,
-        "name": "paragoomba_walk",
-        "frames": ["red-goomba-walk"],
+        "name": "paragoomba",
+        "frames": ["paragoomba"],
         "loop": true,
         "timePerFrame": 0.2
       },
       {
         "id": 610,
-        "name": "paragoomba_die",
-        "frames": ["red-goomba-stepped"],
+        "name": "paragoomba-stomp",
+        "frames": ["paragoomba-stomp"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 9,
+    "sprites": [
+      {
+        "id": 900,
+        "name": "piranha-look-down",
+        "frames": ["redpiranha-down1", "redpiranha-down2"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 910,
+        "name": "piranha-look-up",
+        "frames": ["redpiranha-up1", "redpiranha-up2"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 920,
+        "name": "piranha-look-down-open",
+        "frames": ["redpiranha-down1"],
+        "loop": false
+      },
+      {
+        "id": 930,
+        "name": "piranha-look-up-open",
+        "frames": ["redpiranha-up1"],
         "loop": false
       }
     ]

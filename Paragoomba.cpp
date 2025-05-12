@@ -69,7 +69,6 @@ ParaGoomba::~ParaGoomba()
         m_wing_right = nullptr;
     }
     
-    Log(__FUNCTION__, "ParaGoomba destroyed, wings cleaned up");
 }
 
 void ParaGoomba::Render(DirectX::SpriteBatch* spriteBatch)
@@ -91,8 +90,6 @@ void ParaGoomba::Render(DirectX::SpriteBatch* spriteBatch)
 void ParaGoomba::OnCollision(const CollisionResult& event)
 {
     // Handle general collision
-    Log("ParaGoombaCollision", "Collision detected");
-    Log("ParaGoombaCollision", "Collision normal: " + std::to_string(event.contactNormal.x) + ", " + std::to_string(event.contactNormal.y));
     
     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);    // Handle wall collisions - reverse direction
     Goomba* goomba = dynamic_cast<Goomba*>(event.collidedWith);
@@ -106,7 +103,7 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
     }    // Handle ground collision - prevent bouncing but allow jumping
     else if (event.contactNormal.y < 0 && event.collidedWith != mario && event.collidedWith != goomba) {
         // If hitting ground, immediately stop vertical velocity
-        Log("ParaGoombaCollision", "Ground collision detected");
+
         Vector2 vel = GetVelocity();
         vel.y = 0.0f;
         SetVelocity(vel);
@@ -115,7 +112,7 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
     // Check if the collision is with Mario
       if (event.contactNormal.y > 0) // Collision from above
     {
-        Log("ParaGoombaCollision", "Collision from above detected");
+
         
         if (mario) {
             if (m_hasWings) {
@@ -155,11 +152,7 @@ void ParaGoomba::Die()
         // Stop movement
         SetVelocity(Vector2::Zero);
         
-        // Deactivate both wings
-        m_wing_left->Deactivate();
-        m_wing_right->Deactivate();
-        
-        Log(__FUNCTION__, "ParaGoomba died");
+
     }
 }
 
@@ -175,7 +168,7 @@ void ParaGoomba::TransformToGoomba()
     // Reset jump mechanics
     m_isJumping = false;
     
-    Log(__FUNCTION__, "ParaGoomba transformed to regular Goomba");
+
 }
 
 bool ParaGoomba::HasWings() const
@@ -246,7 +239,7 @@ void ParaGoomba::Update(float dt)
             case 0: // CLOSED WINGS - walking on ground
                 // Only log occasionally to avoid spamming
                 if (int(m_phaseTimer * 10) % 10 == 0) 
-                    Log("ParaGoomba", "Closed wings phase");
+
                 
                 // In phase 0, wings stay closed (no flapping)
                 m_wing_left->SetAnimation(ID_ANIM_WINGS_FLAP_DOWN, false);
@@ -258,14 +251,14 @@ void ParaGoomba::Update(float dt)
                     m_phaseTimer = 0.0f;
                     m_jumpCount = 0;
                     m_jumpTimer = 0.0f;
-                    Log("ParaGoomba", "Switching to medium flaps phase");
+
                 }
                 break;
                 
             case 1: // MEDIUM FLAPS - three small jumps                // In this phase, wings flap at medium speed and we do small jumps
                 // Only log occasionally to avoid spamming
                 if (int(m_phaseTimer * 10) % 10 == 0)
-                    Log("ParaGoomba", "Medium flaps phase");
+
                 // Handle jumps
                 m_jumpTimer += dt;
 
@@ -281,11 +274,11 @@ void ParaGoomba::Update(float dt)
                     m_wing_right->HandleFlapping(dt, m_mediumFlapSpeed);
                     
                     m_jumpCount++;
-                    Log("ParaGoomba", "Small jump " + std::to_string(m_jumpCount));
+
                 }
 
                 HandleLanding();
-                Log("ParaGoomba", "Jump count: " + std::to_string(m_jumpCount));
+
 
                 // Transition to rapid flaps after 3 jumps
                 if ((m_jumpCount == 4 && m_isGrounded)) {
@@ -293,12 +286,12 @@ void ParaGoomba::Update(float dt)
                     m_phaseTimer = 0.0f;
                     m_jumpTimer = 0.0f;
                     m_jumpCount = 0;
-                    Log("ParaGoomba", "Switching to rapid flaps phase");
+
                 }
                 break;                  
 
                 case 2: // RAPID FLAPS - one big jump
-                Log("ParaGoomba", "Rapid flaps phase");
+
                 if (!m_isJumping && m_isGrounded)
                  {
                     m_jumpCount++;
@@ -310,8 +303,7 @@ void ParaGoomba::Update(float dt)
                     vel.y = m_bigJumpForce;
                     SetVelocity(vel);
                     
-                    Log("ParaGoomba", "Big jump");
-                    
+
                 }
             }
             
@@ -331,7 +323,7 @@ void ParaGoomba::Update(float dt)
                     m_currentPhase = 0;
                     m_phaseTimer = 0.0f;
                     m_jumpCount = 0;
-                    Log("ParaGoomba", "Switching back to closed wings phase after big jump");
+
                 }
             }
 
@@ -387,7 +379,7 @@ void ParaGoomba::Update(float dt)
             // Use the rapid flap speed
             m_wing_left->HandleFlapping(dt, m_rapidFlapSpeed);
             m_wing_right->HandleFlapping(dt, m_rapidFlapSpeed);
-            Log("ParaGoomba", "Rapid flapping");
+
             
             break;
         }
@@ -406,7 +398,8 @@ void ParaGoomba::SetupCollisionComponent()
 
 void ParaGoomba::HandleLanding()
 {
-    if (m_isJumping && m_isGrounded) {
+    if (m_isJumping && m_isGrounded)
+    {
         m_isJumping = false;
         
         // Reset vertical velocity to prevent bouncing but only if we're falling
@@ -416,10 +409,10 @@ void ParaGoomba::HandleLanding()
         if (vel.y > 0.1f) {
             vel.y = 0.0f;
             SetVelocity(vel);
-            Log("ParaGoomba", "Landed on ground - velocity reset");
         }
     }
 }
+
 
 void ParaGoomba::WalkInMarioDirection(Mario* mario)
 {

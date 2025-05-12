@@ -21,6 +21,7 @@
 #include "EndPortal.h"
 #include "Goomba.h"
 #include "ParaGoomba.h"
+#include "FirePiranha.h"
 
 using namespace DirectX;
 using Keys = Keyboard::Keys;
@@ -268,12 +269,23 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		break;
 		case ID_ENT_GOOMBA:
 		{
-			entity = new Goomba(position, Vector2(GOOMBA_WIDTH,GOOMBA_HEIGHT), spriteSheet);
+			float width = data["width"];
+			float height = data["height"];
+			entity = new Goomba(position, Vector2(width, height), spriteSheet);
 			break;
 		}
 		case ID_ENT_PARAGOOMBA:
 		{
-			entity = new ParaGoomba(position, Vector2(GOOMBA_WIDTH,GOOMBA_HEIGHT), spriteSheet);
+			float width = data["width"];
+			float height = data["height"];
+			entity = new ParaGoomba(position, Vector2(width, height), spriteSheet);
+			break;
+		}
+		case ID_ENT_RED_PIRANHA_SPIT_FIRE:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			entity = new FirePiranha(position, Vector2(width, height), spriteSheet);
 			break;
 		}
 		case ID_ENT_GROUND:
@@ -383,6 +395,7 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 			entity = new EndPortal(position, Vector2(width, height), spriteSheet);
 			break;
 		}
+
 	
 
 		//// Add more entity types here as needed

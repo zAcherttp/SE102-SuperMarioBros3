@@ -6,6 +6,7 @@
 #include "MarioStateFactory.h"
 #include "GameConfig.h"
 #include "ParaGoomba.h"
+#include "Block.h"
 
 Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     : Entity(position,size, spriteSheet)
@@ -41,23 +42,28 @@ void Goomba::OnCollision(const CollisionResult& event)
     // Check if the collision is with Mario
     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
     ParaGoomba* paraGoomba = dynamic_cast<ParaGoomba*>(event.collidedWith);
+    Block* block = dynamic_cast<Block*>(event.collidedWith);
 
-    if (event.contactNormal.x != 0 && !mario && !paraGoomba) // Collision from the sides
+
+    if (event.contactNormal.x != 0 && block  ) // Collision from the sides
     {
 
+        if(block->IsSolid()) {
             // If hitting a wall (not Mario), reverse direction and maintain standard speed
             float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
             Vector2 vel = GetVelocity();
             vel.x = (vel.x > 0) ? -targetSpeed : targetSpeed;
             SetVelocity(vel);
-        
+        }
+        else if(!block->IsSolid()) {
+
+        }
     }
     if (event.contactNormal.y > 0) // Collision from above
     {
-        Log("GoombaCollision", "Collision from above detected");
+
         
         if (mario) {
-            Log("GoombaCollision", "Mario jumped on Goomba's head!");
             Die(); // Goomba dies when Mario jumps on it
             
             // Make Mario bounce a bit
@@ -80,7 +86,6 @@ void Goomba::Die()
     if (!m_isDying) {
         m_isDying = true; // Set dying state to true
         m_isCollidable = false; // Disable collision during death
-        Log("GoombaDie", "Goomba is dying at position (" + std::to_string(GetPosition().x) + ", " + std::to_string(GetPosition().y) + ")");
         SetAnimation(ID_ANIM_GOOMBA_DIE, false); // Set death animation
         m_deathTimer = 0.0f; // Initialize the death timer
     }
@@ -94,7 +99,7 @@ void Goomba::Update(float dt)
             // After 0.5 seconds, deactivate the Goomba 
             m_isActive = false;
             m_visible = false;
-            Log("GoombaDie", "Goomba deactivated after death animation");
+
 
         }
         return; // Skip normal updates when dying

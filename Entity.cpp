@@ -82,6 +82,11 @@ bool Entity::IsStatic() const
 	return m_isStatic;
 }
 
+bool Entity::IsNotContactWithSolidBlocks() const
+{
+    return m_doesNotContactWithSolidBlocks;
+}
+
 // Animation control
 void Entity::DefineAnimation(int animId, const std::vector<const wchar_t*>& frameNames, bool loop, float timePerFrame, bool useVelocity, float minTime, float maxTime, float velocityFactor) {
 	m_animator->DefineAnimation(animId, frameNames, loop, timePerFrame,

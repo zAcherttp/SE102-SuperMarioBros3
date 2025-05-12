@@ -197,6 +197,10 @@
     <ClInclude Include="Wings.h">
       <Filter>Source\Entity\Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="FirePiranha.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -335,6 +339,10 @@
     <ClCompile Include="Wings.cpp">
       <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="FirePiranha.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">
@@ -364,10 +372,10 @@
     <Image Include="textures\smb3_enemies_sheet_2.png">
       <Filter>Resources\Texture</Filter>
     </Image>
-    <Image Include="textures\sprites.png">
+    <Image Include="textures\tiles.png">
       <Filter>Resources\Texture</Filter>
     </Image>
-    <Image Include="textures\tiles.png">
+    <Image Include="textures\sprites.png">
       <Filter>Resources\Texture</Filter>
     </Image>
   </ItemGroup>

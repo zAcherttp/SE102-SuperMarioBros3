@@ -54,8 +54,8 @@ void Animator::SetAnimation(const int& id, bool reset)
 
 
 		m_currentSequence = id;
-		Log(__FUNCTION__, "Animation set: " + std::to_string(id));
-		Log(__FUNCTION__, "Animation frames: " + std::to_string(m_animations[id].frames.size()));
+		// Log(__FUNCTION__, "Animation set: " + std::to_string(id));
+		// Log(__FUNCTION__, "Animation frames: " + std::to_string(m_animations[id].frames.size()));
 	
 
 	

@@ -13,6 +13,7 @@ constexpr auto ID_ENT_GREEN_PIRANHA_SPIT_FIRE       = 8;
 constexpr auto ID_ENT_RED_PIRANHA_SPIT_FIRE         = 9;
 constexpr auto ID_ENT_GROUND                        = 10;
 constexpr auto ID_ENT_WINGS                         = 12;
+constexpr auto ID_ENT_BULLET        = 13;
 
 constexpr auto ID_ENT_BUSH                          = 11;
 
@@ -59,6 +60,16 @@ constexpr auto ID_ANIM_PARAGOOMBA_DIE               = 610;
 constexpr auto ID_ANIM_WINGS_FLAP                   = 1200;
 constexpr auto ID_ANIM_WINGS_FLAP_UP                = 1210; // Up position
 constexpr auto ID_ANIM_WINGS_FLAP_DOWN              = 1220; // Down position
+
+// Bullet
+constexpr auto ID_ANIM_BULLET                      = 1300;
+
+// Red Piranha
+constexpr auto ID_ANIM_RED_PIRANHA_LOOK_DOWN       = 900;
+constexpr auto ID_ANIM_RED_PIRANHA_LOOK_UP         = 910;
+constexpr auto ID_ANIM_RED_PIRANHA_LOOK_DOWN_OPEN  = 920;
+constexpr auto ID_ANIM_RED_PIRANHA_LOOK_UP_OPEN    = 930;
+
 
 // Brick
 constexpr auto ID_ANIM_BRICK            	    	= 240;

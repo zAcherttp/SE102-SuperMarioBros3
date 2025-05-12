@@ -11,8 +11,8 @@ Wings::Wings(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     , m_isActive(true)
     , m_offset(Vector2(-2.0f, 0.0f))  // Default offset, adjust as needed
 {    // Define wing flap animations using the actual sprite frame names from sprites.json
-    std::vector<const wchar_t*> flapUpFrames = { L"wing-opem" };   // Note: There's a typo in sprites.json ("opem" instead of "open")
-    std::vector<const wchar_t*> flapDownFrames = { L"wing-closed" };
+    std::vector<const wchar_t*> flapUpFrames = { L"wing-open" };   // Note: There's a typo in sprites.json ("opem" instead of "open")
+    std::vector<const wchar_t*> flapDownFrames = { L"wing-folded" };
     
     // // Define the animations for both states
     DefineAnimation(ID_ANIM_WINGS_FLAP_UP, flapUpFrames, false, m_frameTime);
@@ -29,8 +29,6 @@ Wings::Wings(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 // Base Update method implementation required by Entity abstract class
 void Wings::Update(float dt) 
 {
-    // Call the specialized update with default parameters
-    // This provides a fallback implementation when the wings are used independently
     if (m_isActive) {
         // Use current position and zero velocity as defaults
         Update(dt, GetPosition(), Vector2(0, 0));
@@ -44,15 +42,12 @@ void Wings::Update(float dt, Vector2 ownerPosition, Vector2 ownerVelocity)
 {
     if (!m_isActive) return;
 
-    
-    // Call base update to handle animation
     Entity::Update(dt);
 }
 
 void Wings::Render(DirectX::SpriteBatch* spriteBatch)
 {
     if (!m_isActive) return;
-    
     // Use the standard Entity rendering which will use our animator
     Entity::Render(spriteBatch);
 }
@@ -67,6 +62,7 @@ void Wings::Deactivate()
 {
     m_isActive = false;
     m_visible = false;
+    delete this;
     Log(__FUNCTION__, "Wings deactivated");
 }
 

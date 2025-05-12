@@ -91,9 +91,9 @@ void CollisionComponent::Push(Vector2 distance, float span)
     m_pushedDistance = 0;
     m_pushVel = Vector2(m_pushVector.x / span, m_pushVector.y / span);
     m_isBeingPushed = true;
-    /*Log(LOG_INFO, "Pushing entity " + std::to_string(m_owner->GetAnimId()) + " with distance: " +
+    Log(LOG_INFO, "Pushing entity " + std::to_string(m_owner->GetAnimId()) + " with distance: " +
              std::to_string(m_pushVector.x) + ", " + std::to_string(m_pushVector.y) +
-             " over time: " + std::to_string(m_pushTime) + " seconds.");*/
+             " over time:");
 }
 
 bool CollisionComponent::GetIsPushed() const { return m_isBeingPushed; }

@@ -31,6 +31,7 @@ public:
 	bool IsCollidable() const;
 	bool IsStatic() const;
 	bool IsDead() const;
+	bool IsNotContactWithSolidBlocks() const;
 
 	void DefineAnimation(int animId, const std::vector<const wchar_t*>& frameNames,
 		bool loop = true, float timePerFrame = 0.1f,
@@ -78,6 +79,7 @@ protected:
 	bool m_isCollidable = true;
 	bool m_isStatic = false;
 	bool m_isGrounded = false;
+	bool m_doesNotContactWithSolidBlocks = false;
 
 	//sprite
 	std::unique_ptr<Animator> m_animator;
