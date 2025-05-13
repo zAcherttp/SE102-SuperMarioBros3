@@ -2,13 +2,14 @@
 #include "HeadUpDisplay.h"
 #include "Debug.h"
 #include "Entity.h"
+#include "AssetIDs.h"
 
 constexpr auto RUNSPEED_THRESHOLD = 2.5f * 60.0f;
 constexpr auto MAX_FLIGHT_TIME = 255.f / 60.f;
 
 HeadUpDisplay* HeadUpDisplay::s_instance = nullptr;
 
-HeadUpDisplay::HeadUpDisplay()
+HeadUpDisplay::HeadUpDisplay(SpriteSheet* spriteSheet)
 	: m_lives(4)
 	, m_score(0)
 	, m_coins(0)
@@ -17,7 +18,7 @@ HeadUpDisplay::HeadUpDisplay()
 	, m_isTimerRunning(false)
 	, m_timeCounter(0.0f)
 	, m_pMeterArrows(0)
-	, m_maxPMeterArrows(6)
+	, m_maxPMeterArrows(7)
 	, m_pMeterTimer(0.0f)
 	, m_pMeterTimerThreshold(0.0f)
 	, m_pMeterTimerActive(false)
@@ -30,8 +31,14 @@ HeadUpDisplay::HeadUpDisplay()
 	, m_flightTimerActive(false)
 	, m_flightTimer(0.0f)
 	, m_maxFlightTime(MAX_FLIGHT_TIME)
+	, m_pMeterBadgeBlinkTimer(0.0f)
 {
 	s_instance = this;
+
+	m_animator = std::make_unique<Animator>();
+	m_animator->SetSpriteSheet(spriteSheet);
+
+	LoadSprites();
 }
 
 void HeadUpDisplay::Update(float dt)
@@ -39,6 +46,11 @@ void HeadUpDisplay::Update(float dt)
 	UpdatePMeterTimer(dt);
 	UpdateFlightTimer(dt);
 	UpdateGameTimer(dt);
+
+	// Update badge blink timer
+	m_pMeterBadgeBlinkTimer += dt;
+	if (m_pMeterBadgeBlinkTimer >= 1.0f) // reset every 1s to avoid float drift
+		m_pMeterBadgeBlinkTimer -= 1.0f;
 }
 
 void HeadUpDisplay::Render(DirectX::SpriteBatch* spriteBatch, DirectX::SpriteFont* spriteFont, const RECT& gameRect)
@@ -57,12 +69,44 @@ void HeadUpDisplay::Render(DirectX::SpriteBatch* spriteBatch, DirectX::SpriteFon
 	Vector2 worldNumPos(48, 203);
 	Vector2 livesPos(48, 211);
 
+	// Draw hud board and powerup slots
+	// 			draw with center pos							  top left pos		 offset to top left	
+	m_animator->Draw(spriteBatch, ID_SPRITE_HUD_BOARD, topLeft + (Vector2(13.f, 197.f) + Vector2(75.f, 13.f)) * scale, 0.0f, scale);
+
+	for (int i = 0; i < 3; i++) {
+		m_animator->Draw(spriteBatch, ID_SPRITE_HUD_POWERUP_SLOT, topLeft + (Vector2(172.f + 24.f * i, 197.f) + Vector2(11.f, 13.f)) * scale, 0.0f, scale);
+	}
+
+	// Draw Mario badge
+	m_animator->Draw(spriteBatch, ID_SPRITE_HUD_M_BADGE, topLeft + (Vector2(16.f, 211.f) + Vector2(8.f, 3.5f)) * scale, 0.0f, scale);
+
+	// Draw P-Meter arrows
+	for (int i = 0; i < 6; i++) {
+		m_animator->Draw(spriteBatch, ID_SPRITE_HUD_PMETER_ARROW_FULL, topLeft + (Vector2(64.f + 8.f * i, 203.f) + Vector2(4.f, 3.5f)) * scale, 0.0f, scale);
+	}
+	for (int i = m_pMeterArrows; i < 6; i++) {
+		m_animator->Draw(spriteBatch, ID_SPRITE_HUD_PMETER_ARROW_EMPTY, topLeft + (Vector2(64.f + 8.f * i, 203.f) + Vector2(4.f, 3.5f)) * scale, 0.0f, scale);
+	}
+
+	// Draw P-Meter badge with blinking effect
+	if (m_pMeterArrows >= m_maxPMeterArrows)
+	{
+		// Alternate every 0.5s between FULL and EMPTY
+		bool showFull = (fmodf(m_pMeterBadgeBlinkTimer, 1.0f) < 0.5f);
+		int badgeSprite = showFull ? ID_SPRITE_HUD_PMETER_BADGE_FULL : ID_SPRITE_HUD_PMETER_BADGE_EMPTY;
+		m_animator->Draw(spriteBatch, badgeSprite, topLeft + (Vector2(113.f, 203.f) + Vector2(7.5f, 3.5f)) * scale, 0.0f, scale);
+	}
+	else
+	{
+		m_animator->Draw(spriteBatch, ID_SPRITE_HUD_PMETER_BADGE_EMPTY, topLeft + (Vector2(113.f, 203.f) + Vector2(7.5f, 3.5f)) * scale, 0.0f, scale);
+	}
+
 	spriteFont->DrawString(spriteBatch, GetScore(), topLeft + scorePos * scale, Colors::White, 0.f, Vector2::Zero, scale);
 	spriteFont->DrawString(spriteBatch, GetRTime(), topLeft + timerPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
 	spriteFont->DrawString(spriteBatch, GetCoins(), topLeft + coinPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
 	spriteFont->DrawString(spriteBatch, GetWorld(), topLeft + worldNumPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
 	spriteFont->DrawString(spriteBatch, GetLives(), topLeft + livesPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
-	
+
 }
 
 void HeadUpDisplay::UpdatePMeter(float speed, bool isOnGround, bool isBDown, bool isDirectionDown)
@@ -94,26 +138,6 @@ void HeadUpDisplay::UpdatePMeter(float speed, bool isOnGround, bool isBDown, boo
 		m_pMeterTimer = 24.0f; // 24 frames (converted to seconds in UpdatePMeterTimer)
 		//Log(LOG_INFO, "Started 24-frame P-Meter timer for removing arrow");
 	}
-
-	// Handle P-Meter full state
-	if (IsPMeterFull()) {
-		// When P-Meter is full, Mario's speed accelerates to 0x0380
-		if (m_isBDown && m_isDirectionDown) {
-			// 16-frame timer is handled in the update function
-			if (!m_pMeterTimerActive || m_pMeterTimerType != 3) {
-				m_pMeterTimerActive = true;
-				m_pMeterTimerType = 3; // 16-frame timer
-				m_pMeterTimer = 16.0f; // 16 frames (converted to seconds in UpdatePMeterTimer)
-				//Log(LOG_INFO, "Started 16-frame timer for max speed");
-			}
-		}
-		else {
-			// If B or direction is released, timer starts counting down
-			if (m_pMeterTimerType == 3 && m_pMeterTimerActive) {
-				// Let the timer continue counting but don't lock it anymore
-			}
-		}
-	}
 }
 
 void HeadUpDisplay::UpdatePMeterTimer(float dt)
@@ -125,7 +149,7 @@ void HeadUpDisplay::UpdatePMeterTimer(float dt)
 		m_pMeterTimer -= frameTime;
 
 		switch (m_pMeterTimerType) {
-		// 8-frame timer for adding arrow
+			// 8-frame timer for adding arrow
 		case 1:
 			if (m_pMeterTimer <= 0) {
 				// Timer has elapsed, check if criteria are still met
@@ -133,7 +157,7 @@ void HeadUpDisplay::UpdatePMeterTimer(float dt)
 					// Add an arrow to P-Meter
 					if (m_pMeterArrows < m_maxPMeterArrows) {
 						m_pMeterArrows++;
-						Log(LOG_INFO, "Added P-Meter arrow. Current arrows: " + std::to_string(m_pMeterArrows));
+						//Log(LOG_INFO, "Added P-Meter arrow. Current arrows: " + std::to_string(m_pMeterArrows));
 					}
 
 					// Restart 8-frame timer
@@ -145,7 +169,7 @@ void HeadUpDisplay::UpdatePMeterTimer(float dt)
 				}
 			}
 			break;
-		// 24-frame timer for removing arrow
+			// 24-frame timer for removing arrow
 		case 2:
 			if (m_pMeterTimer <= 0) {
 				// Timer has elapsed, check if criteria are still not met
@@ -153,7 +177,7 @@ void HeadUpDisplay::UpdatePMeterTimer(float dt)
 					// Remove an arrow from P-Meter
 					if (m_pMeterArrows > 0) {
 						m_pMeterArrows--;
-						Log(LOG_INFO, "Removed P-Meter arrow. Current arrows: " + std::to_string(m_pMeterArrows));
+						//Log(LOG_INFO, "Removed P-Meter arrow. Current arrows: " + std::to_string(m_pMeterArrows));
 					}
 
 					// Restart 24-frame timer if there are still arrows
@@ -169,17 +193,6 @@ void HeadUpDisplay::UpdatePMeterTimer(float dt)
 					// Criteria now met, deactivate timer
 					m_pMeterTimerActive = false;
 				}
-			}
-			break;
-			// 16-frame timer for max speed
-		case 3:
-			if (m_isBDown && m_isDirectionDown && m_currentSpeed >= RUNSPEED_THRESHOLD) {
-				// Lock timer at maximum
-				m_pMeterTimer = 16.0f;
-			}
-			else if (m_pMeterTimer <= 0) {
-				// Timer expired, deactivate
-				m_pMeterTimerActive = false;
 			}
 			break;
 		}
@@ -229,6 +242,23 @@ void HeadUpDisplay::UpdateGameTimer(float dt)
 			}
 		}
 	}
+}
+
+void HeadUpDisplay::LoadSprites()
+{
+	m_animator->DefineAnimation(ID_SPRITE_HUD_BOARD, { L"hud" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_BOARD_BACKGROUND, { L"hud-background" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_PMETER_ARROW_FULL, { L"arrow1" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_PMETER_ARROW_EMPTY, { L"arrow2" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_M_BADGE, { L"mbadge" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_L_BADGE, { L"lbadge" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_PAUSE, { L"pause" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_PMETER_BADGE_FULL, { L"pbadge1" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_PMETER_BADGE_EMPTY, { L"pbadge2" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_FIREFLOWER, { L"powerup-fireflower" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_MUSHROOM, { L"powerup-mushroom" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_STAR, { L"powerup-star" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_POWERUP_SLOT, { L"powerupslot" }, false);
 }
 
 void HeadUpDisplay::AddCoins(int amount)

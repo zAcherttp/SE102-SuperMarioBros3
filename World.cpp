@@ -51,10 +51,10 @@ World::~World()
 }
 
 void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker* kbsTracker) {
-	if(kbsTracker->IsKeyPressed(Keys::R)) {
+	if (kbsTracker->IsKeyPressed(Keys::R)) {
 		Reset();
 	}
-	if(kbsTracker->IsKeyPressed(Keys::I)) {
+	if (kbsTracker->IsKeyPressed(Keys::I)) {
 		TogglePause();
 	}
 
@@ -63,10 +63,10 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 	if (!mario) return;
 	mario->HandleInput(kbState, kbsTracker);
 
-	if(kbsTracker->IsKeyPressed(Keys::R)) {
+	if (kbsTracker->IsKeyPressed(Keys::R)) {
 		Reset();
 	}
-	if(kbsTracker->IsKeyPressed(Keys::T)) {
+	if (kbsTracker->IsKeyPressed(Keys::T)) {
 		Teleport();
 	}
 }
@@ -75,27 +75,27 @@ void World::Update(float dt) {
 
 	if (m_isPaused) return;
 
-	if(m_player) {
+	if (m_player) {
 		m_player->Update(dt);
 		Vector2 pos = m_player->GetPosition();
 		int gameWidth, gameHeight;
 		Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
-		Vector2 cameraPos = pos - Vector2(gameWidth / 2.f, gameHeight/2.f);
+		Vector2 cameraPos = pos - Vector2(gameWidth / 2.f, gameHeight / 2.f);
 		//clamp position to nearest pixel to avoid pixel rendering artifacts
 		//cameraPos.x = (int)(cameraPos.x + 0.5f);
-		cameraPos.y = 250;
+		cameraPos.y = 239;
 
 		Game::GetInstance()->SetCameraPosition(cameraPos, false);
 		//Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
 	}
 
-	
+
 	m_entities.erase(
-	std::remove_if(m_entities.begin(), m_entities.end(),
-		[](Entity* e) { return e == nullptr || !e->IsActive(); }),
-	m_entities.end()
-    );
-	
+		std::remove_if(m_entities.begin(), m_entities.end(),
+			[](Entity* e) { return e == nullptr || !e->IsActive(); }),
+		m_entities.end()
+	);
+
 	for (auto e : m_entities) {
 		e->Update(dt);
 	}
@@ -117,23 +117,23 @@ void World::Update(float dt) {
 }
 
 void World::Render(DirectX::SpriteBatch* spriteBatch) {
-	if(m_player) m_player->Render(spriteBatch);
-    for (auto e : m_entities) {
-        e->Render(spriteBatch);
-    }
+	if (m_player) m_player->Render(spriteBatch);
+	for (auto e : m_entities) {
+		e->Render(spriteBatch);
+	}
 }
 
 void World::RenderDebug(DirectX::PrimitiveBatch<DirectX::DX11::VertexPositionColor>* primitiveBatch) {
-    if (m_collisionSystem) {
-        m_collisionSystem->RenderDebug(primitiveBatch);
-    }
-    
-    for (auto e : m_entities) {
-        if (e != nullptr && e->GetCollisionComponent()) {
-            e->GetCollisionComponent()->RenderDebug(primitiveBatch, Colors::Lime);
-        }
-    }
-    
+	if (m_collisionSystem) {
+		m_collisionSystem->RenderDebug(primitiveBatch);
+	}
+
+	for (auto e : m_entities) {
+		if (e != nullptr && e->GetCollisionComponent()) {
+			e->GetCollisionComponent()->RenderDebug(primitiveBatch, Colors::Lime);
+		}
+	}
+
 	if (m_player)
 	{
 		m_player->GetCollisionComponent()->RenderDebug(primitiveBatch, Colors::Lime);
@@ -148,8 +148,8 @@ void World::Reset() {
 }
 
 void World::Teleport() {
-		m_player->SetPosition(Vector2(2500, 400));
-		m_player->SetVelocity(Vector2::Zero);
+	m_player->SetPosition(Vector2(2500, 400));
+	m_player->SetVelocity(Vector2::Zero);
 }
 
 void World::TogglePause()
@@ -181,14 +181,14 @@ void World::Load(SpriteSheet* spriteSheet)
 	}
 	Log(__FUNCTION__, m_name + " loaded successfully");
 
-	if(m_player)
+	if (m_player)
 		dynamic_cast<Mario*>(m_player)->ItsAMe();
 
 	// Reset HUD
 	// TODO: World saves mario state to Game, then after loading, set the properties
 	HeadUpDisplay::GetInstance()->SetTime(300);
 	HeadUpDisplay::GetInstance()->StartTimer();
-	
+
 	return;
 }
 
@@ -263,133 +263,135 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		}
 		entity = new Mario(position, 0, 0, 0, spriteSheet);
 		break;
-		case ID_ENT_GOOMBA:
+	case ID_ENT_GOOMBA:
+	{
+		entity = new Goomba(position, Vector2(GOOMBA_WIDTH, GOOMBA_HEIGHT), spriteSheet);
+		Log(__FUNCTION__, "Goomba created at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
+		break;
+	}
+	case ID_ENT_GROUND:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		int countX = data["countX"];
+		int countY = data["countY"];
+		bool isSolid = data["solid"];
+		entity = new Ground(position, Vector2(width, height), countX, countY, isSolid, spriteSheet);
+		break;
+	}
+	case ID_ENT_BUSH:
+	{
+		int brushType = data["brushType"];
+		if (brushType == 0)
 		{
-			entity = new Goomba(position, Vector2(GOOMBA_WIDTH,GOOMBA_HEIGHT), spriteSheet);
-			Log(__FUNCTION__, "Goomba created at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
-			break;
+			int tileXcount = data["tileXcount"];
+			entity = new Bush(position, tileXcount, spriteSheet, brushType);
 		}
-		case ID_ENT_GROUND:
+		else entity = new Bush(position, 1, spriteSheet, brushType);
+		break;
+	}
+	case ID_ENT_CLOUD:
+	{
+		int cloudType = data["cloudType"];
+		if (cloudType == 0)
 		{
-			float width = data["width"];
-			float height = data["height"];
-			int countX = data["countX"];
-			int countY = data["countY"];
-			bool isSolid = data["solid"];
-			entity = new Ground(position, Vector2(width, height), countX, countY, isSolid, spriteSheet);
-			break;
+			int count = data["count"];
+			entity = new Cloud(position, count, spriteSheet, cloudType);
 		}
-		 case ID_ENT_BUSH:
-		 {
-		 	int brushType = data["brushType"];
-			if(brushType ==0)
-			{
-				int tileXcount = data["tileXcount"];
-				entity = new Bush(position, tileXcount, spriteSheet, brushType);
-			}
-			else entity = new Bush(position,1, spriteSheet, brushType);
-		 	break;
-		 }
-		 case ID_ENT_CLOUD:
-		 {
-		 	int cloudType = data["cloudType"];
-			if(cloudType == 0)
-			{
-				int count = data["count"];
-				entity = new Cloud(position, count, spriteSheet, cloudType);
-			}
-			else entity = new Cloud(position, 0, spriteSheet, cloudType);
-		 	break;
-		 }
-		 case ID_ENT_SCREW_BLOCK:
-		 {
-			float width = data["width"];
-			float height = data["height"];
-			int countX = data["countX"];
-			int countY = data["countY"];
-			bool isSolid = data["solid"];
-			bool isFloating = data["floating"];
-			int color = data["color"];
-			float depth = data["depth"];
-			entity = new ScrewBlock(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, depth, color, isFloating);
-			break;
-		}	
-		case ID_ENT_PIPE:
-		{
-			float width = data["width"];
-			float height = data["height"];
-			int countX = data["countX"];
-			int countY = data["countY"];
-			bool isSolid = data["solid"];
-			bool hasHead = data["hasHead"];
-			entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, hasHead);
-			break;
-		}
-		case ID_ENT_BRICK:
-		{
-			float width = data["width"];
-			float height = data["height"];
-			bool isSolid = data["solid"];
-			entity = new Brick(position, Vector2(width, height), isSolid, spriteSheet);
-			break;
-		}
-		case ID_ENT_COIN:
-		{
-			float width = data["width"];
-			float height = data["height"];
-			bool isSolid = data["solid"];
-			entity = new Coin(position, Vector2(width, height), isSolid, spriteSheet);
-			break;
-		}
-		case ID_ENT_SKY_PLATFORM:
-		{
-			float width = data["width"];
-			float height = data["height"];
-			int countX = data["countX"];
-			bool isSolid = data["solid"];
-			entity = new SkyPlatform(position, Vector2(width, height), countX, isSolid, spriteSheet);
-			break;
-		}
-		case ID_ENT_LUCKY_BLOCK:
-		{
-			float width = data["width"];
-			float height = data["height"];
-			bool isSolid = data["solid"];
-			entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet);
-			break;
-		}
-		case ID_ENT_BLACK_BACKGROUND:
-		{
-			float width = data["width"];
-			float height = data["height"];
-			int countX = data["countX"];
-			int countY = data["countY"];
-			int bgtype = data["bgtype"];
-			float depth = data["depth"];
-			entity = new BlackBackground(position, Vector2(width, height), countX, countY, spriteSheet, bgtype, depth);
-			break;
-		}
-		case ID_ENT_END_PORTAL:
-		{
-			float width = data["width"];
-			float height = data["height"];
-			entity = new EndPortal(position, Vector2(width, height), spriteSheet);
-			break;
-		}
-	
+		else entity = new Cloud(position, 0, spriteSheet, cloudType);
+		break;
+	}
+	case ID_ENT_SCREW_BLOCK:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		int countX = data["countX"];
+		int countY = data["countY"];
+		bool isSolid = data["solid"];
+		bool isFloating = data["floating"];
+		int color = data["color"];
+		float depth = data["depth"];
+		entity = new ScrewBlock(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, depth, color, isFloating);
+		break;
+	}
+	case ID_ENT_PIPE:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		int countX = data["countX"];
+		int countY = data["countY"];
+		bool isSolid = data["solid"];
+		bool hasHead = data["hasHead"];
+		entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, hasHead);
+		break;
+	}
+	case ID_ENT_BRICK:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		bool isSolid = data["solid"];
+		entity = new Brick(position, Vector2(width, height), isSolid, spriteSheet);
+		break;
+	}
+	case ID_ENT_COIN:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		bool isSolid = data["solid"];
+		entity = new Coin(position, Vector2(width, height), isSolid, spriteSheet);
+		break;
+	}
+	case ID_ENT_SKY_PLATFORM:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		int countX = data["countX"];
+		bool isSolid = data["solid"];
+		entity = new SkyPlatform(position, Vector2(width, height), countX, isSolid, spriteSheet);
+		break;
+	}
+	case ID_ENT_LUCKY_BLOCK:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		bool isSolid = data["solid"];
+		entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet);
+		break;
+	}
+	case ID_ENT_BLACK_BACKGROUND:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		int countX = data["countX"];
+		int countY = data["countY"];
+		int bgtype = data["bgtype"];
+		float depth = data["depth"];
+		entity = new BlackBackground(position, Vector2(width, height), countX, countY, spriteSheet, bgtype, depth);
+		break;
+	}
+	case ID_ENT_END_PORTAL:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		entity = new EndPortal(position, Vector2(width, height), spriteSheet);
+		break;
+	}
 
-		//// Add more entity types here as needed
-		default:
+
+	//// Add more entity types here as needed
+	default:
 		Log(__FUNCTION__, "Unknown entity type: " + std::to_string(entType));
 		break;;
 	}
-	
-	if(dynamic_cast<Mario*>(entity)) {
+
+	if (dynamic_cast<Mario*>(entity)) {
 		m_player = dynamic_cast<Mario*>(entity);
 		Log(__FUNCTION__, "Mario has been created!");
-	} else if (entity) {
+	}
+	else if (entity) {
 		m_entities.push_back(entity);
-	} else {
+	}
+	else {
 		Log(__FUNCTION__, "Failed to create entity of type: " + std::to_string(entType));
 		delete entity;
 		return nullptr;
@@ -409,7 +411,7 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 		Log(__FUNCTION__, "No animation data found for entity type: " + std::to_string(type));
 		return;
 	}
-	
+
 	// Special debugging for Goomba
 	//if (type == ID_ENT_GOOMBA) {
 	//	Log(__FUNCTION__, "Found animation data for Goomba (type " + std::to_string(type) + ")");
@@ -420,12 +422,12 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 		if (animId == -1) continue;
 
 		/*if (type == ID_ENT_GOOMBA) {
-			Log(__FUNCTION__, "Loading Goomba animation ID: " + std::to_string(animId) + 
+			Log(__FUNCTION__, "Loading Goomba animation ID: " + std::to_string(animId) +
 				" Name: " + sequence["name"].get<std::string>() +
 				" Frames: " + std::to_string(sequence["frames"].size()));
 		}
 		else {
-			Log(__FUNCTION__, "Entity ID: " + std::to_string(type) + " Animation ID: " + 
+			Log(__FUNCTION__, "Entity ID: " + std::to_string(type) + " Animation ID: " +
 				std::to_string(animId) + " Frames: " + std::to_string(sequence["frames"].size()));
 		}*/
 
@@ -443,13 +445,13 @@ void World::LoadAnimationsForEntity(Entity* entity, int type, const json& anim)
 
 			// Use the cached wstring's c_str()
 			frameNames.push_back(frameNameCache[frameName].c_str());
-			
+
 			// Log frame names for Goomba
 			/*if (type == ID_ENT_GOOMBA) {
 				Log(__FUNCTION__, "Goomba frame: " + frameName);
 			}*/
 		}
-		
+
 		bool loop = sequence.contains("loop") ? sequence["loop"].get<bool>() : false;
 		float timePerFrame = sequence.contains("timePerFrame") ? sequence["timePerFrame"].get<float>() : 0.1f;
 		bool useVelocityScaling = sequence.contains("useVelocityScaling") ? sequence["useVelocityScaling"].get<bool>() : false;

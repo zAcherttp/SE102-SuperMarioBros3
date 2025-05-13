@@ -420,6 +420,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">hud/hud.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>38,7,76,14</rect>
+                <key>scale9Paddings</key>
+                <rect>38,7,76,14</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">hud/lbadge.png</key>
             <key type="filename">hud/mbadge.png</key>
             <struct type="IndividualSpriteSettings">
@@ -1229,6 +1242,7 @@
             <filename>1-1/blue-mid-mid.png</filename>
             <filename>1-1/green-bottom-left.png</filename>
             <filename>mario/small-holding-walk.png</filename>
+            <filename>hud/hud.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

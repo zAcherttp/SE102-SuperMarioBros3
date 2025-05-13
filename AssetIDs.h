@@ -179,3 +179,17 @@ constexpr auto ID_SPRITE_END_PORTAL_MID_RIGHT	    = 2250;
 constexpr auto ID_SPRITE_END_PORTAL_BOT_LEFT		= 2260;
 constexpr auto ID_SPRITE_END_PORTAL_BOT_MID	    	= 2270;
 constexpr auto ID_SPRITE_END_PORTAL_BOT_RIGHT	    = 2280;
+
+constexpr auto ID_SPRITE_HUD_BOARD = 2900;
+constexpr auto ID_SPRITE_HUD_BOARD_BACKGROUND = 2901;
+constexpr auto ID_SPRITE_HUD_PMETER_ARROW_EMPTY = 2902;
+constexpr auto ID_SPRITE_HUD_PMETER_ARROW_FULL = 2903;
+constexpr auto ID_SPRITE_HUD_PMETER_BADGE_EMPTY = 2904;
+constexpr auto ID_SPRITE_HUD_PMETER_BADGE_FULL = 2905;
+constexpr auto ID_SPRITE_HUD_M_BADGE = 2906;
+constexpr auto ID_SPRITE_HUD_L_BADGE = 2907;
+constexpr auto ID_SPRITE_HUD_PAUSE = 2908;
+constexpr auto ID_SPRITE_HUD_FIREFLOWER = 2909;
+constexpr auto ID_SPRITE_HUD_MUSHROOM = 2910;
+constexpr auto ID_SPRITE_HUD_STAR = 2911;
+constexpr auto ID_SPRITE_HUD_POWERUP_SLOT = 2912;

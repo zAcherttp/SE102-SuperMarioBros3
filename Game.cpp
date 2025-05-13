@@ -48,7 +48,7 @@ void Game::Initialize(HWND window, int width, int height) {
 
 	m_keyboard = std::make_unique<Keyboard>();
 	m_keys = std::make_unique<Keyboard::KeyboardStateTracker>();
-	m_hud = std::make_unique<HeadUpDisplay>();
+	m_hud = std::make_unique<HeadUpDisplay>(m_spriteSheet.get());
 
 	m_gameView.TopLeftX = 0.0f;
 	m_gameView.TopLeftY = 0.0f;

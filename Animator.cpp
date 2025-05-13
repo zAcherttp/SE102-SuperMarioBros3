@@ -28,7 +28,8 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 		{
 			sequence.frames.push_back(frame);
 			//Log(__FUNCTION__, "Found frame:" + str);
-		} else {
+		}
+		else {
 			// Log(__FUNCTION__, "Frame not found");
 		}
 	}
@@ -37,7 +38,7 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 	m_animations[name] = sequence;
 
 	// Log(__FUNCTION__, "Loaded animation: " + std::to_string(name));
-	
+
 }
 
 // Set the current animation and optionally reset it
@@ -49,23 +50,23 @@ void Animator::SetAnimation(const int& id, bool reset)
 	{
 		return;
 	}
-	
+
 	// Find the animation in the unordered map
 	auto it = m_animations.find(id);
 
 
-		m_currentSequence = id;
-		//Log(__FUNCTION__, "Animation set: " + std::to_string(id));
-		//Log(__FUNCTION__, "Animation frames: " + std::to_string(m_animations[id].frames.size()));
-	
+	m_currentSequence = id;
+	//Log(__FUNCTION__, "Animation set: " + std::to_string(id));
+	//Log(__FUNCTION__, "Animation frames: " + std::to_string(m_animations[id].frames.size()));
 
-	
-		if (reset)
-		{
-			m_currentFrame = 0;
-			m_totalElapsed = 0.f;
-			m_paused = false;
-		}
+
+
+	if (reset)
+	{
+		m_currentFrame = 0;
+		m_totalElapsed = 0.f;
+		m_paused = false;
+	}
 }
 
 // Update the animation based on elapsed time and current velocity
@@ -119,26 +120,26 @@ void Animator::Update(float elapsed, float velocity)
 	}
 }
 
-void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& position, const float& depth )
+void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& position, const float& depth)
 {
 	if (m_currentSequence < 0 || !m_spriteSheet)
 
-	return;
-	
+		return;
+
 	auto it = m_animations.find(m_currentSequence);
 
-	if(it->second.frames.empty())
-	// Log(__FUNCTION__, "Animation frames empty for: " + std::to_string(m_currentSequence));
+	if (it->second.frames.empty())
+		// Log(__FUNCTION__, "Animation frames empty for: " + std::to_string(m_currentSequence));
 
-	if (it == m_animations.end() || it->second.frames.empty())
-	return;
-	
+		if (it == m_animations.end() || it->second.frames.empty())
+			return;
+
 	const AnimationSequence& sequence = it->second;
-	
+
 	//Log(__FUNCTION__, "drawing current frame ");
 	if (m_currentFrame < 0 || m_currentFrame >= sequence.frames.size())
-	return;
-	
+		return;
+
 	// Get the current frame to draw
 	const SpriteSheet::SpriteFrame* frame = sequence.frames[m_currentFrame];
 
@@ -154,7 +155,7 @@ void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& positi
 /// <param name="batch">A pointer to the DirectX::SpriteBatch used for rendering.</param>
 /// <param name="id">The identifier of the animation sequence to draw.</param>
 /// <param name="position">The position on the screen where the animation frame should be drawn.</param>
-void Animator::Draw(DirectX::SpriteBatch* batch, const int& id, const DirectX::XMFLOAT2& position, const float& depth)
+void Animator::Draw(DirectX::SpriteBatch* batch, const int& id, const DirectX::XMFLOAT2& position, const float& depth, const float& scale)
 {
 	if (!m_spriteSheet)
 		return;
@@ -168,7 +169,7 @@ void Animator::Draw(DirectX::SpriteBatch* batch, const int& id, const DirectX::X
 	const SpriteSheet::SpriteFrame* frame = sequence.frames[0];
 
 	m_spriteSheet->Draw(batch, *frame, position, DirectX::Colors::White,
-		m_rotation, m_scale, m_spriteEffects, depth);
+		m_rotation, scale, m_spriteEffects, depth);
 }
 
 
