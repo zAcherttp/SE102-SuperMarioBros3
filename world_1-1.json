@@ -633,7 +633,7 @@
       "height": 16,
       "countX": 3,
       "countY": 3,
-      "solid": true,
+      "solid": false,
       "floating": false,
       "color": 1,
       "depth": 0.5
@@ -646,7 +646,7 @@
       "height": 16,
       "countX": 3,
       "countY": 5,
-      "solid": true,
+      "solid": false,
       "floating": false,
       "color": 0,
       "depth": 1.0
@@ -659,7 +659,7 @@
       "height": 16,
       "countX": 5,
       "countY": 3,
-      "solid": true,
+      "solid": false,
       "floating": false,
       "color": 0,
       "depth": 0.2
@@ -672,7 +672,7 @@
       "height": 16,
       "countX": 6,
       "countY": 2,
-      "solid": true,
+      "solid": false,
       "floating": false,
       "color": 0,
       "depth": 0.2
@@ -685,7 +685,7 @@
       "height": 16,
       "countX": 4,
       "countY": 5,
-      "solid": true,
+      "solid": false,
       "floating": false,
       "color": 1,
       "depth": 0.5
@@ -698,7 +698,7 @@
       "height": 16,
       "countX": 4,
       "countY": 7,
-      "solid": true,
+      "solid": false,
       "floating": false,
       "color": 0,
       "depth": 1.0
@@ -711,7 +711,7 @@
       "height": 16,
       "countX": 7,
       "countY": 2,
-      "solid": true,
+      "solid": false,
       "floating": false,
       "color": 0,
       "depth": 0.2
@@ -724,7 +724,7 @@
       "height": 16,
       "countX": 7,
       "countY": 4,
-      "solid": true,
+      "solid": false,
       "floating": false,
       "color": 1,
       "depth": 0.5
@@ -737,7 +737,7 @@
       "height": 16,
       "countX": 7,
       "countY": 6,
-      "solid": true,
+      "solid": false,
       "floating": false,
       "color": 0,
       "depth": 0.8
@@ -750,7 +750,7 @@
       "height": 16,
       "countX": 4,
       "countY": 2,
-      "solid": true,
+      "solid": false,
       "floating": true,
       "color": 1,
       "depth": 0.5
@@ -763,7 +763,7 @@
       "height": 16,
       "countX": 3,
       "countY": 3,
-      "solid": true,
+      "solid": false,
       "floating": false,
       "color": 1,
       "depth": 0.5
@@ -776,7 +776,7 @@
       "height": 16,
       "countX": 3,
       "countY": 9,
-      "solid": true,
+      "solid": false,
       "floating": false,
       "color": 0,
       "depth": 0.8
@@ -1199,7 +1199,7 @@
       "y": 352.0,
       "width": 16,
       "height": 16,
-      "solid": false
+      "solid": true
     },
     {
       "type": 21,
@@ -1207,7 +1207,7 @@
       "y": 352.0,
       "width": 16,
       "height": 16,
-      "solid": false
+      "solid": true
     },
     {
       "type": 21,
@@ -1215,7 +1215,7 @@
       "y": 304.0,
       "width": 16,
       "height": 16,
-      "solid": false
+      "solid": true
     },
     {
       "type": 21,
@@ -1223,7 +1223,7 @@
       "y": 304.0,
       "width": 16,
       "height": 16,
-      "solid": false
+      "solid": true
     },
     {
       "type": 21,
@@ -1231,7 +1231,7 @@
       "y": 320.0,
       "width": 16,
       "height": 16,
-      "solid": false
+      "solid": true
     },
     {
       "type": 21,
@@ -1239,7 +1239,7 @@
       "y": 384.0,
       "width": 16,
       "height": 16,
-      "solid": false
+      "solid": true
     },
     {
       "type": 21,
@@ -1247,7 +1247,7 @@
       "y": 352.0,
       "width": 16,
       "height": 16,
-      "solid": false
+      "solid": true
     },
     {
       "type": 21,
@@ -1255,7 +1255,7 @@
       "y": 368.0,
       "width": 16,
       "height": 16,
-      "solid": false
+      "solid": true
     },
     {
       "type": 17,
