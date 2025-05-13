@@ -44,25 +44,26 @@ void Goomba::OnCollision(const CollisionResult& event)
     ParaGoomba* paraGoomba = dynamic_cast<ParaGoomba*>(event.collidedWith);
     Block* block = dynamic_cast<Block*>(event.collidedWith);
 
+    if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID) {
+        return;
+    }
 
     if (event.contactNormal.x != 0 && block  ) // Collision from the sides
     {
-
-        if(block->IsSolid()) {
+        if(block->IsSolid()) 
+        {
             // If hitting a wall (not Mario), reverse direction and maintain standard speed
             float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
             Vector2 vel = GetVelocity();
-            vel.x = (vel.x > 0) ? -targetSpeed : targetSpeed;
+            Log("Goomba", "Reversing direction");
+            vel.x = -vel.x;
             SetVelocity(vel);
+            Log("Goomba", "Velocity: " + std::to_string(vel.x) + ", " + std::to_string(vel.y));
         }
-        else if(!block->IsSolid()) {
-
-        }
+        return;
     }
     if (event.contactNormal.y > 0) // Collision from above
     {
-
-        
         if (mario) {
             Die(); // Goomba dies when Mario jumps on it
             
@@ -71,13 +72,15 @@ void Goomba::OnCollision(const CollisionResult& event)
             vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
             mario->SetVelocity(vel);
         }
+        return;
     }
-    else if (event.contactNormal.y < 0 && event.collidedWith != mario) {
+    if (event.contactNormal.y < 0 && event.collidedWith != mario) {
         // If hitting ground, immediately stop vertical velocity
         Vector2 vel = GetVelocity();
         vel.y = 0.0f;
         SetVelocity(vel);
         m_isGrounded = true;
+        return;
     }
 }
 
@@ -99,8 +102,6 @@ void Goomba::Update(float dt)
             // After 0.5 seconds, deactivate the Goomba 
             m_isActive = false;
             m_visible = false;
-
-
         }
         return; // Skip normal updates when dying
     }
@@ -115,13 +116,13 @@ void Goomba::Update(float dt)
         SetVelocity(vel);
     }
     
-    float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
-    Vector2 vel = GetVelocity();
-    // If horizontal speed has deviated from target, restore it
-    if (std::abs(vel.x) != targetSpeed) {
-        vel.x = (vel.x >= 0) ? targetSpeed : -targetSpeed;
-        SetVelocity(vel);
-    }
+    // float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
+    // Vector2 vel = GetVelocity();
+    // // If horizontal speed has deviated from target, restore it
+    // if (std::abs(vel.x) != targetSpeed) {
+    //     vel.x = (vel.x >= 0) ? targetSpeed : -targetSpeed;
+    //     SetVelocity(vel);
+    // }
 
     // Handle flip animation
     m_animTimer += dt;
@@ -138,6 +139,7 @@ void Goomba::Update(float dt)
     }
 
     SetPosition(GetPosition() + GetVelocity() * dt);
+ 
     // Update other properties
     Entity::Update(dt);
 }

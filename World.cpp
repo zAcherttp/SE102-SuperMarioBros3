@@ -22,6 +22,7 @@
 #include "Goomba.h"
 #include "ParaGoomba.h"
 #include "FirePiranha.h"
+#include "RedTroopas.h"
 
 using namespace DirectX;
 using Keys = Keyboard::Keys;
@@ -286,6 +287,13 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 			float width = data["width"];
 			float height = data["height"];
 			entity = new FirePiranha(position, Vector2(width, height), spriteSheet);
+			break;
+		}
+		case ID_ENT_RED_TROOPA:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			entity = new RedTroopas(position, Vector2(width, height), spriteSheet);
 			break;
 		}
 		case ID_ENT_GROUND:

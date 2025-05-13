@@ -281,38 +281,21 @@ void Collision::ResolveCollision(Entity* entity, const CollisionResult& result, 
         }
         entity->SetPosition(position);
     }
-    else if ( block && (!block->IsSolid() || (block->IsSolid() && entity->IsNotContactWithSolidBlocks()))) {
-        entity->OnCollision(result);
+    // else if ( block && (!block->IsSolid() || (block->IsSolid() && entity->IsNotContactWithSolidBlocks()))) {
+    //     entity->OnCollision(result);
     
-        // Notify the other entity (if not static)
-        if (!result.collidedWith->IsStatic()) {
-            CollisionResult otherEvent = result;
-            otherEvent.collidedWith = entity;
-            otherEvent.contactNormal = -result.contactNormal;
-            result.collidedWith->OnCollision(otherEvent);
-        }
+    //     // Notify the other entity (if not static)
+    //     if (!result.collidedWith->IsStatic()) {
+    //         CollisionResult otherEvent = result;
+    //         otherEvent.collidedWith = entity;
+    //         otherEvent.contactNormal = -result.contactNormal;
+    //         result.collidedWith->OnCollision(otherEvent);
+    //     }
         
-        return; 
-    }
+    //     return; 
+    // }
     else {
-        // Notify the entity about the collision
-        Vector2 velocity = entity->GetVelocity();
-        Vector2 position = entity->GetPosition();
-        
-        // general collision resolution
-        if(axis == Axis::X) {
-            velocity.x = -velocity.x;
-            position.x += velocity.x * dt;
-        } else {
-            velocity.y = result.contactNormal.y * std::abs(velocity.y) * (1.0f - result.contactTime);
-            position.y += velocity.y * dt;
-        }
-        
         entity->OnCollision(result);
-        // Apply updated velocity and position
-        entity->SetVelocity(velocity);
-        entity->SetPosition(position);
-        
     }
 
     // Notify the other entity (if not static)
@@ -413,10 +396,12 @@ bool Collision::GroundCheck(const Entity* entity, float dt)
     // Calculate how far the entity will move in the next frame
     float rayLength = std::abs(velocity.y * dt);
 
-    // Use a minimum distance to check even when velocity is small or zero
-    float minRayLength = size.y / 2 + 0.5f;
+    // // Use a minimum distance to check even when velocity is small or zero
+    float minRayLength = size.y / 2 + 1.0f; 
 
     rayLength = std::max(rayLength, minRayLength);
+
+ 
 
     // Get cells around the entity
     std::vector<std::pair<int, int>> cells = GetEntityCells(entity, dt);

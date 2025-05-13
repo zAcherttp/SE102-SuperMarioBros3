@@ -25,6 +25,12 @@ namespace GameConfig
         {
             // Koopa specific constants
         }
+
+        namespace Troopas
+        {
+            constexpr float WALK_SPEED = 30.0f;
+            constexpr float SHELL_SPEED = 60.0f;
+        }
         // ...other enemies
     }
 

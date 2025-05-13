@@ -27,7 +27,7 @@ FirePiranha::FirePiranha(Vector2 position, Vector2 size, SpriteSheet* spriteShee
     Log(__FUNCTION__, "Collision component initialized");
     m_mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
     m_isCollidable = true; 
-    m_doesNotContactWithSolidBlocks = true; // Ignore solid blocks
+
     // Offset for bullet spawn position
 }
 
@@ -60,7 +60,7 @@ void FirePiranha::Update(float dt)
     switch (m_state)
     {
         case HIDDEN:
-            if (abs(m_pos.x - mario_pos.x) < 96.0f && abs(m_pos.x - mario_pos.x) >= 24.0f )
+            if (abs(m_pos.x - mario_pos.x) < 120.0f && abs(m_pos.x - mario_pos.x) >= 24.0f )
             {
                 m_state = EMERGING;
                 m_timer = 0.0f; // Reset timer for emerging state
@@ -186,8 +186,7 @@ void FirePiranha::OnCollision(const CollisionResult& event)
     Block* block = dynamic_cast<Block*>(event.collidedWith);
 
     if (block) {
-        if(block->IsSolid()) Log(__FUNCTION__, "FirePiranha collided with solid block");
-        else Log(__FUNCTION__, "FirePiranha collided with non-solid block");
+        if(block->IsSolid()){}
     }
 
     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
@@ -200,7 +199,7 @@ void FirePiranha::OnCollision(const CollisionResult& event)
         //     // Mario is invincible, destroy the FirePiranha
         //     Die();
         //     return;
-        }
+    }
 
     
 }

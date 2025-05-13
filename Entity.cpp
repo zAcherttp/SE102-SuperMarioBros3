@@ -6,13 +6,14 @@
 
 using namespace DirectX::SimpleMath;
 
+
+
 Entity::Entity(Vector2 position, SpriteSheet* spriteSheet) {
 	m_collisionComponent = std::make_unique<CollisionComponent>(this);
 	Log(LOG_INFO, "Creating Entity at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
 	m_collisionComponent->SetPosition(position);
 	m_animator = std::make_unique<Animator>();
 	m_animator->SetSpriteSheet(spriteSheet);
-
 }
 
 Entity::Entity(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 size, SpriteSheet* spriteSheet) {
@@ -31,10 +32,8 @@ void Entity::Render(DirectX::SpriteBatch* spriteBatch) {
 	if (m_visible) {
 		// Get the position
 		Vector2 pos = m_collisionComponent->GetPosition();
-
 		pos.x = (float)(int)(pos.x + 0.5f);
-		pos.y = (float)(int)(pos.y - 0.5f);
-		
+        pos.y = (float)(int)(pos.y + 0.5f);
 		m_animator->Draw(spriteBatch, pos);
 	}
 }
@@ -82,10 +81,7 @@ bool Entity::IsStatic() const
 	return m_isStatic;
 }
 
-bool Entity::IsNotContactWithSolidBlocks() const
-{
-    return m_doesNotContactWithSolidBlocks;
-}
+
 
 // Animation control
 void Entity::DefineAnimation(int animId, const std::vector<const wchar_t*>& frameNames, bool loop, float timePerFrame, bool useVelocity, float minTime, float maxTime, float velocityFactor) {
@@ -102,6 +98,16 @@ void Entity::SetAnimation(int animId, bool reset) {
 void Entity::SetDirection(int direction) {
 	// Direction: -1 = left, 1 = right
 	m_animator->SetFlipHorizontal(direction > 0);
+}
+
+CollisionGroup Entity::GetCollisionGroup() const
+{
+    return m_collisionGroup;
+}
+
+void Entity::SetCollisionGroup(const CollisionGroup &group)
+{
+    m_collisionGroup = group;	
 }
 
 int Entity::GetAnimId() const {

@@ -7,6 +7,16 @@
 
 using namespace DirectX::SimpleMath;
 
+enum class CollisionGroup {
+	NONE = 0,
+	PLAYER,
+	ENEMY,
+	SOLID,
+	NONSOLID,
+	BACKGROUND,
+	ITEM,
+	PROJECTILE,
+};
 class Entity
 {
 public:
@@ -31,7 +41,7 @@ public:
 	bool IsCollidable() const;
 	bool IsStatic() const;
 	bool IsDead() const;
-	bool IsNotContactWithSolidBlocks() const;
+
 
 	void DefineAnimation(int animId, const std::vector<const wchar_t*>& frameNames,
 		bool loop = true, float timePerFrame = 0.1f,
@@ -41,6 +51,9 @@ public:
 	void SetAnimation(int animId, bool reset = false);
 
 	void SetDirection(int direction);
+
+	CollisionGroup GetCollisionGroup() const;
+	void SetCollisionGroup(const CollisionGroup& group);
 
 	int GetAnimId() const;
 	void SetAnimId(const int& id);
@@ -79,7 +92,7 @@ protected:
 	bool m_isCollidable = true;
 	bool m_isStatic = false;
 	bool m_isGrounded = false;
-	bool m_doesNotContactWithSolidBlocks = false;
+	CollisionGroup m_collisionGroup = CollisionGroup::NONE;
 
 	//sprite
 	std::unique_ptr<Animator> m_animator;

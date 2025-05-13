@@ -15,6 +15,7 @@ public:    ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);
     void Render(DirectX::SpriteBatch* spriteBatch) override;
 
     void OnCollision(const CollisionResult& event) override;
+    void OnNoCollision(float dt, Axis axis) override;
     void SetupCollisionComponent();
     void Die() override;
       // Method to transform into regular Goomba (remove wings)
@@ -27,6 +28,7 @@ public:    ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);
 
     void WalkInMarioDirection(Mario* mario);
     
+    void Jump(float dt);
 private:
     float m_animTimer;
     float m_frameTime;

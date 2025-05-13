@@ -14,7 +14,7 @@ enum BulletDirection {
     // Left side angles (clockwise from top)
     TOP_LEFT_45 = 4,       // 45° angle (-1, -1)
     TOP_LEFT_60 = 5,       // 60° angle (calculate vector)
-    TOP_LEFT_120 = 6,      // 120° angle (calculate vector)
+    TOP_LEFT_120 = 6,      // 120° angle (calculate vector) 
     TOP_LEFT_135 = 7       // 135° angle (-1, 1)
 };
 

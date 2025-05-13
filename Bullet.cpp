@@ -14,7 +14,7 @@ Bullet::Bullet(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, BulletD
     , m_direction(direction)
     , m_speed(50.0f)  // Pixels per second
 {
-    m_doesNotContactWithSolidBlocks = true; // Ignore solid blocks
+
 
     std::vector<const wchar_t*> bulletFrames = { L"fire-projectile" };
     DefineAnimation(ID_ANIM_BULLET, bulletFrames, true, m_frameTime);
