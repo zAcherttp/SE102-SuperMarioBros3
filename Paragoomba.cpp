@@ -89,12 +89,9 @@ void ParaGoomba::Render(DirectX::SpriteBatch* spriteBatch)
 
 void ParaGoomba::OnCollision(const CollisionResult& event)
 {
-    Log("ParaGoombaCollision", "Collision normal: " + std::to_string(event.contactNormal.x) + ", " + std::to_string(event.contactNormal.y));
-    
     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);    
     Goomba* goomba = dynamic_cast<Goomba*>(event.collidedWith);
     Block* block = dynamic_cast<Block*>(event.collidedWith);  
-    ScrewBlock* screwBlock = dynamic_cast<ScrewBlock*>(event.collidedWith); 
 
     if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
         return;
@@ -106,10 +103,8 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
         {
             float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
             Vector2 vel = GetVelocity();
-            Log("Goomba", "Reversing direction");
             vel.x = -vel.x;
             SetVelocity(vel);
-            Log("Goomba", "Velocity: " + std::to_string(vel.x) + ", " + std::to_string(vel.y));
         }
 
     }
@@ -250,7 +245,6 @@ void ParaGoomba::Update(float dt)
                     m_jumpCount++;
                     m_jumpTimer = 0.0f;
                     Jump(m_smallJumpForce);
-                    Log("ParaGoomba", "Jumping with small force");
                     Vector2 vel = GetVelocity();
                     SetPosition(GetPosition() + vel * dt);
                 }

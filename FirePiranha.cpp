@@ -181,7 +181,6 @@ void FirePiranha::Render(DirectX::SpriteBatch* spriteBatch)
 
 void FirePiranha::OnCollision(const CollisionResult& event)
 {
-    // Log(__FUNCTION__, "FirePiranha collision detected");
 
     Block* block = dynamic_cast<Block*>(event.collidedWith);
 

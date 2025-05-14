@@ -401,7 +401,6 @@ bool Collision::GroundCheck(const Entity* entity, float dt)
 
     rayLength = std::max(rayLength, minRayLength);
 
- 
 
     // Get cells around the entity
     std::vector<std::pair<int, int>> cells = GetEntityCells(entity, dt);

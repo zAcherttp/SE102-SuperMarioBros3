@@ -703,5 +703,24 @@
         "loop": false
       }
     ]
+  },
+  {
+    "type": 4,
+    "sprites": [
+      {
+        "id": 400,
+        "name": "red-troopa-walk",
+        "frames": ["redtroopa-walk1", "redtroopa-walk2"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 410,
+        "name": "red-troopa-shell",
+        "frames": ["redtroopa-shell1", "redtroopa-shell2", "redtroopa-shell3"],
+        "loop": true,
+        "timePerFrame": 0.2
+      }
+    ]
   }
 ]

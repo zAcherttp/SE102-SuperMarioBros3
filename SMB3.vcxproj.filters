@@ -200,7 +200,10 @@
     <ClInclude Include="Bullet.h">
       <Filter>Source\Entity\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="FirePiranha.h" />
+    <ClInclude Include="FirePiranha.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="RedTroopas.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -342,7 +345,10 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="FirePiranha.cpp" />
+    <ClCompile Include="FirePiranha.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="RedTroopas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">

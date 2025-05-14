@@ -25,7 +25,7 @@ Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     
     // Setup collision component
     SetupCollisionComponent();
-    Log(__FUNCTION__, "Collision component initialized");
+ 
 }
 
 void Goomba::Render(DirectX::SpriteBatch* spriteBatch)
@@ -55,10 +55,10 @@ void Goomba::OnCollision(const CollisionResult& event)
             // If hitting a wall (not Mario), reverse direction and maintain standard speed
             float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
             Vector2 vel = GetVelocity();
-            Log("Goomba", "Reversing direction");
+
             vel.x = -vel.x;
             SetVelocity(vel);
-            Log("Goomba", "Velocity: " + std::to_string(vel.x) + ", " + std::to_string(vel.y));
+ 
         }
         return;
     }
