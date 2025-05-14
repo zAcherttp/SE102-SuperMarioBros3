@@ -34,6 +34,8 @@ constexpr auto ID_ENT_SCREW_BLOCK_HOVER_PLATFORM    = 26;
 constexpr auto ID_ENT_PIPE                          = 27;
 constexpr auto ID_ENT_COIN                          = 28;
 
+constexpr auto ID_ENT_EFFECT                        = 29;
+
 //Entities' animation IDs
 constexpr auto ID_ANIM_MARIO_SMALL                  = 100;
 constexpr auto ID_ANIM_MARIO_SUPER	                = 101;
@@ -69,6 +71,18 @@ constexpr auto ID_ANIM_WINGS_FLAP_DOWN              = 1220; // Down position
 
 // Bullet
 constexpr auto ID_ANIM_BULLET                      = 1300;
+
+// Effects
+constexpr auto ID_ANIM_EFFECT_BONK                 = 2900;
+constexpr auto ID_ANIM_EFFECT_PIRANHA_DIE          = 2910;
+constexpr auto ID_ANIM_EFFECT_POINT_100            = 2920;
+constexpr auto ID_ANIM_EFFECT_POINT_200            = 2921;
+constexpr auto ID_ANIM_EFFECT_POINT_400            = 2922;
+constexpr auto ID_ANIM_EFFECT_POINT_800            = 2923;
+constexpr auto ID_ANIM_EFFECT_POINT_1000           = 2924;
+constexpr auto ID_ANIM_EFFECT_POINT_2000           = 2925;
+constexpr auto ID_ANIM_EFFECT_POINT_4000           = 2926;
+constexpr auto ID_ANIM_EFFECT_POINT_8000           = 2927;
 
 // Red Piranha
 constexpr auto ID_ANIM_RED_PIRANHA_LOOK_DOWN       = 900;

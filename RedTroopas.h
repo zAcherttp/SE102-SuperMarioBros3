@@ -1,5 +1,7 @@
 #pragma once
 #include "Entity.h"
+#include "Effect.h"
+#include <vector>
 
 enum TroopaState
 {
@@ -55,7 +57,9 @@ public:
     
     // Store the last direction for comparison
     float m_lastDirectionX;
-    
+
+    std::vector<Effect*> m_bonkEffects;
+
     // Direction change cooldown to prevent rapid reversals
     
     std::map<InteractionPointType, bool> m_pointCollisionState;

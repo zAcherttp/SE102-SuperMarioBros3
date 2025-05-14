@@ -30,9 +30,8 @@ private:
     bool m_flipFrame;
     float m_deathTimer;
     bool m_isDying;
-    bool m_hasWings;  // Flag to track if it still has wings
+    bool m_hasWings; 
     
-    // Composition: ParaGoomba has wings
     Wings* m_wing_left;
     Wings* m_wing_right;
     

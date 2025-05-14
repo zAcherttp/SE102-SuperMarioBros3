@@ -19,7 +19,7 @@ enum class CollisionGroup {
 };
 
 enum class DyingType {
-	NONE = 0,
+	UNDEFINED = 0,
 	STOMPED,
 	BONKED
 };
@@ -99,7 +99,7 @@ protected:
 	bool m_isStatic = false;
 	bool m_isGrounded = false;
 	CollisionGroup m_collisionGroup = CollisionGroup::NONE;
-	DyingType m_dyingType = DyingType::NONE;
+	DyingType m_dyingType = DyingType::UNDEFINED;
 
 	//sprite
 	std::unique_ptr<Animator> m_animator;

@@ -39,6 +39,11 @@ RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 
 void RedTroopas::Render(DirectX::SpriteBatch* spriteBatch)
 {
+    if(m_bonkEffects.size() > 0) {
+        for (auto& effect : m_bonkEffects) {
+            effect->Render(spriteBatch);
+        }
+    }
     Entity::Render(spriteBatch);
 }
 
@@ -66,6 +71,12 @@ void RedTroopas::Update(float dt)
     UpdateSpriteDirection();
     
     SetPosition(GetPosition() + GetVelocity() * dt);
+
+    if(!m_bonkEffects.empty()) {
+        for (auto& effect : m_bonkEffects) {
+            effect->Update(dt);
+        }
+    }
     Entity::Update(dt);
 }
 
@@ -113,6 +124,9 @@ void RedTroopas::OnCollision(const CollisionResult& event)
             if(m_state == SHELL_SLIDE)
             {
                 entity->Die(DyingType::BONKED);
+                Game* game = Game::GetInstance();
+                SpriteSheet* spriteSheet = game->GetSpriteSheet();
+                m_bonkEffects.push_back(new Effect(entity->GetPosition(), Vector2::Zero, spriteSheet, EffectType::BONK));
             }
         }
 

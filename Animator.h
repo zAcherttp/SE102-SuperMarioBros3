@@ -68,6 +68,8 @@ public:
     const std::unordered_map<int, AnimationSequence>& GetAnimations() const;
     bool HasAnimation(const int& id) const;
 
+    float GetTimePerFrame();
+
 private:
     SpriteSheet* m_spriteSheet = nullptr;
     bool m_ownsSpriteSheet = false;  

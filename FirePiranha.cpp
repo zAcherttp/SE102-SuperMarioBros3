@@ -6,6 +6,7 @@
 #include "Block.h"
 #include "Game.h"
 #include "World.h"
+#include "RedTroopas.h"
 
 
 FirePiranha::FirePiranha(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
@@ -22,6 +23,8 @@ FirePiranha::FirePiranha(Vector2 position, Vector2 size, SpriteSheet* spriteShee
     , m_yThreshold(352.0f) // Y threshold for up/down orientation
     , m_initialPosition(position) // Store the initial position
     , BULLET_OFFSET(0.0f, -8.0f)
+    , m_flipTime(0.025f)
+    , m_flipTimer(0.0f)
 {
     SetupCollisionComponent();
     Log(__FUNCTION__, "Collision component initialized");
@@ -38,7 +41,35 @@ FirePiranha::~FirePiranha()
 
 void FirePiranha::Update(float dt)
 {  
-    // Get current position and calculate target positions
+    
+    if(m_isDying && m_isActive)
+    {
+        if(m_deathTimer > m_flipTime * 15)
+        {
+            m_isActive = false;
+            return;
+        }
+        m_deathTimer += dt;
+
+        m_flipTimer += dt;
+        if (m_flipTimer > m_flipTime) {
+            m_isFlipped = !m_isFlipped;
+            m_animator->SetFlipVertical(m_isFlipped);
+            m_flipTimer = 0.0f;
+        }
+        
+        if(m_dyingType == DyingType::BONKED)
+        {
+
+        }
+
+        Entity::Update(dt);
+        if (m_activeBullet != nullptr) {
+            m_activeBullet->Update(dt);
+        }
+        return;
+    }
+
     Vector2 m_pos = GetPosition();
     Vector2 mario_pos = m_mario ? m_mario->GetPosition() : Vector2(0, 0);
 
@@ -184,20 +215,15 @@ void FirePiranha::OnCollision(const CollisionResult& event)
 
     Block* block = dynamic_cast<Block*>(event.collidedWith);
 
+    Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
+
     if (block) {
         if(block->IsSolid()){}
     }
 
-    Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
     if (mario)
     {
-        Log(__FUNCTION__, "FirePiranha collision with Mario detected");
-        
-        // // Check if Mario is in star mode (invincible) and can hurt enemies
-        // if (mario->IsInvincible()) {
-        //     // Mario is invincible, destroy the FirePiranha
-        //     Die();
-        //     return;
+        return;
     }
 
     
@@ -296,14 +322,14 @@ void FirePiranha::CleanupBullets()
 
 void FirePiranha::Die(DyingType type)
 {
-
-    CleanupBullets();
-    
-
-    m_visible = false;
-    m_isCollidable = false;
-    
-    Log(__FUNCTION__, "FirePiranha died");
+    if(!m_isDying) {
+        m_dyingType = type;
+        m_isDying = true; 
+        m_isCollidable = false; 
+        m_deathTimer = 0.0f; 
+        SetAnimation(ID_ANIM_EFFECT_PIRANHA_DIE, true);
+        return;
+    }
 }
 
 void FirePiranha::UpdatePlantOrientation(Mario* mario)

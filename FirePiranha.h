@@ -43,6 +43,8 @@ private:
     float m_emergeTime; // Time to emerge from pipe
     float m_fireDelay;  // Delay before firing
     float m_fireTime;   // Time in firing state
+
+    
     
     Bullet* m_activeBullet;
     Vector2 BULLET_OFFSET; // Offset for bullet spawn position
@@ -57,6 +59,12 @@ private:
     bool m_isFlipped;   // true: looking right, false: looking left
     bool m_isLookingUp; // true: looking up, false: looking down
     float m_yThreshold; // Y threshold for looking up/down (352 pixels)
+
+    bool m_isDying = false;
+    float m_deathTimer;
+
+    float m_flipTime;
+    float m_flipTimer;
     
     
     // Determine which direction to fire based on Mario's position

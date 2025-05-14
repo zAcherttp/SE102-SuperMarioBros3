@@ -86,29 +86,21 @@ void Goomba::OnCollision(const CollisionResult& event)
 
 void Goomba::Die(DyingType type)
 {
+    if(!m_isDying)
+    {
+        m_dyingType = type;
+        m_isDying = true; 
+        m_isCollidable = false; 
+        m_deathTimer = 0.0f; 
+    }
     if(type == DyingType::STOMPED) {
-        if (!m_isDying) 
-        {   
-            m_dyingType = type; // Set the dying type
-            m_isDying = true; // Set dying state to true
-            m_isCollidable = false; // Disable collision during death
-            SetAnimation(ID_ANIM_GOOMBA_DIE, false); // Set death animation
-            m_deathTimer = 0.0f; // Initialize the death timer
-        }
+        SetAnimation(ID_ANIM_GOOMBA_DIE, false); // Set death animation
         return;
     }
     if(type == DyingType::BONKED) {
-        if (!m_isDying) 
-        {
-            m_dyingType = type;
-            m_isDying = true; 
-            m_isCollidable = false; 
-            m_deathTimer = 0.0f; 
-            SetAnimation(ID_ANIM_GOOMBA_WALK, false); 
-            m_animator->SetFlipVertical(true); 
-            SetVelocity(Vector2(GameConfig::Enemies::Goomba::WALK_SPEED,
-                         -GameConfig::Enemies::DEATH_BOUNCE_VELOCITY));
-        }
+        SetAnimation(ID_ANIM_GOOMBA_WALK, false); 
+        m_animator->SetFlipVertical(true); 
+        SetVelocity(Vector2(GameConfig::Enemies::Goomba::WALK_SPEED,-GameConfig::Enemies::DEATH_BOUNCE_VELOCITY));
         return;
     }
 }

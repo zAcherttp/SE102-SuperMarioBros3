@@ -701,6 +701,13 @@
         "name": "piranha-look-up-open",
         "frames": ["redpiranha-up1"],
         "loop": false
+      },
+      {
+        "id": 2910,
+        "name": "piranha-look-die",
+        "frames": ["pop1", "pop2", "pop3", "pop4"],
+        "loop": true,
+        "timePerFrame": 0.1
       }
     ]
   },

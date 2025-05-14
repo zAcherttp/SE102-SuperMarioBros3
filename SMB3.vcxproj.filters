@@ -204,6 +204,7 @@
       <Filter>Source\Entity\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="RedTroopas.h" />
+    <ClInclude Include="Effect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -349,6 +350,7 @@
       <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="RedTroopas.cpp" />
+    <ClCompile Include="Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">

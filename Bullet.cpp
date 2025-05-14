@@ -116,7 +116,6 @@ void Bullet::UpdateRotation(float dt)
 
 void Bullet::Render(DirectX::SpriteBatch* spriteBatch)
 {    
-    // Use the standard Entity rendering which will use our animator
     Entity::Render(spriteBatch);
 }
 
