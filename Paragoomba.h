@@ -8,23 +8,18 @@
 
 class ParaGoomba : public Entity
 {
-public:    ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);
+public:
+    ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);
     ~ParaGoomba();
 
     void Update(float dt) override;
     void Render(DirectX::SpriteBatch* spriteBatch) override;
-
     void OnCollision(const CollisionResult& event) override;
-    void OnNoCollision(float dt, Axis axis) override;
     void SetupCollisionComponent();
-    void Die() override;
-      // Method to transform into regular Goomba (remove wings)
+    void Die(DyingType type) override;
     void TransformToGoomba();
-    
-    // Check if ParaGoomba still has wings
     bool HasWings() const;
 
-    void HandleLanding();
 
     void WalkInMarioDirection(Mario* mario);
     

@@ -35,7 +35,6 @@ RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     m_pointCollisionState[InteractionPointType::LeftFoot] = true;
     m_pointCollisionState[InteractionPointType::RightFoot] = true;
     
-    Log(__FUNCTION__, "Collision component initialized");
 }
 
 void RedTroopas::Render(DirectX::SpriteBatch* spriteBatch)
@@ -43,15 +42,14 @@ void RedTroopas::Render(DirectX::SpriteBatch* spriteBatch)
     Entity::Render(spriteBatch);
 }
 
-void RedTroopas::Die()
+void RedTroopas::Die(DyingType type)
 {
 
 }
 
+
 void RedTroopas::Update(float dt)
 {
-    // Update direction change cooldown
-    ResetInteractionPoints();
     m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
     
     // Check for platform edges using raycasting if the entity is grounded
@@ -77,6 +75,7 @@ void RedTroopas::OnCollision(const CollisionResult& event)
     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);    
     Goomba* goomba = dynamic_cast<Goomba*>(event.collidedWith);
     Block* block = dynamic_cast<Block*>(event.collidedWith);  
+    Entity* entity = dynamic_cast<Entity*>(event.collidedWith);
 
     if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
         return;
@@ -106,6 +105,14 @@ void RedTroopas::OnCollision(const CollisionResult& event)
                 m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL_SLIDE, true);
                 m_state = SHELL_SLIDE;
                 return;
+            }
+        }
+
+        if(entity)
+        {
+            if(m_state == SHELL_SLIDE)
+            {
+                entity->Die(DyingType::BONKED);
             }
         }
 
@@ -146,8 +153,19 @@ void RedTroopas::OnCollision(const CollisionResult& event)
             Vector2 vel = mario->GetVelocity();
             vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
             mario->SetVelocity(vel);
+
             m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL_SLIDE, true);
             m_state = SHELL_SLIDE;
+            return;
+        }
+        if(m_state == SHELL_SLIDE) {
+            Vector2 vel = mario->GetVelocity();
+            vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+            mario->SetVelocity(vel);
+
+            m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL);
+            SetVelocity(Vector2(0.0f, 0.0f));
+            m_state = SHELL_IDLE;
             return;
         }
 
@@ -241,9 +259,6 @@ bool RedTroopas::CheckEdge()
         vel.x = -vel.x;
         SetVelocity(vel);
         UpdateSpriteDirection();
-        
-        
-        Log(__FUNCTION__, "Edge detected, changing direction");
         return true;
     }
     
@@ -314,134 +329,5 @@ std::vector<std::pair<InteractionPointType, Vector2>> RedTroopas::GetInteraction
     points.push_back({ InteractionPointType::RightLower, Vector2(size.x / 2 , size.y / 4) });
     
     return points;
-}
-
-
-// void RedTroopas::OnFootCollision(const CollisionResult& event)
-// {
-//     // Make sure it's an actual ground collision
-//     Block* block = dynamic_cast<Block*>(event.collidedWith);
-//     if (!block) {
-//         return;  // Only consider solid blocks for platform edge detection
-//     }
-
-//     Vector2 vel = GetVelocity();
-//     vel.y = 0.0f;  
-//     SetVelocity(vel);
-//     m_isGrounded = true;
-//     m_isColliding = true;
-    
-//     // Update the appropriate foot collision state
-//     if (event.pointType == InteractionPointType::LeftFoot) {
-//         UpdateInteractionPointState(InteractionPointType::LeftFoot, true);
-//     } 
-//     else if (event.pointType == InteractionPointType::RightFoot) {
-//         UpdateInteractionPointState(InteractionPointType::RightFoot, true);
-//     }
-// }
-
-// void RedTroopas::OnTopHeadCollision(const CollisionResult& event)
-// {
-//     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
-//     Block* block = dynamic_cast<Block*>(event.collidedWith);
-//     if (mario) {
-//         if(m_state == WALKING) {
-//             TransformToShell();
-//             Vector2 vel = mario->GetVelocity();
-//             vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
-//             mario->SetVelocity(vel);
-//         }
-
-//         if(block) {
-//             if(block->IsSolid()) {
-//                 Vector2 vel = GetVelocity();
-//                 vel.y = 0.0f;
-//                 SetVelocity(vel);
-//             }
-//         }
-//         return;
-//     }
-// }
-
-// void RedTroopas::OnLeftSideCollision(const CollisionResult& event)
-// {
-//     Block* block = dynamic_cast<Block*>(event.collidedWith);
-
-//     if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
-//         return;
-//     }
-    
-//     if (event.contactNormal.x != 0 && block) 
-//     {
-//         if(block->IsSolid()) 
-//         {
-//             float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
-//             Vector2 vel = GetVelocity();
-//             vel.x = -vel.x;
-//             SetVelocity(vel);
-//         }
-//         return;
-//     }
-// }
-
-// void RedTroopas::OnRightSideCollision(const CollisionResult& event)
-// {
-//     Block* block = dynamic_cast<Block*>(event.collidedWith);
-
-//     if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
-//         return;
-//     }
-    
-//     if (event.contactNormal.x != 0 && block) 
-//     {
-//         if(block->IsSolid()) 
-//         {
-//             float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
-//             Vector2 vel = GetVelocity();
-//             vel.x = -vel.x;
-//             SetVelocity(vel);
-//         }
-//         return;
-//     }
-// }
-
-
-// void RedTroopas::OnNoCollision(float dt, Axis axis)
-// {
-//     // if (m_state == WALKING && axis == Axis::Y && !m_isColliding) {
-//     //     Vector2 vel = GetVelocity();
-//     //     m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
-
-//     //     if (m_isGrounded ) {
-//     //         // Only check edge if we didn't already change direction
-//     //         if (!CheckEdge()) {
-//     //             vel.x = -vel.x;
-//     //             SetVelocity(vel);
-//     //             UpdateSpriteDirection(); 
-//     //         }
-//     //     }
-//     // }
-// }
-
-void RedTroopas::UpdateInteractionPointState(InteractionPointType type, bool isColliding) {
-    m_pointCollisionState[type] = isColliding;
-    // Limit the logging to reduce console spam
-    if (type == InteractionPointType::LeftFoot || type == InteractionPointType::RightFoot) {
-        Log(__FUNCTION__, "Point " + std::to_string(static_cast<int>(type)) + 
-            " collision state: " + std::to_string(isColliding));
-    }
-}
-
-void RedTroopas::ResetInteractionPoints() {
-
-    if(m_isGrounded) {
-        m_pointCollisionState[InteractionPointType::LeftFoot] = true;
-        m_pointCollisionState[InteractionPointType::RightFoot] = true;
-    }
-
-    for (auto& [type, state] : m_pointCollisionState) {
-            state = false;  // Reset all except foot collisions
-    }
-    
 }
 

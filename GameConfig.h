@@ -13,10 +13,12 @@ namespace GameConfig
 
     namespace Enemies
     {
+        constexpr float DEATH_STOMP_ANI_TIME = 0.5f;
+        constexpr float DEATH_BONK_ANI_TIME = 2.0f;
+        constexpr float DEATH_BOUNCE_VELOCITY = 200.0f;
         namespace Goomba
         {
             constexpr float WALK_SPEED = 30.0f;
-            constexpr float DEATH_ANIMATION_TIME = 0.5f;
             constexpr float COLLISION_DISABLE_TIME = 0.5f;
             // ...more Goomba stats
         }

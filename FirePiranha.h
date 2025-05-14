@@ -20,8 +20,8 @@ public:
 
     void OnCollision(const CollisionResult& event) override;
     void SetupCollisionComponent();
-    void Die() override;
-    
+    void Die(DyingType type) override;
+
     // Create and fire a bullet in the specified direction
     void Fire(BulletDirection direction);
     

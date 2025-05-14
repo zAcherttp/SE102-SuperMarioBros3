@@ -20,8 +20,8 @@ public:
 
     // void OnCollision(const CollisionResult& event) override;
     void SetupCollisionComponent();
-    void Die() override;
-    
+    void Die(DyingType type) override;
+
     // New function to update sprite direction based on velocity
     void UpdateSpriteDirection();
 

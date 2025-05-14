@@ -187,6 +187,6 @@ bool Entity::IsGrounded() const {
 	return m_isGrounded;
 }
 
-void Entity::Die()
-{
+void Entity::Die(DyingType type) {
+	type;
 }

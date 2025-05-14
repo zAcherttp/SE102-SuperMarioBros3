@@ -17,6 +17,12 @@ enum class CollisionGroup {
 	ITEM,
 	PROJECTILE,
 };
+
+enum class DyingType {
+	NONE = 0,
+	STOMPED,
+	BONKED
+};
 class Entity
 {
 public:
@@ -83,7 +89,7 @@ public:
 	virtual void OnRightSideCollision(const CollisionResult& event);
 	virtual bool IsGrounded() const;
 
-	virtual void Die();
+	virtual void Die(DyingType type);
 
 protected:
 	//physics
@@ -93,6 +99,7 @@ protected:
 	bool m_isStatic = false;
 	bool m_isGrounded = false;
 	CollisionGroup m_collisionGroup = CollisionGroup::NONE;
+	DyingType m_dyingType = DyingType::NONE;
 
 	//sprite
 	std::unique_ptr<Animator> m_animator;

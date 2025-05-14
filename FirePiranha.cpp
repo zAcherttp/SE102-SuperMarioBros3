@@ -294,7 +294,7 @@ void FirePiranha::CleanupBullets()
     }
 }
 
-void FirePiranha::Die()
+void FirePiranha::Die(DyingType type)
 {
 
     CleanupBullets();

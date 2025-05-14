@@ -65,8 +65,8 @@ void Goomba::OnCollision(const CollisionResult& event)
     if (event.contactNormal.y > 0) // Collision from above
     {
         if (mario) {
-            Die(); // Goomba dies when Mario jumps on it
-            
+            Die(DyingType::STOMPED); // Goomba dies when Mario jumps on it
+
             // Make Mario bounce a bit
             Vector2 vel = mario->GetVelocity();
             vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
@@ -84,47 +84,74 @@ void Goomba::OnCollision(const CollisionResult& event)
     }
 }
 
-void Goomba::Die()
+void Goomba::Die(DyingType type)
 {
-    if (!m_isDying) {
-        m_isDying = true; // Set dying state to true
-        m_isCollidable = false; // Disable collision during death
-        SetAnimation(ID_ANIM_GOOMBA_DIE, false); // Set death animation
-        m_deathTimer = 0.0f; // Initialize the death timer
+    if(type == DyingType::STOMPED) {
+        if (!m_isDying) 
+        {   
+            m_dyingType = type; // Set the dying type
+            m_isDying = true; // Set dying state to true
+            m_isCollidable = false; // Disable collision during death
+            SetAnimation(ID_ANIM_GOOMBA_DIE, false); // Set death animation
+            m_deathTimer = 0.0f; // Initialize the death timer
+        }
+        return;
+    }
+    if(type == DyingType::BONKED) {
+        if (!m_isDying) 
+        {
+            m_dyingType = type;
+            m_isDying = true; 
+            m_isCollidable = false; 
+            m_deathTimer = 0.0f; 
+            SetAnimation(ID_ANIM_GOOMBA_WALK, false); 
+            m_animator->SetFlipVertical(true); 
+            SetVelocity(Vector2(GameConfig::Enemies::Goomba::WALK_SPEED,
+                         -GameConfig::Enemies::DEATH_BOUNCE_VELOCITY));
+        }
+        return;
     }
 }
 
 void Goomba::Update(float dt)
 {
-    if (m_isDying) {
-        m_deathTimer += dt;
-        if (m_deathTimer >=  GameConfig::Enemies::Goomba::DEATH_ANIMATION_TIME) {
-            // After 0.5 seconds, deactivate the Goomba 
-            m_isActive = false;
-            m_visible = false;
-        }
-        return; // Skip normal updates when dying
-    }
-    
-    // Check if entity is on ground - important for physics
     m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
-    
-    // Apply gravity only if in the air
     if (!m_isGrounded) {
         Vector2 vel = GetVelocity();
         vel.y += GameConfig::Physics::GRAVITY * dt;
         SetVelocity(vel);
     }
     
-    // float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
-    // Vector2 vel = GetVelocity();
-    // // If horizontal speed has deviated from target, restore it
-    // if (std::abs(vel.x) != targetSpeed) {
-    //     vel.x = (vel.x >= 0) ? targetSpeed : -targetSpeed;
-    //     SetVelocity(vel);
-    // }
+    if (m_isDying && m_isActive) {
+        m_deathTimer += dt;
+        if(m_dyingType == DyingType::STOMPED)
+        {
+            if (m_deathTimer >=  GameConfig::Enemies::DEATH_STOMP_ANI_TIME) {
+                // After 0.5 seconds, deactivate the Goomba
+                m_isActive = false;
+                m_visible = false;// Remove collision component
+                m_collisionComponent = nullptr; // Set to nullptr
+            }
+            return; 
+        }
+        if(m_dyingType == DyingType::BONKED)
+        {
+            if(m_deathTimer >=  GameConfig::Enemies::DEATH_BONK_ANI_TIME) {
+                // After 2.0 seconds, deactivate the Goomba
+                m_isActive = false;
+                m_visible = false;// Remove collision component
+                m_collisionComponent = nullptr; // Set to nullptr
+                return;
+            }
+            SetPosition(GetPosition() + GetVelocity() * dt);
+            return;
+        }
+    }
+    
+    // Check if entity is on ground - important for physics
+    
+    // Apply gravity only if in the air
 
-    // Handle flip animation
     m_animTimer += dt;
     if (m_animTimer >= m_frameTime)
     {

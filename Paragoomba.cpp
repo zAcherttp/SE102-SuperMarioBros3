@@ -131,8 +131,8 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
             }
             else {
 
-                Die();
-                
+                Die(DyingType::STOMPED);
+
                 Vector2 vel = mario->GetVelocity();
                 vel.y = GameConfig::Mario::BOUNCE_FORCE;
                 mario->SetVelocity(vel);
@@ -152,17 +152,37 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
     }
 }
 
-void ParaGoomba::Die()
+void ParaGoomba::Die(DyingType type)
 {
-    if (!m_isDying) {
-        m_isDying = true;
-        m_deathTimer = 0.0f;
-
-        SetAnimation(ID_ANIM_PARAGOOMBA_DIE, false);
-
-        m_isCollidable = false;
-        
-        SetVelocity(Vector2::Zero);
+    if(type == DyingType::STOMPED)
+    {
+        if (!m_isDying) {
+            m_dyingType = type;
+            m_isDying = true;
+            m_deathTimer = 0.0f;
+            m_isCollidable = false;
+            SetAnimation(ID_ANIM_PARAGOOMBA_DIE, false);            
+            SetVelocity(Vector2::Zero);
+        }
+        return;
+    }
+    if (type == DyingType::BONKED)
+    {
+        if(m_hasWings)
+        {
+            TransformToGoomba();
+        }
+        if (!m_isDying) {
+            m_dyingType = type;
+            m_isDying = true;
+            m_isCollidable = false;
+            m_deathTimer = 0.0f;
+            SetAnimation(ID_ANIM_PARAGOOMBA_WALK, false);
+            m_animator->SetFlipVertical(true); 
+            SetVelocity(Vector2(GameConfig::Enemies::Goomba::WALK_SPEED,
+                         -GameConfig::Enemies::DEATH_BOUNCE_VELOCITY));
+        }
+        return;
     }
 }
 
@@ -183,16 +203,41 @@ bool ParaGoomba::HasWings() const
 
 void ParaGoomba::Update(float dt)
 {
-    Entity::Update(dt);
-  
-    if (m_isDying) {
+    m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
+
+    if (!m_isGrounded) {
+        Vector2 vel = GetVelocity();
+        vel.y += GameConfig::Physics::GRAVITY * dt;
+        SetVelocity(vel);
+    }
+
+    if (m_isDying && m_isActive) {
         m_deathTimer += dt;
-        if (m_deathTimer >= 0.5f) { 
-            SetIsVisible(false);
-            m_isActive = false;
+        if(m_dyingType == DyingType::STOMPED)
+        {
+            if (m_deathTimer >=  GameConfig::Enemies::DEATH_STOMP_ANI_TIME) {
+                // After 0.5 seconds, deactivate the Goomba
+                m_isActive = false;
+                m_visible = false;// Remove collision component
+                m_collisionComponent = nullptr; // Set to nullptr
+            }
+            return; 
         }
-        return;
-    }     
+        if(m_dyingType == DyingType::BONKED)
+        {
+            if(m_deathTimer >=  GameConfig::Enemies::DEATH_BONK_ANI_TIME) {
+                // After 2.0 seconds, deactivate the Goomba
+                m_isActive = false;
+                m_visible = false;// Remove collision component
+                m_collisionComponent = nullptr; // Set to nullptr
+                return;
+            }
+            SetPosition(GetPosition() + GetVelocity() * dt);
+            return;
+        }
+    }    
+
+    Entity::Update(dt);
 
     Mario* mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
     
@@ -214,7 +259,6 @@ void ParaGoomba::Update(float dt)
             }
     }
 
-    m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
 
 
     //// JUMPING PHASE LOGIC
@@ -335,12 +379,6 @@ void ParaGoomba::Update(float dt)
         }
     }
 
-    if (!m_isGrounded) {
-        Vector2 vel = GetVelocity();
-        vel.y += GameConfig::Physics::GRAVITY * dt;
-        SetVelocity(vel);
-    }
-
     Vector2 vel = GetVelocity();
     SetPosition(GetPosition() + vel * dt);
 }
@@ -382,11 +420,4 @@ void ParaGoomba::Jump(float strength) {
         m_isGrounded = false;
         m_isJumping = true;
     }
-}
-
-void ParaGoomba::OnNoCollision(float dt, Axis axis)
-{
-    // if (axis == Axis::Y) {
-    //     m_isGrounded = false;
-    // }
 }
