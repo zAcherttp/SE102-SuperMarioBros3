@@ -4,7 +4,8 @@
 enum TroopaState
 {
     WALKING,
-    SHELL,
+    SHELL_IDLE,
+    SHELL_SLIDE,
     DEAD
 };
 
@@ -23,6 +24,9 @@ public:
     
     // New function to update sprite direction based on velocity
     void UpdateSpriteDirection();
+
+    void TransformToShell();
+    // void TransformToTroopa();
     
     // Check for platform edges using raycasts
     bool CheckEdge();
@@ -31,11 +35,12 @@ public:
 
     std::vector<std::pair<InteractionPointType, DirectX::SimpleMath::Vector2>> GetInteractionPoints() const override;
     
-    void OnFootCollision(const CollisionResult& event) override;
-    void OnTopHeadCollision(const CollisionResult& event) override;
-    void OnLeftSideCollision(const CollisionResult& event) override;
-    void OnRightSideCollision(const CollisionResult& event) override;
-    void OnNoCollision(float dt, Axis axis) override;
+    // void OnFootCollision(const CollisionResult& event) override;
+    // void OnTopHeadCollision(const CollisionResult& event) override;
+    // void OnLeftSideCollision(const CollisionResult& event) override;
+    // void OnRightSideCollision(const CollisionResult& event) override;
+    // void OnNoCollision(float dt, Axis axis) override;
+    void OnCollision(const CollisionResult& event) override;
     void UpdateInteractionPointState(InteractionPointType type, bool isColliding);
     void ResetInteractionPoints();
     

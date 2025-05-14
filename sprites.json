@@ -717,9 +717,15 @@
       {
         "id": 410,
         "name": "red-troopa-shell",
+        "frames": ["redtroopa-shell1"],
+        "loop": false
+      },
+      {
+        "id": 420,
+        "name": "red-troopa-shell-slide",
         "frames": ["redtroopa-shell1", "redtroopa-shell2", "redtroopa-shell3"],
         "loop": true,
-        "timePerFrame": 0.2
+        "timePerFrame": 0.1
       }
     ]
   }

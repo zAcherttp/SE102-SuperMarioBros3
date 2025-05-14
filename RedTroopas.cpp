@@ -72,6 +72,100 @@ void RedTroopas::Update(float dt)
 }
 
 
+void RedTroopas::OnCollision(const CollisionResult& event)
+{
+    Mario* mario = dynamic_cast<Mario*>(event.collidedWith);    
+    Goomba* goomba = dynamic_cast<Goomba*>(event.collidedWith);
+    Block* block = dynamic_cast<Block*>(event.collidedWith);  
+
+    if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
+        return;
+    }
+    
+    if (event.contactNormal.x != 0)  // side collision
+    {
+        if(block)
+        { 
+            if(block->IsSolid()) 
+            {
+                float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
+                Vector2 vel = GetVelocity();
+                vel.x = -vel.x;
+                SetVelocity(vel);
+            return;
+            }
+        }
+
+        if(mario) {
+            if (m_state == SHELL_IDLE) {
+                if(event.contactNormal.x > 0) {
+                    SetVelocity(Vector2(GameConfig::Enemies::Troopas::WALK_SPEED*7, 0.0f));
+                } else {
+                    SetVelocity(Vector2(-GameConfig::Enemies::Troopas::WALK_SPEED*7, 0.0f));
+                }
+                m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL_SLIDE, true);
+                m_state = SHELL_SLIDE;
+                return;
+            }
+        }
+
+    }
+ 
+    if(event.contactNormal.y < 0 && block) // foot collision
+    { 
+        Block* block = dynamic_cast<Block*>(event.collidedWith);
+        if (!block) {
+            return;  // Only consider solid blocks for platform edge detection
+        }
+    
+        Vector2 vel = GetVelocity();
+        vel.y = 0.0f;  
+        SetVelocity(vel);
+        m_isGrounded = true;
+        return;
+    }
+
+   if (event.contactNormal.y > 0) // Collision from above
+   {
+    if (mario) {
+        if(m_state == WALKING) {
+            Vector2 vel = mario->GetVelocity();
+            vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+            mario->SetVelocity(vel);
+            TransformToShell();
+            return;
+        }
+        if(m_state == SHELL_IDLE) {
+            
+            if(mario->GetPosition().x < GetPosition().x + 8.0f) {
+                SetVelocity(Vector2(GameConfig::Enemies::Troopas::WALK_SPEED*7, 0.0f));
+            } else {
+                SetVelocity(Vector2(-GameConfig::Enemies::Troopas::WALK_SPEED*7, 0.0f));
+            }
+             
+            Vector2 vel = mario->GetVelocity();
+            vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+            mario->SetVelocity(vel);
+            m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL_SLIDE, true);
+            m_state = SHELL_SLIDE;
+            return;
+        }
+
+        if(block) {
+            if(block->IsSolid()) {
+                Vector2 vel = GetVelocity();
+                vel.y = 0.0f;
+                SetVelocity(vel);
+            }
+            return;
+        }
+    }
+    }
+
+    else if (mario && !m_isDying) {
+    }
+}
+
 bool RedTroopas::CheckEdge()
 {
     if (m_state != WALKING || !m_isGrounded ) {
@@ -185,9 +279,25 @@ void RedTroopas::UpdateSpriteDirection()
     }
 }
 
+void RedTroopas::TransformToShell()
+{
+    if (m_state == WALKING) {
+        m_state = SHELL_IDLE;
+    }
+
+	Vector2 newSize = Vector2(16.0f, 16.0f);
+	m_collisionComponent->SetSize(newSize);
+	m_collisionComponent->SetPosition(GetPosition());
+    SetPosition(GetPosition() + Vector2(0.0f, 5.0f));
+    SetVelocity(Vector2(0.0f, 0.0f));
+
+    m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL);
+
+}
+
 bool RedTroopas::UsesInteractionPoints() const
 {
-    return true;  // Enable interaction points for RedTroopas
+    return false;  // Disable interaction points for RedTroopas
 }
 
 std::vector<std::pair<InteractionPointType, Vector2>> RedTroopas::GetInteractionPoints() const
@@ -207,113 +317,111 @@ std::vector<std::pair<InteractionPointType, Vector2>> RedTroopas::GetInteraction
 }
 
 
-void RedTroopas::OnFootCollision(const CollisionResult& event)
-{
-    // Make sure it's an actual ground collision
-    Block* block = dynamic_cast<Block*>(event.collidedWith);
-    if (!block) {
-        return;  // Only consider solid blocks for platform edge detection
-    }
+// void RedTroopas::OnFootCollision(const CollisionResult& event)
+// {
+//     // Make sure it's an actual ground collision
+//     Block* block = dynamic_cast<Block*>(event.collidedWith);
+//     if (!block) {
+//         return;  // Only consider solid blocks for platform edge detection
+//     }
 
-    Vector2 vel = GetVelocity();
-    vel.y = 0.0f;  
-    SetVelocity(vel);
-    m_isGrounded = true;
-    m_isColliding = true;
+//     Vector2 vel = GetVelocity();
+//     vel.y = 0.0f;  
+//     SetVelocity(vel);
+//     m_isGrounded = true;
+//     m_isColliding = true;
     
-    // Update the appropriate foot collision state
-    if (event.pointType == InteractionPointType::LeftFoot) {
-        UpdateInteractionPointState(InteractionPointType::LeftFoot, true);
-    } 
-    else if (event.pointType == InteractionPointType::RightFoot) {
-        UpdateInteractionPointState(InteractionPointType::RightFoot, true);
-    }
-}
+//     // Update the appropriate foot collision state
+//     if (event.pointType == InteractionPointType::LeftFoot) {
+//         UpdateInteractionPointState(InteractionPointType::LeftFoot, true);
+//     } 
+//     else if (event.pointType == InteractionPointType::RightFoot) {
+//         UpdateInteractionPointState(InteractionPointType::RightFoot, true);
+//     }
+// }
 
-void RedTroopas::OnTopHeadCollision(const CollisionResult& event)
-{
-    Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
-    Block* block = dynamic_cast<Block*>(event.collidedWith);
-    if (mario) {
-        if(m_state == WALKING) {
-            m_state = SHELL;
-            Vector2 vel = mario->GetVelocity();
-            vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
-            mario->SetVelocity(vel);
-        }
+// void RedTroopas::OnTopHeadCollision(const CollisionResult& event)
+// {
+//     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
+//     Block* block = dynamic_cast<Block*>(event.collidedWith);
+//     if (mario) {
+//         if(m_state == WALKING) {
+//             TransformToShell();
+//             Vector2 vel = mario->GetVelocity();
+//             vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+//             mario->SetVelocity(vel);
+//         }
 
-        if(block) {
-            if(block->IsSolid()) {
-                Vector2 vel = GetVelocity();
-                vel.y = 0.0f;
-                SetVelocity(vel);
-            }
-        }
-        return;
-    }
-}
+//         if(block) {
+//             if(block->IsSolid()) {
+//                 Vector2 vel = GetVelocity();
+//                 vel.y = 0.0f;
+//                 SetVelocity(vel);
+//             }
+//         }
+//         return;
+//     }
+// }
 
-void RedTroopas::OnLeftSideCollision(const CollisionResult& event)
-{
-    Block* block = dynamic_cast<Block*>(event.collidedWith);
+// void RedTroopas::OnLeftSideCollision(const CollisionResult& event)
+// {
+//     Block* block = dynamic_cast<Block*>(event.collidedWith);
 
-    if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
-        return;
-    }
+//     if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
+//         return;
+//     }
     
-    if (event.contactNormal.x != 0 && block) 
-    {
-        if(block->IsSolid()) 
-        {
-            float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
-            Vector2 vel = GetVelocity();
-            vel.x = -vel.x;
-            SetVelocity(vel);
-        }
-        return;
-    }
-}
+//     if (event.contactNormal.x != 0 && block) 
+//     {
+//         if(block->IsSolid()) 
+//         {
+//             float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
+//             Vector2 vel = GetVelocity();
+//             vel.x = -vel.x;
+//             SetVelocity(vel);
+//         }
+//         return;
+//     }
+// }
 
-void RedTroopas::OnRightSideCollision(const CollisionResult& event)
-{
-    Block* block = dynamic_cast<Block*>(event.collidedWith);
+// void RedTroopas::OnRightSideCollision(const CollisionResult& event)
+// {
+//     Block* block = dynamic_cast<Block*>(event.collidedWith);
 
-    if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
-        return;
-    }
+//     if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
+//         return;
+//     }
     
-    if (event.contactNormal.x != 0 && block) 
-    {
-        if(block->IsSolid()) 
-        {
-            float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
-            Vector2 vel = GetVelocity();
-            vel.x = -vel.x;
-            SetVelocity(vel);
-        }
-        return;
-    }
-}
+//     if (event.contactNormal.x != 0 && block) 
+//     {
+//         if(block->IsSolid()) 
+//         {
+//             float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
+//             Vector2 vel = GetVelocity();
+//             vel.x = -vel.x;
+//             SetVelocity(vel);
+//         }
+//         return;
+//     }
+// }
 
 
-void RedTroopas::OnNoCollision(float dt, Axis axis)
-{
-    if (m_state == WALKING && axis == Axis::Y && !m_isColliding) {
-        Vector2 vel = GetVelocity();
-        m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
-        
-        // If we just landed on the ground after falling, check for edges
-        if (m_isGrounded ) {
-            // Only check edge if we didn't already change direction
-            if (!CheckEdge()) {
-                // No edge detected, just reverse direction
-                vel.x = -vel.x;
-                SetVelocity(vel);
-                UpdateSpriteDirection(); 
-            }
-        }
-    }
-}
+// void RedTroopas::OnNoCollision(float dt, Axis axis)
+// {
+//     // if (m_state == WALKING && axis == Axis::Y && !m_isColliding) {
+//     //     Vector2 vel = GetVelocity();
+//     //     m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
+
+//     //     if (m_isGrounded ) {
+//     //         // Only check edge if we didn't already change direction
+//     //         if (!CheckEdge()) {
+//     //             vel.x = -vel.x;
+//     //             SetVelocity(vel);
+//     //             UpdateSpriteDirection(); 
+//     //         }
+//     //     }
+//     // }
+// }
 
 void RedTroopas::UpdateInteractionPointState(InteractionPointType type, bool isColliding) {
     m_pointCollisionState[type] = isColliding;

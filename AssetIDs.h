@@ -51,6 +51,8 @@ constexpr auto ID_ANIM_MARIO_HOLD                   = 80;
 //Red Troopa
 constexpr auto ID_ANIM_RED_TROOPAS_WALK              = 400;
 constexpr auto ID_ANIM_RED_TROOPAS_SHELL             = 410;
+constexpr auto ID_ANIM_RED_TROOPAS_SHELL_SLIDE       = 420;
+constexpr auto ID_ANIM_RED_TROOPAS_SHELL_REVIVE      = 430;
 
 // Goomba
 constexpr auto ID_ANIM_GOOMBA_WALK                  = 500;
