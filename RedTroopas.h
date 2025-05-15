@@ -28,39 +28,42 @@ public:
     void UpdateSpriteDirection();
 
     void TransformToShell();
-    // void TransformToTroopa();
+    void TransformToTroopa();
     
     // Check for platform edges using raycasts
     bool CheckEdge();
 
-    bool UsesInteractionPoints() const override;
-
-    std::vector<std::pair<InteractionPointType, DirectX::SimpleMath::Vector2>> GetInteractionPoints() const override;
-    
-    // void OnFootCollision(const CollisionResult& event) override;
-    // void OnTopHeadCollision(const CollisionResult& event) override;
-    // void OnLeftSideCollision(const CollisionResult& event) override;
-    // void OnRightSideCollision(const CollisionResult& event) override;
-    // void OnNoCollision(float dt, Axis axis) override;
     void OnCollision(const CollisionResult& event) override;
-    void UpdateInteractionPointState(InteractionPointType type, bool isColliding);
-    void ResetInteractionPoints();
+
+    void StartVibration();
+    void UpdateVibration(float dt);
     
-    private:
+private:
     float m_animTimer;
     float m_frameTime;
     bool m_flipFrame;
     float m_deathTimer;
     bool m_isDying;
+
+    bool m_isVibrating;
+    float m_vibrateTimer;
+    float m_vibrateInterval;
+    float m_vibrateAmplitude;
+    int m_vibrateCount;
+    int m_maxVibrateCount;
+    Vector2 m_originalPosition;
+    bool m_vibrateDirection; 
+    bool m_firstRevivePhase;
+    bool m_secondRevivePhase;
+
+    float m_reviveTimer;
+    float m_reviveTime;
     
     bool m_isColliding;
     
-    // Store the last direction for comparison
     float m_lastDirectionX;
 
     std::vector<Effect*> m_bonkEffects;
-
-    // Direction change cooldown to prevent rapid reversals
     
     std::map<InteractionPointType, bool> m_pointCollisionState;
     

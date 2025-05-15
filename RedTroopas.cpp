@@ -12,10 +12,19 @@
 RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     : Entity(position,size, spriteSheet)
     , m_animTimer(0.0f)
-    , m_frameTime(0.15f)  // Controls how fast the flip animation occurs
+    , m_frameTime(0.15f)
     , m_flipFrame(false)
-    , m_lastDirectionX(-1.0f)  // Initialize to match initial velocity direction (left)
+    , m_lastDirectionX(-1.0f)
     , m_isColliding(false)
+    , m_reviveTimer(0.0f)
+    , m_reviveTime(5.0f)
+    , m_isVibrating(false)
+    , m_vibrateTimer(0.0f)
+    , m_vibrateInterval(0.0f)
+    , m_vibrateAmplitude(0.0f)
+    , m_vibrateCount(0)
+    , m_maxVibrateCount(0)
+
 {
     SetAnimation(ID_ANIM_RED_TROOPAS_WALK, true);
     m_visible = true; // Set visibility to true
@@ -55,6 +64,24 @@ void RedTroopas::Die(DyingType type)
 
 void RedTroopas::Update(float dt)
 {
+
+    if (m_isVibrating) {
+        UpdateVibration(dt);
+        Entity::Update(dt);
+        return;
+    }
+
+    if (m_state == SHELL_IDLE) {
+        m_reviveTimer += dt;
+        if (m_reviveTimer >= 5.0f && !m_isVibrating) {  
+            StartVibration();
+            m_reviveTimer = 0.0f;
+        }
+    } else {
+
+        m_reviveTimer = 0.0f;
+    }
+
     m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
     
     // Check for platform edges using raycasting if the entity is grounded
@@ -292,11 +319,8 @@ void RedTroopas::UpdateSpriteDirection()
 {
     Vector2 vel = GetVelocity();
     
-    // Only update if there's horizontal movement and the direction has changed
-    // This ensures we only flip the sprite when actually changing direction
     if (vel.x != 0 && ((vel.x > 0) != (m_lastDirectionX > 0)))
     {
-        // Update the animator's flip state based on direction
         if (GetAnimator())
         {
 
@@ -324,24 +348,83 @@ void RedTroopas::TransformToShell()
 
 }
 
-bool RedTroopas::UsesInteractionPoints() const
+void RedTroopas::TransformToTroopa()
 {
-    return false;  // Disable interaction points for RedTroopas
+    if (m_state == SHELL_IDLE) {
+        m_state = WALKING;
+    }
+    Mario* m_mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
+
+    Vector2 newSize = Vector2(16.0f, 27.0f);
+    m_collisionComponent->SetSize(newSize);
+    m_collisionComponent->SetPosition(GetPosition() - Vector2(0.0f, 5.0f));
+    
+    if(m_mario) {
+        Vector2 marioPos = m_mario->GetPosition();
+        Vector2 goombaPos = GetPosition();
+        
+        if (marioPos.x < goombaPos.x + 8.0f) {
+            SetVelocity(Vector2(-GameConfig::Enemies::Troopas::WALK_SPEED, 0.0f));
+        } else {
+            SetVelocity(Vector2(GameConfig::Enemies::Troopas::WALK_SPEED, 0.0f));
+        }
+    }
+    m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_WALK, true);
 }
 
-std::vector<std::pair<InteractionPointType, Vector2>> RedTroopas::GetInteractionPoints() const
-{
-    std::vector<std::pair<InteractionPointType, Vector2>> points;
-    Vector2 size = GetCollisionComponent()->GetSize();
-    
-    points.push_back({ InteractionPointType::LeftFoot, Vector2(-size.x / 4 , size.y / 2 - 1.0f) });
-    points.push_back({ InteractionPointType::RightFoot, Vector2(size.x / 4 , size.y / 2 - 1.0f) });
-    points.push_back({ InteractionPointType::LeftUpper, Vector2(-size.x / 2 , -size.y / 4) });
-    points.push_back({ InteractionPointType::RightUpper, Vector2(size.x / 2 , -size.y / 4) });
-    points.push_back({ InteractionPointType::TopHead, Vector2(0.0f , -size.y / 2) });
-    points.push_back({ InteractionPointType::LeftLower, Vector2(-size.x / 2 , size.y / 4) });
-    points.push_back({ InteractionPointType::RightLower, Vector2(size.x / 2 , size.y / 4) });
-    
-    return points;
+void RedTroopas::StartVibration() {
+    if (!m_isVibrating) {
+        m_isVibrating = true;
+        m_vibrateTimer = 0.0f;
+        m_vibrateInterval = 0.03f;        
+        m_vibrateAmplitude = 1.0f;        
+        m_vibrateCount = 0;
+        m_maxVibrateCount = 20;          
+        m_originalPosition = GetPosition(); 
+        m_vibrateDirection = true;
+        m_firstRevivePhase = false;
+        m_secondRevivePhase = false;
+        
+
+        m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_REVIVE_SLOW, false);
+   
+        m_reviveTimer = 0.0f;
+        m_reviveTime = 1.77f; 
+    }
 }
 
+void RedTroopas::UpdateVibration(float dt) {
+    if (!m_isVibrating) return;
+    
+    m_vibrateTimer += dt;
+    m_reviveTimer += dt;
+    
+   
+    if (m_vibrateTimer >= m_vibrateInterval) {
+        m_vibrateTimer = 0.0f;
+        m_vibrateCount++;
+        
+        float offsetX = m_vibrateDirection? -m_vibrateAmplitude : 0;
+
+        m_vibrateDirection = !m_vibrateDirection;
+
+        SetPosition(m_originalPosition + Vector2(offsetX, 0.0f));
+    
+    }
+
+    if (m_reviveTimer > 0.5f && m_reviveTimer < 1.12f &&!m_firstRevivePhase) {
+        m_firstRevivePhase = true;
+        m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_REVIVE_SLOW, true);
+    }
+
+    if (m_reviveTimer >= 1.12f && !m_secondRevivePhase) {
+        m_secondRevivePhase = true;
+        m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_REVIVE_FAST, true);
+    }
+    
+    if (m_reviveTimer >= m_reviveTime) {
+        SetPosition(m_originalPosition);
+        m_isVibrating = false;
+        TransformToTroopa();
+    }
+}

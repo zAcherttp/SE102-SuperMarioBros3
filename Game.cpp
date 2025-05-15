@@ -91,6 +91,7 @@ void Game::Update(DX::StepTimer const& timer) {
 
 	m_hud->Update(elapsedTime);
 }
+
 #pragma endregion
 
 void Game::HandleInput() {

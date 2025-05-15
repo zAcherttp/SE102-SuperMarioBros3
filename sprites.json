@@ -733,6 +733,20 @@
         "frames": ["redtroopa-shell1", "redtroopa-shell2", "redtroopa-shell3"],
         "loop": true,
         "timePerFrame": 0.1
+      },
+      {
+        "id": 430,
+        "name": "red-troopa-revive-slow",
+        "frames": ["redtroopa-shell1", "redtroopa-shell1-alt"],
+        "loop": true,
+        "timePerFrame": 0.15
+      },
+      {
+        "id": 440,
+        "name": "red-troopa-revive-fast",
+        "frames": ["redtroopa-shell1", "redtroopa-shell1-alt"],
+        "loop": true,
+        "timePerFrame": 0.05
       }
     ]
   }
