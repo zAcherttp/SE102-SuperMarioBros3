@@ -99,6 +99,7 @@ void Mario::ItsAMe()
 	this->m_movementSM = new MarioIdleState(Direction::Right);
 	this->m_powerupSM->Enter(this);
 	this->m_movementSM->Enter(this);
+	this->SetDirection(1);
 
 	Log(LOG_INFO, "Mario position: " + std::to_string(this->GetPosition().x) + ", " + std::to_string(this->GetPosition().y));
 	Log(LOG_INFO, "It's A Me, Mario");

@@ -82,9 +82,30 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 }
 
 void World::Update(float dt) {
-
+	m_entities.erase(
+		std::remove_if(m_entities.begin(), m_entities.end(),
+		[](Entity* e) { return e == nullptr || !e->IsActive(); }),
+		m_entities.end()
+	);
+	
+	
+	if (m_collisionSystem) {
+		
+		if (m_player) {
+			m_collisionSystem->UpdateEntity(m_player, dt);
+		}
+		
+		for (auto e : m_entities) {
+			if (!e->IsStatic()) {
+				m_collisionSystem->UpdateEntity(e, dt);
+			}
+		}
+		
+		m_collisionSystem->ProcessCollisions(dt);
+	}
+	
 	if (m_isPaused) return;
-
+	
 	if (m_player) {
 		m_player->Update(dt);
 		Vector2 pos = m_player->GetPosition();
@@ -94,41 +115,14 @@ void World::Update(float dt) {
 		//clamp position to nearest pixel to avoid pixel rendering artifacts
 		//cameraPos.x = (int)(cameraPos.x + 0.5f);
 		cameraPos.y = 239;
-
+	
 		Game::GetInstance()->SetCameraPosition(cameraPos, false);
 		//Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
 	}
 
-
-	m_entities.erase(
-		std::remove_if(m_entities.begin(), m_entities.end(),
-			[](Entity* e) { return e == nullptr || !e->IsActive(); }),
-		m_entities.end()
-	);
-
 	for (auto e : m_entities) {
 		e->Update(dt);
 	}
-
-	if (m_collisionSystem) {
-
-		if (m_player) {
-			m_collisionSystem->UpdateEntity(m_player, dt);
-		}
-
-		for (auto e : m_entities) {
-			if (!e->IsStatic()) {
-				m_collisionSystem->UpdateEntity(e, dt);
-			}
-		}
-
-		m_collisionSystem->ProcessCollisions(dt);
-	}
-	
-	for (auto e : m_entities) {
-		e->Update(dt);
-	}
-
 }
 
 void World::Render(DirectX::SpriteBatch* spriteBatch) {
