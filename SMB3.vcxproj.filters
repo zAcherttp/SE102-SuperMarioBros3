@@ -205,6 +205,7 @@
     </ClInclude>
     <ClInclude Include="RedTroopas.h" />
     <ClInclude Include="Effect.h" />
+    <ClInclude Include="EffectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -351,6 +352,7 @@
     <ClCompile Include="Game.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="EffectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">

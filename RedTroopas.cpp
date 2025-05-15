@@ -153,7 +153,7 @@ void RedTroopas::OnCollision(const CollisionResult& event)
                 entity->Die(DyingType::BONKED);
                 Game* game = Game::GetInstance();
                 SpriteSheet* spriteSheet = game->GetSpriteSheet();
-                m_bonkEffects.push_back(new Effect(entity->GetPosition(), Vector2::Zero, spriteSheet, EffectType::BONK));
+                EffectManager::GetInstance()->CreateBonkEffect(entity->GetPosition());
             }
         }
 

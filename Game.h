@@ -12,6 +12,7 @@
 #include "StepTimer.h"
 #include "HeadUpDisplay.h"
 #include "json.hpp"
+#include "EffectManager.h"
 
 using json = nlohmann::json;
 
@@ -113,6 +114,7 @@ private:
     std::wstring m_spriteFontPath;
 
     std::unique_ptr<HeadUpDisplay> m_hud;
+    std::unique_ptr<EffectManager> m_effectManager;
 
 	std::unique_ptr<SpriteSheet> m_spriteSheet;
     std::wstring m_spritePath;

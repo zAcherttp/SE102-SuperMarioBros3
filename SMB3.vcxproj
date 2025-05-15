@@ -196,6 +196,7 @@
     <ClInclude Include="DebugOverlay.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Effect.h" />
+    <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EndPortal.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FirePiranha.h" />
@@ -242,6 +243,7 @@
     <ClCompile Include="DebugOverlay.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="EndPortal.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FirePiranha.cpp" />

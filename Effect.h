@@ -21,7 +21,6 @@ public:
     void Deactivate();
     bool IsActive() const { return m_isActive; }
     
-
 private:
     float m_animTimer;
     EffectType m_type;
@@ -29,6 +28,5 @@ private:
     bool m_isFlipped;
     float m_flipTimer;
     float m_flipTime;
+
 };
-
-

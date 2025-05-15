@@ -90,6 +90,7 @@ void Game::Update(DX::StepTimer const& timer) {
 	if (m_nextWorldId != m_currentWorldId) SwitchWorld();
 
 	m_hud->Update(elapsedTime);
+	m_effectManager->Update(elapsedTime);
 }
 
 #pragma endregion
@@ -151,6 +152,8 @@ void Game::Render() {
 			m_states->PointClamp(), nullptr, nullptr, nullptr, m_camera->GetGameViewMatrix());
 
 		GetCurrentWorld()->Render(m_spriteBatch.get());
+		
+		m_effectManager->Render(m_spriteBatch.get());
 
 		m_spriteBatch->End();
 
@@ -441,6 +444,8 @@ void Game::CreateDeviceDependentResources() {
 	m_effect = std::make_unique<BasicEffect>(device);
 	m_effect->SetVertexColorEnabled(true);
 	m_effect->SetWorld(Matrix::Identity);
+
+	m_effectManager = std::make_unique<EffectManager>(m_spriteSheet.get());
 
 	DX::ThrowIfFailed(CreateInputLayoutFromEffect<VertexPositionColor>(
 		device, m_effect.get(), m_inputLayout.ReleaseAndGetAddressOf()));
