@@ -1,4 +1,4 @@
-	#pragma once
+#pragma once
 #include "pch.h"
 #include "Mario.h"
 #include "AssetIDs.h"
@@ -18,12 +18,14 @@ using Keyboard = DirectX::Keyboard;
 #define B_BTN		Keyboard::J
 #define A_BTN		Keyboard::K
 
+constexpr auto PLAYER_HOLD_THROW_SPEED = 4.0f * 60.0f;
+
 Mario::Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spriteSheet)
 	: Entity(position, spriteSheet), m_lives(lives), m_score(score), m_coins(coins)
 {
-	this->m_powerupSM = nullptr;
-	this->m_movementSM = nullptr;
-	this->m_inputState = new InputState();
+	m_powerupSM = nullptr;
+	m_movementSM = nullptr;
+	m_inputState = new InputState();
 }
 
 void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker* kbsTracker) {
@@ -51,24 +53,18 @@ void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 
 	if (!m_movementSM) return;
 
-	MarioPowerUpState* mPState = m_powerupSM->HandleInput(this);
-	MarioMovementState* mMState = m_movementSM->HandleInput(this);
+	auto mPState = m_powerupSM->HandleInput(this);
+	auto mMState = m_movementSM->HandleInput(this);
 
-	if (mPState != nullptr) {
+	if (mPState) {
 		m_powerupSM->Exit(this);
-
-		delete m_powerupSM;
-		m_powerupSM = mPState;
-
+		m_powerupSM = std::move(mPState);
 		m_powerupSM->Enter(this);
 	}
 
-	if (mMState != nullptr) {
+	if (mMState) {
 		m_movementSM->Exit(this);
-
-		delete m_movementSM;
-		m_movementSM = mMState;
-
+		m_movementSM = std::move(mMState);
 		m_movementSM->Enter(this);
 	}
 }
@@ -94,13 +90,13 @@ bool Mario::UsesInteractionPoints() const
 void Mario::ItsAMe()
 {
 	// set default for now, later game class will have mario factory
-	
-	this->m_powerupSM = new MarioSmallState();
-	this->m_movementSM = new MarioIdleState(Direction::Right);
-	this->m_powerupSM->Enter(this);
-	this->m_movementSM->Enter(this);
 
-	Log(LOG_INFO, "Mario position: " + std::to_string(this->GetPosition().x) + ", " + std::to_string(this->GetPosition().y));
+	m_powerupSM = std::make_unique<MarioSmallState>();
+	m_movementSM = std::make_unique<MarioIdleState>(Direction::Right);
+	m_powerupSM->Enter(this);
+	m_movementSM->Enter(this);
+
+	Log(LOG_INFO, "Mario position: " + std::to_string(GetPosition().x) + ", " + std::to_string(GetPosition().y));
 	Log(LOG_INFO, "It's A Me, Mario");
 }
 
@@ -124,7 +120,7 @@ void Mario::Update(float dt)
 }
 
 void Mario::Render(DirectX::SpriteBatch* spriteBatch) {
-		if (m_visible) {
+	if (m_visible) {
 		// round the position to the nearest pixel
 		Vector2 pos = m_collisionComponent->GetPosition();
 		/*pos.x = static_cast<int>(pos.x + 0.5f);
@@ -145,7 +141,7 @@ std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetSmallMarioIntera
 	points.push_back({ InteractionPointType::RightLower, Vector2(size.x / 2, size.y / 4) });
 	points.push_back({ InteractionPointType::LeftFoot, Vector2(-size.x / 4, size.y / 2) });
 	points.push_back({ InteractionPointType::RightFoot, Vector2(size.x / 4, size.y / 2) });
-	
+
 	return points;
 }
 
@@ -184,7 +180,7 @@ void Mario::OnCollision(const CollisionResult& result) {
 
 void Mario::OnNoCollision(float dt, Axis axis) {
 	Vector2 vel = GetVelocity();
-	if(axis == Axis::X) {
+	if (axis == Axis::X) {
 		SetPosition(GetPosition() + Vector2(vel.x * dt, 0));
 	}
 	else {
@@ -212,9 +208,9 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 			Vector2 pos = GetPosition();
 			Vector2 size = GetSize();
 			float pushDistance = (size.x + otherSize.x) / 2;
-			if(result.contactNormal.x > 0)
+			if (result.contactNormal.x > 0)
 				pushDistance -= (pos.x - otherPos.x);
-			if(result.contactNormal.x < 0)
+			if (result.contactNormal.x < 0)
 				pushDistance -= (otherPos.x - pos.x);
 
 			m_collisionComponent->Push(Vector2(pushDistance, 0), 0.1);
@@ -259,6 +255,8 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+	//TODO: add this line
+	//Shell* shell = dynamic_cast<Shell*>(result.collidedWith);
 	if (result.contactNormal.x < 0) {
 		if (block && block->IsSolid())
 		{
@@ -266,8 +264,11 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
 			SetVelocity(vel);
 		}
-		else {
-
+		else if (m_inputState->isBDown && m_movementSM->GetStateName() != "hold") { // && shell && isHoldable
+			m_movementSM->Exit(this);
+			auto state = std::make_unique<MarioHoldState>(m_movementSM->GetDirection(), result.collidedWith);
+			m_movementSM = std::move(state);
+			m_movementSM->Enter(this);
 		}
 	}
 	else if (result.contactNormal.y != 0) {
@@ -275,7 +276,7 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 		{
 			Vector2 otherSize = result.collidedWith->GetSize();
 			Vector2 otherPos = result.collidedWith->GetPosition();
-			
+
 			float pushDistance = otherPos.x - otherSize.x / 2 - result.contactPoint.x;
 
 			m_collisionComponent->Push(Vector2(pushDistance, 0), 0.1);
@@ -294,8 +295,11 @@ void Mario::OnLeftSideCollision(const CollisionResult& result) {
 			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
 			SetVelocity(vel);
 		}
-		else {
-
+		else if (m_inputState->isBDown && m_movementSM->GetStateName() != "hold") { // && shell && isHoldable
+			m_movementSM->Exit(this);
+			auto state = std::make_unique<MarioHoldState>(m_movementSM->GetDirection(), result.collidedWith);
+			m_movementSM = std::move(state);
+			m_movementSM->Enter(this);
 		}
 	}
 	else if (result.contactNormal.y != 0) {

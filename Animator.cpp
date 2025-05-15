@@ -123,18 +123,16 @@ void Animator::Update(float elapsed, float velocity)
 void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& position, const float& depth)
 {
 	if (m_currentSequence < 0 || !m_spriteSheet)
-
 		return;
 
 	auto it = m_animations.find(m_currentSequence);
-
-	if (it->second.frames.empty())
-		// Log(__FUNCTION__, "Animation frames empty for: " + std::to_string(m_currentSequence));
-
-		if (it == m_animations.end() || it->second.frames.empty())
-			return;
+	if (it == m_animations.end() || it->second.frames.empty())
+		return;
 
 	const AnimationSequence& sequence = it->second;
+
+	if (sequence.frames.empty())
+		return;
 
 	//Log(__FUNCTION__, "drawing current frame ");
 	if (m_currentFrame < 0 || m_currentFrame >= sequence.frames.size())
@@ -161,11 +159,14 @@ void Animator::Draw(DirectX::SpriteBatch* batch, const int& id, const DirectX::X
 		return;
 
 	auto it = m_animations.find(id);
-
-	if (it == m_animations.end() || it->second.frames.empty())
+	if (it == m_animations.end())
 		return;
 
 	const AnimationSequence& sequence = it->second;
+
+	if (sequence.frames.empty())
+		return;
+
 	const SpriteSheet::SpriteFrame* frame = sequence.frames[0];
 
 	m_spriteSheet->Draw(batch, *frame, position, DirectX::Colors::White,

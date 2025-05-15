@@ -76,8 +76,8 @@ private:
 
 	InputState* m_inputState;
 
-	MarioMovementState* m_movementSM;
-	MarioPowerUpState* m_powerupSM;
+	std::unique_ptr<MarioMovementState> m_movementSM;
+	std::unique_ptr<MarioPowerUpState> m_powerupSM;
 
 	std::vector<std::pair<InteractionPointType, Vector2>> GetSmallMarioInteractionPoints() const;
 	std::vector<std::pair<InteractionPointType, Vector2>> GetBigMarioInteractionPoints() const;

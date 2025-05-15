@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "AssetIDs.h"
 #include "Mario.h"
-#include "MarioStateFactory.h"
 #include "MarioPowerUpStates.h"
 
 std::string MarioSmallState::GetStateName() const { return "small"; }
@@ -28,7 +27,7 @@ void MarioPowerUpState::Exit(Mario* mario)
     SetAnimation(mario, mario->GetCurrentMStateAnimValue() - mario->GetCurrentPStateAnimValue());
 }
 
-MarioPowerUpState* MarioSmallState::HandleInput(Mario* mario)
+std::unique_ptr<MarioPowerUpState> MarioSmallState::HandleInput(Mario* mario)
 {
     // do absolutely nothing
     mario;
@@ -41,7 +40,7 @@ void MarioSmallState::Update(Mario* mario, float dt)
     mario, dt;
 }
 
-MarioPowerUpState* MarioSuperState::HandleInput(Mario* mario)
+std::unique_ptr<MarioPowerUpState> MarioSuperState::HandleInput(Mario* mario)
 {
     // do absolutely nothing
 	mario;
@@ -54,7 +53,7 @@ void MarioSuperState::Update(Mario* mario, float dt)
 	mario, dt;
 }
 
-MarioPowerUpState* MarioRaccoonState::HandleInput(Mario* mario)
+std::unique_ptr<MarioPowerUpState> MarioRaccoonState::HandleInput(Mario* mario)
 {
     // do absolutely nothing
 	mario;

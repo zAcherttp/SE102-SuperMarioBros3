@@ -9,7 +9,7 @@ using namespace DirectX::SimpleMath;
 class MarioPowerUpState : public MarioStateBase {
 public:
 	MarioPowerUpState() : MarioStateBase() {};
-	virtual MarioPowerUpState* HandleInput(Mario* mario) = 0;
+	virtual std::unique_ptr<MarioPowerUpState> HandleInput(Mario* mario) = 0;
 	void Update(Mario* mario, float dt) override = 0;
 	void Enter(Mario* mario) override;
 	void Exit(Mario* mario) override;
@@ -18,7 +18,7 @@ public:
 class MarioSmallState : public MarioPowerUpState {
 public:
 	MarioSmallState() : MarioPowerUpState() {};
-	MarioPowerUpState* HandleInput(Mario* mario) override;
+	std::unique_ptr<MarioPowerUpState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
@@ -28,7 +28,7 @@ public:
 class MarioSuperState : public MarioPowerUpState {
 public:
 	MarioSuperState() : MarioPowerUpState() {};
-	MarioPowerUpState* HandleInput(Mario* mario) override;
+	std::unique_ptr<MarioPowerUpState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
@@ -38,7 +38,7 @@ public:
 class MarioRaccoonState : public MarioPowerUpState {
 public:
 	MarioRaccoonState() : MarioPowerUpState() {};
-	MarioPowerUpState* HandleInput(Mario* mario) override;
+	std::unique_ptr<MarioPowerUpState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;

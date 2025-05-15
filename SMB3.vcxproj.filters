@@ -124,9 +124,6 @@
     <ClInclude Include="MarioStateBase.h">
       <Filter>Source\Entity\Mario</Filter>
     </ClInclude>
-    <ClInclude Include="MarioStateFactory.h">
-      <Filter>Source\Entity\Mario</Filter>
-    </ClInclude>
     <ClInclude Include="ScrewBlock.h">
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
@@ -269,9 +266,6 @@
       <Filter>Source\Entity\Mario</Filter>
     </ClCompile>
     <ClCompile Include="MarioStateBase.cpp">
-      <Filter>Source\Entity\Mario</Filter>
-    </ClCompile>
-    <ClCompile Include="MarioStateFactory.cpp">
       <Filter>Source\Entity\Mario</Filter>
     </ClCompile>
     <ClCompile Include="Pipe.cpp">

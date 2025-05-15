@@ -136,7 +136,7 @@ void Game::Render() {
 		context->RSGetViewports(&viewportCount, &oldViewport);
 
 		ID3D11ShaderResourceView* const nullSRVs[1] = { nullptr };
-        context->PSSetShaderResources(0, 1, nullSRVs);
+		context->PSSetShaderResources(0, 1, nullSRVs);
 
 		context->OMSetRenderTargets(1, m_gameRenderTargetView.GetAddressOf(),
 			nullptr);
@@ -186,7 +186,7 @@ void Game::Render() {
 		m_primitiveBatch->Begin();
 
 		GetCurrentWorld()->RenderDebug(m_primitiveBatch.get());
-		
+
 		m_primitiveBatch->End();
 
 		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
@@ -275,7 +275,7 @@ void Game::GetDefaultGameSize(int& width, int& height) const noexcept {
 }
 
 void Game::GetDefaultGameTitle(LPCWSTR& title) const noexcept {
-	title = m_gameTitle.c_str()	;
+	title = m_gameTitle.c_str();
 }
 
 #pragma endregion
@@ -328,7 +328,7 @@ void Game::LoadGameConfig(const json& config)
 
 	std::string fontPath = config["game"]["sprites"]["font"];
 	m_spriteFontPath = std::wstring(fontPath.begin(), fontPath.end());
-	
+
 	std::string title(config["game"]["title"]);
 	m_gameTitle = std::wstring(title.begin(), title.end());
 
@@ -387,7 +387,7 @@ void Game::SwitchWorld()
 	m_isLoading = true;
 	if (m_worlds[m_currentWorldId] != NULL)
 		m_worlds[m_currentWorldId]->Unload();
-		m_currentWorldId = m_nextWorldId;
+	m_currentWorldId = m_nextWorldId;
 
 	//TODO: clean up sprites/anims
 
