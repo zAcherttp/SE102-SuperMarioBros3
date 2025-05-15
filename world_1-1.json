@@ -692,7 +692,7 @@
       "countY": 5,
       "solid": false,
       "floating": false,
-      "color": 0,
+      "color": 2,
       "depth": 1.0
     },
     {
@@ -705,7 +705,7 @@
       "countY": 3,
       "solid": false,
       "floating": false,
-      "color": 0,
+      "color": 3,
       "depth": 0.9
     },
     {
@@ -718,7 +718,7 @@
       "countY": 2,
       "solid": false,
       "floating": false,
-      "color": 0,
+      "color": 3,
       "depth": 0.9
     },
     {
@@ -757,7 +757,7 @@
       "countY": 2,
       "solid": false,
       "floating": false,
-      "color": 0,
+      "color": 3,
       "depth": 0.9
     },
     {
@@ -783,7 +783,7 @@
       "countY": 6,
       "solid": false,
       "floating": false,
-      "color": 0,
+      "color": 2,
       "depth": 1.0
     },
     {
@@ -822,7 +822,7 @@
       "countY": 9,
       "solid": false,
       "floating": false,
-      "color": 0,
+      "color": 3,
       "depth": 1.0
     },
     {

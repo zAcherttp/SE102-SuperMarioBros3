@@ -22,7 +22,7 @@
       {
         "id": 130,
         "name": "mario_small_sprint",
-        "frames": [ "small-run1", "small-run2" ],
+        "frames": ["small-run1", "small-run2"],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
@@ -401,31 +401,31 @@
       {
         "id": 2535,
         "name": "green-mid-right",
-        "frames": ["green-mid-right"],
+        "frames": ["green-right-mid"],
         "loop": false
       },
       {
         "id": 2536,
-        "name": "green-bot-left",
-        "frames": ["green-bot-left"],
+        "name": "green-bottom-left",
+        "frames": ["green-bottom-left"],
         "loop": false
       },
       {
         "id": 2537,
-        "name": "green-bot-mid",
-        "frames": ["green-bot-mid"],
+        "name": "green-bottom-mid",
+        "frames": ["green-bottom-mid"],
         "loop": false
       },
       {
         "id": 2538,
-        "name": "green-bot-right",
-        "frames": ["green-bot-right"],
+        "name": "green-bottom-right",
+        "frames": ["green-bottom-right"],
         "loop": false
       },
       {
         "id": 2520,
         "name": "blue-top-left",
-        "frames": ["blue-top-left"],
+        "frames": ["blue-left-top"],
         "loop": false
       },
       {
@@ -437,7 +437,7 @@
       {
         "id": 2522,
         "name": "blue-top-right",
-        "frames": ["blue-top-right"],
+        "frames": ["blue-right-top"],
         "loop": false
       },
       {
@@ -455,25 +455,25 @@
       {
         "id": 2525,
         "name": "blue-mid-right",
-        "frames": ["blue-mid-right"],
+        "frames": ["blue-right-mid"],
         "loop": false
       },
       {
         "id": 2526,
         "name": "blue-bot-left",
-        "frames": ["blue-bot-left"],
+        "frames": ["blue-bottom-left"],
         "loop": false
       },
       {
         "id": 2527,
         "name": "blue-bot-mid",
-        "frames": ["blue-bot-mid"],
+        "frames": ["blue-bottom-mid"],
         "loop": false
       },
       {
         "id": 2528,
         "name": "blue-bot-right",
-        "frames": ["blue-bot-right"],
+        "frames": ["blue-right-bottom"],
         "loop": false
       }
     ]
@@ -513,7 +513,7 @@
       {
         "id": 240,
         "name": "brick",
-        "frames": ["brick1", "brick2", "brick3", "brick4"],
+        "frames": ["brick-1", "brick-2", "brick-3", "brick-4"],
         "loop": true,
         "timePerFrame": 0.3
       }
