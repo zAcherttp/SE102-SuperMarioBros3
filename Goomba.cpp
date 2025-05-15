@@ -5,6 +5,8 @@
 #include "Mario.h"
 #include "MarioStateFactory.h"
 #include "GameConfig.h"
+#include "ParaGoomba.h"
+#include "Block.h"
 
 Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     : Entity(position,size, spriteSheet)
@@ -13,8 +15,7 @@ Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     , m_flipFrame(false)
 {
     // Define the animation using the single frame we have
-    std::vector<const wchar_t*> walkFrames = { L"red-goomba-walk" };
-    DefineAnimation(ID_ANIM_GOOMBA_WALK, walkFrames, true, m_frameTime);
+
     SetAnimation(ID_ANIM_GOOMBA_WALK, true);
     m_visible = true; // Set visibility to true
     m_isDying = false; // Initialize dying state
@@ -24,78 +25,125 @@ Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     
     // Setup collision component
     SetupCollisionComponent();
-    Log(__FUNCTION__, "Collision component initialized");
+ 
 }
 
 void Goomba::Render(DirectX::SpriteBatch* spriteBatch)
 {
-    // Debugging render information
-    // Log("GoombaRender", "Rendering at position (" + 
-    //     std::to_string(GetPosition().x) + ", " + 
-    //     std::to_string(GetPosition().y) + ")");
-        
     Entity::Render(spriteBatch);
 }
 
 void Goomba::OnCollision(const CollisionResult& event)
 {
     // Handle general collision
-    Log("GoombaCollision", "Collision detected");
-    Log("GoombaCollision", "Collision normal: " + std::to_string(event.contactNormal.x) + ", " + std::to_string(event.contactNormal.y));
+    // Log("GoombaCollision", "Collision detected");
+    // Log("GoombaCollision", "Collision normal: " + std::to_string(event.contactNormal.x) + ", " + std::to_string(event.contactNormal.y));
     
     // Check if the collision is with Mario
     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
-    
+    ParaGoomba* paraGoomba = dynamic_cast<ParaGoomba*>(event.collidedWith);
+    Block* block = dynamic_cast<Block*>(event.collidedWith);
+
+    if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID) {
+        return;
+    }
+
+    if (event.contactNormal.x != 0 && block  ) // Collision from the sides
+    {
+        if(block->IsSolid()) 
+        {
+            // If hitting a wall (not Mario), reverse direction and maintain standard speed
+            float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
+            Vector2 vel = GetVelocity();
+
+            vel.x = -vel.x;
+            SetVelocity(vel);
+ 
+        }
+        return;
+    }
     if (event.contactNormal.y > 0) // Collision from above
     {
-        Log("GoombaCollision", "Collision from above detected");
-        
         if (mario) {
-            Log("GoombaCollision", "Mario jumped on Goomba's head!");
-            Die(); // Goomba dies when Mario jumps on it
-            
+            Die(DyingType::STOMPED); // Goomba dies when Mario jumps on it
+
             // Make Mario bounce a bit
             Vector2 vel = mario->GetVelocity();
-            vel.y = GameConfig::Mario::STANDARD_JUMP_FORCE; // Use Mario's standard jump force
+            vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
             mario->SetVelocity(vel);
         }
+        return;
     }
-    else if (event.contactNormal.x != 0) // Collision from the sides
-    {
-        Log("GoombaCollision", "Collision from the side detected");
-        
-        // If Mario hit the Goomba from the side
-        if (mario) {
-            Log("GoombaCollision", "Mario collided with Goomba from the side");
-        }
+    if (event.contactNormal.y < 0 && event.collidedWith != mario) {
+        // If hitting ground, immediately stop vertical velocity
+        Vector2 vel = GetVelocity();
+        vel.y = 0.0f;
+        SetVelocity(vel);
+        m_isGrounded = true;
+        return;
     }
 }
 
-void Goomba::Die()
+void Goomba::Die(DyingType type)
 {
-    if (!m_isDying) {
-        m_isDying = true; // Set dying state to true
-        m_isCollidable = false; // Disable collision during death
-        Log("GoombaDie", "Goomba is dying at position (" + std::to_string(GetPosition().x) + ", " + std::to_string(GetPosition().y) + ")");
+    if(!m_isDying)
+    {
+        m_dyingType = type;
+        m_isDying = true; 
+        m_isCollidable = false; 
+        m_deathTimer = 0.0f; 
+    }
+    if(type == DyingType::STOMPED) {
         SetAnimation(ID_ANIM_GOOMBA_DIE, false); // Set death animation
-        m_deathTimer = 0.0f; // Initialize the death timer
+        return;
+    }
+    if(type == DyingType::BONKED) {
+        SetAnimation(ID_ANIM_GOOMBA_WALK, false); 
+        m_animator->SetFlipVertical(true); 
+        SetVelocity(Vector2(GameConfig::Enemies::Goomba::WALK_SPEED,-GameConfig::Enemies::DEATH_BOUNCE_VELOCITY));
+        return;
     }
 }
 
 void Goomba::Update(float dt)
 {
-    if (m_isDying) {
-        m_deathTimer += dt;
-        if (m_deathTimer >=  GameConfig::Enemies::Goomba::DEATH_ANIMATION_TIME) {
-            // After 0.5 seconds, deactivate the Goomba 
-            m_isActive = false;
-            m_visible = false;
-            Log("GoombaDie", "Goomba deactivated after death animation");
-        }
-        return; // Skip normal updates when dying
+    m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
+    if (!m_isGrounded) {
+        Vector2 vel = GetVelocity();
+        vel.y += GameConfig::Physics::GRAVITY * dt;
+        SetVelocity(vel);
     }
+    
+    if (m_isDying && m_isActive) {
+        m_deathTimer += dt;
+        if(m_dyingType == DyingType::STOMPED)
+        {
+            if (m_deathTimer >=  GameConfig::Enemies::DEATH_STOMP_ANI_TIME) {
+                // After 0.5 seconds, deactivate the Goomba
+                m_isActive = false;
+                m_visible = false;// Remove collision component
+                m_collisionComponent = nullptr; // Set to nullptr
+            }
+            return; 
+        }
+        if(m_dyingType == DyingType::BONKED)
+        {
+            if(m_deathTimer >=  GameConfig::Enemies::DEATH_BONK_ANI_TIME) {
+                // After 2.0 seconds, deactivate the Goomba
+                m_isActive = false;
+                m_visible = false;// Remove collision component
+                m_collisionComponent = nullptr; // Set to nullptr
+                return;
+            }
+            SetPosition(GetPosition() + GetVelocity() * dt);
+            return;
+        }
+    }
+    
+    // Check if entity is on ground - important for physics
+    
+    // Apply gravity only if in the air
 
-    // Handle flip animation
     m_animTimer += dt;
     if (m_animTimer >= m_frameTime)
     {
@@ -110,6 +158,7 @@ void Goomba::Update(float dt)
     }
 
     SetPosition(GetPosition() + GetVelocity() * dt);
+ 
     // Update other properties
     Entity::Update(dt);
 }

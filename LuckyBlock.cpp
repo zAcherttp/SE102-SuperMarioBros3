@@ -15,6 +15,7 @@ LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet
 	m_isClaiming = false;
 	m_isClaimed = false;
 
+	m_isCollidable = true;
 
 	// update the collision box to match the size of the ground
 	Vector2 curSize = m_collisionComponent->GetSize();

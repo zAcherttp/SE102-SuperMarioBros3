@@ -216,7 +216,6 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 				pushDistance -= (pos.x - otherPos.x);
 			if(result.contactNormal.x < 0)
 				pushDistance -= (otherPos.x - pos.x);
-
 			m_collisionComponent->Push(Vector2(pushDistance, 0), 0.1);
 		}
 	}

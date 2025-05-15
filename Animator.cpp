@@ -20,9 +20,15 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 	// Load all frames from the sprite sheet
 	for (auto frameName : frameNames)
 	{
+<<<<<<< HEAD
 		//std::wstring fname = std::wstring(frameName);
 		//std::string fstr = std::string(fname.begin(), fname.end());
 		// Log(__FUNCTION__, "Finding frame: " + fstr); // Updated to use 'fstr' instead of 'name.c_str()'
+=======
+		std::wstring name = std::wstring(frameName);
+		std::string str = std::string(name.begin(), name.end());
+		Log(__FUNCTION__, "Finding frame: " + str); // Updated to use 'str' instead of 'name.c_str()'
+>>>>>>> nhan
 		auto frame = m_spriteSheet->Find(frameName);
 		if (frame)
 		{
@@ -37,8 +43,12 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 	// Save the animation
 	m_animations[name] = sequence;
 
+<<<<<<< HEAD
 	// Log(__FUNCTION__, "Loaded animation: " + std::to_string(name));
 
+=======
+	Log(__FUNCTION__, "Loaded animation: " + std::to_string(name));
+>>>>>>> nhan
 }
 
 // Set the current animation and optionally reset it
@@ -55,9 +65,16 @@ void Animator::SetAnimation(const int& id, bool reset)
 	auto it = m_animations.find(id);
 
 
+<<<<<<< HEAD
 	m_currentSequence = id;
 	//Log(__FUNCTION__, "Animation set: " + std::to_string(id));
 	//Log(__FUNCTION__, "Animation frames: " + std::to_string(m_animations[id].frames.size()));
+=======
+		m_currentSequence = id;
+		// Log(__FUNCTION__, "Animation set: " + std::to_string(id));
+		// Log(__FUNCTION__, "Animation frames: " + std::to_string(m_animations[id].frames.size()));
+	
+>>>>>>> nhan
 
 
 

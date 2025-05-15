@@ -25,6 +25,7 @@ public:
 
 	std::vector<Entity*>& GetEntities();
 	Entity* GetPlayer();
+	static World* GetInstance();
 
 	DirectX::XMVECTORF32 GetBackgroundColor() const;
 	std::string GetName() const;
@@ -41,6 +42,8 @@ private:
 	int m_width;
 	int m_height;
 	DirectX::XMVECTORF32 m_background;
+
+	static World* s_instance;
 
 	bool m_isPaused;
 

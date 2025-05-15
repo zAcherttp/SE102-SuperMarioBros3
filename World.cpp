@@ -20,12 +20,19 @@
 #include "BlackBackground.h"
 #include "EndPortal.h"
 #include "Goomba.h"
+#include "ParaGoomba.h"
+#include "FirePiranha.h"
+#include "RedTroopas.h"
 
 using namespace DirectX;
 using Keys = Keyboard::Keys;
 
+World* World::s_instance = nullptr;
+
 World::World(std::string wPath, std::string name)
 {
+	s_instance = this; // singleton instance
+
 	m_path = wPath;
 	m_name = name;
 	m_player = nullptr;
@@ -37,6 +44,9 @@ World::World(std::string wPath, std::string name)
 
 World::~World()
 {
+	if (s_instance == this)
+	s_instance = nullptr;
+
 	if (m_player)
 	{
 		delete m_player;
@@ -114,6 +124,11 @@ void World::Update(float dt) {
 
 		m_collisionSystem->ProcessCollisions(dt);
 	}
+	
+	for (auto e : m_entities) {
+		e->Update(dt);
+	}
+
 }
 
 void World::Render(DirectX::SpriteBatch* spriteBatch) {
@@ -263,120 +278,143 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		}
 		entity = new Mario(position, 0, 0, 0, spriteSheet);
 		break;
-	case ID_ENT_GOOMBA:
-	{
-		entity = new Goomba(position, Vector2(GOOMBA_WIDTH, GOOMBA_HEIGHT), spriteSheet);
-		Log(__FUNCTION__, "Goomba created at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
-		break;
-	}
-	case ID_ENT_GROUND:
-	{
-		float width = data["width"];
-		float height = data["height"];
-		int countX = data["countX"];
-		int countY = data["countY"];
-		bool isSolid = data["solid"];
-		entity = new Ground(position, Vector2(width, height), countX, countY, isSolid, spriteSheet);
-		break;
-	}
-	case ID_ENT_BUSH:
-	{
-		int brushType = data["brushType"];
-		if (brushType == 0)
+		case ID_ENT_GOOMBA:
 		{
-			int tileXcount = data["tileXcount"];
-			entity = new Bush(position, tileXcount, spriteSheet, brushType);
+			float width = data["width"];
+			float height = data["height"];
+			entity = new Goomba(position, Vector2(width, height), spriteSheet);
+			break;
 		}
-		else entity = new Bush(position, 1, spriteSheet, brushType);
-		break;
-	}
-	case ID_ENT_CLOUD:
-	{
-		int cloudType = data["cloudType"];
-		if (cloudType == 0)
+		case ID_ENT_PARAGOOMBA:
 		{
-			int count = data["count"];
-			entity = new Cloud(position, count, spriteSheet, cloudType);
+			float width = data["width"];
+			float height = data["height"];
+			entity = new ParaGoomba(position, Vector2(width, height), spriteSheet);
+			break;
 		}
-		else entity = new Cloud(position, 0, spriteSheet, cloudType);
-		break;
-	}
-	case ID_ENT_SCREW_BLOCK:
-	{
-		float width = data["width"];
-		float height = data["height"];
-		int countX = data["countX"];
-		int countY = data["countY"];
-		bool isSolid = data["solid"];
-		bool isFloating = data["floating"];
-		int color = data["color"];
-		float depth = data["depth"];
-		entity = new ScrewBlock(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, depth, color, isFloating);
-		break;
-	}
-	case ID_ENT_PIPE:
-	{
-		float width = data["width"];
-		float height = data["height"];
-		int countX = data["countX"];
-		int countY = data["countY"];
-		bool isSolid = data["solid"];
-		bool hasHead = data["hasHead"];
-		entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, hasHead);
-		break;
-	}
-	case ID_ENT_BRICK:
-	{
-		float width = data["width"];
-		float height = data["height"];
-		bool isSolid = data["solid"];
-		entity = new Brick(position, Vector2(width, height), isSolid, spriteSheet);
-		break;
-	}
-	case ID_ENT_COIN:
-	{
-		float width = data["width"];
-		float height = data["height"];
-		bool isSolid = data["solid"];
-		entity = new Coin(position, Vector2(width, height), isSolid, spriteSheet);
-		break;
-	}
-	case ID_ENT_SKY_PLATFORM:
-	{
-		float width = data["width"];
-		float height = data["height"];
-		int countX = data["countX"];
-		bool isSolid = data["solid"];
-		entity = new SkyPlatform(position, Vector2(width, height), countX, isSolid, spriteSheet);
-		break;
-	}
-	case ID_ENT_LUCKY_BLOCK:
-	{
-		float width = data["width"];
-		float height = data["height"];
-		bool isSolid = data["solid"];
-		entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet);
-		break;
-	}
-	case ID_ENT_BLACK_BACKGROUND:
-	{
-		float width = data["width"];
-		float height = data["height"];
-		int countX = data["countX"];
-		int countY = data["countY"];
-		int bgtype = data["bgtype"];
-		float depth = data["depth"];
-		entity = new BlackBackground(position, Vector2(width, height), countX, countY, spriteSheet, bgtype, depth);
-		break;
-	}
-	case ID_ENT_END_PORTAL:
-	{
-		float width = data["width"];
-		float height = data["height"];
-		entity = new EndPortal(position, Vector2(width, height), spriteSheet);
-		break;
-	}
+		case ID_ENT_RED_PIRANHA_SPIT_FIRE:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			entity = new FirePiranha(position, Vector2(width, height), spriteSheet);
+			break;
+		}
+		case ID_ENT_RED_TROOPA:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			entity = new RedTroopas(position, Vector2(width, height), spriteSheet);
+			break;
+		}
+		case ID_ENT_GROUND:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			int countX = data["countX"];
+			int countY = data["countY"];
+			bool isSolid = data["solid"];
+			entity = new Ground(position, Vector2(width, height), countX, countY, isSolid, spriteSheet);
+			break;
+		}
+		 case ID_ENT_BUSH:
+		 {
+		 	int brushType = data["brushType"];
+			if(brushType ==0)
+			{
+				int tileXcount = data["tileXcount"];
+				entity = new Bush(position, tileXcount, spriteSheet, brushType);
+			}
+			else entity = new Bush(position,1, spriteSheet, brushType);
+		 	break;
+		 }
+		 case ID_ENT_CLOUD:
+		 {
+		 	int cloudType = data["cloudType"];
+			if(cloudType == 0)
+			{
+				int count = data["count"];
+				entity = new Cloud(position, count, spriteSheet, cloudType);
+			}
+			else entity = new Cloud(position, 0, spriteSheet, cloudType);
+		 	break;
+		 }
+		 case ID_ENT_SCREW_BLOCK:
+		 {
+			float width = data["width"];
+			float height = data["height"];
+			int countX = data["countX"];
+			int countY = data["countY"];
+			bool isSolid = data["solid"];
+			bool isFloating = data["floating"];
+			int color = data["color"];
+			float depth = data["depth"];
+			entity = new ScrewBlock(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, depth, color, isFloating);
+			break;
+		}	
+		case ID_ENT_PIPE:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			int countX = data["countX"];
+			int countY = data["countY"];
+			bool isSolid = data["solid"];
+			bool hasHead = data["hasHead"];
+			entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, hasHead);
+			break;
+		}
+		case ID_ENT_BRICK:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			bool isSolid = data["solid"];
+			entity = new Brick(position, Vector2(width, height), isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_COIN:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			bool isSolid = data["solid"];
+			entity = new Coin(position, Vector2(width, height), isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_SKY_PLATFORM:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			int countX = data["countX"];
+			bool isSolid = data["solid"];
+			entity = new SkyPlatform(position, Vector2(width, height), countX, isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_LUCKY_BLOCK:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			bool isSolid = data["solid"];
+			entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet);
+			break;
+		}
+		case ID_ENT_BLACK_BACKGROUND:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			int countX = data["countX"];
+			int countY = data["countY"];
+			int bgtype = data["bgtype"];
+			float depth = data["depth"];
+			entity = new BlackBackground(position, Vector2(width, height), countX, countY, spriteSheet, bgtype, depth);
+			break;
+		}
+		case ID_ENT_END_PORTAL:
+		{
+			float width = data["width"];
+			float height = data["height"];
+			entity = new EndPortal(position, Vector2(width, height), spriteSheet);
+			break;
+		}
 
+	
 
 	//// Add more entity types here as needed
 	default:
@@ -501,3 +539,8 @@ std::string World::GetName() const
 inline int World::GetWidth() const { return m_width; }
 
 inline int World::GetHeight() const { return m_height; }
+
+World* World::GetInstance()
+{
+	return s_instance;
+}

@@ -194,6 +194,17 @@
     <ClInclude Include="Game.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Wings.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="FirePiranha.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="RedTroopas.h" />
+    <ClInclude Include="Effect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -326,6 +337,17 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Wings.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="FirePiranha.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="RedTroopas.cpp" />
+    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Game.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>

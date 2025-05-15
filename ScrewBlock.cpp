@@ -11,6 +11,9 @@ ScrewBlock::ScrewBlock(Vector2 position, Vector2 size, int countX, int countY, b
 	m_tileYcount = countY;
 	m_isSolid = isSolid;
 	m_isStatic = true;
+    m_isCollidable = true;
+
+    // Set the color and depth
 	m_depth = depth;
     m_color = color;
     m_isFloating = isFloating;
@@ -21,6 +24,8 @@ ScrewBlock::ScrewBlock(Vector2 position, Vector2 size, int countX, int countY, b
 	m_collisionComponent->SetSize(newSize);
 	// update the position as size is the center of the entity
 	m_collisionComponent->SetPosition(position + Vector2(newSize.x / 2 , newSize.y / 2));
+
+    m_collisionGroup = CollisionGroup::NONSOLID;
 }
 
 int ScrewBlock::GetSpriteID(int color, ScrewBlockPosition position) {

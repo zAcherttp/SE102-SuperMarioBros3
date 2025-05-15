@@ -14,7 +14,7 @@ public:
 
     void OnCollision(const CollisionResult& event) override;
     void SetupCollisionComponent();
-    void Die() override;
+    void Die(DyingType type) override;
 private:
     float m_animTimer;
     float m_frameTime;

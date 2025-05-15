@@ -7,6 +7,22 @@
 
 using namespace DirectX::SimpleMath;
 
+enum class CollisionGroup {
+	NONE = 0,
+	PLAYER,
+	ENEMY,
+	SOLID,
+	NONSOLID,
+	BACKGROUND,
+	ITEM,
+	PROJECTILE,
+};
+
+enum class DyingType {
+	UNDEFINED = 0,
+	STOMPED,
+	BONKED
+};
 class Entity
 {
 public:
@@ -32,6 +48,7 @@ public:
 	bool IsStatic() const;
 	bool IsDead() const;
 
+
 	void DefineAnimation(int animId, const std::vector<const wchar_t*>& frameNames,
 		bool loop = true, float timePerFrame = 0.1f,
 		bool useVelocity = false, float minTime = 0.05f,
@@ -40,6 +57,9 @@ public:
 	void SetAnimation(int animId, bool reset = false);
 
 	void SetDirection(int direction);
+
+	CollisionGroup GetCollisionGroup() const;
+	void SetCollisionGroup(const CollisionGroup& group);
 
 	int GetAnimId() const;
 	void SetAnimId(const int& id);
@@ -69,7 +89,7 @@ public:
 	virtual void OnRightSideCollision(const CollisionResult& event);
 	virtual bool IsGrounded() const;
 
-	virtual void Die();
+	virtual void Die(DyingType type);
 
 protected:
 	//physics
@@ -78,6 +98,8 @@ protected:
 	bool m_isCollidable = true;
 	bool m_isStatic = false;
 	bool m_isGrounded = false;
+	CollisionGroup m_collisionGroup = CollisionGroup::NONE;
+	DyingType m_dyingType = DyingType::UNDEFINED;
 
 	//sprite
 	std::unique_ptr<Animator> m_animator;

@@ -46,7 +46,7 @@ enum class Axis { X, Y };
 
 class Collision {
 public:
-    Collision(int worldWidth, int worldHeight, int cellSize = 27 );
+    Collision(int worldWidth, int worldHeight, int cellSize = 313 );
     ~Collision();
 
     Collision(const Collision&) = delete;
@@ -68,22 +68,23 @@ public:
 
     // Process all collisions for a frame
     void ProcessCollisions(float dt);
-    void UpdateDebugInfo(float dt);
-
-    bool GroundCheck(const Entity* entity, float dt = 0.0f);
+    void UpdateDebugInfo(float dt);    bool GroundCheck(const Entity* entity, float dt = 0.0f);
 
     void RenderDebug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* primitiveBatch);
 
     static Collision* GetInstance();
+    std::vector<std::pair<int, int>> GetEntityCells(const Entity* entity, float dt);
+    bool RayVsRect(const Vector2& origin, const Vector2& end, const Rectangle& rect, Vector2& contactPoint, Vector2& contactNormal, float& contactTime);
+
+    // Get access to the spatial grid
+    const std::vector<std::vector<SpatialGridCell>>& GetGrid() const { return m_grid; }
 private:
     std::pair<int, int> GetCellCoords(const Vector2& position);
-    std::vector<std::pair<int, int>> GetEntityCells(const Entity* entity, float dt);
     void SweptAABB(Entity* movingEntity, Entity* staticEntity, float dt, CollisionResult& result, Axis axis);
     void CheckInteractionPointCollision(Entity* entity, Entity* other, float dt, CollisionResult& result, Axis axis);
     void ResolveCollision(Entity* entity, const CollisionResult& result, float dt, Axis axis);
     bool RayEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt, Axis axis);
     bool SweptEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt);
-    bool RayVsRect(const Vector2& origin, const Vector2& end, const Rectangle& rect, Vector2& contactPoint, Vector2& contactNormal, float& contactTime);
 
 private:
     static Collision* s_instance;

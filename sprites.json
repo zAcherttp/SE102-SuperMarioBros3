@@ -367,6 +367,114 @@
         "name": "shade-top-right",
         "frames": ["shade-top-right"],
         "loop": false
+      },
+      {
+        "id": 2530,
+        "name": "green-top-left",
+        "frames": ["green-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2531,
+        "name": "green-top-mid",
+        "frames": ["green-top-mid"],
+        "loop": false
+      },
+      {
+        "id": 2532,
+        "name": "green-top-right",
+        "frames": ["green-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2533,
+        "name": "green-mid-left",
+        "frames": ["green-mid-left"],
+        "loop": false
+      },
+      {
+        "id": 2534,
+        "name": "green-mid-mid",
+        "frames": ["green-mid-mid"],
+        "loop": false
+      },
+      {
+        "id": 2535,
+        "name": "green-mid-right",
+        "frames": ["green-mid-right"],
+        "loop": false
+      },
+      {
+        "id": 2536,
+        "name": "green-bot-left",
+        "frames": ["green-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2537,
+        "name": "green-bot-mid",
+        "frames": ["green-bot-mid"],
+        "loop": false
+      },
+      {
+        "id": 2538,
+        "name": "green-bot-right",
+        "frames": ["green-bot-right"],
+        "loop": false
+      },
+      {
+        "id": 2520,
+        "name": "blue-top-left",
+        "frames": ["blue-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2521,
+        "name": "blue-top-mid",
+        "frames": ["blue-top-mid"],
+        "loop": false
+      },
+      {
+        "id": 2522,
+        "name": "blue-top-right",
+        "frames": ["blue-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2523,
+        "name": "blue-mid-left",
+        "frames": ["blue-mid-left"],
+        "loop": false
+      },
+      {
+        "id": 2524,
+        "name": "blue-mid-mid",
+        "frames": ["blue-mid-mid"],
+        "loop": false
+      },
+      {
+        "id": 2525,
+        "name": "blue-mid-right",
+        "frames": ["blue-mid-right"],
+        "loop": false
+      },
+      {
+        "id": 2526,
+        "name": "blue-bot-left",
+        "frames": ["blue-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2527,
+        "name": "blue-bot-mid",
+        "frames": ["blue-bot-mid"],
+        "loop": false
+      },
+      {
+        "id": 2528,
+        "name": "blue-bot-right",
+        "frames": ["blue-bot-right"],
+        "loop": false
       }
     ]
   },
@@ -534,16 +642,97 @@
     "sprites": [
       {
         "id": 500,
-        "name": "goomba_walk",
-        "frames": ["yellow-goomba-walk"],
+        "name": "goomba",
+        "frames": ["goomba"],
         "loop": true,
         "timePerFrame": 0.2
       },
       {
         "id": 510,
-        "name": "goomba_die",
-        "frames": ["yellow-goomba-stepped"],
+        "name": "goomba-stomp",
+        "frames": ["goomba-stomp"],
         "loop": false
+      }
+    ]
+  },
+  {
+    "type": 6,
+    "sprites": [
+      {
+        "id": 600,
+        "name": "paragoomba",
+        "frames": ["paragoomba"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 610,
+        "name": "paragoomba-stomp",
+        "frames": ["paragoomba-stomp"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 9,
+    "sprites": [
+      {
+        "id": 900,
+        "name": "piranha-look-down",
+        "frames": ["redpiranha-down1", "redpiranha-down2"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 910,
+        "name": "piranha-look-up",
+        "frames": ["redpiranha-up1", "redpiranha-up2"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 920,
+        "name": "piranha-look-down-open",
+        "frames": ["redpiranha-down1"],
+        "loop": false
+      },
+      {
+        "id": 930,
+        "name": "piranha-look-up-open",
+        "frames": ["redpiranha-up1"],
+        "loop": false
+      },
+      {
+        "id": 2910,
+        "name": "piranha-look-die",
+        "frames": ["pop1", "pop2", "pop3", "pop4"],
+        "loop": true,
+        "timePerFrame": 0.1
+      }
+    ]
+  },
+  {
+    "type": 4,
+    "sprites": [
+      {
+        "id": 400,
+        "name": "red-troopa-walk",
+        "frames": ["redtroopa-walk1", "redtroopa-walk2"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 410,
+        "name": "red-troopa-shell",
+        "frames": ["redtroopa-shell1"],
+        "loop": false
+      },
+      {
+        "id": 420,
+        "name": "red-troopa-shell-slide",
+        "frames": ["redtroopa-shell1", "redtroopa-shell2", "redtroopa-shell3"],
+        "loop": true,
+        "timePerFrame": 0.1
       }
     ]
   }
