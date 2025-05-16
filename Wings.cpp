@@ -1,7 +1,13 @@
 #include "pch.h"
-#include "Wings.h"
 #include "AssetIDs.h"
 #include "Debug.h"
+#include "Enemy.h"
+#include "Entity.h"
+#include "SimpleMath.h"
+#include "SpriteBatch.h"
+#include "SpriteSheet.h"
+#include "Wings.h"
+#include <vector>
 
 Wings::Wings(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	: Enemy(position, size, spriteSheet)
@@ -41,7 +47,8 @@ void Wings::Update(float dt)
 void Wings::Update(float dt, Vector2 ownerPosition, Vector2 ownerVelocity)
 {
 	if (!m_isActive) return;
-
+	ownerPosition;
+	ownerVelocity;
 	Entity::Update(dt);
 }
 
