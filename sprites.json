@@ -912,5 +912,16 @@
         "loop": false
       }
     ]
+  },
+  {
+    "type": 31,
+    "sprites": [
+      {
+        "id": 3100,
+        "name": "flower",
+        "frames": ["powerup-fireflower"],
+        "loop": false
+      }
+    ]
   }
 ]

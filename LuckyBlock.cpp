@@ -7,6 +7,7 @@
 #include "EffectManager.h"
 #include "World.h"
 #include "Mushroom.h"
+#include "FireLeaf.h"
 
 LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial)
 	: Block(position, size, spriteSheet)
@@ -121,7 +122,7 @@ void LuckyBlock::SpawnCoin()
 void LuckyBlock::SpawnPowerUp()
 {
     Mario* mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
-    PowerUpType powerupType = PowerUpType::MUSHROOM;
+    PowerUpType powerupType = PowerUpType::LEAF;
 
 	// if (mario->GetCurrentPStateName() == "smallMario") {
 	// 	powerupType = PowerUpType::MUSHROOM;
@@ -137,8 +138,8 @@ void LuckyBlock::SpawnPowerUp()
 			new Mushroom(spawnPosition, Vector2(16, 16), Game::GetInstance()->GetSpriteSheet())
 	 	);
 	} else if (powerupType == PowerUpType::LEAF) {
-		// World::GetInstance()->GetEntities().push_back(
-		// 	// new FireLeaf(spawnPosition, Vector2(16, 16), Game::GetInstance()->GetSpriteSheet())
-		// );
+		World::GetInstance()->GetEntities().push_back(
+			new FireLeaf(spawnPosition, Vector2(16, 16), Game::GetInstance()->GetSpriteSheet())
+		);
 	}
 }

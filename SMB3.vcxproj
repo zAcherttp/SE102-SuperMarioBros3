@@ -199,6 +199,7 @@
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="EndPortal.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="FireLeaf.h" />
     <ClInclude Include="FirePiranha.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameConfig.h" />
@@ -246,6 +247,7 @@
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="EndPortal.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="FireLeaf.cpp" />
     <ClCompile Include="FirePiranha.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Goomba.cpp" />

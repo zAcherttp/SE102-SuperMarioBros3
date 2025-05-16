@@ -1289,7 +1289,7 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": false
+      "isSpecial": true
     },
     {
       "type": 21,
@@ -1308,6 +1308,15 @@
       "height": 16,
       "solid": true,
       "isSpecial": false
+    },
+    {
+      "type": 21,
+      "x": 1440.0,
+      "y": 128.0,
+      "width": 16,
+      "height": 16,
+      "solid": true,
+      "isSpecial": true
     },
     {
       "type": 17,

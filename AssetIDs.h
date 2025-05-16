@@ -37,6 +37,7 @@ constexpr auto ID_ENT_COIN                          = 28;
 constexpr auto ID_ENT_EFFECT                        = 29;
 
 constexpr auto ID_ENT_MUSHROOM                      = 30;
+constexpr auto ID_ENT_FIRE_LEAF                     = 31;
 
 //Entities' animation IDs
 constexpr auto ID_ANIM_MARIO_SMALL = 100000;
@@ -100,6 +101,9 @@ constexpr auto ID_ANIM_EFFECT_COIN                 = 2930;
 
 //Mushroom
 constexpr auto ID_ANIM_MUSHROOM = 3000;
+
+// Fire Leaf
+constexpr auto ID_ANIM_FIRE_LEAF = 3100;
 
 // Red Piranha
 constexpr auto ID_ANIM_RED_PIRANHA_LOOK_DOWN       = 900;

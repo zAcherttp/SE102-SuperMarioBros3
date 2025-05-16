@@ -203,6 +203,7 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="Mushroom.h" />
+    <ClInclude Include="FireLeaf.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -347,6 +348,7 @@
     </ClCompile>
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Mushroom.cpp" />
+    <ClCompile Include="FireLeaf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">
