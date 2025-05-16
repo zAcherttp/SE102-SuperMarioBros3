@@ -3,7 +3,9 @@
 #include "CollisionComponent.h"
 #include "Mario.h"
 #include "Debug.h"
+#include "RedTroopas.h"
 #include "Block.h"
+#include "Enemy.h"
 #include "DebugOverlay.h"
 
 using namespace DirectX;
@@ -269,18 +271,19 @@ void Collision::ResolveCollision(Entity* entity, const CollisionResult& result, 
 			break;
 		}
 
-        Vector2 velocity = entity->GetVelocity();
-        Vector2 position = entity->GetPosition();
-        if(axis == Axis::X) {
-            position.x += velocity.x * dt;
-        } else {
-            position.y += velocity.y * dt;
-        }
-        entity->SetPosition(position);
-    }
-    else {
-        entity->OnCollision(result);
-    }
+		Vector2 velocity = entity->GetVelocity();
+		Vector2 position = entity->GetPosition();
+		if (axis == Axis::X) {
+			position.x += velocity.x * dt;
+		}
+		else {
+			position.y += velocity.y * dt;
+		}
+		entity->SetPosition(position);
+	}
+	else {
+		entity->OnCollision(result);
+	}
 
 	// Notify the other entity (if not static)
 	if (result.collidedWith->IsActive()) {
@@ -306,6 +309,8 @@ void Collision::ProcessCollisions(float dt)
 
 		// Get potential collision candidates
 		std::vector<Entity*> potentialCollisions = GetPotentialCollisions(entity);
+
+		ResolveOverlaps(entity, potentialCollisions);
 
 		//Log(LOG_INFO, std::to_string(potentialCollisions.size()));
 
@@ -334,16 +339,11 @@ void Collision::ProcessCollisions(float dt)
 		else {
 			entity->OnNoCollision(dt, Axis::X);
 		}
-	}
 
-	// Process Y-axis collisions
-	for (auto& pair : m_entityCells) {
-		Entity* entity = pair.first;
-		if (entity->IsStatic() || !entity->IsActive() || !entity->IsCollidable()) continue;
-		std::vector<Entity*> potentialCollisions = GetPotentialCollisions(entity);
-		CollisionResult earliestCollision;
+		// Process Y-axis collisions
 		earliestCollision.contactTime = 1.0f;
 		earliestCollision.collided = false;
+
 		for (Entity* other : potentialCollisions) {
 			if (!other->IsActive() || !other->IsCollidable()) continue;
 			CollisionResult result = CheckCollision(entity, other, dt, Axis::Y);
@@ -354,6 +354,186 @@ void Collision::ProcessCollisions(float dt)
 			ResolveCollision(entity, earliestCollision, dt, Axis::Y);
 		else
 			entity->OnNoCollision(dt, Axis::Y);
+	}
+}
+
+void Collision::ResolveOverlaps(Entity* entity, const std::vector<Entity*>& potentialCollisions)
+{
+	//Log(LOG_INFO, "RESOLVING OVERLAP");
+
+	if (entity->IsStatic() || !entity->IsActive() || !entity->IsCollidable()) {
+		return;
+	}
+	Mario* mario = dynamic_cast<Mario*>(entity);
+	if (!mario) return;
+
+	// Check for overlaps with each potential collision
+	for (Entity* other : potentialCollisions) {
+		// Skip null, inactive, or non-collidable entities
+		if (other == nullptr || !other->IsActive() || !other->IsCollidable()) {
+			continue;
+		}
+
+		// Skip non-solid blocks or enemies
+		Block* block = dynamic_cast<Block*>(other);
+		Enemy* enemy = dynamic_cast<Enemy*>(other);
+		if (block && !block->IsSolid() || enemy) {
+			continue;
+		}
+
+		// Verify collision components
+		CollisionComponent* entityCollision = entity->GetCollisionComponent();
+		CollisionComponent* otherCollision = other->GetCollisionComponent();
+		if (entityCollision == nullptr || otherCollision == nullptr) {
+			continue;
+		}
+
+		// Get entity bounding boxes
+		RECT entityRect = entityCollision->GetRect();
+		RECT otherRect = otherCollision->GetRect();
+
+		// Check if rectangles overlap
+		RECT intersection;
+		if (IntersectRect(&intersection, &entityRect, &otherRect)) {
+			// Calculate overlap dimensions
+			float entityMidpointY = (entityRect.top + entityRect.bottom) / 2.0f;
+
+			// Only resolve if intersection is in the lower half of the entity
+			if (intersection.top > entityMidpointY || intersection.bottom > entityMidpointY) {
+				int overlapWidth = intersection.right - intersection.left;
+				int overlapHeight = intersection.bottom - intersection.top;
+
+				// Only resolve significant overlaps (avoid floating point precision issues)
+				if (overlapWidth > 1 && overlapHeight > 1) {
+					// Determine which axis has the smallest overlap to resolve along that axis first
+					Vector2 vel = entity->GetVelocity();
+
+					if (overlapWidth <= overlapHeight) {
+						// Resolve X-axis overlap
+						Vector2 contactNormal;
+
+						// Determine push direction based on entity centers
+						Vector2 entityCenter(
+							(entityRect.left + entityRect.right) / 2.0f,
+							(entityRect.top + entityRect.bottom) / 2.0f);
+
+						Vector2 otherCenter(
+							(otherRect.left + otherRect.right) / 2.0f,
+							(otherRect.top + otherRect.bottom) / 2.0f);
+
+						// Calculate normal direction from other entity to this entity
+						if (entityCenter.x < otherCenter.x) {
+							contactNormal = Vector2(-1, 0); // Push left
+						}
+						else {
+							contactNormal = Vector2(1, 0);  // Push right
+						}
+
+						// If other entity is static, move only the current entity
+						if (other->IsStatic()) {
+							// Move entity out of collision
+							Vector2 position = entity->GetPosition();
+							position.x += contactNormal.x * overlapWidth;
+							entity->SetPosition(position);
+							entity->SetVelocity(Vector2(0, vel.y));
+
+							// Create a debug collision visualization
+							DebugCollisionInfo info;
+							info.position = Vector2(
+								(float)intersection.left + overlapWidth / 2.0f,
+								(float)intersection.top + overlapHeight / 2.0f);
+							info.normal = contactNormal;
+							info.timeToLive = DEBUG_COLLISION_TTL;
+							m_debugCollisions.push_back(info);
+						}
+						// If both entities are non-static, distribute the movement
+						else if (!entity->IsStatic() && !other->IsStatic()) {
+							// Move both entities equally in opposite directions
+							Vector2 entityPos = entity->GetPosition();
+							entityPos.x += contactNormal.x * (overlapWidth / 2.0f);
+							entity->SetPosition(entityPos);
+							entity->SetVelocity(Vector2(0, vel.y));
+
+							Vector2 otherPos = other->GetPosition();
+							otherPos.x -= contactNormal.x * (overlapWidth / 2.0f);
+							other->SetPosition(otherPos);
+							other->SetVelocity(Vector2(0, vel.y));
+
+							// Create a debug collision visualization
+							DebugCollisionInfo info;
+							info.position = Vector2(
+								(float)intersection.left + overlapWidth / 2.0f,
+								(float)intersection.top + overlapHeight / 2.0f);
+							info.normal = contactNormal;
+							info.timeToLive = DEBUG_COLLISION_TTL;
+							m_debugCollisions.push_back(info);
+						}
+					}
+					else {
+						// Resolve Y-axis overlap
+						Vector2 contactNormal;
+
+						// Determine push direction based on entity centers
+						Vector2 entityCenter(
+							(entityRect.left + entityRect.right) / 2.0f,
+							(entityRect.top + entityRect.bottom) / 2.0f);
+
+						Vector2 otherCenter(
+							(otherRect.left + otherRect.right) / 2.0f,
+							(otherRect.top + otherRect.bottom) / 2.0f);
+
+						// Calculate normal direction from other entity to this entity
+						if (entityCenter.y < otherCenter.y) {
+							contactNormal = Vector2(0, -1); // Push up
+						}
+						else {
+							contactNormal = Vector2(0, 1);  // Push down
+						}
+
+						// If other entity is static, move only the current entity
+						if (other->IsStatic()) {
+							// Move entity out of collision
+							Vector2 position = entity->GetPosition();
+							position.y += contactNormal.y * overlapHeight;
+							entity->SetPosition(position);
+							entity->SetVelocity(Vector2(vel.x, 0));
+
+
+							// Create a debug collision visualization
+							DebugCollisionInfo info;
+							info.position = Vector2(
+								(float)intersection.left + overlapWidth / 2.0f,
+								(float)intersection.top + overlapHeight / 2.0f);
+							info.normal = contactNormal;
+							info.timeToLive = DEBUG_COLLISION_TTL;
+							m_debugCollisions.push_back(info);
+						}
+						// If both entities are non-static, distribute the movement
+						else if (!entity->IsStatic() && !other->IsStatic()) {
+							// Move both entities equally in opposite directions
+							Vector2 entityPos = entity->GetPosition();
+							entityPos.y += contactNormal.y * (overlapHeight / 2.0f);
+							entity->SetPosition(entityPos);
+							entity->SetVelocity(Vector2(vel.x, 0));
+
+							Vector2 otherPos = other->GetPosition();
+							otherPos.y -= contactNormal.y * (overlapHeight / 2.0f);
+							other->SetPosition(otherPos);
+							other->SetVelocity(Vector2(vel.x, 0));
+
+							// Create a debug collision visualization
+							DebugCollisionInfo info;
+							info.position = Vector2(
+								(float)intersection.left + overlapWidth / 2.0f,
+								(float)intersection.top + overlapHeight / 2.0f);
+							info.normal = contactNormal;
+							info.timeToLive = DEBUG_COLLISION_TTL;
+							m_debugCollisions.push_back(info);
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -380,10 +560,10 @@ bool Collision::GroundCheck(const Entity* entity, float dt)
 	// Calculate how far the entity will move in the next frame
 	float rayLength = std::abs(velocity.y * dt);
 
-    // // Use a minimum distance to check even when velocity is small or zero
-    float minRayLength = size.y / 2 + 1.0f; 
+	// // Use a minimum distance to check even when velocity is small or zero
+	float minRayLength = size.y / 2 + 1.0f;
 
-    rayLength = std::max(rayLength, minRayLength);
+	rayLength = std::max(rayLength, minRayLength);
 
 
 	// Get cells around the entity
@@ -494,9 +674,11 @@ bool Collision::RayVsRect(const Vector2& origin, const Vector2& end, const Recta
 bool Collision::RayEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt, Axis axis) {
 	// Check if dynamic entity is actually moving
 	Vector2 inVel = in.GetVelocity();
-	axis == Axis::X ? inVel.y = 0 : inVel.x = 0;
+
 	if (inVel.x == 0 && inVel.y == 0)
 		return false;
+
+	axis == Axis::X ? inVel.y = 0 : inVel.x = 0;
 
 	Vector2 inPos = in.GetPosition();
 	Vector2 inSize = in.GetSize();

@@ -4,7 +4,7 @@
  * Contains references to each image within the sprite sheet.
  *
  * https://www.codeandweb.com/texturepacker
- * $TexturePacker:SmartUpdate:ede3880dc7bc4124c3d7d31f372d029b:b07531b58b9aa6ac7392152bb01f1894:9372a5c6e87557cd082219126b413cbe$
+ * $TexturePacker:SmartUpdate:ebddd76271d6233e2e57ca7dd42b7726:8295e25eaaef5393eca525594de013fd:9372a5c6e87557cd082219126b413cbe$
  *
  */
 namespace TexturePackerMonoGameDefinitions
@@ -101,6 +101,7 @@ namespace TexturePackerMonoGameDefinitions
 		public const string End-portal-top-mid = "end-portal-top-mid";
 		public const string End-portal-top-right = "end-portal-top-right";
 		public const string Fire-projectile = "fire-projectile";
+		public const string Fireflower = "fireflower";
 		public const string Goomba-stomp = "goomba-stomp";
 		public const string Goomba = "goomba";
 		public const string Grass-mid-left = "grass-mid-left";

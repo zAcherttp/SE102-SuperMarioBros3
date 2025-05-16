@@ -67,7 +67,7 @@ Vector2 MarioWalkState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioRunState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioSkidState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioJumpState::GetStateSizeOffset() const { return Vector2(0, 0); }
-Vector2 MarioSitState::GetStateSizeOffset() const { return Vector2(0, -5); }
+Vector2 MarioSitState::GetStateSizeOffset() const { return Vector2(0, -9); }
 Vector2 MarioHoldState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioKickState::GetStateSizeOffset() const { return Vector2(0, 0); }
 
@@ -80,7 +80,7 @@ void MarioMovementState::Enter(Mario* mario) {
 }
 
 void MarioMovementState::Exit(Mario* mario) {
-	mario->SetPosition(mario->GetPosition() + mario->GetCurrentMStateSizeOffset());
+	//mario->SetPosition(mario->GetPosition() + mario->GetCurrentMStateSizeOffset());
 	mario->SetSize(mario->GetCurrentPStateSizeOffset() -
 		mario->GetCurrentMStateSizeOffset());
 	SetAnimation(mario, mario->GetCurrentPStateAnimValue() -

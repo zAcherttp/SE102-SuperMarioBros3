@@ -46,8 +46,8 @@ enum class Axis { X, Y };
 
 class Collision {
 public:
-    Collision(int worldWidth, int worldHeight, int cellSize = 313 );
-    ~Collision();
+	Collision(int worldWidth, int worldHeight, int cellSize = 313);
+	~Collision();
 
 	Collision(const Collision&) = delete;
 
@@ -68,25 +68,26 @@ public:
 
 	// Process all collisions for a frame
 	void ProcessCollisions(float dt);
+	void ResolveOverlaps(Entity* entity, const std::vector<Entity*>& potentialCollisions);
 	void UpdateDebugInfo(float dt);
 
 	bool GroundCheck(const Entity* entity, float dt = 0.0f);
 
 	void RenderDebug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* primitiveBatch);
 
-    static Collision* GetInstance();
-    std::vector<std::pair<int, int>> GetEntityCells(const Entity* entity, float dt);
-    bool RayVsRect(const Vector2& origin, const Vector2& end, const Rectangle& rect, Vector2& contactPoint, Vector2& contactNormal, float& contactTime);
+	static Collision* GetInstance();
+	std::vector<std::pair<int, int>> GetEntityCells(const Entity* entity, float dt);
+	bool RayVsRect(const Vector2& origin, const Vector2& end, const Rectangle& rect, Vector2& contactPoint, Vector2& contactNormal, float& contactTime);
 
-    // Get access to the spatial grid
-    const std::vector<std::vector<SpatialGridCell>>& GetGrid() const { return m_grid; }
+	// Get access to the spatial grid
+	const std::vector<std::vector<SpatialGridCell>>& GetGrid() const { return m_grid; }
 private:
-    std::pair<int, int> GetCellCoords(const Vector2& position);
-    void SweptAABB(Entity* movingEntity, Entity* staticEntity, float dt, CollisionResult& result, Axis axis);
-    void CheckInteractionPointCollision(Entity* entity, Entity* other, float dt, CollisionResult& result, Axis axis);
-    void ResolveCollision(Entity* entity, const CollisionResult& result, float dt, Axis axis);
-    bool RayEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt, Axis axis);
-    bool SweptEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt);
+	std::pair<int, int> GetCellCoords(const Vector2& position);
+	void SweptAABB(Entity* movingEntity, Entity* staticEntity, float dt, CollisionResult& result, Axis axis);
+	void CheckInteractionPointCollision(Entity* entity, Entity* other, float dt, CollisionResult& result, Axis axis);
+	void ResolveCollision(Entity* entity, const CollisionResult& result, float dt, Axis axis);
+	bool RayEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt, Axis axis);
+	bool SweptEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt);
 
 private:
 	static Collision* s_instance;

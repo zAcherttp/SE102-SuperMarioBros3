@@ -33,7 +33,7 @@ void Entity::Render(DirectX::SpriteBatch* spriteBatch) {
 		// Get the position
 		Vector2 pos = m_collisionComponent->GetPosition();
 		pos.x = (float)(int)(pos.x + 0.5f);
-        pos.y = (float)(int)(pos.y + 0.5f);
+		pos.y = (float)(int)(pos.y + 0.5f);
 		m_animator->Draw(spriteBatch, pos);
 	}
 }
@@ -91,8 +91,8 @@ void Entity::DefineAnimation(int animId, const std::vector<const wchar_t*>& fram
 
 void Entity::SetAnimation(int animId, bool reset) {
 	//Log(LOG_INFO, "Setting animation: " + std::to_string(animId) + " for entity: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
+	m_animId = animId;
 	m_animator->SetAnimation(animId, reset);
-
 }
 
 void Entity::SetDirection(int direction) {
@@ -102,12 +102,12 @@ void Entity::SetDirection(int direction) {
 
 CollisionGroup Entity::GetCollisionGroup() const
 {
-    return m_collisionGroup;
+	return m_collisionGroup;
 }
 
-void Entity::SetCollisionGroup(const CollisionGroup &group)
+void Entity::SetCollisionGroup(const CollisionGroup& group)
 {
-    m_collisionGroup = group;	
+	m_collisionGroup = group;
 }
 
 int Entity::GetAnimId() const {

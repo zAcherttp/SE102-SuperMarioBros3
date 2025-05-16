@@ -1,12 +1,12 @@
 #pragma once
-#include "Entity.h"
+#include "Enemy.h"
 #include "Wings.h"
 #include "Mario.h"
 
 #define PARAGOOMBA_WIDTH 16
 #define PARAGOOMBA_HEIGHT 16
 
-class ParaGoomba : public Entity
+class ParaGoomba : public Enemy
 {
 public:
 	ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);
