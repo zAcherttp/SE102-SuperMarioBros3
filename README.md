@@ -25,7 +25,7 @@ This project aims to implement a functional clone of the first two levels (1-1 a
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/zAcherttp/SE102-SuperMarioBros3
+   git clone https://github.com/yourusername/super-mario-bros-3-clone.git
    ```
 
 2. Ensure you have the required dependencies:
@@ -78,9 +78,9 @@ Levels are stored in .json files with a entity-based design. The level loader pa
 ## Development Progress
 
 - [x] Basic engine structure
-- [x] Player movement and physics
-- [x] Power-up system
-- [x] Enemy AI implementation
+- [ ] Player movement and physics
+- [ ] Power-up system
+- [ ] Enemy AI implementation
 - [ ] Level 1-1 implementation
 - [ ] Level 1-4 implementation
 - [ ] Final polishing and bug fixes
