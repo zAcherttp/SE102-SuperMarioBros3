@@ -46,353 +46,379 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DeviceResources.h">
+    <ClInclude Include="src\DeviceResources.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="src\pch.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Animator.h">
+    <ClInclude Include="src\Animator.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="AssetIDs.h">
+    <ClInclude Include="src\AssetIDs.h">
       <Filter>Source\Lib</Filter>
     </ClInclude>
-    <ClInclude Include="BlackBackground.h">
+    <ClInclude Include="src\BlackBackground.h">
       <Filter>Source\Entity\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="Block.h">
+    <ClInclude Include="src\Block.h">
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
-    <ClInclude Include="Brick.h">
+    <ClInclude Include="src\Brick.h">
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
-    <ClInclude Include="Bush.h">
+    <ClInclude Include="src\Bush.h">
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
-    <ClInclude Include="Cloud.h">
+    <ClInclude Include="src\Cloud.h">
       <Filter>Source\Entity\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="Coin.h">
+    <ClInclude Include="src\Coin.h">
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="src\Camera.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Debug.h">
+    <ClInclude Include="src\Debug.h">
       <Filter>Source\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="DebugOverlay.h">
+    <ClInclude Include="src\DebugOverlay.h">
       <Filter>Source\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="EndPortal.h">
+    <ClInclude Include="src\EndPortal.h">
       <Filter>Source\Entity\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionComponent.h">
+    <ClInclude Include="src\CollisionComponent.h">
       <Filter>Source\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
+    <ClInclude Include="src\Collision.h">
       <Filter>Source\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
+    <ClInclude Include="src\Entity.h">
       <Filter>Source\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Ground.h">
+    <ClInclude Include="src\Ground.h">
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
-    <ClInclude Include="HeadUpDisplay.h">
+    <ClInclude Include="src\HeadUpDisplay.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Helpers.h">
+    <ClInclude Include="src\Helpers.h">
       <Filter>Source\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="json.hpp">
+    <ClInclude Include="src\json.hpp">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="LuckyBlock.h">
+    <ClInclude Include="src\LuckyBlock.h">
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
-    <ClInclude Include="Mario.h">
+    <ClInclude Include="src\Mario.h">
       <Filter>Source\Entity\Mario</Filter>
     </ClInclude>
-    <ClInclude Include="MarioMovementStates.h">
+    <ClInclude Include="src\MarioMovementStates.h">
       <Filter>Source\Entity\Mario</Filter>
     </ClInclude>
-    <ClInclude Include="MarioPowerUpStates.h">
+    <ClInclude Include="src\MarioPowerUpStates.h">
       <Filter>Source\Entity\Mario</Filter>
     </ClInclude>
-    <ClInclude Include="MarioStateBase.h">
+    <ClInclude Include="src\MarioStateBase.h">
       <Filter>Source\Entity\Mario</Filter>
     </ClInclude>
-    <ClInclude Include="ScrewBlock.h">
+    <ClInclude Include="src\ScrewBlock.h">
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
-    <ClInclude Include="SkyPlatform.h">
+    <ClInclude Include="src\SkyPlatform.h">
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteSheet.h">
+    <ClInclude Include="src\SpriteSheet.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
+    <ClInclude Include="src\World.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="State.h">
+    <ClInclude Include="src\State.h">
       <Filter>Source\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="StepTimer.h">
+    <ClInclude Include="src\StepTimer.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Pipe.h">
+    <ClInclude Include="src\Pipe.h">
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="src\resource.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Animator.h" />
-    <ClInclude Include="json.hpp" />
-    <ClInclude Include="State.h" />
-    <ClInclude Include="Mario.h" />
-    <ClInclude Include="MarioMovementStates.h" />
-    <ClInclude Include="Debug.h" />
-    <ClInclude Include="AssetIDs.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="Block.h" />
-    <ClInclude Include="Ground.h" />
-    <ClInclude Include="CollisionComponent.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Bush.h" />
-    <ClInclude Include="Cloud.h" />
-    <ClInclude Include="ScrewBlock.h" />
-    <ClInclude Include="Pipe.h" />
-    <ClInclude Include="Brick.h" />
-    <ClInclude Include="Coin.h" />
-    <ClInclude Include="SkyPlatform.h" />
-    <ClInclude Include="LuckyBlock.h" />
-    <ClInclude Include="BlackBackground.h" />
-    <ClInclude Include="EndPortal.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="HeadUpDisplay.h" />
-    <ClInclude Include="MarioPowerUpStates.h" />
-    <ClInclude Include="MarioStateBase.h" />
-    <ClInclude Include="GameConfig.h">
+    <ClInclude Include="src\Animator.h" />
+    <ClInclude Include="src\json.hpp" />
+    <ClInclude Include="src\State.h" />
+    <ClInclude Include="src\Mario.h" />
+    <ClInclude Include="src\MarioMovementStates.h" />
+    <ClInclude Include="src\Debug.h" />
+    <ClInclude Include="src\AssetIDs.h" />
+    <ClInclude Include="src\resource.h" />
+    <ClInclude Include="src\Block.h" />
+    <ClInclude Include="src\Ground.h" />
+    <ClInclude Include="src\CollisionComponent.h" />
+    <ClInclude Include="src\Collision.h" />
+    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Bush.h" />
+    <ClInclude Include="src\Cloud.h" />
+    <ClInclude Include="src\ScrewBlock.h" />
+    <ClInclude Include="src\Pipe.h" />
+    <ClInclude Include="src\Brick.h" />
+    <ClInclude Include="src\Coin.h" />
+    <ClInclude Include="src\SkyPlatform.h" />
+    <ClInclude Include="src\LuckyBlock.h" />
+    <ClInclude Include="src\BlackBackground.h" />
+    <ClInclude Include="src\EndPortal.h" />
+    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\HeadUpDisplay.h" />
+    <ClInclude Include="src\MarioPowerUpStates.h" />
+    <ClInclude Include="src\MarioStateBase.h" />
+    <ClInclude Include="src\GameConfig.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Goomba.h">
+    <ClInclude Include="src\Goomba.h">
       <Filter>Source\Entity\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="Paragoomba.h">
+    <ClInclude Include="src\Paragoomba.h">
       <Filter>Source\Entity\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="src\Camera.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
+    <ClInclude Include="src\Game.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Wings.h">
+    <ClInclude Include="src\Wings.h">
       <Filter>Source\Entity\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="Bullet.h">
+    <ClInclude Include="src\Bullet.h">
       <Filter>Source\Entity\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="FirePiranha.h">
+    <ClInclude Include="src\FirePiranha.h">
       <Filter>Source\Entity\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="RedTroopas.h" />
-    <ClInclude Include="Effect.h" />
-    <ClInclude Include="EffectManager.h" />
-    <ClInclude Include="Mushroom.h" />
-    <ClInclude Include="FireLeaf.h" />
+    <ClInclude Include="src\Effect.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EffectManager.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Enemy.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FireLeaf.h">
+      <Filter>Source\Entity\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mushroom.h">
+      <Filter>Source\Entity\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RedTroopas.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DeviceResources.cpp">
+    <ClCompile Include="src\DeviceResources.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="src\pch.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Animator.cpp">
+    <ClCompile Include="src\Animator.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="AssetIDs.cpp">
+    <ClCompile Include="src\AssetIDs.cpp">
       <Filter>Source\Lib</Filter>
     </ClCompile>
-    <ClCompile Include="BlackBackground.cpp">
+    <ClCompile Include="src\BlackBackground.cpp">
       <Filter>Source\Entity\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="Block.cpp">
+    <ClCompile Include="src\Block.cpp">
       <Filter>Source\Entity\Block</Filter>
     </ClCompile>
-    <ClCompile Include="Brick.cpp">
+    <ClCompile Include="src\Brick.cpp">
       <Filter>Source\Entity\Block</Filter>
     </ClCompile>
-    <ClCompile Include="Bush.cpp">
+    <ClCompile Include="src\Bush.cpp">
       <Filter>Source\Entity\Block</Filter>
     </ClCompile>
-    <ClCompile Include="Cloud.cpp">
+    <ClCompile Include="src\Cloud.cpp">
       <Filter>Source\Entity\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="Coin.cpp">
+    <ClCompile Include="src\Coin.cpp">
       <Filter>Source\Entity\Block</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="src\Camera.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Debug.cpp">
+    <ClCompile Include="src\Debug.cpp">
       <Filter>Source\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="DebugOverlay.cpp">
+    <ClCompile Include="src\DebugOverlay.cpp">
       <Filter>Source\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="EndPortal.cpp">
+    <ClCompile Include="src\EndPortal.cpp">
       <Filter>Source\Entity\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="Collision.cpp">
+    <ClCompile Include="src\Collision.cpp">
       <Filter>Source\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionComponent.cpp">
+    <ClCompile Include="src\CollisionComponent.cpp">
       <Filter>Source\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Entity.cpp">
+    <ClCompile Include="src\Entity.cpp">
       <Filter>Source\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Ground.cpp">
+    <ClCompile Include="src\Ground.cpp">
       <Filter>Source\Entity\Block</Filter>
     </ClCompile>
-    <ClCompile Include="HeadUpDisplay.cpp">
+    <ClCompile Include="src\HeadUpDisplay.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Helpers.cpp">
+    <ClCompile Include="src\Helpers.cpp">
       <Filter>Source\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="LuckyBlock.cpp">
+    <ClCompile Include="src\LuckyBlock.cpp">
       <Filter>Source\Entity\Block</Filter>
     </ClCompile>
-    <ClCompile Include="Mario.cpp">
+    <ClCompile Include="src\Mario.cpp">
       <Filter>Source\Entity\Mario</Filter>
     </ClCompile>
-    <ClCompile Include="MarioMovementStates.cpp">
+    <ClCompile Include="src\MarioMovementStates.cpp">
       <Filter>Source\Entity\Mario</Filter>
     </ClCompile>
-    <ClCompile Include="MarioPowerUpStates.cpp">
+    <ClCompile Include="src\MarioPowerUpStates.cpp">
       <Filter>Source\Entity\Mario</Filter>
     </ClCompile>
-    <ClCompile Include="MarioStateBase.cpp">
+    <ClCompile Include="src\MarioStateBase.cpp">
       <Filter>Source\Entity\Mario</Filter>
     </ClCompile>
-    <ClCompile Include="Pipe.cpp">
+    <ClCompile Include="src\Pipe.cpp">
       <Filter>Source\Entity\Block</Filter>
     </ClCompile>
-    <ClCompile Include="ScrewBlock.cpp">
+    <ClCompile Include="src\ScrewBlock.cpp">
       <Filter>Source\Entity\Block</Filter>
     </ClCompile>
-    <ClCompile Include="SkyPlatform.cpp">
+    <ClCompile Include="src\SkyPlatform.cpp">
       <Filter>Source\Entity\Block</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteSheet.cpp">
+    <ClCompile Include="src\SpriteSheet.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="World.cpp">
+    <ClCompile Include="src\World.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Animator.cpp" />
-    <ClCompile Include="Mario.cpp" />
-    <ClCompile Include="MarioMovementStates.cpp" />
-    <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="AssetIDs.cpp" />
-    <ClCompile Include="Block.cpp" />
-    <ClCompile Include="Ground.cpp" />
-    <ClCompile Include="CollisionComponent.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Bush.cpp" />
-    <ClCompile Include="Cloud.cpp" />
-    <ClCompile Include="ScrewBlock.cpp" />
-    <ClCompile Include="Pipe.cpp" />
-    <ClCompile Include="Brick.cpp" />
-    <ClCompile Include="Coin.cpp" />
-    <ClCompile Include="SkyPlatform.cpp" />
-    <ClCompile Include="LuckyBlock.cpp" />
-    <ClCompile Include="BlackBackground.cpp" />
-    <ClCompile Include="EndPortal.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="HeadUpDisplay.cpp" />
-    <ClCompile Include="MarioPowerUpStates.cpp" />
-    <ClCompile Include="MarioStateBase.cpp" />
-    <ClCompile Include="Goomba.cpp">
+    <ClCompile Include="src\Animator.cpp" />
+    <ClCompile Include="src\Mario.cpp" />
+    <ClCompile Include="src\MarioMovementStates.cpp" />
+    <ClCompile Include="src\Debug.cpp" />
+    <ClCompile Include="src\AssetIDs.cpp" />
+    <ClCompile Include="src\Block.cpp" />
+    <ClCompile Include="src\Ground.cpp" />
+    <ClCompile Include="src\CollisionComponent.cpp" />
+    <ClCompile Include="src\Collision.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Bush.cpp" />
+    <ClCompile Include="src\Cloud.cpp" />
+    <ClCompile Include="src\ScrewBlock.cpp" />
+    <ClCompile Include="src\Pipe.cpp" />
+    <ClCompile Include="src\Brick.cpp" />
+    <ClCompile Include="src\Coin.cpp" />
+    <ClCompile Include="src\SkyPlatform.cpp" />
+    <ClCompile Include="src\LuckyBlock.cpp" />
+    <ClCompile Include="src\BlackBackground.cpp" />
+    <ClCompile Include="src\EndPortal.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\HeadUpDisplay.cpp" />
+    <ClCompile Include="src\MarioPowerUpStates.cpp" />
+    <ClCompile Include="src\MarioStateBase.cpp" />
+    <ClCompile Include="src\Goomba.cpp">
       <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="Paragoomba.cpp">
+    <ClCompile Include="src\Paragoomba.cpp">
       <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="src\Camera.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="src\Main.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Wings.cpp">
+    <ClCompile Include="src\Wings.cpp">
       <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="Bullet.cpp">
+    <ClCompile Include="src\Bullet.cpp">
       <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="FirePiranha.cpp">
+    <ClCompile Include="src\FirePiranha.cpp">
       <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="RedTroopas.cpp" />
-    <ClCompile Include="Effect.cpp" />
-    <ClCompile Include="Game.cpp">
+    <ClCompile Include="src\Game.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="EffectManager.cpp" />
-    <ClCompile Include="Mushroom.cpp" />
-    <ClCompile Include="FireLeaf.cpp" />
+    <ClCompile Include="src\Effect.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EffectManager.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Enemy.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FireLeaf.cpp">
+      <Filter>Source\Entity\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mushroom.cpp">
+      <Filter>Source\Entity\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RedTroopas.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="textures\font.png">
+    <Image Include="src\textures\font.png">
       <Filter>Resources\Texture</Filter>
     </Image>
-    <Image Include="SMB3.ico">
+    <Image Include="src\SMB3.ico">
       <Filter>Resources\Texture</Filter>
     </Image>
-    <Image Include="textures\sprites.png">
+    <Image Include="src\textures\sprites.png">
       <Filter>Resources\Texture</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="game.json">
+    <None Include="src\game.json">
       <Filter>Resources\Assets</Filter>
     </None>
-    <None Include="textures\mario.spritefont">
+    <None Include="src\textures\mario.spritefont">
       <Filter>Resources\Assets</Filter>
     </None>
-    <None Include="sprites.json">
+    <None Include="src\sprites.json">
       <Filter>Resources\Assets</Filter>
     </None>
-    <None Include="world_1-1.json">
+    <None Include="src\world_1-1.json">
       <Filter>Resources\Assets</Filter>
     </None>
-    <None Include="packages.config">
+    <None Include="src\packages.config">
       <Filter>Source\Core</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="textures\readme.txt">
+    <Text Include="src\textures\readme.txt">
       <Filter>Resources</Filter>
     </Text>
-    <Text Include="textures\sprites.txt">
+    <Text Include="src\textures\sprites.txt">
       <Filter>Resources\Assets</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="settings.manifest">
+    <Manifest Include="src\settings.manifest">
       <Filter>Source\Core</Filter>
     </Manifest>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="resource.rc">
+    <ResourceCompile Include="src\resource.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
   </ItemGroup>
