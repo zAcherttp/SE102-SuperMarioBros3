@@ -70,7 +70,7 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 
 	if (!m_player || !m_player->IsActive() || m_isPaused) return;
 	Mario* mario = dynamic_cast<Mario*>(m_player);
-	if (!mario) return;
+	if (!mario || mario->IsTransitioning()) return;
 	mario->HandleInput(kbState, kbsTracker);
 
 	if (kbsTracker->IsKeyPressed(Keys::R)) {
@@ -88,8 +88,11 @@ void World::Update(float dt) {
 		m_entities.end()
 	);
 	
+	if (m_isPaused) return;
+	Mario* mario = dynamic_cast<Mario*>(m_player);
+	bool skip = mario && mario->IsTransitioning() || mario->IsDying();
 	
-	if (m_collisionSystem) {
+	if (m_collisionSystem && !skip) {
 		
 		if (m_player) {
 			m_collisionSystem->UpdateEntity(m_player, dt);
@@ -104,8 +107,8 @@ void World::Update(float dt) {
 		m_collisionSystem->ProcessCollisions(dt);
 	}
 	
-	if (m_isPaused) return;
-	
+		
+
 	if (m_player) {
 		m_player->Update(dt);
 		Vector2 pos = m_player->GetPosition();
@@ -120,9 +123,13 @@ void World::Update(float dt) {
 		//Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
 	}
 
+	if (skip) return;
+
 	for (auto e : m_entities) {
 		e->Update(dt);
 	}
+
+	Game::GetInstance()->UpdateHUD(dt);
 }
 
 void World::Render(DirectX::SpriteBatch* spriteBatch) {
@@ -530,9 +537,9 @@ std::string World::GetName() const
 	return m_name;
 }
 
-inline int World::GetWidth() const { return m_width; }
+int World::GetWidth() const { return m_width; }
 
-inline int World::GetHeight() const { return m_height; }
+int World::GetHeight() const { return m_height; }
 
 World* World::GetInstance()
 {

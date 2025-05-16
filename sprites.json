@@ -3,43 +3,189 @@
     "type": 0,
     "sprites": [
       {
-        "id": 110,
+        "id": 100010,
         "name": "mario_small_idle",
-        "frames": ["small-idle"],
+        "frames": [ "small-idle" ],
         "loop": false
       },
       {
-        "id": 120,
+        "id": 200010,
+        "name": "mario_big_idle",
+        "frames": [ "big-idle" ],
+        "loop": false
+      },
+      {
+        "id": 100020,
         "name": "mario_small_walk",
-        "frames": ["small-walk", "small-idle"],
+        "frames": [ "small-walk", "small-idle" ],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
         "minTimePerFrame": 0.05,
         "maxTimePerFrame": 0.2,
-        "velocityScaleFactor": 0.02
+        "velocityScaleFactor": 0.015
       },
       {
-        "id": 130,
+        "id": 200020,
+        "name": "mario_big_walk",
+        "frames": [ "big-walk1", "big-jump2", "big-walk1","big-idle" ],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.05,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.015
+      },
+      {
+        "id": 100030,
         "name": "mario_small_sprint",
-        "frames": ["small-run1", "small-run2"],
+        "frames": [ "small-sprint1", "small-sprint2" ],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
-        "minTimePerFrame": 0.05,
+        "minTimePerFrame": 0.01,
         "maxTimePerFrame": 0.2,
         "velocityScaleFactor": 0.02
       },
       {
-        "id": 140,
+        "id": 200030,
+        "name": "mario_big_sprint",
+        "frames": [ "big-sprint2", "big-sprint3", "big-sprint2", "big-sprint1" ],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.01,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.02
+      },
+      {
+        "id": 100040,
         "name": "mario_small_skid",
-        "frames": ["small-skid"],
+        "frames": [ "small-skid" ],
         "loop": false
       },
       {
-        "id": 150,
+        "id": 200040,
+        "name": "mario_big_skid",
+        "frames": [ "big-skid" ],
+        "loop": false
+      },
+      {
+        "id": 100050,
         "name": "mario_small_jump",
-        "frames": ["small-jump"],
+        "frames": [ "small-jump" ],
+        "loop": false
+      },
+      {
+        "id": 200050,
+        "name": "mario_big_jump",
+        "frames": [ "big-jump1" ],
+        "loop": false
+      },
+      {
+        "id": 200051,
+        "name": "mario_big_jump",
+        "frames": [ "big-jump2" ],
+        "loop": false
+      },
+      {
+        "id": 100060,
+        "name": "mario_small_powerjump",
+        "frames": [ "small-sprint-jump" ],
+        "loop": false
+      },
+      {
+        "id": 200060,
+        "name": "mario_big_powerjump1",
+        "frames": [ "big-sprint-jump2" ],
+        "loop": false
+      },
+      {
+        "id": 200070,
+        "name": "mario_big_sit",
+        "frames": [ "big-sit" ],
+        "loop": false
+      },
+      {
+        "id": 100090,
+        "name": "mario_small_hold_idle",
+        "frames": [ "small-holding-walk" ],
+        "loop": false
+      },
+      {
+        "id": 200090,
+        "name": "mario_big_hold_idle",
+        "frames": [ "big-holding-walk1" ],
+        "loop": false
+      },
+      {
+        "id": 100091,
+        "name": "mario_small_hold",
+        "frames": [ "small-holding-walk", "small-holding-jump" ],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.05,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.015
+      },
+      {
+        "id": 200091,
+        "name": "mario_small_hold",
+        "frames": [ "big-holding-walk2", "big-holding-walk1" ],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.05,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.015
+      },
+      {
+        "id": 100092,
+        "name": "mario_small_hold_jump",
+        "frames": [ "small-holding-jump" ],
+        "loop": false
+      },
+      {
+        "id": 200092,
+        "name": "mario_big_hold_jump",
+        "frames": [ "big-holding-jump" ],
+        "loop": false
+      },
+      {
+        "id": 100093,
+        "name": "mario_small_hold_front",
+        "frames": [ "small-holding-front" ],
+        "loop": false
+      },
+      {
+        "id": 200093,
+        "name": "mario_big_hold_front",
+        "frames": [ "big-front" ],
+        "loop": false
+      },
+      {
+        "id": 100100,
+        "name": "mario_small_kick",
+        "frames": [ "small-kick" ],
+        "loop": false
+      },
+      {
+        "id": 200100,
+        "name": "mario_big_kick",
+        "frames": [ "big-kick" ],
+        "loop": false
+      },
+      {
+        "id": 400000,
+        "name": "mario_die",
+        "frames": [ "small-die" ],
+        "loop": false
+      },
+      {
+        "id": 110,
+        "name": "mario_bonked",
+        "frames": [ "big-to-small" ],
         "loop": false
       }
     ]
@@ -511,7 +657,7 @@
     "type": 24,
     "sprites": [
       {
-        "id": 240,
+        "id": 2400,
         "name": "brick",
         "frames": ["brick-1", "brick-2", "brick-3", "brick-4"],
         "loop": true,
@@ -523,7 +669,7 @@
     "type": 28,
     "sprites": [
       {
-        "id": 280,
+        "id": 2800,
         "name": "coin",
         "frames": ["coin-1", "coin-2", "coin-3", "coin-4"],
         "loop": true,
@@ -546,12 +692,19 @@
     "type": 21,
     "sprites": [
       {
-        "id": 210,
+        "id": 2100,
         "name": "lucky-block",
-        "frames": ["lucky-box-1", "lucky-box-2", "lucky-box-3", "lucky-box-4"],
+        "frames": [ "lucky-box-1", "lucky-box-2", "lucky-box-3", "lucky-box-4" ],
         "loop": true,
         "timePerFrame": 0.3
+      },
+      {
+        "id": 2110,
+        "name": "lucky-block-claimed",
+        "frames": [ "lucky-box-claimed" ],
+        "loop": false
       }
+
     ]
   },
   {
@@ -575,7 +728,7 @@
     "type": 22,
     "sprites": [
       {
-        "id": 220,
+        "id": 2200,
         "name": "end-portal",
         "frames": ["mushroom", "leaf"],
         "loop": true,

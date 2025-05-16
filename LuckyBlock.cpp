@@ -11,10 +11,11 @@ LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet
 	m_tileXcount = 1;
 	m_tileYcount = 1; // LuckyBlock is always 1 tile high
 	m_isSolid = isSolid;
-	m_isStatic = false;
+	m_isStatic = true;
 	m_isClaiming = false;
 	m_isClaimed = false;
-
+	m_isCollidable = true;
+	m_isActive = true;
 	m_isCollidable = true;
 
 	// update the collision box to match the size of the ground
@@ -25,20 +26,19 @@ LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet
 	Vector2 newPos = position + Vector2(newSize.x / 2, newSize.y / 2);
 	m_collisionComponent->SetPosition(newPos);
 	m_origin = newPos;
-    SetAnimation(ID_ANIM_LUCKY_BLOCK, true);
-    // Log(LOG_INFO, "Set Animation for: " + std::to_string(position.x) + ", " + std::to_string(position.y));
+	SetAnimation(ID_ANIM_LUCKY_BLOCK, true);
 
-
+	// Log(LOG_INFO, "Set Animation for: " + std::to_string(position.x) + ", " + std::to_string(position.y));
 }
 
 void LuckyBlock::Render(DirectX::SpriteBatch* spriteBatch)
 {
-    Vector2 size = m_collisionComponent->GetSize();
-    Vector2 tileSize = Vector2(size.x / m_tileXcount, size.y / m_tileYcount);
-    Vector2 pos = m_collisionComponent->GetPosition() - Vector2(size.x / 2 - tileSize.x / 2, size.y / 2 - tileSize.y / 2);
+	Vector2 size = m_collisionComponent->GetSize();
+	Vector2 tileSize = Vector2(size.x / m_tileXcount, size.y / m_tileYcount);
+	Vector2 pos = m_collisionComponent->GetPosition() - Vector2(size.x / 2 - tileSize.x / 2, size.y / 2 - tileSize.y / 2);
 
-    m_animator->Draw(spriteBatch, pos , 0.5f); 
-    
+	m_animator->Draw(spriteBatch, pos, 0.5f);
+
 }
 
 void LuckyBlock::Update(float dt)
@@ -62,19 +62,21 @@ void LuckyBlock::Update(float dt)
 			SetVelocity(vel);
 			SetPosition(m_origin);
 
-		} else {
+		}
+		else {
 			SetVelocity(vel);
 			SetPosition(pos);
 		}
 	}
 
-    m_animator->Update(dt);
+	m_animator->Update(dt);
 }
 
 void LuckyBlock::Bump() {
-	if(m_isClaimed || m_isClaiming) return;
+	if (m_isClaimed || m_isClaiming) return;
 	m_isClaiming = true;
 	m_isClaimed = false;
+	SetAnimId(ID_ANIM_LUCKY_BLOCK_CLAIMED);
 	SetVelocity(Vector2(0, -240.f));
 
 	//Log(LOG_INFO, "Bumped LuckyBlock at: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
@@ -86,7 +88,7 @@ void LuckyBlock::OnCollision(const CollisionResult& event)
 
 	//Log(LOG_INFO, "Collision with LuckyBlock at: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y) + " with: " + std::to_string(event.collidedWith->GetPosition().x) + ", " + std::to_string(event.collidedWith->GetPosition().y));
 
-	if (event.contactNormal.y < 0 && mario)
+	if (event.contactNormal.y < 0 && mario && !m_isClaimed)
 	{
 		Vector2 vel = mario->GetVelocity();
 		vel.y = -vel.y;

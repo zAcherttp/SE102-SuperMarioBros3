@@ -63,17 +63,17 @@ Vector2 Entity::GetVelocity() const
 	return m_collisionComponent->GetVelocity();
 }
 
-void Entity::SetVelocity(const Vector2& vel) 
-{ 
+void Entity::SetVelocity(const Vector2& vel)
+{
 	m_collisionComponent->SetVelocity(vel);
 }
 
 bool Entity::IsActive() const {
-	return m_isActive; 
+	return m_isActive;
 }
 
 bool Entity::IsCollidable() const {
-	return m_isCollidable; 
+	return m_isCollidable;
 }
 
 bool Entity::IsStatic() const
@@ -114,7 +114,10 @@ int Entity::GetAnimId() const {
 	return m_animId;
 }
 
-void Entity::SetAnimId(const int& id) { m_animId = id; }
+void Entity::SetAnimId(const int& id) {
+	m_animId = id;
+	m_animator->SetAnimation(id, true);
+}
 
 Animator* Entity::GetAnimator() { return m_animator.get(); }
 

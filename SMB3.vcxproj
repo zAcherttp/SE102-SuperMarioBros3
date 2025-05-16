@@ -212,7 +212,6 @@
     <ClInclude Include="MarioMovementStates.h" />
     <ClInclude Include="MarioPowerUpStates.h" />
     <ClInclude Include="MarioStateBase.h" />
-    <ClInclude Include="MarioStateFactory.h" />
     <ClInclude Include="Paragoomba.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Pipe.h" />
@@ -258,7 +257,6 @@
     <ClCompile Include="MarioMovementStates.cpp" />
     <ClCompile Include="MarioPowerUpStates.cpp" />
     <ClCompile Include="MarioStateBase.cpp" />
-    <ClCompile Include="MarioStateFactory.cpp" />
     <ClCompile Include="Paragoomba.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

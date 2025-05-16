@@ -189,6 +189,7 @@
             <key type="filename">1-1/blue-bottom-left.png</key>
             <key type="filename">1-1/blue-bottom-mid.png</key>
             <key type="filename">1-1/blue-left-top.png</key>
+            <key type="filename">1-1/blue-mid-left.png</key>
             <key type="filename">1-1/blue-mid-mid.png</key>
             <key type="filename">1-1/blue-right-bottom.png</key>
             <key type="filename">1-1/blue-right-mid.png</key>
@@ -230,7 +231,9 @@
             <key type="filename">1-1/end-portal-top-mid.png</key>
             <key type="filename">1-1/end-portal-top-right.png</key>
             <key type="filename">1-1/green-bottom-left.png</key>
+            <key type="filename">1-1/green-bottom-mid.png</key>
             <key type="filename">1-1/green-bottom-right.png</key>
+            <key type="filename">1-1/green-mid-left.png</key>
             <key type="filename">1-1/green-mid-mid.png</key>
             <key type="filename">1-1/green-right-mid.png</key>
             <key type="filename">1-1/green-top-left.png</key>
@@ -314,13 +317,14 @@
             <key type="filename">luckybox/lucky-box-2.png</key>
             <key type="filename">luckybox/lucky-box-3.png</key>
             <key type="filename">luckybox/lucky-box-4.png</key>
+            <key type="filename">luckybox/lucky-box-claimed.png</key>
             <key type="filename">mario/small-die.png</key>
             <key type="filename">mario/small-holding-front.png</key>
             <key type="filename">mario/small-jump.png</key>
             <key type="filename">mario/small-kick.png</key>
             <key type="filename">mario/small-sprint-jump.png</key>
             <key type="filename">mario/small-sprint1.png</key>
-            <key type="filename">mario/snall-sprint2.png</key>
+            <key type="filename">mario/small-sprint2.png</key>
             <key type="filename">particles/pop1.png</key>
             <key type="filename">particles/spark1.png</key>
             <key type="filename">particles/spark2.png</key>
@@ -1193,7 +1197,6 @@
             <filename>mario/small-sprint-jump.png</filename>
             <filename>mario/small-sprint1.png</filename>
             <filename>mario/small-walk.png</filename>
-            <filename>mario/snall-sprint2.png</filename>
             <filename>particles/100.png</filename>
             <filename>particles/1000.png</filename>
             <filename>particles/1up.png</filename>
@@ -1243,6 +1246,11 @@
             <filename>1-1/green-bottom-left.png</filename>
             <filename>mario/small-holding-walk.png</filename>
             <filename>hud/hud.png</filename>
+            <filename>mario/small-sprint2.png</filename>
+            <filename>luckybox/lucky-box-claimed.png</filename>
+            <filename>1-1/blue-mid-left.png</filename>
+            <filename>1-1/green-bottom-mid.png</filename>
+            <filename>1-1/green-mid-left.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

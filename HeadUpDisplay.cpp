@@ -63,7 +63,7 @@ void HeadUpDisplay::Render(DirectX::SpriteBatch* spriteBatch, DirectX::SpriteFon
 	Vector2 scorePos(64, 211);
 	Vector2 timerPos(136, 211);
 
-	Vector2 coinTextSize = ((Vector2)spriteFont->MeasureString(GetCoins()));
+	Vector2 coinTextSize = ((Vector2)spriteFont->MeasureString(GetCoinsChar()));
 	Vector2 coinPos = Vector2(160 - coinTextSize.x, 203);
 
 	Vector2 worldNumPos(48, 203);
@@ -101,11 +101,11 @@ void HeadUpDisplay::Render(DirectX::SpriteBatch* spriteBatch, DirectX::SpriteFon
 		m_animator->Draw(spriteBatch, ID_SPRITE_HUD_PMETER_BADGE_EMPTY, topLeft + (Vector2(113.f, 203.f) + Vector2(7.5f, 3.5f)) * scale, 0.0f, scale);
 	}
 
-	spriteFont->DrawString(spriteBatch, GetScore(), topLeft + scorePos * scale, Colors::White, 0.f, Vector2::Zero, scale);
-	spriteFont->DrawString(spriteBatch, GetRTime(), topLeft + timerPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
-	spriteFont->DrawString(spriteBatch, GetCoins(), topLeft + coinPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
-	spriteFont->DrawString(spriteBatch, GetWorld(), topLeft + worldNumPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
-	spriteFont->DrawString(spriteBatch, GetLives(), topLeft + livesPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
+	spriteFont->DrawString(spriteBatch, GetScoreChar(), topLeft + scorePos * scale, Colors::White, 0.f, Vector2::Zero, scale);
+	spriteFont->DrawString(spriteBatch, GetRTimeChar(), topLeft + timerPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
+	spriteFont->DrawString(spriteBatch, GetCoinsChar(), topLeft + coinPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
+	spriteFont->DrawString(spriteBatch, GetWorldChar(), topLeft + worldNumPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
+	spriteFont->DrawString(spriteBatch, GetLivesChar(), topLeft + livesPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
 
 }
 
@@ -279,7 +279,10 @@ int HeadUpDisplay::GetPMeterValue() const { return m_pMeterArrows; }
 
 bool HeadUpDisplay::IsPMeterFull() const { return m_pMeterArrows >= m_maxPMeterArrows; }
 
-void HeadUpDisplay::SetLives(int lives) { m_lives = lives; }
+void HeadUpDisplay::SetLives(int lives) {
+	m_lives = lives;
+	if (m_lives <= 0) m_lives = 4;
+}
 
 int HeadUpDisplay::GetLives() const { return m_lives; }
 
@@ -319,34 +322,34 @@ void HeadUpDisplay::SetMarioPowerupType(int powerupType) { m_currentPowerupType 
 
 int HeadUpDisplay::GetMarioPowerupType() const { return m_currentPowerupType; }
 
-const char* HeadUpDisplay::GetLives()
+const char* HeadUpDisplay::GetLivesChar()
 {
 	static char lives[3];
 	sprintf_s(lives, "%d", m_lives);
 	return lives;
 }
 
-const char* HeadUpDisplay::GetScore()
+const char* HeadUpDisplay::GetScoreChar()
 {
 	static char score[8];
 	sprintf_s(score, "%07d", m_score);
 	return score;
 }
 
-const char* HeadUpDisplay::GetCoins()
+const char* HeadUpDisplay::GetCoinsChar()
 {
 	static char coinsBuffer[3];
 	sprintf_s(coinsBuffer, "%d", m_coins);
 	return coinsBuffer;
 }
 
-const char* HeadUpDisplay::GetWorld() const
+const char* HeadUpDisplay::GetWorldChar() const
 {
 	static char world[2];
 	sprintf_s(world, "%d", m_worldNumber);
 	return world;
 }
-const char* HeadUpDisplay::GetRTime() const
+const char* HeadUpDisplay::GetRTimeChar() const
 {
 	static char timeBuffer[4];
 	sprintf_s(timeBuffer, "%03d", m_timeRemaining);

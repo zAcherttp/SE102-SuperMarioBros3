@@ -31,6 +31,7 @@ Game::Game() noexcept(false)
 	m_gameTitle = L"";
 	m_gameWidth = m_gameHeight = m_wndHeight = m_wndWidth = 0;
 	m_isLoading = true;
+	m_requestReset = false;
 }
 
 Game* Game::GetInstance() { return s_instance; }
@@ -87,9 +88,10 @@ void Game::Update(DX::StepTimer const& timer) {
 		m_worlds[m_currentWorldId]->Update(elapsedTime);
 	}
 
-	if (m_nextWorldId != m_currentWorldId) SwitchWorld();
-
-	m_hud->Update(elapsedTime);
+	if (m_nextWorldId != m_currentWorldId || m_requestReset) {
+		SwitchWorld();
+		m_requestReset = false;
+	}
 	m_effectManager->Update(elapsedTime);
 }
 
@@ -112,6 +114,20 @@ void Game::HandleInput() {
 		m_worlds[m_currentWorldId]->HandleInput(&kbs, m_keys.get());
 		DebugOverlay::UpdateMarioState((Mario*)m_worlds[m_currentWorldId]->GetPlayer());
 	}
+}
+
+void Game::UpdateHUD(float dt)
+{
+	m_hud->Update(dt);
+}
+
+void Game::RestartWorld()
+{
+	m_requestReset = true;
+
+	m_hud->SetLives(m_hud->GetLives() - 1);
+
+	Log(LOG_INFO, "World restarting");
 }
 
 #pragma region Frame Render
@@ -138,7 +154,7 @@ void Game::Render() {
 		context->RSGetViewports(&viewportCount, &oldViewport);
 
 		ID3D11ShaderResourceView* const nullSRVs[1] = { nullptr };
-        context->PSSetShaderResources(0, 1, nullSRVs);
+		context->PSSetShaderResources(0, 1, nullSRVs);
 
 		context->OMSetRenderTargets(1, m_gameRenderTargetView.GetAddressOf(),
 			nullptr);
@@ -190,7 +206,7 @@ void Game::Render() {
 		m_primitiveBatch->Begin();
 
 		GetCurrentWorld()->RenderDebug(m_primitiveBatch.get());
-		
+
 		m_primitiveBatch->End();
 
 		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
@@ -279,7 +295,7 @@ void Game::GetDefaultGameSize(int& width, int& height) const noexcept {
 }
 
 void Game::GetDefaultGameTitle(LPCWSTR& title) const noexcept {
-	title = m_gameTitle.c_str()	;
+	title = m_gameTitle.c_str();
 }
 
 #pragma endregion
@@ -332,7 +348,7 @@ void Game::LoadGameConfig(const json& config)
 
 	std::string fontPath = config["game"]["sprites"]["font"];
 	m_spriteFontPath = std::wstring(fontPath.begin(), fontPath.end());
-	
+
 	std::string title(config["game"]["title"]);
 	m_gameTitle = std::wstring(title.begin(), title.end());
 
@@ -391,7 +407,7 @@ void Game::SwitchWorld()
 	m_isLoading = true;
 	if (m_worlds[m_currentWorldId] != NULL)
 		m_worlds[m_currentWorldId]->Unload();
-		m_currentWorldId = m_nextWorldId;
+	m_currentWorldId = m_nextWorldId;
 
 	//TODO: clean up sprites/anims
 

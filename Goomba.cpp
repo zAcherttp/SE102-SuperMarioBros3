@@ -3,16 +3,15 @@
 #include "Debug.h"
 #include "AssetIDs.h"
 #include "Mario.h"
-#include "MarioStateFactory.h"
 #include "GameConfig.h"
 #include "ParaGoomba.h"
 #include "Block.h"
 
 Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
-    : Entity(position,size, spriteSheet)
-    , m_animTimer(0.0f)
-    , m_frameTime(0.15f)  // Controls how fast the flip animation occurs
-    , m_flipFrame(false)
+	: Entity(position, size, spriteSheet)
+	, m_animTimer(0.0f)
+	, m_frameTime(0.15f)  // Controls how fast the flip animation occurs
+	, m_flipFrame(false)
 {
     // Define the animation using the single frame we have
 
@@ -156,9 +155,9 @@ void Goomba::Update(float dt)
 
 void Goomba::SetupCollisionComponent()
 {
-    Vector2 curSize = m_collisionComponent->GetSize();
+	Vector2 curSize = m_collisionComponent->GetSize();
 	Vector2 newSize = Vector2(curSize.x, curSize.y);
 	m_collisionComponent->SetSize(newSize);
 
-	m_collisionComponent->SetPosition(GetPosition() + Vector2(newSize.x / 2 , newSize.y / 2));
+	m_collisionComponent->SetPosition(GetPosition() + Vector2(newSize.x / 2, newSize.y / 2));
 }

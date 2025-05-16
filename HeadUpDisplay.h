@@ -63,11 +63,11 @@ private:
 	bool m_isTimerRunning;
 	float m_timeCounter;
 
-	const char* GetLives();
-	const char* GetScore();
-	const char* GetCoins();
-	const char* GetWorld() const;
-	const char* GetRTime() const;
+	const char* GetLivesChar();
+	const char* GetScoreChar();
+	const char* GetCoinsChar();
+	const char* GetWorldChar() const;
+	const char* GetRTimeChar() const;
 
 	// P-Meter related
 	int m_pMeterArrows;
