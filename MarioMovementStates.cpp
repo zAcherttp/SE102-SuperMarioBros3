@@ -3,6 +3,7 @@
 #include "AssetIDs.h"
 #include "Debug.h"
 #include "Mario.h"
+#include "RedTroopas.h"
 
 using namespace DirectX;
 
@@ -108,6 +109,14 @@ void MarioJumpState::Enter(Mario* mario) {
 void MarioKickState::Enter(Mario* mario) {
 	m_entity->SetVelocity(Vector2(PLAYER_HOLD_THROW_SPEED * (int)GetDirection(),
 		0.f));
+
+	RedTroopas* shell = dynamic_cast<RedTroopas*>(m_entity);
+
+	if (shell && shell->GetState() == TroopaState::SHELL_IDLE) {
+		shell->SetState(TroopaState::SHELL_SLIDE);
+		shell->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL_SLIDE, true);
+	}
+
 
 	// Set animation and size
 	mario->SetSize(mario->GetCurrentPStateSizeOffset() +
@@ -535,6 +544,10 @@ std::unique_ptr<MarioMovementState> MarioHoldState::HandleInput(Mario* mario) {
 	bool isGrounded = mario->IsGrounded();
 	Vector2 vel = mario->GetVelocity();
 
+	if (m_isInterrupted) {
+		return std::make_unique<MarioIdleState>(GetDirection());
+	}
+
 	if (input->isAPressed && isGrounded && !m_isJumping) {
 		Log(LOG_INFO, "MarioHoldState::HandleInput: Jumping");
 		float absSpeed = std::abs(vel.x);
@@ -575,6 +588,14 @@ std::unique_ptr<MarioMovementState> MarioHoldState::HandleInput(Mario* mario) {
 
 void MarioHoldState::Update(Mario* mario, float dt) {
 	auto input = mario->GetInput();
+
+	RedTroopas* shell = dynamic_cast<RedTroopas*>(m_heldEntity);
+
+	if (shell && shell->GetState() == TroopaState::WALKING)
+	{
+		m_isInterrupted = true;
+		return;
+	}
 
 	Vector2 vel = mario->GetVelocity();
 	bool isGrounded = mario->IsGrounded();

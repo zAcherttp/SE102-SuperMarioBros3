@@ -40,6 +40,7 @@ public:
 
 	void ItsAMe();
 	void Damage();
+	bool Kick(Direction dir, Entity* ent);
 
 	void Update(float dt) override;
 	void Render(DirectX::SpriteBatch* spriteBatch) override;

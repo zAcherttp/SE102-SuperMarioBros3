@@ -126,6 +126,8 @@ private:
 
 	bool m_isWalking = false;
 
+	bool m_isInterrupted = false;
+
 	Direction m_newDir;
 	Vector2 m_heldEntityOffset;
 };

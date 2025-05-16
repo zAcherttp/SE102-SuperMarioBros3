@@ -4,6 +4,7 @@
 #include "AssetIDs.h"
 #include "Debug.h"
 #include "Block.h"
+#include "RedTroopas.h"
 
 using namespace DirectX::SimpleMath;
 using Keyboard = DirectX::Keyboard;
@@ -108,6 +109,19 @@ void Mario::ItsAMe()
 
 void Mario::Damage() {
 	if (m_powerupSM) m_powerupSM->Damage();
+}
+
+bool Mario::Kick(Direction dir, Entity* ent)
+{
+	if (m_movementSM->GetStateName() == "hold") {
+		return false;
+	}
+
+	m_movementSM->Exit(this);
+	m_movementSM = std::move(std::make_unique<MarioKickState>(dir, ent));
+	m_movementSM->Enter(this);
+
+	return true;
 }
 
 void Mario::Update(float dt)
@@ -275,8 +289,8 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
-	//TODO: add this line
-	//Shell* shell = dynamic_cast<Shell*>(result.collidedWith);
+	//TODO: change to universal Troopa class
+	RedTroopas* shell = dynamic_cast<RedTroopas*>(result.collidedWith);
 	if (result.contactNormal.x < 0) {
 		if (block && block->IsSolid())
 		{
@@ -284,7 +298,7 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
 			SetVelocity(vel);
 		}
-		else if (m_inputState->isBDown && m_movementSM->GetStateName() != "hold") { // && shell && isHoldable
+		else if (m_inputState->isBDown && m_movementSM->GetStateName() != "hold" && shell && shell->GetState() == TroopaState::SHELL_IDLE) {
 			m_movementSM->Exit(this);
 			auto state = std::make_unique<MarioHoldState>(m_movementSM->GetDirection(), result.collidedWith);
 			m_movementSM = std::move(state);
@@ -308,6 +322,7 @@ void Mario::OnLeftSideCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+	RedTroopas* shell = dynamic_cast<RedTroopas*>(result.collidedWith);
 	if (result.contactNormal.x > 0) {
 		if (block && block->IsSolid())
 		{
@@ -315,7 +330,7 @@ void Mario::OnLeftSideCollision(const CollisionResult& result) {
 			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
 			SetVelocity(vel);
 		}
-		else if (m_inputState->isBDown && m_movementSM->GetStateName() != "hold") { // && shell && isHoldable
+		else if (m_inputState->isBDown && m_movementSM->GetStateName() != "hold" && shell && shell->GetState() == TroopaState::SHELL_IDLE) {
 			m_movementSM->Exit(this);
 			auto state = std::make_unique<MarioHoldState>(m_movementSM->GetDirection(), result.collidedWith);
 			m_movementSM = std::move(state);
