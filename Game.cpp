@@ -29,6 +29,9 @@ Game::Game() noexcept(false)
 	m_gameView = {};
 	m_currentWorldId = m_nextWorldId = -1;
 	m_gameTitle = L"";
+	m_gameWidth = m_gameHeight = m_wndHeight = m_wndWidth = 0;
+	m_isLoading = true;
+	m_requestReset = false;
 }
 
 Game* Game::GetInstance() { return s_instance; }
@@ -46,6 +49,7 @@ void Game::Initialize(HWND window, int width, int height) {
 
 	m_keyboard = std::make_unique<Keyboard>();
 	m_keys = std::make_unique<Keyboard::KeyboardStateTracker>();
+	m_hud = std::make_unique<HeadUpDisplay>(m_spriteSheet.get());
 
 	m_gameView.TopLeftX = 0.0f;
 	m_gameView.TopLeftY = 0.0f;
@@ -73,6 +77,9 @@ void Game::Tick()
 
 // Updates the world.
 void Game::Update(DX::StepTimer const& timer) {
+
+	if (m_isLoading) return;
+
 	float elapsedTime = float(timer.GetElapsedSeconds());
 
 	HandleInput();
@@ -81,8 +88,13 @@ void Game::Update(DX::StepTimer const& timer) {
 		m_worlds[m_currentWorldId]->Update(elapsedTime);
 	}
 
-	if (m_nextWorldId != m_currentWorldId) SwitchWorld();
+	if (m_nextWorldId != m_currentWorldId || m_requestReset) {
+		SwitchWorld();
+		m_requestReset = false;
+	}
+	m_effectManager->Update(elapsedTime);
 }
+
 #pragma endregion
 
 void Game::HandleInput() {
@@ -104,11 +116,30 @@ void Game::HandleInput() {
 	}
 }
 
+void Game::UpdateHUD(float dt)
+{
+	m_hud->Update(dt);
+}
+
+void Game::AddScore(const int& score)
+{
+	m_hud->AddScore(score);
+}
+
+void Game::RestartWorld()
+{
+	m_requestReset = true;
+
+	m_hud->SetLives(m_hud->GetLives() - 1);
+
+	Log(LOG_INFO, "World restarting");
+}
+
 #pragma region Frame Render
 // Draws the scene.
 void Game::Render() {
 	// Don't try to render anything before the first Update.
-	if (m_timer.GetFrameCount() == 0) {
+	if (m_timer.GetFrameCount() == 0 || m_isLoading) {
 		return;
 	}
 	auto context = m_deviceResources->GetD3DDeviceContext();
@@ -128,7 +159,7 @@ void Game::Render() {
 		context->RSGetViewports(&viewportCount, &oldViewport);
 
 		ID3D11ShaderResourceView* const nullSRVs[1] = { nullptr };
-        context->PSSetShaderResources(0, 1, nullSRVs);
+		context->PSSetShaderResources(0, 1, nullSRVs);
 
 		context->OMSetRenderTargets(1, m_gameRenderTargetView.GetAddressOf(),
 			nullptr);
@@ -138,10 +169,12 @@ void Game::Render() {
 			GetCurrentWorld()->GetBackgroundColor());
 
 		// Render the game world to the render target
-		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
+		m_spriteBatch->Begin(SpriteSortMode_BackToFront, m_states->NonPremultiplied(),
 			m_states->PointClamp(), nullptr, nullptr, nullptr, m_camera->GetGameViewMatrix());
 
 		GetCurrentWorld()->Render(m_spriteBatch.get());
+
+		m_effectManager->Render(m_spriteBatch.get());
 
 		m_spriteBatch->End();
 
@@ -161,8 +194,11 @@ void Game::Render() {
 			m_states->PointClamp());
 
 		// Draw the game render target to the screen
-		m_spriteBatch->Draw(m_gameShaderResource.Get(), m_camera->GetGameViewRect());
-
+		const RECT& gameRect = m_camera->GetGameViewRect();
+		m_spriteBatch->Draw(m_gameShaderResource.Get(), gameRect);
+		//Log(LOG_INFO, "HUD position: " + std::to_string(m_gameView.TopLeftX) + ", " + std::to_string(m_gameView.TopLeftY));
+		// Draw HUD
+		m_hud->Render(m_spriteBatch.get(), m_font.get(), gameRect);
 
 		m_spriteBatch->End();
 
@@ -175,7 +211,7 @@ void Game::Render() {
 		m_primitiveBatch->Begin();
 
 		GetCurrentWorld()->RenderDebug(m_primitiveBatch.get());
-		
+
 		m_primitiveBatch->End();
 
 		m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied(),
@@ -264,7 +300,7 @@ void Game::GetDefaultGameSize(int& width, int& height) const noexcept {
 }
 
 void Game::GetDefaultGameTitle(LPCWSTR& title) const noexcept {
-	title = m_gameTitle.c_str()	;
+	title = m_gameTitle.c_str();
 }
 
 #pragma endregion
@@ -293,6 +329,7 @@ bool Game::LoadGame(const std::string& filePath)
 	catch (const std::exception& e) {
 		Log(__FUNCTION__, "Exception occurred: " + std::string(e.what()));
 	}
+	m_isLoading = false;
 	return true;
 }
 
@@ -316,7 +353,7 @@ void Game::LoadGameConfig(const json& config)
 
 	std::string fontPath = config["game"]["sprites"]["font"];
 	m_spriteFontPath = std::wstring(fontPath.begin(), fontPath.end());
-	
+
 	std::string title(config["game"]["title"]);
 	m_gameTitle = std::wstring(title.begin(), title.end());
 
@@ -344,9 +381,19 @@ void Game::SetNextWorldId(int id)
 	m_nextWorldId = id;
 }
 
+void Game::SetWorldSize(int width, int height)
+{
+	m_camera->SetWorldSize(width, height);
+}
+
 void Game::SetCameraPosition(const Vector2& pos, bool oneAxis)
 {
 	m_camera->SetPosition(pos, oneAxis);
+}
+
+void Game::MoveCamera(const DirectX::SimpleMath::Vector2& delta)
+{
+	m_camera->Move(delta);
 }
 
 SpriteSheet* Game::GetSpriteSheet() const
@@ -362,16 +409,19 @@ SpriteBatch* Game::GetSpriteBatch() const
 void Game::SwitchWorld()
 {
 	if (m_nextWorldId < 0) return;
+	m_isLoading = true;
 	if (m_worlds[m_currentWorldId] != NULL)
 		m_worlds[m_currentWorldId]->Unload();
-		m_currentWorldId = m_nextWorldId;
+	m_currentWorldId = m_nextWorldId;
 
 	//TODO: clean up sprites/anims
 
+	// Load world
 	World* world = m_worlds[m_currentWorldId];
 	Log(__FUNCTION__, "Loading into world: " + world->GetName());
-
 	world->Load(m_spriteSheet.get());
+
+	m_isLoading = false;
 }
 #pragma endregion
 
@@ -416,6 +466,8 @@ void Game::CreateDeviceDependentResources() {
 	m_effect->SetVertexColorEnabled(true);
 	m_effect->SetWorld(Matrix::Identity);
 
+	m_effectManager = std::make_unique<EffectManager>(m_spriteSheet.get());
+
 	DX::ThrowIfFailed(CreateInputLayoutFromEffect<VertexPositionColor>(
 		device, m_effect.get(), m_inputLayout.ReleaseAndGetAddressOf()));
 
@@ -450,7 +502,7 @@ void Game::CreateWindowSizeDependentResources() {
 	float windowHeight = static_cast<float>(size.bottom);
 
 	if (m_camera) {
-		m_camera->UpdateWindowSizeDependentMatrices(windowWidth, windowHeight);
+		m_camera->UpdateWindowSizeDependentMatrices((int)windowWidth, (int)windowHeight);
 	}
 
 	m_effect->SetView(m_camera->GetDebugViewMatrix());

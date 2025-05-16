@@ -6,13 +6,14 @@
 
 using namespace DirectX::SimpleMath;
 
+
+
 Entity::Entity(Vector2 position, SpriteSheet* spriteSheet) {
 	m_collisionComponent = std::make_unique<CollisionComponent>(this);
-	Log(LOG_INFO, "Creating Entity at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
+	//Log(LOG_INFO, "Creating Entity at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
 	m_collisionComponent->SetPosition(position);
 	m_animator = std::make_unique<Animator>();
 	m_animator->SetSpriteSheet(spriteSheet);
-
 }
 
 Entity::Entity(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 size, SpriteSheet* spriteSheet) {
@@ -24,15 +25,15 @@ Entity::Entity(DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vecto
 }
 
 void Entity::Update(float deltaTime) {
-	m_animator->Update(deltaTime, m_vel.x);
+	m_animator->Update(deltaTime, m_collisionComponent->GetVelocity().x);
 }
 
 void Entity::Render(DirectX::SpriteBatch* spriteBatch) {
 	if (m_visible) {
-		// round the position to the nearest pixel
+		// Get the position
 		Vector2 pos = m_collisionComponent->GetPosition();
-		/*pos.x = static_cast<int>(pos.x + 0.5f);
-		pos.y = static_cast<int>(pos.y + 0.5f);*/
+		pos.x = (float)(int)(pos.x + 0.5f);
+		pos.y = (float)(int)(pos.y + 0.5f);
 		m_animator->Draw(spriteBatch, pos);
 	}
 }
@@ -49,8 +50,7 @@ void Entity::SetSize(const Vector2& size)
 
 Vector2 Entity::GetPosition() const
 {
-	Vector2 pos = m_collisionComponent->GetPosition();
-	return pos;
+	return m_collisionComponent->GetPosition();
 }
 
 void Entity::SetPosition(const Vector2& pos)
@@ -60,34 +60,28 @@ void Entity::SetPosition(const Vector2& pos)
 
 Vector2 Entity::GetVelocity() const
 {
-	return m_vel;
+	return m_collisionComponent->GetVelocity();
 }
 
-void Entity::SetVelocity(const Vector2& vel) 
-{ 
-	m_vel = vel;
-}
-
-Vector2 Entity::GetAcceleration() const {
-	return m_accel;
-}
-
-void Entity::SetAcceleration(const Vector2& accel) {
-	m_accel = accel;
+void Entity::SetVelocity(const Vector2& vel)
+{
+	m_collisionComponent->SetVelocity(vel);
 }
 
 bool Entity::IsActive() const {
-	return m_isActive; 
+	return m_isActive;
 }
 
 bool Entity::IsCollidable() const {
-	return m_isCollidable; 
+	return m_isCollidable;
 }
 
 bool Entity::IsStatic() const
 {
 	return m_isStatic;
 }
+
+
 
 // Animation control
 void Entity::DefineAnimation(int animId, const std::vector<const wchar_t*>& frameNames, bool loop, float timePerFrame, bool useVelocity, float minTime, float maxTime, float velocityFactor) {
@@ -96,6 +90,8 @@ void Entity::DefineAnimation(int animId, const std::vector<const wchar_t*>& fram
 }
 
 void Entity::SetAnimation(int animId, bool reset) {
+	//Log(LOG_INFO, "Setting animation: " + std::to_string(animId) + " for entity: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
+	m_animId = animId;
 	m_animator->SetAnimation(animId, reset);
 }
 
@@ -104,11 +100,24 @@ void Entity::SetDirection(int direction) {
 	m_animator->SetFlipHorizontal(direction > 0);
 }
 
+CollisionGroup Entity::GetCollisionGroup() const
+{
+	return m_collisionGroup;
+}
+
+void Entity::SetCollisionGroup(const CollisionGroup& group)
+{
+	m_collisionGroup = group;
+}
+
 int Entity::GetAnimId() const {
 	return m_animId;
 }
 
-void Entity::SetAnimId(const int& id) { m_animId = id; }
+void Entity::SetAnimId(const int& id) {
+	m_animId = id;
+	m_animator->SetAnimation(id, true);
+}
 
 Animator* Entity::GetAnimator() { return m_animator.get(); }
 
@@ -152,43 +161,35 @@ bool Entity::UsesInteractionPoints() const
 	return false;
 }
 
-void Entity::OnCollision(const CollisionEvent& event) {
-	if (UsesInteractionPoints()) {
-		switch (event.pointType) {
-		case InteractionPointType::TopHead:
-			OnTopHeadCollision(event.collidedWith, event.normal);
-			break;
-		case InteractionPointType::LeftFoot:
-		case InteractionPointType::RightFoot:
-			OnFootCollision(event.collidedWith, event.normal);
-			break;
-		case InteractionPointType::LeftMiddle:
-			OnLeftSideCollision(event.collidedWith, event.normal);
-			break;
-		case InteractionPointType::RightMiddle:
-			OnRightSideCollision(event.collidedWith, event.normal);
-			break;
-		default:
-			break;
-		}
-	}
+void Entity::OnCollision(const CollisionResult& result) {
+	result;
 }
 
-void Entity::OnNoCollision() {
+void Entity::OnNoCollision(float dt, Axis axis) {
+	dt;
+	axis;
 }
 
-void Entity::OnTopHeadCollision(Entity* other, const Vector2& normal) {}
-void Entity::OnFootCollision(Entity* other, const Vector2& normal) {
+void Entity::OnTopHeadCollision(const CollisionResult& event) {
+	event;
 }
-void Entity::OnLeftSideCollision(Entity* other, const Vector2& normal) {}
-void Entity::OnRightSideCollision(Entity* other, const Vector2& normal) {}
+
+void Entity::OnFootCollision(const CollisionResult& event) {
+	event;
+}
+
+void Entity::OnLeftSideCollision(const CollisionResult& event) {
+	event;
+}
+
+void Entity::OnRightSideCollision(const CollisionResult& event) {
+	event;
+}
 
 bool Entity::IsGrounded() const {
-	Vector2 pos = m_collisionComponent->GetPosition();
-	Vector2 size = m_collisionComponent->GetSize();
-	std::vector<Entity*> m_hitEntities;
+	return m_isGrounded;
+}
 
-	Collision::GetInstance()->Raycast(this, pos, pos + Vector2(0, size.y / 2 ), m_hitEntities);
-
-	return !m_hitEntities.empty();
+void Entity::Die(DyingType type) {
+	type;
 }

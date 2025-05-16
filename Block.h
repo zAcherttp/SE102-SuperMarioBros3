@@ -9,10 +9,21 @@ public:
     Block(Vector2 position, SpriteSheet* spriteSheet);
     ~Block() = default;
 
-    bool IsSolid() const { return m_isSolid; }
-    void SetSolid(bool solid) { m_isSolid = solid; }
+    bool IsSolid() const;
+    void SetSolid(bool solid);
+
+    bool IsCollectible() const;
+
+    void SetIsClaimed(bool claimed);
+
+    virtual void Collect();
+    virtual void Bump();
+    virtual void Break();
 
 protected:
-    bool m_isSolid = true;
+    bool m_isSolid;
+    bool m_isCollectible;
+
+    bool m_isClaimed;
 };
 

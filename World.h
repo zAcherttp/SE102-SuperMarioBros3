@@ -20,9 +20,11 @@ public:
 	void Load(SpriteSheet* spriteSheet);
 	void Unload();
 	void Reset();
+	void Teleport();
+	void TogglePause();
 
-	std::vector<Entity*>& GetEntities();
 	Entity* GetPlayer();
+	static World* GetInstance();
 
 	DirectX::XMVECTORF32 GetBackgroundColor() const;
 	std::string GetName() const;
@@ -31,6 +33,7 @@ public:
 
 	void HandleInput(DirectX::Keyboard::State* kbState, DirectX::Keyboard::KeyboardStateTracker* kbsTracker);
 
+	void AddEntity(Entity* entity);
 private:
 	std::string m_path;
 	std::string m_name;
@@ -39,6 +42,10 @@ private:
 	int m_width;
 	int m_height;
 	DirectX::XMVECTORF32 m_background;
+
+	static World* s_instance;
+
+	bool m_isPaused;
 
 	std::unique_ptr<Collision> m_collisionSystem;
 

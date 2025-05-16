@@ -1,18 +1,44 @@
 #pragma once
+#include "Collision.h"
+#include "CollisionComponent.h"
 #include "Entity.h"
+#include "Keyboard.h"
 #include "MarioMovementStates.h"
+#include "MarioPowerUpStates.h"
+#include "MarioStateBase.h"
+#include "SimpleMath.h"
+#include "SpriteBatch.h"
+#include "SpriteSheet.h"
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 using namespace DirectX::SimpleMath;
 
 struct InputState {
+	bool isLeftDown = false;
+	bool isRightDown = false;
+	bool isUpDown = false;
+	bool isDownDown = false;
+	bool isADown = false;
+	bool isBDown = false;
+
 	bool isLeftPressed = false;
 	bool isRightPressed = false;
 	bool isUpPressed = false;
 	bool isDownPressed = false;
 	bool isAPressed = false;
 	bool isBPressed = false;
+	bool isStartPressed = false;
+
+	void ResetDirectionals() {
+		isLeftDown = isLeftPressed = false;
+		isRightDown = isRightPressed = false;
+		isUpDown = isUpPressed = false;
+		isDownDown = isDownPressed = false;
+	}
 };
-	
 
 class Mario : public Entity
 {
@@ -24,6 +50,9 @@ public:
 	bool UsesInteractionPoints() const override;
 
 	void ItsAMe();
+	void Damage();
+	void PowerUp(PowerUpType type);
+	bool Kick(Direction dir, Entity* ent);
 
 	void Update(float dt) override;
 	void Render(DirectX::SpriteBatch* spriteBatch) override;
@@ -37,14 +66,27 @@ public:
 	int GetCoins() const { return m_coins; }
 	void SetCoins(int coins) { m_coins = coins; }
 
-	std::string GetCurrentStateName() const { return m_movementSM->GetStateName(); }
+	PowerUpType GetPowerUpState() const;
 
-	void OnCollision(const CollisionEvent& event) override;
-	void OnNoCollision() override;
-	void OnTopHeadCollision(Entity* other, const Vector2& normal) override;
-	void OnFootCollision(Entity* other, const Vector2& normal) override;
-	void OnLeftSideCollision(Entity* other, const Vector2& normal) override;
-	void OnRightSideCollision(Entity* other, const Vector2& normal) override;
+	bool IsTransitioning() const;
+	bool IsDying() const;
+
+	std::string GetCurrentMStateName() const { return m_movementSM->GetStateName(); }
+	std::string GetCurrentPStateName() const { return m_powerupSM->GetStateName(); }
+
+	int GetCurrentMStateAnimValue() const { return m_movementSM->GetStateAnimValue(); }
+	int GetCurrentPStateAnimValue() const { return m_powerupSM->GetStateAnimValue(); }
+
+	Vector2 GetCurrentMStateSizeOffset() const { return m_movementSM->GetStateSizeOffset(); }
+	Vector2 GetCurrentPStateSizeOffset() const { return m_powerupSM->GetStateSizeOffset(); }
+
+	void OnCollision(const CollisionResult& event) override;
+	void OnNoCollision(float dt, Axis axis) override;
+
+	void OnTopHeadCollision(const CollisionResult& event) override;
+	void OnFootCollision(const CollisionResult& event) override;
+	void OnLeftSideCollision(const CollisionResult& event) override;
+	void OnRightSideCollision(const CollisionResult& event) override;
 
 private:
 	int m_lives;
@@ -53,11 +95,10 @@ private:
 
 	InputState* m_inputState;
 
-	MarioMovementState* m_movementSM;
-	/*MarioPowerUpState* m_powerupSM;*/
+	std::unique_ptr<MarioMovementState> m_movementSM;
+	std::unique_ptr<MarioPowerUpState> m_powerupSM;
 
 	std::vector<std::pair<InteractionPointType, Vector2>> GetSmallMarioInteractionPoints() const;
 	std::vector<std::pair<InteractionPointType, Vector2>> GetBigMarioInteractionPoints() const;
 	std::vector<std::pair<InteractionPointType, Vector2>> GetBigMarioSitInteractionPoints() const;
 };
-

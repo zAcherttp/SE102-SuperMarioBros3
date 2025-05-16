@@ -4,16 +4,21 @@
 #include <map>
 #include <unordered_set>
 
+using namespace DirectX::SimpleMath;
+
 enum class InteractionPointType {
     TopHead,
+
     LeftUpper,
-    LeftMiddle,
     LeftLower,
+
     RightUpper,
-    RightMiddle,
     RightLower,
+
     LeftFoot,
     RightFoot,
+
+    None,
 };
 
 class Entity;
@@ -23,22 +28,28 @@ public:
     CollisionComponent(Entity* owner);
     ~CollisionComponent() = default;
 
-    RECT GetBoundingBox() const;
+    RECT GetRect() const;
+    Rectangle GetRectangle() const;
 
-    DirectX::SimpleMath::Vector2 GetSize() const;
-	void SetSize(DirectX::SimpleMath::Vector2 size);
+    void Update(float dt);
 
-	DirectX::SimpleMath::Vector2 GetPosition() const;
-    void SetPosition(DirectX::SimpleMath::Vector2 position);
+    Vector2 GetSize() const;
+	void SetSize(Vector2 size);
 
-    // Check if a point is inside the bounding box
-    bool ContainsPoint(const DirectX::SimpleMath::Vector2& point) const;
-	bool ContainsRectangle(const RECT& rect) const;
+	Vector2 GetPosition() const;
+    void SetPosition(Vector2 position);
+
+	Vector2 GetVelocity() const;
+    void SetVelocity(Vector2 velocity);
+
+    //push entity over timespan
+    void Push(Vector2 distance, float span);
+    bool GetIsPushed() const;
 
     // Get the owner entity
     Entity* GetOwner() const { return m_owner; }
 
-    virtual std::vector<std::pair<InteractionPointType, DirectX::SimpleMath::Vector2>> GetInteractionPoints() const;
+    virtual std::vector<std::pair<InteractionPointType, Vector2>> GetInteractionPoints() const;
     
     // Debug rendering
     void RenderDebug(DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* primitiveBatch,
@@ -47,6 +58,12 @@ public:
 
 private:
     Entity* m_owner;
-    DirectX::SimpleMath::Vector2 m_size;
-    DirectX::SimpleMath::Vector2 m_pos;
+    Vector2 m_size;
+    Vector2 m_pos;
+    Vector2 m_vel;
+
+    bool m_isBeingPushed;
+    Vector2 m_pushVector;
+    Vector2 m_pushVel;
+    float m_pushedDistance;
 };

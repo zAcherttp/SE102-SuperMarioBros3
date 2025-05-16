@@ -7,6 +7,22 @@
 
 using namespace DirectX::SimpleMath;
 
+enum class CollisionGroup {
+	NONE = 0,
+	PLAYER,
+	ENEMY,
+	SOLID,
+	NONSOLID,
+	BACKGROUND,
+	ITEM,
+	PROJECTILE,
+};
+
+enum class DyingType {
+	UNDEFINED = 0,
+	STOMPED,
+	BONKED
+};
 class Entity
 {
 public:
@@ -27,12 +43,11 @@ public:
 	Vector2 GetVelocity() const;
 	void SetVelocity(const Vector2& vel);
 
-	Vector2 GetAcceleration() const;
-	void SetAcceleration(const Vector2& accel);
-
 	bool IsActive() const;
 	bool IsCollidable() const;
 	bool IsStatic() const;
+	bool IsDead() const;
+
 
 	void DefineAnimation(int animId, const std::vector<const wchar_t*>& frameNames,
 		bool loop = true, float timePerFrame = 0.1f,
@@ -42,6 +57,9 @@ public:
 	void SetAnimation(int animId, bool reset = false);
 
 	void SetDirection(int direction);
+
+	CollisionGroup GetCollisionGroup() const;
+	void SetCollisionGroup(const CollisionGroup& group);
 
 	int GetAnimId() const;
 	void SetAnimId(const int& id);
@@ -62,24 +80,26 @@ public:
 	virtual std::vector<std::pair<InteractionPointType, Vector2>> GetInteractionPoints() const;
 	virtual bool UsesInteractionPoints() const;
 
-	virtual void OnCollision(const CollisionEvent& event);
-	virtual void OnNoCollision();
+	virtual void OnCollision(const CollisionResult& event);
+	virtual void OnNoCollision(float dt, Axis axis);
 
-	virtual void OnTopHeadCollision(Entity* other, const Vector2& normal);
-	virtual void OnFootCollision(Entity* other, const Vector2& normal);
-	virtual void OnLeftSideCollision(Entity* other, const Vector2& normal);
-	virtual void OnRightSideCollision(Entity* other, const Vector2& normal);
+	virtual void OnTopHeadCollision(const CollisionResult& event);
+	virtual void OnFootCollision(const CollisionResult& event);
+	virtual void OnLeftSideCollision(const CollisionResult& event);
+	virtual void OnRightSideCollision(const CollisionResult& event);
 	virtual bool IsGrounded() const;
 
-protected:
-	Vector2 m_vel;
-	Vector2 m_accel;
+	virtual void Die(DyingType type);
 
+protected:
 	//physics
 	std::unique_ptr<CollisionComponent> m_collisionComponent;
 	bool m_isActive = true;
 	bool m_isCollidable = true;
 	bool m_isStatic = false;
+	bool m_isGrounded = false;
+	CollisionGroup m_collisionGroup = CollisionGroup::NONE;
+	DyingType m_dyingType = DyingType::UNDEFINED;
 
 	//sprite
 	std::unique_ptr<Animator> m_animator;

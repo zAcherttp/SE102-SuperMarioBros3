@@ -1,103 +1,83 @@
 #pragma once
 #include "pch.h"
 #include "Debug.h"
-#include "State.h"
+#include "MarioStateBase.h"
+#include "RedTroopas.h"
+
+class Entity;
 
 class MarioWalkState;
 class MarioRunState;
 class MarioSkidState;
 class MarioJumpState;
 class MarioSitState;
-class Mario;
 
 using KBState = DirectX::Keyboard::State;
 using KBSTracker = DirectX::Keyboard::KeyboardStateTracker;
 
-enum class MarioMovementStateType {
-    Idle,
-    Walk,
-    Run,
-    Jump,
-    Skid,
-    Sit
-};
-
-enum class MarioPowerupStateType {
-    Small,
-	Super,
-	Racoon
-};
-
-enum class Direction { Left = -1, Right = 1 };
-
-class MarioStateBase : protected State<Mario> {
+class MarioMovementState : public MarioStateBase {
 protected:
 	Direction m_dir;
 public:
-	MarioStateBase(Direction dir) : m_dir(dir), State() {};
+	MarioMovementState(Direction dir) : m_dir(dir) {};
 	Direction GetDirection() const;
-	virtual MarioStateBase* HandleInput(Mario* mario) = 0;
+	virtual std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) = 0;
 	void Update(Mario* mario, float dt) override = 0;
 	virtual void Enter(Mario* mario) override;
-	virtual void Exit(Mario* mario) override = 0;
-	virtual std::string GetStateName() const = 0;
-	void SetAnimation(Mario* mario, int animId) const;
+	virtual void Exit(Mario* mario) override;
 };
 
-class MarioPowerupState : public MarioStateBase {
+class MarioDieMState : public MarioMovementState {
 public:
-	MarioPowerupState(Direction dir) : MarioStateBase(dir) {};
-	virtual MarioPowerupState* HandleInput(Mario* mario) = 0;
-	void Update(Mario* mario, float dt) override = 0;
-	virtual void Exit(Mario* mario) override = 0;
-};
-
-class MarioMovementState : public MarioStateBase {
-public:
-	MarioMovementState(Direction dir) : MarioStateBase(dir) {};
-	virtual MarioMovementState* HandleInput(Mario* mario) override = 0;
-	void Update(Mario* mario, float dt) override = 0;
-	virtual void Exit(Mario* mario) override = 0;
+	MarioDieMState(Direction dir = Direction::Left) : MarioMovementState(dir) {};
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
+	void Update(Mario* mario, float dt) override;
+	std::string GetStateName() const override;
+	void Enter(Mario* mario) override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 };
 
 class MarioIdleState : public MarioMovementState {
 public:
 	MarioIdleState(Direction dir) : MarioMovementState(dir) {};
-	MarioMovementState* HandleInput(Mario* mario) override;
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
-	void Enter(Mario* mario) override;
-	void Exit(Mario* mario) override;
 	std::string GetStateName() const override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 };
 
 class MarioWalkState : public MarioMovementState {
 public:
 	MarioWalkState(Direction dir) : MarioMovementState(dir) {};
-	MarioMovementState* HandleInput(Mario* mario) override;
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
-	void Enter(Mario* mario) override;
-	void Exit(Mario* mario) override;
 	std::string GetStateName() const override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 };
 
 class MarioRunState : public MarioMovementState {
 public:
 	MarioRunState(Direction dir) : MarioMovementState(dir) {};
-	MarioMovementState* HandleInput(Mario* mario) override;
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
-	void Enter(Mario* mario) override;
-	void Exit(Mario* mario) override;
 	std::string GetStateName() const override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
+private:
+	bool m_isSprinting = false;
 };
 
 class MarioSkidState : public MarioMovementState {
 public:
 	MarioSkidState(Direction dir) : MarioMovementState(dir), m_lastDir(dir) {};
-	MarioMovementState* HandleInput(Mario* mario) override;
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
-	void Enter(Mario* mario) override;
-	void Exit(Mario* mario) override;
 	std::string GetStateName() const override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 private:
 	Direction m_lastDir;
 };
@@ -105,25 +85,65 @@ private:
 class MarioJumpState : public MarioMovementState {
 public:
 	MarioJumpState(Direction dir) : MarioMovementState(dir) {};
-	MarioMovementState* HandleInput(Mario* mario) override;
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
 	void Enter(Mario* mario) override;
-	void Exit(Mario* mario) override;
 	std::string GetStateName() const override;
-};	
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
+private:
+	bool m_isFalling = false;
+};
 
 class MarioSitState : public MarioMovementState {
 public:
 	MarioSitState(Direction dir) : MarioMovementState(dir) {};
-	MarioMovementState* HandleInput(Mario* mario) override;
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
-	void Enter(Mario* mario) override;
-	void Exit(Mario* mario) override;
 	std::string GetStateName() const override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 };
 
-class MarioStateFactory {
+class MarioHoldState : public MarioMovementState {
 public:
-    static MarioMovementState* CreateState(MarioMovementStateType type, Direction direction);
-	static MarioPowerupState* CreateState(MarioPowerupStateType type, Direction direction);
+	MarioHoldState(Direction dir, Entity* heldEntity);
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
+	void Update(Mario* mario, float dt) override;
+	std::string GetStateName() const override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
+	Vector2 GetHeldEntityOffset(Mario* mario, const int& state);
+	void CheckHeldShellCollisions(Mario* mario, RedTroopas* shell, float dt);
+private:
+	Entity* m_heldEntity;
+
+	bool m_isJumping = false;
+	const float m_jumpDebounce = 0.2f;
+	const float m_dirChangeTimeSpan = 0.3f;
+
+	float m_jumpTimer;
+	float m_dirChangeState;
+	int m_dirState = -1;
+
+	bool m_isWalking = false;
+
+	bool m_isInterrupted = false;
+
+	Direction m_newDir;
+	Vector2 m_heldEntityOffset;
+};
+
+class MarioKickState : public MarioMovementState {
+public:
+	MarioKickState(Direction dir, Entity* entity) : MarioMovementState(dir), m_entity(entity) {};
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
+	void Enter(Mario* mario) override;
+	void Update(Mario* mario, float dt) override;
+	std::string GetStateName() const override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
+private:
+	Entity* m_entity;
+	float m_kickTimer = 0.4f;
 };

@@ -3,32 +3,272 @@
     "type": 0,
     "sprites": [
       {
-        "id": 110,
+        "id": 100010,
         "name": "mario_small_idle",
-        "frames": [ "small-idle" ],
+        "frames": ["small-idle"],
         "loop": false
       },
       {
-        "id": 120,
+        "id": 200010,
+        "name": "mario_big_idle",
+        "frames": [ "big-idle" ],
+        "loop": false
+      },
+      {
+        "id": 300010,
+        "name": "mario_raccoon_idle",
+        "frames": [ "raccoon-idle" ],
+        "loop": false
+      },
+      {
+        "id": 100020,
         "name": "mario_small_walk",
-        "frames": [ "small-walk", "small-idle" ],
+        "frames": ["small-walk", "small-idle"],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
         "minTimePerFrame": 0.05,
         "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.015
+      },
+      {
+        "id": 200020,
+        "name": "mario_big_walk",
+        "frames": [ "big-walk1", "big-jump2", "big-walk1","big-idle" ],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.05,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.015
+      },{
+        "id": 300020,
+        "name": "mario_big_walk",
+        "frames": [ "raccoon-walk", "raccoon-flap2", "raccoon-walk","raccoon-idle" ],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.05,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.015
+      },
+      {
+        "id": 100030,
+        "name": "mario_small_sprint",
+        "frames": ["small-sprint1", "small-sprint2"],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.01,
+        "maxTimePerFrame": 0.2,
         "velocityScaleFactor": 0.02
       },
       {
-        "id": 140,
+        "id": 200030,
+        "name": "mario_big_sprint",
+        "frames": [ "big-sprint2", "big-sprint3", "big-sprint2", "big-sprint1" ],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.01,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.02
+      },{
+        "id": 300030,
+        "name": "mario_raccoon_sprint",
+        "frames": [ "raccoon-sprint2", "raccoon-sprint3", "raccoon-sprint2", "raccoon-sprint1" ],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.01,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.02
+      },
+      {
+        "id": 100040,
         "name": "mario_small_skid",
-        "frames": [ "small-skid" ],
+        "frames": ["small-skid"],
         "loop": false
       },
       {
-        "id": 150,
+        "id": 200040,
+        "name": "mario_big_skid",
+        "frames": [ "big-skid" ],
+        "loop": false
+      },{
+        "id": 300040,
+        "name": "mario_raccoon_skid",
+        "frames": [ "raccoon-skid" ],
+        "loop": false
+      },
+      {
+        "id": 100050,
         "name": "mario_small_jump",
-        "frames": [ "small-jump" ],
+        "frames": ["small-jump"],
+        "loop": false
+      },
+      {
+        "id": 200050,
+        "name": "mario_big_jump",
+        "frames": ["big-jump1"],
+        "loop": false
+      },
+      {
+        "id": 200051,
+        "name": "mario_big_jump",
+        "frames": [ "big-jump2" ],
+        "loop": false
+      },{
+        "id": 300050,
+        "name": "mario_raccoon_jump",
+        "frames": [ "raccoon-jump1" ],
+        "loop": false
+      },
+      {
+        "id": 300051,
+        "name": "mario_raccoon_jump",
+        "frames": [ "raccoon-jump2" ],
+        "loop": false
+      },
+      {
+        "id": 100060,
+        "name": "mario_small_powerjump",
+        "frames": ["small-sprint-jump"],
+        "loop": false
+      },
+      {
+        "id": 200060,
+        "name": "mario_big_powerjump1",
+        "frames": [ "big-sprint-jump2" ],
+        "loop": false
+      },{
+        "id": 300060,
+        "name": "mario_raccoon_powerjump1",
+        "frames": [ "raccoon-fly1" ],
+        "loop": false
+      },
+      {
+        "id": 200070,
+        "name": "mario_big_sit",
+        "frames": [ "big-sit" ],
+        "loop": false
+      },{
+        "id": 300070,
+        "name": "mario_raccoon_sit",
+        "frames": [ "raccoon-sit" ],
+        "loop": false
+      },
+      {
+        "id": 100090,
+        "name": "mario_small_hold_idle",
+        "frames": ["small-holding-walk"],
+        "loop": false
+      },
+      {
+        "id": 200090,
+        "name": "mario_big_hold_idle",
+        "frames": [ "big-holding-walk1" ],
+        "loop": false
+      },
+      {
+        "id": 300090,
+        "name": "mario_big_hold_idle",
+        "frames": [ "raccoon-holding-walk1" ],
+        "loop": false
+      },
+      {
+        "id": 100091,
+        "name": "mario_small_hold",
+        "frames": ["small-holding-walk", "small-holding-jump"],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.05,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.015
+      },
+      {
+        "id": 200091,
+        "name": "mario_big_hold",
+        "frames": [ "big-holding-walk2", "big-holding-walk1" ],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.05,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.015
+      },{
+        "id": 300091,
+        "name": "mario_raccoon_hold",
+        "frames": [ "raccoon-holding-walk2", "raccoon-holding-walk1" ],
+        "loop": true,
+        "timePerFrame": 0.1,
+        "useVelocityScaling": true,
+        "minTimePerFrame": 0.05,
+        "maxTimePerFrame": 0.2,
+        "velocityScaleFactor": 0.015
+      },
+      {
+        "id": 100092,
+        "name": "mario_small_hold_jump",
+        "frames": ["small-holding-jump"],
+        "loop": false
+      },
+      {
+        "id": 200092,
+        "name": "mario_big_hold_jump",
+        "frames": [ "big-holding-jump" ],
+        "loop": false
+      },{
+        "id": 300092,
+        "name": "mario_raccoon_hold_jump",
+        "frames": [ "raccoon-holding-jump" ],
+        "loop": false
+      },
+      {
+        "id": 100093,
+        "name": "mario_small_hold_front",
+        "frames": ["small-holding-front"],
+        "loop": false
+      },
+      {
+        "id": 200093,
+        "name": "mario_big_hold_front",
+        "frames": [ "big-front" ],
+        "loop": false
+      },{
+        "id": 300093,
+        "name": "mario_raccoon_hold_front",
+        "frames": [ "raccoon-front" ],
+        "loop": false
+      },
+      {
+        "id": 100100,
+        "name": "mario_small_kick",
+        "frames": ["small-kick"],
+        "loop": false
+      },
+      {
+        "id": 200100,
+        "name": "mario_big_kick",
+        "frames": [ "big-kick" ],
+        "loop": false
+      },{
+        "id": 300100,
+        "name": "mario_raccoon_kick",
+        "frames": [ "raccoon-kick" ],
+        "loop": false
+      },
+      {
+        "id": 400000,
+        "name": "mario_die",
+        "frames": ["small-die"],
+        "loop": false
+      },
+      {
+        "id": 110,
+        "name": "mario_bonked",
+        "frames": ["big-to-small"],
         "loop": false
       }
     ]
@@ -39,19 +279,730 @@
       {
         "id": 1000,
         "name": "ground_top_left",
-        "frames": [ "platform-top-left" ],
+        "frames": ["platform-top-left"],
         "loop": false
       },
       {
         "id": 1010,
         "name": "ground_top_mid",
-        "frames": [ "platform-top-mid" ],
+        "frames": ["platform-top-mid"],
         "loop": false
       },
       {
         "id": 1020,
         "name": "ground_top_right",
-        "frames": [ "platform-top-right" ],
+        "frames": ["platform-top-right"],
+        "loop": false
+      },
+      {
+        "id": 1030,
+        "name": "ground_bot_left",
+        "frames": ["platform-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 1040,
+        "name": "ground_bot_mid",
+        "frames": ["platform-bot-mid"],
+        "loop": false
+      },
+      {
+        "id": 1050,
+        "name": "ground_bot_right",
+        "frames": ["platform-bot-right"],
+        "loop": false
+      },
+      {
+        "id": 1060,
+        "name": "independent-platform",
+        "frames": ["independent-platform"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 11,
+    "sprites": [
+      {
+        "id": 1100,
+        "name": "bush",
+        "frames": ["bush"],
+        "loop": false
+      },
+      {
+        "id": 1110,
+        "name": "bush-2",
+        "frames": ["cactus-left-side"],
+        "loop": false
+      },
+      {
+        "id": 1120,
+        "name": "bush-3",
+        "frames": ["cactus-right-side"],
+        "loop": false
+      },
+      {
+        "id": 1130,
+        "name": "bush-4",
+        "frames": ["cactus-mid"],
+        "loop": false
+      },
+      {
+        "id": 1140,
+        "name": "bush-5",
+        "frames": ["cactus-outer-top-left"],
+        "loop": false
+      },
+      {
+        "id": 1150,
+        "name": "bush-6",
+        "frames": ["cactus-outer-top-right"],
+        "loop": false
+      },
+      {
+        "id": 1160,
+        "name": "bush-7",
+        "frames": ["inner-cactus-top-left"],
+        "loop": false
+      },
+      {
+        "id": 1170,
+        "name": "bush-8",
+        "frames": ["inner-cactus-top-right"],
+        "loop": false
+      },
+      {
+        "id": 1101,
+        "name": "bush-9",
+        "frames": ["end-cactus-left-side"],
+        "loop": false
+      },
+      {
+        "id": 1111,
+        "name": "bush-10",
+        "frames": ["end-cactus-right-side"],
+        "loop": false
+      },
+      {
+        "id": 1121,
+        "name": "bush-11",
+        "frames": ["end-cactus-top-left"],
+        "loop": false
+      },
+      {
+        "id": 1131,
+        "name": "bush-12",
+        "frames": ["end-cactus-top-right"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 15,
+    "sprites": [
+      {
+        "id": 1500,
+        "name": "cloud-00",
+        "frames": ["cloud-00"],
+        "loop": false
+      },
+      {
+        "id": 1510,
+        "name": "cloud-10",
+        "frames": ["cloud-10"],
+        "loop": false
+      },
+      {
+        "id": 1520,
+        "name": "cloud-20",
+        "frames": ["cloud-20"],
+        "loop": false
+      },
+      {
+        "id": 1530,
+        "name": "cloud-01",
+        "frames": ["cloud-01"],
+        "loop": false
+      },
+      {
+        "id": 1540,
+        "name": "cloud-11",
+        "frames": ["cloud-11"],
+        "loop": false
+      },
+      {
+        "id": 1550,
+        "name": "cloud-21",
+        "frames": ["cloud-21"],
+        "loop": false
+      },
+      {
+        "id": 1501,
+        "name": "cloud-flower",
+        "frames": ["cloud-flower"],
+        "loop": false
+      },
+      {
+        "id": 1502,
+        "name": "cloud-star",
+        "frames": ["cloud-star"],
+        "loop": false
+      },
+      {
+        "id": 1503,
+        "name": "cloud-mushroom",
+        "frames": ["cloud-mushroom"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 25,
+    "sprites": [
+      {
+        "id": 2513,
+        "name": "pink-mid-left",
+        "frames": ["pink-mid-left"],
+        "loop": false
+      },
+      {
+        "id": 2515,
+        "name": "pink-mid-right",
+        "frames": ["pink-mid-right"],
+        "loop": false
+      },
+      {
+        "id": 2514,
+        "name": "pink-mid-mid",
+        "frames": ["pink-mid-mid"],
+        "loop": false
+      },
+      {
+        "id": 2510,
+        "name": "pink-top-left",
+        "frames": ["pink-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2512,
+        "name": "pink-top-right",
+        "frames": ["pink-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2511,
+        "name": "pink-top-mid",
+        "frames": ["pink-top-mid"],
+        "loop": false
+      },
+      {
+        "id": 2516,
+        "name": "pink-bot-left",
+        "frames": ["pink-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2518,
+        "name": "pink-bot-right",
+        "frames": ["pink-bot-right"],
+        "loop": false
+      },
+      {
+        "id": 2517,
+        "name": "pink-bot-mid",
+        "frames": ["pink-bot-mid"],
+        "loop": false
+      },
+      {
+        "id": 2503,
+        "name": "white-mid-left",
+        "frames": ["white-mid-left"],
+        "loop": false
+      },
+      {
+        "id": 2505,
+        "name": "white-mid-right",
+        "frames": ["white-mid-right"],
+        "loop": false
+      },
+      {
+        "id": 2504,
+        "name": "white-mid-mid",
+        "frames": ["white-mid-mid"],
+        "loop": false
+      },
+      {
+        "id": 2500,
+        "name": "white-top-left",
+        "frames": ["white-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2502,
+        "name": "white-top-right",
+        "frames": ["white-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2501,
+        "name": "white-top-mid",
+        "frames": ["white-top-mid"],
+        "loop": false
+      },
+      {
+        "id": 2506,
+        "name": "white-bot-left",
+        "frames": ["white-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2508,
+        "name": "white-bot-right",
+        "frames": ["white-bot-right"],
+        "loop": false
+      },
+      {
+        "id": 2507,
+        "name": "white-bot-mid",
+        "frames": ["white-bot-mid"],
+        "loop": false
+      },
+      {
+        "id": 2550,
+        "name": "shade-left",
+        "frames": ["shade-left"],
+        "loop": false
+      },
+      {
+        "id": 2551,
+        "name": "shade-top",
+        "frames": ["shade-top"],
+        "loop": false
+      },
+      {
+        "id": 2552,
+        "name": "shade-bot-left",
+        "frames": ["shade-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2553,
+        "name": "shade-top-left",
+        "frames": ["shade-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2554,
+        "name": "shade-top-right",
+        "frames": ["shade-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2530,
+        "name": "green-top-left",
+        "frames": ["green-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2531,
+        "name": "green-top-mid",
+        "frames": ["green-top-mid"],
+        "loop": false
+      },
+      {
+        "id": 2532,
+        "name": "green-top-right",
+        "frames": ["green-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2533,
+        "name": "green-mid-left",
+        "frames": ["green-mid-left"],
+        "loop": false
+      },
+      {
+        "id": 2534,
+        "name": "green-mid-mid",
+        "frames": ["green-mid-mid"],
+        "loop": false
+      },
+      {
+        "id": 2535,
+        "name": "green-mid-right",
+        "frames": ["green-right-mid"],
+        "loop": false
+      },
+      {
+        "id": 2536,
+        "name": "green-bottom-left",
+        "frames": ["green-bottom-left"],
+        "loop": false
+      },
+      {
+        "id": 2537,
+        "name": "green-bottom-mid",
+        "frames": ["green-bottom-mid"],
+        "loop": false
+      },
+      {
+        "id": 2538,
+        "name": "green-bottom-right",
+        "frames": ["green-bottom-right"],
+        "loop": false
+      },
+      {
+        "id": 2520,
+        "name": "blue-top-left",
+        "frames": ["blue-left-top"],
+        "loop": false
+      },
+      {
+        "id": 2521,
+        "name": "blue-top-mid",
+        "frames": ["blue-top-mid"],
+        "loop": false
+      },
+      {
+        "id": 2522,
+        "name": "blue-top-right",
+        "frames": ["blue-right-top"],
+        "loop": false
+      },
+      {
+        "id": 2523,
+        "name": "blue-mid-left",
+        "frames": ["blue-mid-left"],
+        "loop": false
+      },
+      {
+        "id": 2524,
+        "name": "blue-mid-mid",
+        "frames": ["blue-mid-mid"],
+        "loop": false
+      },
+      {
+        "id": 2525,
+        "name": "blue-mid-right",
+        "frames": ["blue-right-mid"],
+        "loop": false
+      },
+      {
+        "id": 2526,
+        "name": "blue-bot-left",
+        "frames": ["blue-bottom-left"],
+        "loop": false
+      },
+      {
+        "id": 2527,
+        "name": "blue-bot-mid",
+        "frames": ["blue-bottom-mid"],
+        "loop": false
+      },
+      {
+        "id": 2528,
+        "name": "blue-bot-right",
+        "frames": ["blue-right-bottom"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 27,
+    "sprites": [
+      {
+        "id": 2700,
+        "name": "pipe-top-left",
+        "frames": ["pipe-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2710,
+        "name": "pipe-top-right",
+        "frames": ["pipe-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2720,
+        "name": "pipe-bot-left",
+        "frames": ["pipe-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2730,
+        "name": "pipe-bot-right",
+        "frames": ["pipe-bot-right"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 24,
+    "sprites": [
+      {
+        "id": 2400,
+        "name": "brick",
+        "frames": ["brick-1", "brick-2", "brick-3", "brick-4"],
+        "loop": true,
+        "timePerFrame": 0.3
+      }
+    ]
+  },
+  {
+    "type": 28,
+    "sprites": [
+      {
+        "id": 2800,
+        "name": "coin",
+        "frames": ["coin-1", "coin-2", "coin-3", "coin-4"],
+        "loop": true,
+        "timePerFrame": 0.3
+      }
+    ]
+  },
+  {
+    "type": 16,
+    "sprites": [
+      {
+        "id": 1600,
+        "name": "sky-platform",
+        "frames": "sky-platform",
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 21,
+    "sprites": [
+      {
+        "id": 2100,
+        "name": "lucky-block",
+        "frames": ["lucky-box-1", "lucky-box-2", "lucky-box-3", "lucky-box-4"],
+        "loop": true,
+        "timePerFrame": 0.3
+      },
+      {
+        "id": 2110,
+        "name": "lucky-block-claimed",
+        "frames": ["lucky-box-claimed"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 17,
+    "sprites": [
+      {
+        "id": 1700,
+        "name": "end-background",
+        "frames": "end-background",
+        "loop": false
+      },
+      {
+        "id": 1710,
+        "name": "end-barrier",
+        "frames": "end-barrier",
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 22,
+    "sprites": [
+      {
+        "id": 2200,
+        "name": "end-portal",
+        "frames": ["powerup-mushroom", "leafpowerup-mushroom"],
+        "loop": true,
+        "timePerFrame": 0.3
+      },
+      {
+        "id": 2200,
+        "name": "end-portal-top-left",
+        "frames": ["end-portal-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2210,
+        "name": "end-portal-top-mid",
+        "frames": ["end-portal-top-mid"],
+        "loop": false
+      },
+      {
+        "id": 2220,
+        "name": "end-portal-top-right",
+        "frames": ["end-portal-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2230,
+        "name": "end-portal-mid-left",
+        "frames": ["end-portal-mid-left"],
+        "loop": false
+      },
+      {
+        "id": 2240,
+        "name": "end-portal-mid-mid",
+        "frames": ["end-portal-mid-mid"],
+        "loop": false
+      },
+      {
+        "id": 2250,
+        "name": "end-portal-mid-right",
+        "frames": ["end-portal-mid-right"],
+        "loop": false
+      },
+      {
+        "id": 2260,
+        "name": "end-portal-bot-left",
+        "frames": ["end-portal-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2270,
+        "name": "end-portal-bot-mid",
+        "frames": ["end-portal-bot-mid"],
+        "loop": false
+      },
+      {
+        "id": 2280,
+        "name": "end-portal-bot-right",
+        "frames": ["end-portal-bot-right"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 5,
+    "sprites": [
+      {
+        "id": 500,
+        "name": "goomba",
+        "frames": ["goomba"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 510,
+        "name": "goomba-stomp",
+        "frames": ["goomba-stomp"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 6,
+    "sprites": [
+      {
+        "id": 600,
+        "name": "paragoomba",
+        "frames": ["paragoomba"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 610,
+        "name": "paragoomba-stomp",
+        "frames": ["paragoomba-stomp"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 9,
+    "sprites": [
+      {
+        "id": 900,
+        "name": "piranha-look-down",
+        "frames": ["redpiranha-down1", "redpiranha-down2"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 910,
+        "name": "piranha-look-up",
+        "frames": ["redpiranha-up1", "redpiranha-up2"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 920,
+        "name": "piranha-look-down-open",
+        "frames": ["redpiranha-down1"],
+        "loop": false
+      },
+      {
+        "id": 930,
+        "name": "piranha-look-up-open",
+        "frames": ["redpiranha-up1"],
+        "loop": false
+      },
+      {
+        "id": 2910,
+        "name": "piranha-look-die",
+        "frames": ["pop1", "pop2", "pop3", "pop4"],
+        "loop": true,
+        "timePerFrame": 0.1
+      }
+    ]
+  },
+  {
+    "type": 4,
+    "sprites": [
+      {
+        "id": 400,
+        "name": "red-troopa-walk",
+        "frames": ["redtroopa-walk1", "redtroopa-walk2"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 410,
+        "name": "red-troopa-shell",
+        "frames": ["redtroopa-shell1"],
+        "loop": false
+      },
+      {
+        "id": 420,
+        "name": "red-troopa-shell-slide",
+        "frames": ["redtroopa-shell1", "redtroopa-shell2", "redtroopa-shell3"],
+        "loop": true,
+        "timePerFrame": 0.1
+      },
+      {
+        "id": 430,
+        "name": "red-troopa-revive-slow",
+        "frames": ["redtroopa-shell1", "redtroopa-shell1-alt"],
+        "loop": true,
+        "timePerFrame": 0.15
+      },
+      {
+        "id": 440,
+        "name": "red-troopa-revive-fast",
+        "frames": ["redtroopa-shell1", "redtroopa-shell1-alt"],
+        "loop": true,
+        "timePerFrame": 0.05
+      }
+    ]
+  },
+  {
+    "type": 30,
+    "sprites": [
+      {
+        "id": 3000,
+        "name": "mushroom",
+        "frames": ["powerup-mushroom"],
+        "loop": false
+      }
+    ]
+  },
+  {
+    "type": 31,
+    "sprites": [
+      {
+        "id": 3100,
+        "name": "flower",
+        "frames": ["powerup-fireflower"],
         "loop": false
       }
     ]

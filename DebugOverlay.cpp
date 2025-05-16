@@ -102,8 +102,10 @@ void DebugOverlay::UpdateInput(Keyboard::State* kbState)
 
 void DebugOverlay::UpdateMarioState(Mario* mario)
 {
-	m_marioState.first = mario->GetCurrentStateName();
-	m_marioState.second = mario->IsGrounded();
+	if (mario) {
+		m_marioState.first = mario->GetCurrentMStateName();
+		m_marioState.second = mario->IsGrounded();
+	}
 }
 
 /// <summary>
