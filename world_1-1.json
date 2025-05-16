@@ -1321,7 +1321,7 @@
       "countX": 1,
       "countY": 26,
       "bgtype": 1,
-      "depth": 0.0
+      "depth": 1.0
     },
     {
       "type": 17,
@@ -1332,7 +1332,7 @@
       "countX": 20,
       "countY": 26,
       "bgtype": 0,
-      "depth": 0.0
+      "depth": 1.0
     },
     {
       "type": 22,

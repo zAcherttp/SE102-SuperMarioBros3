@@ -71,5 +71,7 @@ private:
 	std::map<InteractionPointType, bool> m_pointCollisionState;
 
 	TroopaState m_state;
+
+	bool m_canRevive = false;
 };
 

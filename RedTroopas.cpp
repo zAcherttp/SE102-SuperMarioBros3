@@ -114,8 +114,6 @@ void RedTroopas::Update(float dt)
 		m_reviveTimer = 0.0f;
 	}
 	
-
-
 	// Check for platform edges using raycasting if the entity is grounded
 	if (m_isGrounded && m_state == WALKING) {
 		CheckEdge(); // Use our new raycast-based edge detection
@@ -345,7 +343,6 @@ void RedTroopas::SetupCollisionComponent()
 	Vector2 curSize = m_collisionComponent->GetSize();
 	Vector2 newSize = Vector2(curSize.x, curSize.y);
 	m_collisionComponent->SetSize(newSize);
-
 	m_collisionComponent->SetPosition(GetPosition() + Vector2(newSize.x / 2, newSize.y / 2));
 }
 
@@ -357,11 +354,8 @@ void RedTroopas::UpdateSpriteDirection()
 	{
 		if (GetAnimator())
 		{
-
 			GetAnimator()->SetFlipHorizontal(vel.x > 0);
-
 		}
-
 		m_lastDirectionX = vel.x;
 	}
 }
@@ -435,12 +429,11 @@ void RedTroopas::StartVibration() {
 	}
 }
 
-void RedTroopas::UpdateVibration(float dt) {
+void RedTroopas::UpdateVibration(float dt){
 	if (!m_isVibrating) return;
 
 	m_vibrateTimer += dt;
 	m_reviveTimer += dt;
-
 
 	if (m_vibrateTimer >= m_vibrateInterval) {
 		m_vibrateTimer = 0.0f;
@@ -450,8 +443,30 @@ void RedTroopas::UpdateVibration(float dt) {
 
 		m_vibrateDirection = !m_vibrateDirection;
 
-		SetPosition(GetPosition() + Vector2(offsetX, 0.0f));
+		// Before transforming, do a final check for blocks
+		std::vector<std::pair<int, int>> cells = Collision::GetInstance()->GetEntityCells(this, dt);
+		m_canRevive = true;
+		
+		for (const auto& cell : cells) {
+			auto& gridEntities = Collision::GetInstance()->GetGrid()[cell.first][cell.second].entities;
+			
+			for (Entity* other : gridEntities) {
+				Block* block = dynamic_cast<Block*>(other);
+				if (block && block->IsSolid() && block->IsActive()) {
+					Rectangle blockRect = block->GetCollisionComponent()->GetRectangle();
+					Rectangle futureShellRect = GetCollisionComponent()->GetRectangle();				
+					
+					if (futureShellRect.x < blockRect.x + blockRect.width &&
+						futureShellRect.x + futureShellRect.width > blockRect.x &&
+						futureShellRect.y < blockRect.y + blockRect.height &&
+						futureShellRect.y + futureShellRect.height > blockRect.y) {
+						m_canRevive = false;
+					}
+				}
+			}
+		}
 
+		SetPosition(GetPosition() + Vector2(offsetX, 0.0f));
 	}
 
 	if (m_reviveTimer > 0.5f && m_reviveTimer < 1.12f && !m_firstRevivePhase) {
@@ -466,6 +481,9 @@ void RedTroopas::UpdateVibration(float dt) {
 
 	if (m_reviveTimer >= m_reviveTime) {
 		m_isVibrating = false;
-		TransformToTroopa();
+		if (m_canRevive)
+			TransformToTroopa();
+		else
+			Die(DyingType::BONKED);
 	}
 }
