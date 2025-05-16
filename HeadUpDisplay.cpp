@@ -1,8 +1,19 @@
 #include "pch.h"
-#include "HeadUpDisplay.h"
-#include "Debug.h"
-#include "Entity.h"
+#include "Animator.h"
 #include "AssetIDs.h"
+#include "Debug.h"
+#include "Game.h"
+#include "HeadUpDisplay.h"
+#include "SimpleMath.h"
+#include "SpriteBatch.h"
+#include "SpriteFont.h"
+#include "SpriteSheet.h"
+#include <cmath>
+#include <cstdio>
+#include <DirectXColors.h>
+#include <memory>
+#include <string>
+#include <Windows.h>
 
 constexpr auto RUNSPEED_THRESHOLD = 2.5f * 60.0f;
 constexpr auto MAX_FLIGHT_TIME = 255.f / 60.f;
@@ -101,11 +112,11 @@ void HeadUpDisplay::Render(DirectX::SpriteBatch* spriteBatch, DirectX::SpriteFon
 		m_animator->Draw(spriteBatch, ID_SPRITE_HUD_PMETER_BADGE_EMPTY, topLeft + (Vector2(113.f, 203.f) + Vector2(7.5f, 3.5f)) * scale, 0.0f, scale);
 	}
 
-	spriteFont->DrawString(spriteBatch, GetScoreChar(), topLeft + scorePos * scale, Colors::White, 0.f, Vector2::Zero, scale);
-	spriteFont->DrawString(spriteBatch, GetRTimeChar(), topLeft + timerPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
-	spriteFont->DrawString(spriteBatch, GetCoinsChar(), topLeft + coinPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
-	spriteFont->DrawString(spriteBatch, GetWorldChar(), topLeft + worldNumPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
-	spriteFont->DrawString(spriteBatch, GetLivesChar(), topLeft + livesPos * scale, Colors::White, 0.f, Vector2::Zero, scale);
+	spriteFont->DrawString(spriteBatch, GetScoreChar(), topLeft + scorePos * scale, DirectX::Colors::White, 0.f, Vector2::Zero, scale);
+	spriteFont->DrawString(spriteBatch, GetRTimeChar(), topLeft + timerPos * scale, DirectX::Colors::White, 0.f, Vector2::Zero, scale);
+	spriteFont->DrawString(spriteBatch, GetCoinsChar(), topLeft + coinPos * scale, DirectX::Colors::White, 0.f, Vector2::Zero, scale);
+	spriteFont->DrawString(spriteBatch, GetWorldChar(), topLeft + worldNumPos * scale, DirectX::Colors::White, 0.f, Vector2::Zero, scale);
+	spriteFont->DrawString(spriteBatch, GetLivesChar(), topLeft + livesPos * scale, DirectX::Colors::White, 0.f, Vector2::Zero, scale);
 
 }
 
@@ -322,21 +333,21 @@ void HeadUpDisplay::SetMarioPowerupType(int powerupType) { m_currentPowerupType 
 
 int HeadUpDisplay::GetMarioPowerupType() const { return m_currentPowerupType; }
 
-const char* HeadUpDisplay::GetLivesChar()
+const char* HeadUpDisplay::GetLivesChar() const
 {
 	static char lives[3];
 	sprintf_s(lives, "%d", m_lives);
 	return lives;
 }
 
-const char* HeadUpDisplay::GetScoreChar()
+const char* HeadUpDisplay::GetScoreChar() const
 {
-	static char score[8];
+	static char score[8] = { 0 };
 	sprintf_s(score, "%07d", m_score);
 	return score;
 }
 
-const char* HeadUpDisplay::GetCoinsChar()
+const char* HeadUpDisplay::GetCoinsChar() const
 {
 	static char coinsBuffer[3];
 	sprintf_s(coinsBuffer, "%d", m_coins);

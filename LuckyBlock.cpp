@@ -1,13 +1,20 @@
 #include "pch.h"
 #include "AssetIDs.h"
+#include "Block.h"
+#include "Collision.h"
 #include "Debug.h"
-#include "LuckyBlock.h"
-#include "GameConfig.h"
-#include "Mario.h"
 #include "EffectManager.h"
-#include "World.h"
-#include "Mushroom.h"
 #include "FireLeaf.h"
+#include "Game.h"
+#include "LuckyBlock.h"
+#include "Mario.h"
+#include "MarioPowerUpStates.h"
+#include "Mushroom.h"
+#include "SimpleMath.h"
+#include "SpriteBatch.h"
+#include "SpriteSheet.h"
+#include "World.h"
+#include <string>
 
 LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial)
 	: Block(position, size, spriteSheet)
@@ -50,11 +57,13 @@ void LuckyBlock::Render(DirectX::SpriteBatch* spriteBatch)
 
 void LuckyBlock::Update(float dt)
 {
-	if (!m_collectedCoin) m_claimCoinTimer += dt;
-	if (m_claimCoinTimer > 0.5f && !m_collectedCoin) {
+	if (!m_collectedCoin && m_isClaimed) m_claimCoinTimer += dt;
+	if (m_claimCoinTimer > 0.7f && !m_collectedCoin) {
 		m_collectedCoin = true;
 
 		Game::GetInstance()->AddScore(100);
+
+		Log(LOG_INFO, "Collected Coin from LuckyBlock at: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
 
 	}
 	if (m_isClaiming) {

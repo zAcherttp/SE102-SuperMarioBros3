@@ -63,9 +63,9 @@ private:
 	bool m_isTimerRunning;
 	float m_timeCounter;
 
-	const char* GetLivesChar();
-	const char* GetScoreChar();
-	const char* GetCoinsChar();
+	const char* GetLivesChar() const;
+	const char* GetScoreChar() const;
+	const char* GetCoinsChar() const;
 	const char* GetWorldChar() const;
 	const char* GetRTimeChar() const;
 
