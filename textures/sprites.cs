@@ -4,7 +4,7 @@
  * Contains references to each image within the sprite sheet.
  *
  * https://www.codeandweb.com/texturepacker
- * $TexturePacker:SmartUpdate:09f6703374e507e35bc9060567d3f513:d0f6fe69781650178ab2c51d9b288a6a:9372a5c6e87557cd082219126b413cbe$
+ * $TexturePacker:SmartUpdate:ede3880dc7bc4124c3d7d31f372d029b:b07531b58b9aa6ac7392152bb01f1894:9372a5c6e87557cd082219126b413cbe$
  *
  */
 namespace TexturePackerMonoGameDefinitions
@@ -38,6 +38,7 @@ namespace TexturePackerMonoGameDefinitions
 		public const string Big-sprint1 = "big-sprint1";
 		public const string Big-sprint2 = "big-sprint2";
 		public const string Big-sprint3 = "big-sprint3";
+		public const string Big-to-small = "big-to-small";
 		public const string Big-walk1 = "big-walk1";
 		public const string Blue-bottom-left = "blue-bottom-left";
 		public const string Blue-bottom-mid = "blue-bottom-mid";

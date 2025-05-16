@@ -33,15 +33,17 @@ constexpr auto ID_ENT_PIPE = 27;
 constexpr auto ID_ENT_COIN = 28;
 
 //Entities' animation IDs
-constexpr auto ID_ANIM_MARIO_SMALL = 100;
-constexpr auto ID_ANIM_MARIO_SUPER = 101;
-constexpr auto ID_ANIM_MARIO_RACCOON = 102;
+constexpr auto ID_ANIM_MARIO_SMALL = 100000;
+constexpr auto ID_ANIM_MARIO_SUPER = 200000;
+constexpr auto ID_ANIM_MARIO_RACCOON = 300000;
+constexpr auto ID_ANIM_MARIO_DIE = 400000;
 
 constexpr auto ID_ANIM_MARIO_IDLE = 10;
 constexpr auto ID_ANIM_MARIO_WALK = 20;
 constexpr auto ID_ANIM_MARIO_SPRINT = 30;
 constexpr auto ID_ANIM_MARIO_SKID = 40;
 constexpr auto ID_ANIM_MARIO_JUMP = 50;
+constexpr auto ID_ANIM_MARIO_JUMP_ALT = 1;
 constexpr auto ID_ANIM_MARIO_POWERJUMP = 60;
 constexpr auto ID_ANIM_MARIO_SIT = 70;
 constexpr auto ID_ANIM_MARIO_FLY = 80;
@@ -49,7 +51,9 @@ constexpr auto ID_ANIM_MARIO_HOLD_IDLE = 90;
 constexpr auto ID_ANIM_MARIO_HOLD = 1;
 constexpr auto ID_ANIM_MARIO_HOLD_JUMP = 2;
 constexpr auto ID_ANIM_MARIO_HOLD_FRONT = 3;
-constexpr auto ID_ANIM_MARIO_KICK = 94;
+constexpr auto ID_ANIM_MARIO_KICK = 100;
+
+constexpr auto ID_ANIM_MARIO_SUPER_BONKED = 110;
 
 // Goomba
 constexpr auto ID_ANIM_GOOMBA_WALK = 500;
@@ -58,17 +62,17 @@ constexpr auto ID_ANIM_GOOMBA_DIE = 510;
 // Paragoomba
 constexpr auto ID_ANIM_PARAGOOMBA_WALK = 600;
 // Brick
-constexpr auto ID_ANIM_BRICK = 240;
+constexpr auto ID_ANIM_BRICK = 2400;
 
 // Coin
-constexpr auto ID_ANIM_COIN = 280;
+constexpr auto ID_ANIM_COIN = 2800;
 
 // Lucky Block
-constexpr auto ID_ANIM_LUCKY_BLOCK = 210;
-constexpr auto ID_ANIM_LUCKY_BLOCK_CLAIMED = 211;
+constexpr auto ID_ANIM_LUCKY_BLOCK = 2100;
+constexpr auto ID_ANIM_LUCKY_BLOCK_CLAIMED = 2110;
 
 // End Portal
-constexpr auto ID_ANIM_END_PORTAL = 220;
+constexpr auto ID_ANIM_END_PORTAL = 2200;
 
 //Entities's Sprite IDs
 

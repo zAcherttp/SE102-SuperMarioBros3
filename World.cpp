@@ -60,7 +60,7 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 
 	if (!m_player || !m_player->IsActive() || m_isPaused) return;
 	Mario* mario = dynamic_cast<Mario*>(m_player);
-	if (!mario) return;
+	if (!mario || mario->IsTransitioning()) return;
 	mario->HandleInput(kbState, kbsTracker);
 
 	if (kbsTracker->IsKeyPressed(Keys::R)) {
@@ -74,6 +74,29 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 void World::Update(float dt) {
 
 	if (m_isPaused) return;
+	Mario* mario = dynamic_cast<Mario*>(m_player);
+	bool skip = mario && mario->IsTransitioning() || mario->IsDying();
+
+	m_entities.erase(
+		std::remove_if(m_entities.begin(), m_entities.end(),
+			[](Entity* e) { return e == nullptr || !e->IsActive(); }),
+		m_entities.end()
+	);
+
+	if (m_collisionSystem && !skip) {
+
+		if (m_player) {
+			m_collisionSystem->UpdateEntity(m_player, dt);
+		}
+
+		for (auto e : m_entities) {
+			if (!e->IsStatic()) {
+				m_collisionSystem->UpdateEntity(e, dt);
+			}
+		}
+
+		m_collisionSystem->ProcessCollisions(dt);
+	}
 
 	if (m_player) {
 		m_player->Update(dt);
@@ -89,31 +112,13 @@ void World::Update(float dt) {
 		//Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
 	}
 
-
-	m_entities.erase(
-		std::remove_if(m_entities.begin(), m_entities.end(),
-			[](Entity* e) { return e == nullptr || !e->IsActive(); }),
-		m_entities.end()
-	);
+	if (skip) return;
 
 	for (auto e : m_entities) {
 		e->Update(dt);
 	}
 
-	if (m_collisionSystem) {
-
-		if (m_player) {
-			m_collisionSystem->UpdateEntity(m_player, dt);
-		}
-
-		for (auto e : m_entities) {
-			if (!e->IsStatic()) {
-				m_collisionSystem->UpdateEntity(e, dt);
-			}
-		}
-
-		m_collisionSystem->ProcessCollisions(dt);
-	}
+	Game::GetInstance()->UpdateHUD(dt);
 }
 
 void World::Render(DirectX::SpriteBatch* spriteBatch) {
@@ -498,6 +503,6 @@ std::string World::GetName() const
 	return m_name;
 }
 
-inline int World::GetWidth() const { return m_width; }
+int World::GetWidth() const { return m_width; }
 
-inline int World::GetHeight() const { return m_height; }
+int World::GetHeight() const { return m_height; }

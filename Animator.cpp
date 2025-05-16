@@ -75,6 +75,7 @@ void Animator::Update(float elapsed, float velocity)
 	if (m_paused || m_currentSequence < 0)
 		return;
 
+
 	auto it = m_animations.find(m_currentSequence);
 	if (it == m_animations.end() || it->second.frames.empty())
 		return;

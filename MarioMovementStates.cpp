@@ -34,6 +34,7 @@ constexpr auto PLAYER_GRAVITY_SLOW =
 constexpr auto PLAYER_GRAVITY_FAST =
 5.0f / 16.0f * 60.0f * 60.0f; // Fast gravity when not holding jump
 
+std::string MarioDieMState::GetStateName() const { return "die"; }
 std::string MarioIdleState::GetStateName() const { return "idle"; }
 std::string MarioWalkState::GetStateName() const { return "walk"; }
 std::string MarioRunState::GetStateName() const { return "run"; }
@@ -43,6 +44,7 @@ std::string MarioSitState::GetStateName() const { return "sit"; }
 std::string MarioHoldState::GetStateName() const { return "hold"; }
 std::string MarioKickState::GetStateName() const { return "kick"; }
 
+int MarioDieMState::GetStateAnimValue() const { return ID_ANIM_MARIO_DIE; }
 int MarioIdleState::GetStateAnimValue() const { return ID_ANIM_MARIO_IDLE; }
 int MarioWalkState::GetStateAnimValue() const { return ID_ANIM_MARIO_WALK; }
 int MarioRunState::GetStateAnimValue() const { return ID_ANIM_MARIO_WALK; }
@@ -57,16 +59,18 @@ int MarioSitState::GetStateAnimValue() const { return ID_ANIM_MARIO_SIT; }
 int MarioHoldState::GetStateAnimValue() const { return ID_ANIM_MARIO_HOLD_IDLE; }
 int MarioKickState::GetStateAnimValue() const { return ID_ANIM_MARIO_KICK; }
 
+Vector2 MarioDieMState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioIdleState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioWalkState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioRunState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioSkidState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioJumpState::GetStateSizeOffset() const { return Vector2(0, 0); }
-Vector2 MarioSitState::GetStateSizeOffset() const { return Vector2(0, 0); }
+Vector2 MarioSitState::GetStateSizeOffset() const { return Vector2(0, -5); }
 Vector2 MarioHoldState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioKickState::GetStateSizeOffset() const { return Vector2(0, 0); }
 
 void MarioMovementState::Enter(Mario* mario) {
+	mario->SetPosition(mario->GetPosition() - mario->GetCurrentMStateSizeOffset());
 	mario->SetSize(mario->GetCurrentPStateSizeOffset() +
 		mario->GetCurrentMStateSizeOffset());
 	SetAnimation(mario, mario->GetCurrentPStateAnimValue() +
@@ -74,10 +78,15 @@ void MarioMovementState::Enter(Mario* mario) {
 }
 
 void MarioMovementState::Exit(Mario* mario) {
+	mario->SetPosition(mario->GetPosition() + mario->GetCurrentMStateSizeOffset());
 	mario->SetSize(mario->GetCurrentPStateSizeOffset() -
 		mario->GetCurrentMStateSizeOffset());
 	SetAnimation(mario, mario->GetCurrentPStateAnimValue() -
 		mario->GetCurrentMStateAnimValue());
+}
+
+void MarioDieMState::Enter(Mario* mario) {
+	mario;
 }
 
 void MarioJumpState::Enter(Mario* mario) {
@@ -170,6 +179,15 @@ void MarioMovementState::Update(Mario* mario, float dt) {
 	mario->SetVelocity(vel);
 }
 
+std::unique_ptr<MarioMovementState> MarioDieMState::HandleInput(Mario* mario) {
+	mario;
+	return nullptr;
+}
+
+void MarioDieMState::Update(Mario* mario, float dt) {
+	mario, dt;
+}
+
 std::unique_ptr<MarioMovementState> MarioIdleState::HandleInput(Mario* mario) {
 	auto input = mario->GetInput();
 
@@ -232,6 +250,11 @@ std::unique_ptr<MarioMovementState> MarioWalkState::HandleInput(Mario* mario) {
 
 	if (input->isBDown && (input->isRightDown ^ input->isLeftDown)) {
 		return std::make_unique<MarioRunState>(GetDirection());
+	}
+
+	if (input->isDownDown && mario->IsGrounded() &&
+		mario->GetCurrentPStateName() != "small") {
+		return std::make_unique<MarioSitState>(GetDirection());
 	}
 
 	if (!input->isLeftDown && !input->isRightDown &&
@@ -313,6 +336,11 @@ std::unique_ptr<MarioMovementState> MarioRunState::HandleInput(Mario* mario) {
 		m_isSprinting = false;
 	}
 
+	if (input->isDownDown && mario->IsGrounded() &&
+		mario->GetCurrentPStateName() != "small") {
+		return std::make_unique<MarioSitState>(GetDirection());
+	}
+
 	if (input->isRightDown == false && input->isLeftDown == false ||
 		input->isRightDown && input->isLeftDown && input->isBDown) {
 		return std::make_unique<MarioWalkState>(GetDirection());
@@ -377,8 +405,15 @@ void MarioRunState::Update(Mario* mario, float dt) {
 
 std::unique_ptr<MarioMovementState> MarioSkidState::HandleInput(Mario* mario) {
 
+	auto input = mario->GetInput();
+
 	if (mario->GetVelocity().x == 0 && GetDirection() != m_lastDir) {
 		return std::make_unique<MarioWalkState>(GetDirection());
+	}
+
+	if (input->isDownDown && mario->IsGrounded() &&
+		mario->GetCurrentPStateName() != "small") {
+		return std::make_unique<MarioSitState>(GetDirection());
 	}
 
 	return nullptr;
@@ -441,6 +476,13 @@ void MarioJumpState::Update(Mario* mario, float dt) {
 		if (std::abs(vel.x) > speedCap) {
 			vel.x -= (vel.x > 0 ? 1 : -1) * PLAYER_ACCEL_FRIC * dt;
 		}
+	}
+
+	if (vel.y > 0 && !m_isFalling && !HeadUpDisplay::GetInstance()->IsPMeterFull()
+		&& mario->GetCurrentPStateName() != "small") {
+		m_isFalling = true;
+		SetAnimation(mario, mario->GetCurrentMStateAnimValue() +
+			mario->GetCurrentPStateAnimValue() + ID_ANIM_MARIO_JUMP_ALT);
 	}
 
 	mario->SetVelocity(vel);
@@ -611,7 +653,7 @@ void MarioHoldState::Update(Mario* mario, float dt) {
 		m_dirChangeState += dt;
 	}
 
-	int state = std::floor(std::clamp(m_dirChangeState, 0.f, m_dirChangeTimeSpan) / m_dirChangeTimeSpan * 4);
+	int state = (int)std::floor(std::clamp(m_dirChangeState, 0.f, m_dirChangeTimeSpan) / m_dirChangeTimeSpan * 4);
 	if (state != m_dirState) {
 		m_dirState = state;
 		switch (m_dirState) {

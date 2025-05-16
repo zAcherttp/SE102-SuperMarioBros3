@@ -116,5 +116,5 @@ void ScrewBlock::Update(float dt)
 {
 	//do nothing
 	dt;
-	//SetPosition(GetPosition() + GetVelocity() * dt);
+	SetPosition(GetPosition() + GetVelocity() * dt);
 }

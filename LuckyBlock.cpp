@@ -17,7 +17,6 @@ LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet
 	m_isCollidable = true;
 	m_isActive = true;
 
-
 	// update the collision box to match the size of the ground
 	Vector2 curSize = m_collisionComponent->GetSize();
 	Vector2 newSize = Vector2(curSize.x * m_tileXcount, curSize.y);
@@ -27,9 +26,8 @@ LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet
 	m_collisionComponent->SetPosition(newPos);
 	m_origin = newPos;
 	SetAnimation(ID_ANIM_LUCKY_BLOCK, true);
+
 	// Log(LOG_INFO, "Set Animation for: " + std::to_string(position.x) + ", " + std::to_string(position.y));
-
-
 }
 
 void LuckyBlock::Render(DirectX::SpriteBatch* spriteBatch)
@@ -89,7 +87,7 @@ void LuckyBlock::OnCollision(const CollisionResult& event)
 
 	//Log(LOG_INFO, "Collision with LuckyBlock at: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y) + " with: " + std::to_string(event.collidedWith->GetPosition().x) + ", " + std::to_string(event.collidedWith->GetPosition().y));
 
-	if (event.contactNormal.y < 0 && mario)
+	if (event.contactNormal.y < 0 && mario && !m_isClaimed)
 	{
 		Vector2 vel = mario->GetVelocity();
 		vel.y = -vel.y;

@@ -39,6 +39,7 @@ public:
 	bool UsesInteractionPoints() const override;
 
 	void ItsAMe();
+	void Damage();
 
 	void Update(float dt) override;
 	void Render(DirectX::SpriteBatch* spriteBatch) override;
@@ -51,6 +52,9 @@ public:
 	void SetScore(int score) { m_score = score; }
 	int GetCoins() const { return m_coins; }
 	void SetCoins(int coins) { m_coins = coins; }
+
+	bool IsTransitioning() const;
+	bool IsDying() const;
 
 	std::string GetCurrentMStateName() const { return m_movementSM->GetStateName(); }
 	std::string GetCurrentPStateName() const { return m_powerupSM->GetStateName(); }

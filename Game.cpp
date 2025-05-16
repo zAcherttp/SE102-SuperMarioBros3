@@ -31,6 +31,7 @@ Game::Game() noexcept(false)
 	m_gameTitle = L"";
 	m_gameWidth = m_gameHeight = m_wndHeight = m_wndWidth = 0;
 	m_isLoading = true;
+	m_requestReset = false;
 }
 
 Game* Game::GetInstance() { return s_instance; }
@@ -87,9 +88,10 @@ void Game::Update(DX::StepTimer const& timer) {
 		m_worlds[m_currentWorldId]->Update(elapsedTime);
 	}
 
-	if (m_nextWorldId != m_currentWorldId) SwitchWorld();
-
-	m_hud->Update(elapsedTime);
+	if (m_nextWorldId != m_currentWorldId || m_requestReset) {
+		SwitchWorld();
+		m_requestReset = false;
+	}
 }
 #pragma endregion
 
@@ -110,6 +112,20 @@ void Game::HandleInput() {
 		m_worlds[m_currentWorldId]->HandleInput(&kbs, m_keys.get());
 		DebugOverlay::UpdateMarioState((Mario*)m_worlds[m_currentWorldId]->GetPlayer());
 	}
+}
+
+void Game::UpdateHUD(float dt)
+{
+	m_hud->Update(dt);
+}
+
+void Game::RestartWorld()
+{
+	m_requestReset = true;
+
+	m_hud->SetLives(m_hud->GetLives() - 1);
+
+	Log(LOG_INFO, "World restarting");
 }
 
 #pragma region Frame Render

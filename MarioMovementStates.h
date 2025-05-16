@@ -26,6 +26,17 @@ public:
 	virtual void Exit(Mario* mario) override;
 };
 
+class MarioDieMState : public MarioMovementState {
+public:
+	MarioDieMState(Direction dir = Direction::Left) : MarioMovementState(dir) {};
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
+	void Update(Mario* mario, float dt) override;
+	std::string GetStateName() const override;
+	void Enter(Mario* mario) override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
+};
+
 class MarioIdleState : public MarioMovementState {
 public:
 	MarioIdleState(Direction dir) : MarioMovementState(dir) {};
@@ -79,6 +90,8 @@ public:
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
 	Vector2 GetStateSizeOffset() const override;
+private:
+	bool m_isFalling = false;
 };
 
 class MarioSitState : public MarioMovementState {

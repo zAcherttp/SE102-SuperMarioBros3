@@ -30,7 +30,12 @@ Mario::Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spr
 
 void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker* kbsTracker) {
 
-	if (!m_collisionComponent->GetIsPushed()) {
+	m_inputState->isStartPressed = kbsTracker->IsKeyPressed(START);
+
+	if (m_collisionComponent->GetIsPushed()) {
+		m_inputState->ResetDirectionals();
+	}
+	else {
 		m_inputState->isUpDown = kbState->IsKeyDown(UP);
 		m_inputState->isDownDown = kbState->IsKeyDown(DOWN);
 		m_inputState->isLeftDown = kbState->IsKeyDown(LEFT);
@@ -40,18 +45,13 @@ void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 		m_inputState->isLeftPressed = kbsTracker->IsKeyPressed(LEFT);
 		m_inputState->isRightPressed = kbsTracker->IsKeyPressed(RIGHT);
 	}
-	else {
-		m_inputState->ResetDirectionals();
-	}
+
 	m_inputState->isADown = kbState->IsKeyDown(A_BTN);
 	m_inputState->isBDown = kbState->IsKeyDown(B_BTN);
-
-	m_inputState->isStartPressed = kbsTracker->IsKeyPressed(START);
-
 	m_inputState->isAPressed = kbsTracker->IsKeyPressed(A_BTN);
 	m_inputState->isBPressed = kbsTracker->IsKeyPressed(B_BTN);
 
-	if (!m_movementSM) return;
+	if (!m_movementSM || !m_powerupSM || IsTransitioning()) return;
 
 	auto mPState = m_powerupSM->HandleInput(this);
 	auto mMState = m_movementSM->HandleInput(this);
@@ -60,6 +60,11 @@ void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 		m_powerupSM->Exit(this);
 		m_powerupSM = std::move(mPState);
 		m_powerupSM->Enter(this);
+	}
+
+	if (m_powerupSM->GetStateAnimValue() == ID_ANIM_MARIO_DIE) {
+		m_movementSM = std::move(std::make_unique<MarioDieMState>());
+		return;
 	}
 
 	if (mMState) {
@@ -91,13 +96,17 @@ void Mario::ItsAMe()
 {
 	// set default for now, later game class will have mario factory
 
-	m_powerupSM = std::make_unique<MarioSmallState>();
+	m_powerupSM = std::make_unique<MarioSuperState>();
 	m_movementSM = std::make_unique<MarioIdleState>(Direction::Right);
 	m_powerupSM->Enter(this);
 	m_movementSM->Enter(this);
 
 	Log(LOG_INFO, "Mario position: " + std::to_string(GetPosition().x) + ", " + std::to_string(GetPosition().y));
 	Log(LOG_INFO, "It's A Me, Mario");
+}
+
+void Mario::Damage() {
+	if (m_powerupSM) m_powerupSM->Damage();
 }
 
 void Mario::Update(float dt)
@@ -107,10 +116,13 @@ void Mario::Update(float dt)
 	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
 
 	m_collisionComponent->Update(dt);
-
 	m_powerupSM->Update(this, dt);
+
+	if (m_powerupSM->IsDying()) return;
+
 	m_movementSM->Update(this, dt);
 	m_animator->Update(dt, m_collisionComponent->GetVelocity().x);
+
 
 	HeadUpDisplay::GetInstance()->UpdatePMeter(
 		m_collisionComponent->GetVelocity().Length(),
@@ -123,8 +135,6 @@ void Mario::Render(DirectX::SpriteBatch* spriteBatch) {
 	if (m_visible) {
 		// round the position to the nearest pixel
 		Vector2 pos = m_collisionComponent->GetPosition();
-		/*pos.x = static_cast<int>(pos.x + 0.5f);
-		pos.y = static_cast<int>(pos.y + 0.5f);*/
 		m_animator->Draw(spriteBatch, pos, 0.1f);
 	}
 }
@@ -164,6 +174,16 @@ std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetBigMarioInteract
 std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetBigMarioSitInteractionPoints() const
 {
 	return std::vector<std::pair<InteractionPointType, Vector2>>();
+}
+
+bool Mario::IsTransitioning() const
+{
+	return m_powerupSM->IsTransitioning();
+}
+
+bool Mario::IsDying() const
+{
+	return m_powerupSM->IsDying();
 }
 
 void Mario::OnCollision(const CollisionResult& result) {

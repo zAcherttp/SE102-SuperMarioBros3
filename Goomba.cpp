@@ -66,6 +66,7 @@ void Goomba::OnCollision(const CollisionResult& event)
 		// If Mario hit the Goomba from the side
 		if (mario) {
 			//Log("GoombaCollision", "Mario collided with Goomba from the side");
+			mario->Damage();
 		}
 	}
 }
