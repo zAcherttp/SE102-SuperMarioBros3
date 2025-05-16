@@ -35,47 +35,41 @@ void Goomba::Render(DirectX::SpriteBatch* spriteBatch)
 
 void Goomba::OnCollision(const CollisionResult& event)
 {
-    // Handle general collision
-    // Log("GoombaCollision", "Collision detected");
-    // Log("GoombaCollision", "Collision normal: " + std::to_string(event.contactNormal.x) + ", " + std::to_string(event.contactNormal.y));
-    
-    // Check if the collision is with Mario
+
     Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
     ParaGoomba* paraGoomba = dynamic_cast<ParaGoomba*>(event.collidedWith);
     Block* block = dynamic_cast<Block*>(event.collidedWith);
+    Goomba* goomba = dynamic_cast<Goomba*>(event.collidedWith);
 
     if(event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID) {
         return;
     }
 
-    if (event.contactNormal.x != 0 && block  ) // Collision from the sides
+    if (event.contactNormal.x != 0) 
     {
-        if(block->IsSolid()) 
+        if(block && block->IsSolid() || goomba) 
         {
-            // If hitting a wall (not Mario), reverse direction and maintain standard speed
             float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
             Vector2 vel = GetVelocity();
 
             vel.x = -vel.x;
             SetVelocity(vel);
- 
+            return;
         }
-        return;
     }
-    if (event.contactNormal.y > 0) // Collision from above
+    if (event.contactNormal.y > 0) 
     {
         if (mario) {
-            Die(DyingType::STOMPED); // Goomba dies when Mario jumps on it
+            Die(DyingType::STOMPED); 
 
-            // Make Mario bounce a bit
             Vector2 vel = mario->GetVelocity();
-            vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+            vel.y = GameConfig::Mario::BOUNCE_FORCE;
             mario->SetVelocity(vel);
         }
         return;
     }
     if (event.contactNormal.y < 0 && event.collidedWith != mario) {
-        // If hitting ground, immediately stop vertical velocity
+
         Vector2 vel = GetVelocity();
         vel.y = 0.0f;
         SetVelocity(vel);
@@ -94,7 +88,7 @@ void Goomba::Die(DyingType type)
         m_deathTimer = 0.0f; 
     }
     if(type == DyingType::STOMPED) {
-        SetAnimation(ID_ANIM_GOOMBA_DIE, false); // Set death animation
+        SetAnimation(ID_ANIM_GOOMBA_DIE, false); 
         return;
     }
     if(type == DyingType::BONKED) {
@@ -119,18 +113,18 @@ void Goomba::Update(float dt)
         if(m_dyingType == DyingType::STOMPED)
         {
             if (m_deathTimer >=  GameConfig::Enemies::DEATH_STOMP_ANI_TIME) {
-                // After 0.5 seconds, deactivate the Goomba
+
                 m_isActive = false;
-                m_visible = false;// Remove collision component
+                m_visible = false;
             }
             return; 
         }
         if(m_dyingType == DyingType::BONKED)
         {
             if(m_deathTimer >=  GameConfig::Enemies::DEATH_BONK_ANI_TIME) {
-                // After 2.0 seconds, deactivate the Goomba
+ 
                 m_isActive = false;
-                m_visible = false;// Remove collision component
+                m_visible = false;
                 return;
             }
             SetPosition(GetPosition() + GetVelocity() * dt);

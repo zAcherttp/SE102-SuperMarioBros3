@@ -13,7 +13,7 @@
 ParaGoomba::ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     : Entity(position, size, spriteSheet)
     , m_animTimer(0.0f)
-    , m_frameTime(0.15f)  // Controls how fast the flip animation occurs
+    , m_frameTime(0.15f) 
     , m_flipFrame(false)
     , m_deathTimer(0.0f)
     , m_isDying(false)
@@ -26,7 +26,6 @@ ParaGoomba::ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     , m_currentPhase(0)  // Start with closed wings
     , m_phaseTimer(0.0f)
     
-    // Configurable parameters - adjust these values as needed
     , m_closedWingsDuration(0.5f)   // Walk with wings closed for 3 seconds
     , m_mediumFlapsDuration(2.0f)   // Medium flaps for 2 seconds (3 small jumps)
     , m_rapidFlapsDuration(1.0f)    // Rapid flaps for 1 second (big jump)
@@ -34,12 +33,12 @@ ParaGoomba::ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     , m_rapidFlapSpeed(0.066f)        // Rapid flap every 0.1 seconds
     , m_smallJumpForce(-1.5f * 60.0f)  // Small jump force
     , m_bigJumpForce(-3.5f * 60.0f)    // Big jump force
-{    // Create left wing with offset to the left side
+    , m_animDelay(0.0f)
+{   
     m_wing_left = new Wings(position, Vector2(WINGS_WIDTH, WINGS_HEIGHT), spriteSheet);
     m_wing_left->SetOffset(Vector2(-6.0f, -10.0f)); // Offset to the left
     m_wing_left->SetDirection(1); 
     
-    // Create right wing with offset to the right side
     m_wing_right = new Wings(position, Vector2(WINGS_WIDTH, WINGS_HEIGHT), spriteSheet);
     m_wing_right->SetOffset(Vector2(6.0f, -10.0f)); // Offset to the right
     m_wing_right->SetDirection(-1);
@@ -47,9 +46,7 @@ ParaGoomba::ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
     SetAnimation(ID_ANIM_PARAGOOMBA_WALK, true);
     m_visible = true; 
     
-    // Set initial velocity - slow movement to the left
     SetVelocity(Vector2(-GameConfig::Enemies::Goomba::WALK_SPEED, 0.0f));
-      // Setup collision component properly
     SetupCollisionComponent();
     
     m_isCollidable = true;
@@ -73,10 +70,8 @@ ParaGoomba::~ParaGoomba()
 
 void ParaGoomba::Render(DirectX::SpriteBatch* spriteBatch)
 {
-    // Render the base entity (Goomba)
     Entity::Render(spriteBatch);
     
-    // Render wings if they are active and the entity has wings
     if (!m_isDying && m_hasWings) {
         if (m_wing_left->IsActive()) {
             m_wing_left->Render(spriteBatch);
@@ -237,30 +232,29 @@ void ParaGoomba::Update(float dt)
         }
     }    
 
-    Entity::Update(dt);
-
+    
     Mario* mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
     
     static float directionUpdateTimer = 0;
     static int attempt = 0;
     const float UPDATE_INTERVAL = 1.5f; 
     const int MAX_ATTEMPTS = 10; 
-
+    
     if(abs(mario->GetPosition().x - GetPosition().x) < 80.0f)
     {
-            directionUpdateTimer += dt;
-            if (directionUpdateTimer >= UPDATE_INTERVAL) {
-                directionUpdateTimer = 0;
-                
-                if (mario && attempt < MAX_ATTEMPTS) {
-                    WalkInMarioDirection(mario);
-                    attempt++;
-                }
+        directionUpdateTimer += dt;
+        if (directionUpdateTimer >= UPDATE_INTERVAL) {
+            directionUpdateTimer = 0;
+            
+            if (mario && attempt < MAX_ATTEMPTS) {
+                WalkInMarioDirection(mario);
+                attempt++;
             }
+        }
     }
-
-
-
+    
+    
+    
     //// JUMPING PHASE LOGIC
     if (m_hasWings)
     {
@@ -276,10 +270,11 @@ void ParaGoomba::Update(float dt)
                     m_phaseTimer = 0.0f;
                     m_jumpCount = 0;
                     m_jumpTimer = 0.0f;
+                    m_animDelay = 0.0f;
                 }
             }
             break;
-                
+            
             case 1:
             {   
                 m_jumpTimer += dt;
@@ -290,44 +285,39 @@ void ParaGoomba::Update(float dt)
                     m_jumpTimer = 0.0f;
                     Jump(m_smallJumpForce);
                     Vector2 vel = GetVelocity();
-                    SetPosition(GetPosition() + vel * dt);
+                    // SetPosition(GetPosition() + vel * dt);
                 }
-
-
+                
                 if ((m_jumpCount == 3 && m_isGrounded)) {
                     m_currentPhase = 2; 
                     m_phaseTimer = 0.0f;
                     m_jumpTimer = 0.0f;
                     m_jumpCount = 0;
+                    m_animDelay = 0.0f;
                 }
-
+                
             }
             break;                  
-
+            
             case 2:
             {
                 if (!m_isJumping && m_isGrounded)
-                 {
+                {
                     m_jumpCount++;
                     if (m_jumpCount == 1)
                     {
                         Jump(m_bigJumpForce);
                         Vector2 vel = GetVelocity();
-                        SetPosition(GetPosition() + vel * dt);
+                        // SetPosition(GetPosition() + vel * dt);
                     }
                 }
-            
-
+                
+                
                 if (!m_isJumping && m_isGrounded && m_jumpCount >= 2)
                 {
                     m_phaseTimer += dt;
-
-                    if(m_phaseTimer >= m_rapidFlapsDuration * 3)
-                    {
-                        m_wing_left->SetAnimation(ID_ANIM_WINGS_FLAP_DOWN, false);
-                        m_wing_right->SetAnimation(ID_ANIM_WINGS_FLAP_DOWN, false);
-                    }
-
+                    
+                    
                     if (m_phaseTimer >= 0.5f)
                     {
                         m_currentPhase = 0;
@@ -337,9 +327,10 @@ void ParaGoomba::Update(float dt)
                 }
             }
             break;
+            Entity::Update(dt);
         }
     }    
-
+    
     m_animTimer += dt;
     if (m_animTimer >= m_frameTime)
     {
@@ -368,13 +359,27 @@ void ParaGoomba::Update(float dt)
             break;
             
             case 1: 
+            m_animDelay += dt;
+            if(m_animDelay >= 0.2f){
             m_wing_left->HandleFlapping(dt, m_mediumFlapSpeed);
             m_wing_right->HandleFlapping(dt, m_mediumFlapSpeed);
+            }   
             break;
             
             case 2: 
+            m_animDelay += dt;
+            if(m_animDelay >= 0.1f && m_animDelay < 0.7f){
             m_wing_left->HandleFlapping(dt, m_rapidFlapSpeed);
             m_wing_right->HandleFlapping(dt, m_rapidFlapSpeed);
+            }
+            if(m_animDelay >= 0.7f && m_animDelay < 0.8f){
+                m_wing_left->SetAnimation(ID_ANIM_WINGS_FLAP_DOWN, false);
+                m_wing_right->SetAnimation(ID_ANIM_WINGS_FLAP_DOWN, false);
+            }
+            if(m_animDelay >= 0.8f){
+                m_wing_left->HandleFlapping(dt, m_rapidFlapSpeed);
+                m_wing_right->HandleFlapping(dt, m_rapidFlapSpeed);
+            }
             break;
         }
     }

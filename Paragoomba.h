@@ -52,6 +52,7 @@ private:
     float m_smallJumpForce;        // Force for small jump
     float m_bigJumpForce;          // Force for big jump
     float m_jumpForce;             // Current jump force
+    float m_animDelay;
 
 };
 
