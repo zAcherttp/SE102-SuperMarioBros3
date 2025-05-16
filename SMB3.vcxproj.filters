@@ -175,7 +175,6 @@
     <ClInclude Include="HeadUpDisplay.h" />
     <ClInclude Include="MarioPowerUpStates.h" />
     <ClInclude Include="MarioStateBase.h" />
-    <ClInclude Include="MarioStateFactory.h" />
     <ClInclude Include="GameConfig.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -203,6 +202,7 @@
     <ClInclude Include="RedTroopas.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="Mushroom.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -319,7 +319,6 @@
     <ClCompile Include="HeadUpDisplay.cpp" />
     <ClCompile Include="MarioPowerUpStates.cpp" />
     <ClCompile Include="MarioStateBase.cpp" />
-    <ClCompile Include="MarioStateFactory.cpp" />
     <ClCompile Include="Goomba.cpp">
       <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
@@ -347,6 +346,7 @@
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="Mushroom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">

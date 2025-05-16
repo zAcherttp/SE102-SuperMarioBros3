@@ -1243,7 +1243,8 @@
       "y": 352.0,
       "width": 16,
       "height": 16,
-      "solid": true
+      "solid": true,
+      "isSpecial": false
     },
     {
       "type": 21,
@@ -1251,7 +1252,8 @@
       "y": 352.0,
       "width": 16,
       "height": 16,
-      "solid": true
+      "solid": true,
+      "isSpecial": false
     },
     {
       "type": 21,
@@ -1259,7 +1261,8 @@
       "y": 304.0,
       "width": 16,
       "height": 16,
-      "solid": true
+      "solid": true,
+      "isSpecial": false
     },
     {
       "type": 21,
@@ -1267,7 +1270,8 @@
       "y": 304.0,
       "width": 16,
       "height": 16,
-      "solid": true
+      "solid": true,
+      "isSpecial": true
     },
     {
       "type": 21,
@@ -1275,7 +1279,8 @@
       "y": 320.0,
       "width": 16,
       "height": 16,
-      "solid": true
+      "solid": true,
+      "isSpecial": false
     },
     {
       "type": 21,
@@ -1283,7 +1288,8 @@
       "y": 384.0,
       "width": 16,
       "height": 16,
-      "solid": true
+      "solid": true,
+      "isSpecial": false
     },
     {
       "type": 21,
@@ -1291,7 +1297,8 @@
       "y": 352.0,
       "width": 16,
       "height": 16,
-      "solid": true
+      "solid": true,
+      "isSpecial": false
     },
     {
       "type": 21,
@@ -1299,7 +1306,8 @@
       "y": 368.0,
       "width": 16,
       "height": 16,
-      "solid": true
+      "solid": true,
+      "isSpecial": false
     },
     {
       "type": 17,

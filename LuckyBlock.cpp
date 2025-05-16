@@ -4,8 +4,11 @@
 #include "LuckyBlock.h"
 #include "GameConfig.h"
 #include "Mario.h"
+#include "EffectManager.h"
+#include "World.h"
+#include "Mushroom.h"
 
-LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet)
+LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial)
 	: Block(position, size, spriteSheet)
 {
 	m_tileXcount = 1;
@@ -17,6 +20,7 @@ LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet
 	m_isCollidable = true;
 	m_isActive = true;
 	m_isCollidable = true;
+	m_isSpecial = isSpecial;
 
 	// update the collision box to match the size of the ground
 	Vector2 curSize = m_collisionComponent->GetSize();
@@ -37,7 +41,7 @@ void LuckyBlock::Render(DirectX::SpriteBatch* spriteBatch)
 	Vector2 tileSize = Vector2(size.x / m_tileXcount, size.y / m_tileYcount);
 	Vector2 pos = m_collisionComponent->GetPosition() - Vector2(size.x / 2 - tileSize.x / 2, size.y / 2 - tileSize.y / 2);
 
-	m_animator->Draw(spriteBatch, pos, 0.5f);
+	m_animator->Draw(spriteBatch, pos, 0.0f);
 
 }
 
@@ -61,6 +65,7 @@ void LuckyBlock::Update(float dt)
 			m_isClaimed = true;
 			SetVelocity(vel);
 			SetPosition(m_origin);
+			SpawnReward();
 
 		}
 		else {
@@ -79,6 +84,8 @@ void LuckyBlock::Bump() {
 	SetAnimId(ID_ANIM_LUCKY_BLOCK_CLAIMED);
 	SetVelocity(Vector2(0, -240.f));
 
+
+
 	//Log(LOG_INFO, "Bumped LuckyBlock at: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
 }
 
@@ -93,5 +100,45 @@ void LuckyBlock::OnCollision(const CollisionResult& event)
 		Vector2 vel = mario->GetVelocity();
 		vel.y = -vel.y;
 		mario->SetVelocity(vel);
+	}
+}
+
+void LuckyBlock::SpawnReward()
+{
+		if(m_isSpecial) {
+			SpawnPowerUp();
+		}
+		else {
+			SpawnCoin();
+		}
+}	
+
+void LuckyBlock::SpawnCoin()
+{
+	EffectManager::GetInstance()->CreateCoinEffect(GetPosition());
+}
+
+void LuckyBlock::SpawnPowerUp()
+{
+    Mario* mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
+    PowerUpType powerupType = PowerUpType::MUSHROOM;
+
+	// if (mario->GetCurrentPStateName() == "smallMario") {
+	// 	powerupType = PowerUpType::MUSHROOM;
+	// } else {
+	// 	powerupType = PowerUpType::LEAF;
+	// }
+    // auto stateName = mario->GetCurrentPStateName();
+    
+    Vector2 spawnPosition = GetPosition();
+	
+	if (powerupType == PowerUpType::MUSHROOM) {
+		World::GetInstance()->GetEntities().push_back(
+			new Mushroom(spawnPosition, Vector2(16, 16), Game::GetInstance()->GetSpriteSheet())
+	 	);
+	} else if (powerupType == PowerUpType::LEAF) {
+		// World::GetInstance()->GetEntities().push_back(
+		// 	// new FireLeaf(spawnPosition, Vector2(16, 16), Game::GetInstance()->GetSpriteSheet())
+		// );
 	}
 }

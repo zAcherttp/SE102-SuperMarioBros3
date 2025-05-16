@@ -81,6 +81,13 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 	}
 }
 
+void World::AddEntity(Entity *entity)
+{
+	if (entity) {
+        m_entities.push_back(entity);
+    }
+}
+
 void World::Update(float dt) {
 	m_entities.erase(
 		std::remove_if(m_entities.begin(), m_entities.end(),
@@ -393,7 +400,8 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 			float width = data["width"];
 			float height = data["height"];
 			bool isSolid = data["solid"];
-			entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet);
+			bool isSpecial = data["isSpecial"];
+			entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet, isSpecial);
 			break;
 		}
 		case ID_ENT_BLACK_BACKGROUND:

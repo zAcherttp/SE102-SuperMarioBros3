@@ -28,6 +28,10 @@ Effect* EffectManager::CreatePointEffect(const Vector2& position, int points) {
     return CreateEffect(position, Vector2::Zero, EffectType::POINT);
 }
 
+Effect* EffectManager::CreateCoinEffect(const Vector2& position) {
+    return CreateEffect(position, Vector2::Zero, EffectType::COIN);
+}
+
 Effect* EffectManager::CreateEffect(const Vector2& position, Vector2 size, EffectType type) {
 
     if (!m_spriteSheet) {

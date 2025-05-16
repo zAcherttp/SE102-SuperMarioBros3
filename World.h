@@ -34,6 +34,7 @@ public:
 
 	void HandleInput(DirectX::Keyboard::State* kbState, DirectX::Keyboard::KeyboardStateTracker* kbsTracker);
 
+	void AddEntity(Entity* entity);
 private:
 	std::string m_path;
 	std::string m_name;

@@ -36,6 +36,8 @@ constexpr auto ID_ENT_COIN                          = 28;
 
 constexpr auto ID_ENT_EFFECT                        = 29;
 
+constexpr auto ID_ENT_MUSHROOM                      = 30;
+
 //Entities' animation IDs
 constexpr auto ID_ANIM_MARIO_SMALL = 100000;
 constexpr auto ID_ANIM_MARIO_SUPER = 200000;
@@ -93,6 +95,11 @@ constexpr auto ID_ANIM_EFFECT_POINT_1000           = 2924;
 constexpr auto ID_ANIM_EFFECT_POINT_2000           = 2925;
 constexpr auto ID_ANIM_EFFECT_POINT_4000           = 2926;
 constexpr auto ID_ANIM_EFFECT_POINT_8000           = 2927;
+
+constexpr auto ID_ANIM_EFFECT_COIN                 = 2930;
+
+//Mushroom
+constexpr auto ID_ANIM_MUSHROOM = 3000;
 
 // Red Piranha
 constexpr auto ID_ANIM_RED_PIRANHA_LOOK_DOWN       = 900;
@@ -243,3 +250,4 @@ constexpr auto ID_SPRITE_HUD_FIREFLOWER = 2909;
 constexpr auto ID_SPRITE_HUD_MUSHROOM = 2910;
 constexpr auto ID_SPRITE_HUD_STAR = 2911;
 constexpr auto ID_SPRITE_HUD_POWERUP_SLOT = 2912;
+

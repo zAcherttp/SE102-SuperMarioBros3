@@ -4,7 +4,8 @@
 enum class EffectType
 {
     POINT,
-    BONK
+    BONK,
+    COIN
 };
 
 class Effect : public Entity
@@ -28,5 +29,9 @@ private:
     bool m_isFlipped;
     float m_flipTimer;
     float m_flipTime;
+
+    Vector2 m_velocity;         
+    float m_gravity;          
+    float m_initialJumpSpeed; 
 
 };

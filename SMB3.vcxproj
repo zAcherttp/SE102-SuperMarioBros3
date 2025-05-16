@@ -206,6 +206,7 @@
     <ClInclude Include="HeadUpDisplay.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="Mushroom.h" />
     <ClInclude Include="RedTroopas.h" />
     <ClInclude Include="LuckyBlock.h" />
     <ClInclude Include="Mario.h" />
@@ -250,6 +251,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="HeadUpDisplay.cpp" />
     <ClCompile Include="Helpers.cpp" />
+    <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="RedTroopas.cpp" />
     <ClCompile Include="LuckyBlock.cpp" />
     <ClCompile Include="Main.cpp" />

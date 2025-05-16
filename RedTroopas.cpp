@@ -71,9 +71,6 @@ void RedTroopas::Die(DyingType type)
 
 void RedTroopas::Update(float dt)
 {
-
-	Log("RedTroopas::Update", "state: " + std::to_string(m_state));
-
 	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
 
 	if (!m_isGrounded) {
@@ -114,6 +111,8 @@ void RedTroopas::Update(float dt)
 		m_reviveTimer = 0.0f;
 	}
 	
+
+
 	// Check for platform edges using raycasting if the entity is grounded
 	if (m_isGrounded && m_state == WALKING) {
 		CheckEdge(); // Use our new raycast-based edge detection
@@ -137,12 +136,6 @@ void RedTroopas::OnCollision(const CollisionResult& event)
 	Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
 	Goomba* goomba = dynamic_cast<Goomba*>(event.collidedWith);
 	Block* block = dynamic_cast<Block*>(event.collidedWith);
-
-	if(block && m_state == TroopaState::WALKING && block->IsSolid() && abs(block->GetPosition().x  - GetPosition().x) <= 10.0f && abs(block->GetPosition().y - GetPosition().y) <= 10.0f)
-	{
-		Die(DyingType::BONKED);
-		return;
-	}
 
 	if (event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
 		return;
