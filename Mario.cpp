@@ -97,7 +97,7 @@ void Mario::ItsAMe()
 {
 	// set default for now, later game class will have mario factory
 
-	m_powerupSM = std::make_unique<MarioSuperState>();
+	m_powerupSM = std::make_unique<MarioRaccoonState>();
 	m_movementSM = std::make_unique<MarioIdleState>(Direction::Right);
 	m_powerupSM->Enter(this);
 	m_movementSM->Enter(this);
@@ -108,7 +108,24 @@ void Mario::ItsAMe()
 }
 
 void Mario::Damage() {
-	if (m_powerupSM) m_powerupSM->Damage();
+	if (m_powerupSM) m_powerupSM->Damage(this);
+}
+
+void Mario::PowerUp(PowerUpType type)
+{
+	PowerUpType currentType = m_powerupSM->GetCurrentPowerUp();
+	if (currentType == type) {
+		return;
+	}
+	switch (type) {
+	case PowerUpType::SUPER:
+		if (currentType > type) return;
+		m_powerupSM->PowerUp(this);
+		break;
+	case PowerUpType::RACCOON:
+		m_powerupSM->PowerUp(this);
+		break;
+	}
 }
 
 bool Mario::Kick(Direction dir, Entity* ent)
@@ -189,6 +206,11 @@ std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetBigMarioInteract
 std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetBigMarioSitInteractionPoints() const
 {
 	return std::vector<std::pair<InteractionPointType, Vector2>>();
+}
+
+PowerUpType Mario::GetPowerUpState() const
+{
+	return m_powerupSM->GetCurrentPowerUp();
 }
 
 bool Mario::IsTransitioning() const

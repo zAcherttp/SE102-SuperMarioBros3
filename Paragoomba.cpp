@@ -10,7 +10,7 @@
 #include "ScrewBlock.h"
 
 ParaGoomba::ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
-	: Entity(position, size, spriteSheet)
+	: Enemy(position, size, spriteSheet)
 	, m_animTimer(0.0f)
 	, m_frameTime(0.15f)
 	, m_flipFrame(false)

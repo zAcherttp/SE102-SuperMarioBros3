@@ -328,6 +328,7 @@
             <key type="filename">particles/pop1.png</key>
             <key type="filename">particles/spark1.png</key>
             <key type="filename">particles/spark2.png</key>
+            <key type="filename">powerup/fireflower.png</key>
             <key type="filename">powerup/mushroom-1up.png</key>
             <key type="filename">powerup/mushroom.png</key>
             <key type="filename">troopa/greentroopa-shell1-alt.png</key>
@@ -371,6 +372,7 @@
             <key type="filename">boomerang/boomerang-hold2.png</key>
             <key type="filename">boomerang/boomerang-thrown1.png</key>
             <key type="filename">boomerang/boomerang-thrown2.png</key>
+            <key type="filename">mario/big-to-small.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -492,6 +494,8 @@
                 <false/>
             </struct>
             <key type="filename">mario/big-back.png</key>
+            <key type="filename">mario/big-jump2.png</key>
+            <key type="filename">mario/big-walk1.png</key>
             <key type="filename">troopa/greentroopa-walk1.png</key>
             <key type="filename">troopa/greentroopa-walk2.png</key>
             <key type="filename">troopa/redtroopa-walk1.png</key>
@@ -522,8 +526,6 @@
                 <false/>
             </struct>
             <key type="filename">mario/big-holding-jump.png</key>
-            <key type="filename">mario/big-jump1.png</key>
-            <key type="filename">mario/big-jump2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.4375,0.538462</point_f>
@@ -537,6 +539,7 @@
                 <false/>
             </struct>
             <key type="filename">mario/big-holding-walk1.png</key>
+            <key type="filename">mario/big-idle.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -562,16 +565,16 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">mario/big-idle.png</key>
+            <key type="filename">mario/big-jump1.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.5,0.518519</point_f>
+                <point_f>0.4375,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>4,7,7,13</rect>
+                <rect>4,7,8,13</rect>
                 <key>scale9Paddings</key>
-                <rect>4,7,7,13</rect>
+                <rect>4,7,8,13</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -620,6 +623,7 @@
             <key type="filename">mario/big-sprint-jump2.png</key>
             <key type="filename">mario/big-sprint1.png</key>
             <key type="filename">mario/big-sprint2.png</key>
+            <key type="filename">mario/big-sprint3.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -629,32 +633,6 @@
                 <rect>5,7,9,13</rect>
                 <key>scale9Paddings</key>
                 <rect>5,7,9,13</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">mario/big-sprint3.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.526316,0.538462</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>5,7,9,13</rect>
-                <key>scale9Paddings</key>
-                <rect>5,7,9,13</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">mario/big-walk1.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.4375,0.518519</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>4,7,8,13</rect>
-                <key>scale9Paddings</key>
-                <rect>4,7,8,13</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -1251,6 +1229,8 @@
             <filename>1-1/blue-mid-left.png</filename>
             <filename>1-1/green-bottom-mid.png</filename>
             <filename>1-1/green-mid-left.png</filename>
+            <filename>mario/big-to-small.png</filename>
+            <filename>powerup/fireflower.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -40,6 +40,7 @@ public:
 
 	void ItsAMe();
 	void Damage();
+	void PowerUp(PowerUpType type);
 	bool Kick(Direction dir, Entity* ent);
 
 	void Update(float dt) override;
@@ -53,6 +54,8 @@ public:
 	void SetScore(int score) { m_score = score; }
 	int GetCoins() const { return m_coins; }
 	void SetCoins(int coins) { m_coins = coins; }
+
+	PowerUpType GetPowerUpState() const;
 
 	bool IsTransitioning() const;
 	bool IsDying() const;
