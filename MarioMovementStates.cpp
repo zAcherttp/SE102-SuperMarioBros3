@@ -4,6 +4,7 @@
 #include "Debug.h"
 #include "Mario.h"
 #include "RedTroopas.h"
+#include "Block.h"
 
 using namespace DirectX;
 
@@ -591,7 +592,7 @@ void MarioHoldState::Update(Mario* mario, float dt) {
 
 	RedTroopas* shell = dynamic_cast<RedTroopas*>(m_heldEntity);
 
-	if (shell && shell->GetState() == TroopaState::WALKING)
+	if (shell && shell->GetState() != TroopaState::SHELL_IDLE)
 	{
 		m_isInterrupted = true;
 		return;
@@ -705,6 +706,54 @@ void MarioHoldState::Update(Mario* mario, float dt) {
 
 	mario->SetVelocity(vel);
 	m_heldEntity->SetPosition(mario->GetPosition() + GetHeldEntityOffset(mario, state));
+
+	RedTroopas* troopas = dynamic_cast<RedTroopas*>(m_heldEntity);
+
+    if (troopas && troopas->GetState() == TroopaState::SHELL_IDLE) {
+        CheckHeldShellCollisions(mario, troopas, dt);
+    }
+}
+
+void MarioHoldState::CheckHeldShellCollisions(Mario* mario, RedTroopas* shell, float dt) {
+
+    Vector2 shellPos = shell->GetPosition();
+    Vector2 shellSize = shell->GetSize();
+    
+    Rectangle shellRect;
+    shellRect.x = shellPos.x - shellSize.x/2;
+    shellRect.y = shellPos.y - shellSize.y/2;
+    shellRect.width = shellSize.x;
+    shellRect.height = shellSize.y;
+    
+    std::vector<std::pair<int, int>> cells = Collision::GetInstance()->GetEntityCells(shell, dt);
+    
+    for (const auto& cell : cells) {
+        auto& gridEntities = Collision::GetInstance()->GetGrid()[cell.first][cell.second].entities;
+        
+        for (Entity* other : gridEntities) {
+			Block* block = dynamic_cast<Block*>(other);
+			
+            if (other == mario || other == shell || !other->IsActive() || !other->IsCollidable() || block) {
+                continue;
+            }
+            
+            Rectangle otherRect = other->GetCollisionComponent()->GetRectangle();
+            
+            if (shellRect.x < otherRect.x + otherRect.width &&
+                shellRect.x + shellRect.width > otherRect.x &&
+                shellRect.y < otherRect.y + otherRect.height &&
+                shellRect.y + shellRect.height > otherRect.y)
+            {
+                CollisionResult fakeResult;
+                fakeResult.collided = true;
+                fakeResult.collidedWith = other;
+                
+                other->Die(DyingType::BONKED);
+				shell->Die(DyingType::BONKED);
+                EffectManager::GetInstance()->CreateBonkEffect(other->GetPosition());
+            }
+        }
+    }
 }
 
 Vector2 MarioHoldState::GetHeldEntityOffset(Mario* mario, const int& state)

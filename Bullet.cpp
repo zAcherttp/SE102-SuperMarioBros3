@@ -2,6 +2,8 @@
 #include "Bullet.h"
 #include "AssetIDs.h"
 #include "Debug.h"
+#include "Mario.h"
+
 
 Bullet::Bullet(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, BulletDirection direction)
     : Entity(position, size, spriteSheet)
@@ -29,12 +31,29 @@ Bullet::Bullet(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, BulletD
         GetAnimator()->SetFlipHorizontal((m_direction == TOP_RIGHT_45 || m_direction == TOP_RIGHT_60 || m_direction == TOP_RIGHT_120 || m_direction == TOP_RIGHT_135) ? true : false);
     }
 
-    Log(__FUNCTION__, "Bullet initialized with direction: " + std::to_string(static_cast<int>(m_direction)));
 }
 
 void Bullet::Update(float dt) 
 {
     if (!m_isActive) return;
+
+    Mario* m_mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
+
+    // Perform sweep AABB collision detection with Mario
+    Vector2 bulletPosition = GetPosition();
+    Vector2 bulletSize = GetSize() * 0.9f;
+    Vector2 marioPosition = m_mario->GetPosition();
+    Vector2 marioSize = m_mario->GetSize();
+
+    Rectangle bulletBox = {long(bulletPosition.x), long(bulletPosition.y), long(bulletSize.x), long(bulletSize.y)};
+
+    Rectangle marioBox = {long(marioPosition.x), long(marioPosition.y), long(marioSize.x), long(marioSize.y)};
+
+    if (bulletBox.Intersects(marioBox)) {
+        m_mario->Damage();
+        return;
+    }
+
     
     // Handle rotation animation
     UpdateRotation(dt);
@@ -143,5 +162,4 @@ void Bullet::SetDirection(BulletDirection direction)
         GetAnimator()->SetFlipHorizontal(isRightDirection);
     }
 }
-
 

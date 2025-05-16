@@ -223,6 +223,7 @@ void FirePiranha::OnCollision(const CollisionResult& event)
 
     if (mario)
     {
+        mario->Damage();
         return;
     }
 

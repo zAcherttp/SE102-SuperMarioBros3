@@ -199,7 +199,6 @@ void ParaGoomba::Update(float dt)
 				// After 0.5 seconds, deactivate the Goomba
 				m_isActive = false;
 				m_visible = false;// Remove collision component
-				m_collisionComponent = nullptr; // Set to nullptr
 			}
 			return;
 		}
@@ -209,7 +208,6 @@ void ParaGoomba::Update(float dt)
 				// After 2.0 seconds, deactivate the Goomba
 				m_isActive = false;
 				m_visible = false;// Remove collision component
-				m_collisionComponent = nullptr; // Set to nullptr
 				return;
 			}
 			SetPosition(GetPosition() + GetVelocity() * dt);

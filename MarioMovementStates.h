@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "Debug.h"
 #include "MarioStateBase.h"
+#include "RedTroopas.h"
 
 class Entity;
 
@@ -113,6 +114,7 @@ public:
 	int GetStateAnimValue() const override;
 	Vector2 GetStateSizeOffset() const override;
 	Vector2 GetHeldEntityOffset(Mario* mario, const int& state);
+	void CheckHeldShellCollisions(Mario* mario, RedTroopas* shell, float dt);
 private:
 	Entity* m_heldEntity;
 
