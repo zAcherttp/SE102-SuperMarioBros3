@@ -1,7 +1,18 @@
 #pragma once
+#include "Collision.h"
+#include "CollisionComponent.h"
 #include "Entity.h"
+#include "Keyboard.h"
 #include "MarioMovementStates.h"
 #include "MarioPowerUpStates.h"
+#include "MarioStateBase.h"
+#include "SimpleMath.h"
+#include "SpriteBatch.h"
+#include "SpriteSheet.h"
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 using namespace DirectX::SimpleMath;
 

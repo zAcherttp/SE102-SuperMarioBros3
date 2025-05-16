@@ -1,10 +1,26 @@
 #pragma once
 #include "pch.h"
-#include "Mario.h"
 #include "AssetIDs.h"
-#include "Debug.h"
 #include "Block.h"
+#include "Collision.h"
+#include "CollisionComponent.h"
+#include "Debug.h"
+#include "Entity.h"
+#include "HeadUpDisplay.h"
+#include "Keyboard.h"
+#include "Mario.h"
+#include "MarioMovementStates.h"
+#include "MarioPowerUpStates.h"
+#include "MarioStateBase.h"
 #include "RedTroopas.h"
+#include "SimpleMath.h"
+#include "SpriteBatch.h"
+#include "SpriteSheet.h"
+#include <cstdlib>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 using namespace DirectX::SimpleMath;
 using Keyboard = DirectX::Keyboard;
@@ -97,7 +113,7 @@ void Mario::ItsAMe()
 {
 	// set default for now, later game class will have mario factory
 
-	m_powerupSM = std::make_unique<MarioRaccoonState>();
+	m_powerupSM = std::make_unique<MarioSmallState>();
 	m_movementSM = std::make_unique<MarioIdleState>(Direction::Right);
 	m_powerupSM->Enter(this);
 	m_movementSM->Enter(this);
@@ -114,7 +130,7 @@ void Mario::Damage() {
 void Mario::PowerUp(PowerUpType type)
 {
 	PowerUpType currentType = m_powerupSM->GetCurrentPowerUp();
-	if (currentType == type) {
+	if (currentType == type || IsTransitioning()) {
 		return;
 	}
 	switch (type) {
@@ -150,7 +166,7 @@ void Mario::Update(float dt)
 	m_collisionComponent->Update(dt);
 	m_powerupSM->Update(this, dt);
 
-	if (m_powerupSM->IsDying()) return;
+	if (m_powerupSM->IsDying() || IsTransitioning()) return;
 
 	m_movementSM->Update(this, dt);
 	m_animator->Update(dt, m_collisionComponent->GetVelocity().x);

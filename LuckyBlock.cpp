@@ -22,6 +22,8 @@ LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet
 	m_isActive = true;
 	m_isCollidable = true;
 	m_isSpecial = isSpecial;
+	m_claimCoinTimer = 0.0f;
+	m_collectedCoin = false;
 
 	// update the collision box to match the size of the ground
 	Vector2 curSize = m_collisionComponent->GetSize();
@@ -48,6 +50,13 @@ void LuckyBlock::Render(DirectX::SpriteBatch* spriteBatch)
 
 void LuckyBlock::Update(float dt)
 {
+	if (!m_collectedCoin) m_claimCoinTimer += dt;
+	if (m_claimCoinTimer > 0.5f && !m_collectedCoin) {
+		m_collectedCoin = true;
+
+		Game::GetInstance()->AddScore(100);
+
+	}
 	if (m_isClaiming) {
 		// set anim id to opened state
 		//SetAnimId()
@@ -106,13 +115,13 @@ void LuckyBlock::OnCollision(const CollisionResult& event)
 
 void LuckyBlock::SpawnReward()
 {
-		if(m_isSpecial) {
-			SpawnPowerUp();
-		}
-		else {
-			SpawnCoin();
-		}
-}	
+	if (m_isSpecial) {
+		SpawnPowerUp();
+	}
+	else {
+		SpawnCoin();
+	}
+}
 
 void LuckyBlock::SpawnCoin()
 {
@@ -121,25 +130,26 @@ void LuckyBlock::SpawnCoin()
 
 void LuckyBlock::SpawnPowerUp()
 {
-    Mario* mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
-    PowerUpType powerupType = PowerUpType::LEAF;
+	Mario* mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
+	ItemType powerupType;
 
-	// if (mario->GetCurrentPStateName() == "smallMario") {
-	// 	powerupType = PowerUpType::MUSHROOM;
-	// } else {
-	// 	powerupType = PowerUpType::LEAF;
-	// }
-    // auto stateName = mario->GetCurrentPStateName();
-    
-    Vector2 spawnPosition = GetPosition();
-	
-	if (powerupType == PowerUpType::MUSHROOM) {
-		World::GetInstance()->GetEntities().push_back(
+	if (mario->GetPowerUpState() == PowerUpType::SMALL) {
+		powerupType = ItemType::MUSHROOM;
+	}
+	else {
+		powerupType = ItemType::LEAF;
+	}
+
+	Vector2 spawnPosition = GetPosition();
+
+	if (powerupType == ItemType::MUSHROOM) {
+		World::GetInstance()->AddEntity(
 			new Mushroom(spawnPosition, Vector2(16, 16), Game::GetInstance()->GetSpriteSheet())
-	 	);
-	} else if (powerupType == PowerUpType::LEAF) {
-		World::GetInstance()->GetEntities().push_back(
-			new FireLeaf(spawnPosition, Vector2(16, 16), Game::GetInstance()->GetSpriteSheet())
+		);
+	}
+	else if (powerupType == ItemType::LEAF) {
+		World::GetInstance()->AddEntity(
+			new Leaf(spawnPosition, Vector2(16, 16), Game::GetInstance()->GetSpriteSheet())
 		);
 	}
 }

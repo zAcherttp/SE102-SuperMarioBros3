@@ -36,7 +36,6 @@ void Goomba::OnCollision(const CollisionResult& event)
 {
 
 	Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
-	ParaGoomba* paraGoomba = dynamic_cast<ParaGoomba*>(event.collidedWith);
 	Block* block = dynamic_cast<Block*>(event.collidedWith);
 	Goomba* goomba = dynamic_cast<Goomba*>(event.collidedWith);
 
@@ -48,7 +47,6 @@ void Goomba::OnCollision(const CollisionResult& event)
 	{
 		if (block && block->IsSolid() || goomba)
 		{
-			float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
 			Vector2 vel = GetVelocity();
 
 			vel.x = -vel.x;

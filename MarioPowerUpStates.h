@@ -114,6 +114,7 @@ class MarioSuperState : public MarioPowerUpState {
 public:
 	MarioSuperState(PowerUpType lastPowerUp = PowerUpType::NONE) : MarioPowerUpState(lastPowerUp) {
 		m_currentPowerUp = PowerUpType::SUPER;
+		m_toRaccoon = false;
 	};
 	MarioSuperState(PowerUpType lastPowerUp, float invincibleTimer, bool isInvincible, float flashingTimer, bool isFlashing, bool takenDmg) : MarioPowerUpState(lastPowerUp) {
 		m_invincibleTimer = invincibleTimer;
@@ -122,6 +123,7 @@ public:
 		m_isFlashing = isFlashing;
 		m_takenDmg = takenDmg;
 		m_currentPowerUp = PowerUpType::SUPER;
+		m_toRaccoon = false;
 	};
 	std::unique_ptr<MarioPowerUpState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
@@ -131,6 +133,7 @@ public:
 	Vector2 GetStateSizeOffset() const override;
 private:
 	float m_smokeTimer = 0.f;
+	bool m_toRaccoon;
 };
 
 class MarioRaccoonState : public MarioPowerUpState {

@@ -35,79 +35,79 @@ Bullet::Bullet(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, BulletD
 
 void Bullet::Update(float dt)
 {
-    if (!m_isActive) return;
+	if (!m_isActive) return;
 
-    Mario* m_mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
+	Mario* m_mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
 
-    // Perform sweep AABB collision detection with Mario
-    Vector2 bulletPosition = GetPosition();
-    Vector2 bulletSize = GetSize() * 0.9f;
-    Vector2 marioPosition = m_mario->GetPosition();
-    Vector2 marioSize = m_mario->GetSize();
+	// Perform sweep AABB collision detection with Mario
+	Vector2 bulletPosition = GetPosition();
+	Vector2 bulletSize = GetSize() * 0.9f;
+	Vector2 marioPosition = m_mario->GetPosition();
+	Vector2 marioSize = m_mario->GetSize();
 
-    Rectangle bulletBox = {long(bulletPosition.x), long(bulletPosition.y), long(bulletSize.x), long(bulletSize.y)};
+	Rectangle bulletBox = { long(bulletPosition.x), long(bulletPosition.y), long(bulletSize.x), long(bulletSize.y) };
 
-    Rectangle marioBox = {long(marioPosition.x), long(marioPosition.y), long(marioSize.x), long(marioSize.y)};
+	Rectangle marioBox = { long(marioPosition.x), long(marioPosition.y), long(marioSize.x), long(marioSize.y) };
 
-    if (bulletBox.Intersects(marioBox)) {
-        m_mario->Damage();
-        return;
-    }
+	if (bulletBox.Intersects(marioBox)) {
+		m_mario->Damage();
+		return;
+	}
 
-    
-    // Handle rotation animation
-    UpdateRotation(dt);
-    
-    // Update position based on direction and speed
-    Vector2 position = GetPosition();
-    float velocityX = 0.0f;
-    float velocityY = 0.0f;
-      // Set velocity components based on direction
-    switch (m_direction)
-    {
-    // Right side angles (clockwise from top)
-    case TOP_RIGHT_45:      // 45° angle (1, -1)
-        velocityX = m_speed * 0.7071f;  // cos(45°) = 0.7071
-        velocityY = m_speed * 0.7071f; // -sin(45°) = -0.7071
-        break;
-    case TOP_RIGHT_60:      // 60° angle (0.5, -0.866)
-        velocityX = m_speed * 0.866f;     // cos(60°) = 0.866
-        velocityY = m_speed * 0.5f;  // -sin(60°) = -0.5
-        break;
-    case TOP_RIGHT_120:     // 120° angle (0.5, 0.866)
-        velocityX = m_speed * 0.866f;     // cos(120°) = -0.5, but we want right direction
-        velocityY = -m_speed * 0.5f;   // sin(120°) = 0.866
-        break;
-    case TOP_RIGHT_135:     // 135° angle (0.7071, 0.7071)
-        velocityX = m_speed * 0.7071f;  // cos(135°) = -0.7071, but we want right direction
-        velocityY = -m_speed * 0.7071f;  // sin(135°) = 0.7071
-        break;
-    
-    // Left side angles (clockwise from top)
-    case TOP_LEFT_45:       // 45° angle (-0.7071, -0.7071)
-        velocityX = -m_speed * 0.7071f; // -cos(45°) = -0.7071
-        velocityY = m_speed * 0.7071f; // -sin(45°) = -0.7071
-        break;
-    case TOP_LEFT_60:       // 60° angle (-0.5, -0.866)
-        velocityX = -m_speed * 0.866f;    // -cos(60°) = -0.5
-        velocityY = m_speed * 0.5;  // -sin(60°) = -0.866
-        break;
-    case TOP_LEFT_120:      // 120° angle (-0.5, 0.866)
-        velocityX = -m_speed * 0.866f;    // -cos(60°) = -0.5 (mirrored from RIGHT_120)
-        velocityY = -m_speed * 0.5;   // sin(60°) = 0.866
-        break;
-    case TOP_LEFT_135:      // 135° angle (-0.7071, 0.7071)
-        velocityX = -m_speed * 0.7071f; // -cos(45°) = -0.7071
-        velocityY = -m_speed * 0.7071f;  // sin(45°) = 0.7071
-        break;
-    }
-    
-    position.x += velocityX * dt;
-    position.y += velocityY * dt;
-    SetPosition(position);
-    
-    // Call base update to handle animation
-    Entity::Update(dt);
+
+	// Handle rotation animation
+	UpdateRotation(dt);
+
+	// Update position based on direction and speed
+	Vector2 position = GetPosition();
+	float velocityX = 0.0f;
+	float velocityY = 0.0f;
+	// Set velocity components based on direction
+	switch (m_direction)
+	{
+		// Right side angles (clockwise from top)
+	case TOP_RIGHT_45:      // 45° angle (1, -1)
+		velocityX = m_speed * 0.7071f;  // cos(45°) = 0.7071
+		velocityY = m_speed * 0.7071f; // -sin(45°) = -0.7071
+		break;
+	case TOP_RIGHT_60:      // 60° angle (0.5, -0.866)
+		velocityX = m_speed * 0.866f;     // cos(60°) = 0.866
+		velocityY = m_speed * 0.5f;  // -sin(60°) = -0.5
+		break;
+	case TOP_RIGHT_120:     // 120° angle (0.5, 0.866)
+		velocityX = m_speed * 0.866f;     // cos(120°) = -0.5, but we want right direction
+		velocityY = -m_speed * 0.5f;   // sin(120°) = 0.866
+		break;
+	case TOP_RIGHT_135:     // 135° angle (0.7071, 0.7071)
+		velocityX = m_speed * 0.7071f;  // cos(135°) = -0.7071, but we want right direction
+		velocityY = -m_speed * 0.7071f;  // sin(135°) = 0.7071
+		break;
+
+		// Left side angles (clockwise from top)
+	case TOP_LEFT_45:       // 45° angle (-0.7071, -0.7071)
+		velocityX = -m_speed * 0.7071f; // -cos(45°) = -0.7071
+		velocityY = m_speed * 0.7071f; // -sin(45°) = -0.7071
+		break;
+	case TOP_LEFT_60:       // 60° angle (-0.5, -0.866)
+		velocityX = -m_speed * 0.866f;    // -cos(60°) = -0.5
+		velocityY = m_speed * 0.5f;  // -sin(60°) = -0.866
+		break;
+	case TOP_LEFT_120:      // 120° angle (-0.5, 0.866)
+		velocityX = -m_speed * 0.866f;    // -cos(60°) = -0.5 (mirrored from RIGHT_120)
+		velocityY = -m_speed * 0.5f;   // sin(60°) = 0.866
+		break;
+	case TOP_LEFT_135:      // 135° angle (-0.7071, 0.7071)
+		velocityX = -m_speed * 0.7071f; // -cos(45°) = -0.7071
+		velocityY = -m_speed * 0.7071f;  // sin(45°) = 0.7071
+		break;
+	}
+
+	position.x += velocityX * dt;
+	position.y += velocityY * dt;
+	SetPosition(position);
+
+	// Call base update to handle animation
+	Entity::Update(dt);
 }
 
 void Bullet::UpdateRotation(float dt)

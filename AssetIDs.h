@@ -1,19 +1,19 @@
 #pragma once
 
 // Entities IDs
-constexpr auto ID_ENT_MARIO                         = 0;
-constexpr auto ID_ENT_BOOMERANG_BRO                 = 1;
-constexpr auto ID_ENT_GREEN_PARATROOPA_HOPPER       = 2;
-constexpr auto ID_ENT_GREEN_TROOPA                  = 3;
-constexpr auto ID_ENT_RED_TROOPA                    = 4;
-constexpr auto ID_ENT_GOOMBA                        = 5;
-constexpr auto ID_ENT_PARAGOOMBA                    = 6;
-constexpr auto ID_ENT_GREEN_PIRANHA                 = 7;
-constexpr auto ID_ENT_GREEN_PIRANHA_SPIT_FIRE       = 8;
-constexpr auto ID_ENT_RED_PIRANHA_SPIT_FIRE         = 9;
-constexpr auto ID_ENT_GROUND                        = 10;
-constexpr auto ID_ENT_WINGS                         = 12;
-constexpr auto ID_ENT_BULLET                        = 13;
+constexpr auto ID_ENT_MARIO = 0;
+constexpr auto ID_ENT_BOOMERANG_BRO = 1;
+constexpr auto ID_ENT_GREEN_PARATROOPA_HOPPER = 2;
+constexpr auto ID_ENT_GREEN_TROOPA = 3;
+constexpr auto ID_ENT_RED_TROOPA = 4;
+constexpr auto ID_ENT_GOOMBA = 5;
+constexpr auto ID_ENT_PARAGOOMBA = 6;
+constexpr auto ID_ENT_GREEN_PIRANHA = 7;
+constexpr auto ID_ENT_GREEN_PIRANHA_SPIT_FIRE = 8;
+constexpr auto ID_ENT_RED_PIRANHA_SPIT_FIRE = 9;
+constexpr auto ID_ENT_GROUND = 10;
+constexpr auto ID_ENT_WINGS = 12;
+constexpr auto ID_ENT_BULLET = 13;
 
 constexpr auto ID_ENT_BUSH = 11;
 
@@ -27,17 +27,17 @@ constexpr auto ID_ENT_BG_GOAL = 19;
 constexpr auto ID_ENT_END_PORTAL = 22;
 constexpr auto ID_ENT_LUCKY_BLOCK = 21;
 
-constexpr auto ID_ENT_GRASS_BLOCK                   = 23;
-constexpr auto ID_ENT_BRICK                         = 24;
-constexpr auto ID_ENT_SCREW_BLOCK                   = 25;
-constexpr auto ID_ENT_SCREW_BLOCK_HOVER_PLATFORM    = 26;
-constexpr auto ID_ENT_PIPE                          = 27;
-constexpr auto ID_ENT_COIN                          = 28;
+constexpr auto ID_ENT_GRASS_BLOCK = 23;
+constexpr auto ID_ENT_BRICK = 24;
+constexpr auto ID_ENT_SCREW_BLOCK = 25;
+constexpr auto ID_ENT_SCREW_BLOCK_HOVER_PLATFORM = 26;
+constexpr auto ID_ENT_PIPE = 27;
+constexpr auto ID_ENT_COIN = 28;
 
-constexpr auto ID_ENT_EFFECT                        = 29;
+constexpr auto ID_ENT_EFFECT = 29;
 
-constexpr auto ID_ENT_MUSHROOM                      = 30;
-constexpr auto ID_ENT_FIRE_LEAF                     = 31;
+constexpr auto ID_ENT_MUSHROOM = 30;
+constexpr auto ID_ENT_FIRE_LEAF = 31;
 
 //Entities' animation IDs
 constexpr auto ID_ANIM_MARIO_SMALL = 100000;
@@ -63,11 +63,11 @@ constexpr auto ID_ANIM_MARIO_KICK = 100;
 constexpr auto ID_ANIM_MARIO_SUPER_BONKED = 110;
 
 //Red Troopa
-constexpr auto ID_ANIM_RED_TROOPAS_WALK              = 400;
-constexpr auto ID_ANIM_RED_TROOPAS_SHELL             = 410;
-constexpr auto ID_ANIM_RED_TROOPAS_SHELL_SLIDE       = 420;
-constexpr auto ID_ANIM_RED_TROOPAS_REVIVE_SLOW      = 430;
-constexpr auto ID_ANIM_RED_TROOPAS_REVIVE_FAST      = 440;
+constexpr auto ID_ANIM_RED_TROOPAS_WALK = 400;
+constexpr auto ID_ANIM_RED_TROOPAS_SHELL = 410;
+constexpr auto ID_ANIM_RED_TROOPAS_SHELL_SLIDE = 420;
+constexpr auto ID_ANIM_RED_TROOPAS_REVIVE_SLOW = 430;
+constexpr auto ID_ANIM_RED_TROOPAS_REVIVE_FAST = 440;
 
 // Goomba
 constexpr auto ID_ANIM_GOOMBA_WALK = 500;
@@ -75,29 +75,30 @@ constexpr auto ID_ANIM_GOOMBA_DIE = 510;
 
 // Paragoomba
 constexpr auto ID_ANIM_PARAGOOMBA_WALK = 600;
-constexpr auto ID_ANIM_PARAGOOMBA_DIE               = 610;
+constexpr auto ID_ANIM_PARAGOOMBA_DIE = 610;
 
 // Wings
-constexpr auto ID_ANIM_WINGS_FLAP                   = 1200;
-constexpr auto ID_ANIM_WINGS_FLAP_UP                = 1210; // Up position
-constexpr auto ID_ANIM_WINGS_FLAP_DOWN              = 1220; // Down position
+constexpr auto ID_ANIM_WINGS_FLAP = 1200;
+constexpr auto ID_ANIM_WINGS_FLAP_UP = 1210; // Up position
+constexpr auto ID_ANIM_WINGS_FLAP_DOWN = 1220; // Down position
 
 // Bullet
-constexpr auto ID_ANIM_BULLET                      = 1300;
+constexpr auto ID_ANIM_BULLET = 1300;
 
 // Effects
-constexpr auto ID_ANIM_EFFECT_BONK                 = 2900;
-constexpr auto ID_ANIM_EFFECT_PIRANHA_DIE          = 2910;
-constexpr auto ID_ANIM_EFFECT_POINT_100            = 2920;
-constexpr auto ID_ANIM_EFFECT_POINT_200            = 2921;
-constexpr auto ID_ANIM_EFFECT_POINT_400            = 2922;
-constexpr auto ID_ANIM_EFFECT_POINT_800            = 2923;
-constexpr auto ID_ANIM_EFFECT_POINT_1000           = 2924;
-constexpr auto ID_ANIM_EFFECT_POINT_2000           = 2925;
-constexpr auto ID_ANIM_EFFECT_POINT_4000           = 2926;
-constexpr auto ID_ANIM_EFFECT_POINT_8000           = 2927;
+constexpr auto ID_ANIM_EFFECT_BONK = 2900;
+constexpr auto ID_ANIM_EFFECT_PIRANHA_DIE = 2910;
+constexpr auto ID_ANIM_EFFECT_POINT_100 = 2920;
+constexpr auto ID_ANIM_EFFECT_POINT_200 = 2921;
+constexpr auto ID_ANIM_EFFECT_POINT_400 = 2922;
+constexpr auto ID_ANIM_EFFECT_POINT_800 = 2923;
+constexpr auto ID_ANIM_EFFECT_POINT_1000 = 2924;
+constexpr auto ID_ANIM_EFFECT_POINT_2000 = 2925;
+constexpr auto ID_ANIM_EFFECT_POINT_4000 = 2926;
+constexpr auto ID_ANIM_EFFECT_POINT_8000 = 2927;
 
-constexpr auto ID_ANIM_EFFECT_COIN                 = 2930;
+constexpr auto ID_ANIM_EFFECT_COIN = 2930;
+constexpr auto ID_ANIM_EFFECT_SMOKE = 2940;
 
 //Mushroom
 constexpr auto ID_ANIM_MUSHROOM = 3000;
@@ -106,10 +107,10 @@ constexpr auto ID_ANIM_MUSHROOM = 3000;
 constexpr auto ID_ANIM_FIRE_LEAF = 3100;
 
 // Red Piranha
-constexpr auto ID_ANIM_RED_PIRANHA_LOOK_DOWN       = 900;
-constexpr auto ID_ANIM_RED_PIRANHA_LOOK_UP         = 910;
-constexpr auto ID_ANIM_RED_PIRANHA_LOOK_DOWN_OPEN  = 920;
-constexpr auto ID_ANIM_RED_PIRANHA_LOOK_UP_OPEN    = 930;
+constexpr auto ID_ANIM_RED_PIRANHA_LOOK_DOWN = 900;
+constexpr auto ID_ANIM_RED_PIRANHA_LOOK_UP = 910;
+constexpr auto ID_ANIM_RED_PIRANHA_LOOK_DOWN_OPEN = 920;
+constexpr auto ID_ANIM_RED_PIRANHA_LOOK_UP_OPEN = 930;
 
 
 // Brick

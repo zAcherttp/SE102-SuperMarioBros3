@@ -9,7 +9,7 @@
 #include "Goomba.h"
 
 RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
-	: Entity(position, size, spriteSheet)
+	: Enemy(position, size, spriteSheet)
 	, m_animTimer(0.0f)
 	, m_frameTime(0.15f)
 	, m_flipFrame(false)
@@ -110,7 +110,7 @@ void RedTroopas::Update(float dt)
 	else {
 		m_reviveTimer = 0.0f;
 	}
-	
+
 
 
 	// Check for platform edges using raycasting if the entity is grounded
@@ -134,7 +134,6 @@ void RedTroopas::Update(float dt)
 void RedTroopas::OnCollision(const CollisionResult& event)
 {
 	Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
-	Goomba* goomba = dynamic_cast<Goomba*>(event.collidedWith);
 	Block* block = dynamic_cast<Block*>(event.collidedWith);
 
 	if (event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
@@ -147,7 +146,6 @@ void RedTroopas::OnCollision(const CollisionResult& event)
 		{
 			if (block->IsSolid())
 			{
-				float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
 				Vector2 vel = GetVelocity();
 				vel.x = -vel.x;
 				SetVelocity(vel);
@@ -173,11 +171,9 @@ void RedTroopas::OnCollision(const CollisionResult& event)
 
 		if (event.collidedWith)
 		{
-			if (m_state == SHELL_SLIDE )
+			if (m_state == SHELL_SLIDE)
 			{
 				event.collidedWith->Die(DyingType::BONKED);
-				Game* game = Game::GetInstance();
-				SpriteSheet* spriteSheet = game->GetSpriteSheet();
 				EffectManager::GetInstance()->CreateBonkEffect(event.collidedWith->GetPosition());
 			}
 		}
@@ -185,11 +181,6 @@ void RedTroopas::OnCollision(const CollisionResult& event)
 
 	if (event.contactNormal.y < 0 && block) // foot collision
 	{
-		Block* block = dynamic_cast<Block*>(event.collidedWith);
-		if (!block) {
-			return;  // Only consider solid blocks for platform edge detection
-		}
-
 		Vector2 vel = GetVelocity();
 		vel.y = 0.0f;
 		SetVelocity(vel);
@@ -356,7 +347,7 @@ void RedTroopas::UpdateSpriteDirection()
 void RedTroopas::TransformToShell()
 {
 	m_state = SHELL_IDLE;
-	
+
 	Vector2 newSize = Vector2(16.0f, 16.0f);
 	m_collisionComponent->SetSize(newSize);
 	m_collisionComponent->SetPosition(GetPosition());
@@ -370,7 +361,7 @@ void RedTroopas::TransformToShell()
 void RedTroopas::TransformToTroopa()
 {
 	m_state = WALKING;
-	
+
 	Mario* m_mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
 
 	Vector2 newSize = Vector2(16.0f, 27.0f);
@@ -392,7 +383,7 @@ void RedTroopas::TransformToTroopa()
 }
 
 void RedTroopas::SetState(TroopaState state)
-{   
+{
 	if (m_state == DEAD) return;
 	m_state = state;
 }
@@ -422,7 +413,7 @@ void RedTroopas::StartVibration() {
 	}
 }
 
-void RedTroopas::UpdateVibration(float dt){
+void RedTroopas::UpdateVibration(float dt) {
 	if (!m_isVibrating) return;
 
 	m_vibrateTimer += dt;
@@ -439,16 +430,16 @@ void RedTroopas::UpdateVibration(float dt){
 		// Before transforming, do a final check for blocks
 		std::vector<std::pair<int, int>> cells = Collision::GetInstance()->GetEntityCells(this, dt);
 		m_canRevive = true;
-		
+
 		for (const auto& cell : cells) {
 			auto& gridEntities = Collision::GetInstance()->GetGrid()[cell.first][cell.second].entities;
-			
+
 			for (Entity* other : gridEntities) {
 				Block* block = dynamic_cast<Block*>(other);
 				if (block && block->IsSolid() && block->IsActive()) {
 					Rectangle blockRect = block->GetCollisionComponent()->GetRectangle();
-					Rectangle futureShellRect = GetCollisionComponent()->GetRectangle();				
-					
+					Rectangle futureShellRect = GetCollisionComponent()->GetRectangle();
+
 					if (futureShellRect.x < blockRect.x + blockRect.width &&
 						futureShellRect.x + futureShellRect.width > blockRect.x &&
 						futureShellRect.y < blockRect.y + blockRect.height &&

@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity.h"
+#include "Enemy.h"
 #include "Effect.h"
 #include <vector>
 
@@ -11,7 +11,7 @@ enum TroopaState
 	DEAD
 };
 
-class RedTroopas : public Entity
+class RedTroopas : public Enemy
 {
 public:
 	RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);

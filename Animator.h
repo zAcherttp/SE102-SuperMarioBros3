@@ -57,6 +57,7 @@ public:
 	void SetScale(float scaleX, float scaleY);
 	void SetRotation(float rotation);
 	void SetDepth(float depth) { m_depth = depth; }
+	void ResetDepth() { m_depth = m_originalDepth; }
 	float GetDepth() const { return m_depth; }
 
 	// Status methods
@@ -66,8 +67,6 @@ public:
 	bool IsFinished() const;
 	const std::unordered_map<int, AnimationSequence>& GetAnimations() const;
 	bool HasAnimation(const int& id) const;
-
-    float GetTimePerFrame();
 
 private:
 	SpriteSheet* m_spriteSheet = nullptr;
@@ -83,4 +82,5 @@ private:
 	DirectX::XMFLOAT2 m_scale = { 1.0f, 1.0f };
 	float m_rotation = 0.0f;
 	float m_depth = 0.5f;
+	float m_originalDepth = 0.5f;
 };

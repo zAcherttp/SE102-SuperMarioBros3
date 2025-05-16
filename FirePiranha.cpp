@@ -222,11 +222,11 @@ void FirePiranha::OnCollision(const CollisionResult& event)
 		if (block->IsSolid()) {}
 	}
 
-    if (mario)
-    {
-        mario->Damage();
-        return;
-    }
+	if (mario)
+	{
+		mario->Damage();
+		return;
+	}
 
 
 }
@@ -339,10 +339,10 @@ void FirePiranha::Die(DyingType type)
 
 void FirePiranha::UpdatePlantOrientation(Mario* mario)
 {
-	if (m_mario == nullptr)
+	if (mario == nullptr)
 		return;
 
-	Vector2 marioPos = m_mario->GetPosition();
+	Vector2 marioPos = mario->GetPosition();
 	Vector2 plantPos = GetPosition();
 
 	bool shouldFlip = (marioPos.x > plantPos.x);

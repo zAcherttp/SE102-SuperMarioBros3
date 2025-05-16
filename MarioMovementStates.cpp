@@ -683,22 +683,26 @@ void MarioHoldState::Update(Mario* mario, float dt) {
 			SetAnimation(mario, mario->GetCurrentMStateAnimValue()
 				+ mario->GetCurrentPStateAnimValue());
 			mario->SetDirection(-1);
+			m_heldEntity->GetAnimator()->ResetDepth();
 			m_dir = Direction::Left;
 			break;
 		case 1:
 			SetAnimation(mario, mario->GetCurrentMStateAnimValue()
 				+ mario->GetCurrentPStateAnimValue() + ID_ANIM_MARIO_HOLD_FRONT);
+			m_heldEntity->GetAnimator()->SetDepth(0.f);
 			m_dir = Direction::Left;
 			break;
 		case 2:
 			SetAnimation(mario, mario->GetCurrentMStateAnimValue()
 				+ mario->GetCurrentPStateAnimValue() + ID_ANIM_MARIO_HOLD_FRONT);
+			m_heldEntity->GetAnimator()->SetDepth(0.f);
 			m_dir = Direction::Right;
 			break;
 		case 3:
 			SetAnimation(mario, mario->GetCurrentMStateAnimValue()
 				+ mario->GetCurrentPStateAnimValue());
 			mario->SetDirection(1);
+			m_heldEntity->GetAnimator()->ResetDepth();
 			m_dir = Direction::Right;
 			break;
 		}
@@ -709,58 +713,60 @@ void MarioHoldState::Update(Mario* mario, float dt) {
 
 	RedTroopas* troopas = dynamic_cast<RedTroopas*>(m_heldEntity);
 
-    if (troopas && troopas->GetState() == TroopaState::SHELL_IDLE) {
-        CheckHeldShellCollisions(mario, troopas, dt);
-    }
+	if (troopas && troopas->GetState() == TroopaState::SHELL_IDLE) {
+		CheckHeldShellCollisions(mario, troopas, dt);
+	}
 }
 
 void MarioHoldState::CheckHeldShellCollisions(Mario* mario, RedTroopas* shell, float dt) {
 
-    Vector2 shellPos = shell->GetPosition();
-    Vector2 shellSize = shell->GetSize();
-    
-    Rectangle shellRect;
-    shellRect.x = shellPos.x - shellSize.x/2;
-    shellRect.y = shellPos.y - shellSize.y/2;
-    shellRect.width = shellSize.x;
-    shellRect.height = shellSize.y;
-    
-    std::vector<std::pair<int, int>> cells = Collision::GetInstance()->GetEntityCells(shell, dt);
-    
-    for (const auto& cell : cells) {
-        auto& gridEntities = Collision::GetInstance()->GetGrid()[cell.first][cell.second].entities;
-        
-        for (Entity* other : gridEntities) {
+	Vector2 shellPos = shell->GetPosition();
+	Vector2 shellSize = shell->GetSize();
+
+	Rectangle shellRect;
+	shellRect.x = (long)(shellPos.x - shellSize.x / 2);
+	shellRect.y = (long)(shellPos.y - shellSize.y / 2);
+	shellRect.width = (long)shellSize.x;
+	shellRect.height = (long)shellSize.y;
+
+	std::vector<std::pair<int, int>> cells = Collision::GetInstance()->GetEntityCells(shell, dt);
+
+	for (const auto& cell : cells) {
+		auto& gridEntities = Collision::GetInstance()->GetGrid()[cell.first][cell.second].entities;
+
+		for (Entity* other : gridEntities) {
 			Block* block = dynamic_cast<Block*>(other);
-			
-            if (other == mario || other == shell || !other->IsActive() || !other->IsCollidable() || block) {
-                continue;
-            }
-            
-            Rectangle otherRect = other->GetCollisionComponent()->GetRectangle();
-            
-            if (shellRect.x < otherRect.x + otherRect.width &&
-                shellRect.x + shellRect.width > otherRect.x &&
-                shellRect.y < otherRect.y + otherRect.height &&
-                shellRect.y + shellRect.height > otherRect.y)
-            {
-                CollisionResult fakeResult;
-                fakeResult.collided = true;
-                fakeResult.collidedWith = other;
-                
-                other->Die(DyingType::BONKED);
+
+			if (other == mario || other == shell || !other->IsActive() || !other->IsCollidable() || block) {
+				continue;
+			}
+
+			Rectangle otherRect = other->GetCollisionComponent()->GetRectangle();
+
+			if (shellRect.x < otherRect.x + otherRect.width &&
+				shellRect.x + shellRect.width > otherRect.x &&
+				shellRect.y < otherRect.y + otherRect.height &&
+				shellRect.y + shellRect.height > otherRect.y)
+			{
+				CollisionResult fakeResult;
+				fakeResult.collided = true;
+				fakeResult.collidedWith = other;
+
+				other->Die(DyingType::BONKED);
 				shell->Die(DyingType::BONKED);
-                EffectManager::GetInstance()->CreateBonkEffect(other->GetPosition());
-            }
-        }
-    }
+				EffectManager::GetInstance()->CreateBonkEffect(other->GetPosition());
+			}
+		}
+	}
 }
 
 Vector2 MarioHoldState::GetHeldEntityOffset(Mario* mario, const int& state)
 {
 	Vector2 size = m_heldEntity->GetSize();
 	Vector2 mSize = mario->GetSize();
+
 	// state / 4.0f * (1 - (-1)) + (-1), get direction transition lerp value
+	//TODO: FIX THIS LOGIC
 	float lerp = state / 4.0f * 2.f - 1.f;
 
 	m_heldEntityOffset = Vector2(size.x * lerp, -size.y) / 2.f;

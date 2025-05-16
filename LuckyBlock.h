@@ -1,21 +1,21 @@
 #pragma once
 #include "Block.h"
 
-enum class PowerUpType
+enum class ItemType
 {
-    MUSHROOM,
-    LEAF
+	MUSHROOM,
+	LEAF
 };
 class LuckyBlock : public Block
 {
 public:
-    LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial);
+	LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial);
 
 	//static block so no update needed
 	void Update(float dt) override;
 
 	//here we use m_size to render too
-    void Render(DirectX::SpriteBatch* spriteBatch) override;
+	void Render(DirectX::SpriteBatch* spriteBatch) override;
 
 	void Bump() override;
 	void OnCollision(const CollisionResult& event) override;
@@ -31,4 +31,7 @@ private:
 
 	Vector2 m_origin;
 	bool m_isClaiming;
+
+	float m_claimCoinTimer;
+	bool m_collectedCoin;
 };

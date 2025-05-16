@@ -23,7 +23,6 @@ public:
 	void Teleport();
 	void TogglePause();
 
-	std::vector<Entity*>& GetEntities();
 	Entity* GetPlayer();
 	static World* GetInstance();
 

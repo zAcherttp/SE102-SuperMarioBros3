@@ -121,6 +121,11 @@ void Game::UpdateHUD(float dt)
 	m_hud->Update(dt);
 }
 
+void Game::AddScore(const int& score)
+{
+	m_hud->AddScore(score);
+}
+
 void Game::RestartWorld()
 {
 	m_requestReset = true;
@@ -168,7 +173,7 @@ void Game::Render() {
 			m_states->PointClamp(), nullptr, nullptr, nullptr, m_camera->GetGameViewMatrix());
 
 		GetCurrentWorld()->Render(m_spriteBatch.get());
-		
+
 		m_effectManager->Render(m_spriteBatch.get());
 
 		m_spriteBatch->End();

@@ -6,6 +6,7 @@
 #include "RedTroopas.h"
 #include "Block.h"
 #include "Enemy.h"
+#include "Paragoomba.h"
 #include "DebugOverlay.h"
 
 using namespace DirectX;

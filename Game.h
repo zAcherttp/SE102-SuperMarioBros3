@@ -63,6 +63,8 @@ public:
 	void SetNextWorldId(int id);
 	void UpdateHUD(float dt);
 
+	void AddScore(const int& score);
+
 	void RestartWorld();
 
 	void SetWorldSize(int width, int height);
@@ -117,7 +119,7 @@ private:
 	std::wstring m_spriteFontPath;
 
 	std::unique_ptr<HeadUpDisplay> m_hud;
-    std::unique_ptr<EffectManager> m_effectManager;
+	std::unique_ptr<EffectManager> m_effectManager;
 
 	std::unique_ptr<SpriteSheet> m_spriteSheet;
 	std::wstring m_spritePath;

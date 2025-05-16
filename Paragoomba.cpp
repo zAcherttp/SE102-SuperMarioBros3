@@ -69,7 +69,6 @@ void ParaGoomba::Render(DirectX::SpriteBatch* spriteBatch)
 void ParaGoomba::OnCollision(const CollisionResult& event)
 {
 	Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
-	Goomba* goomba = dynamic_cast<Goomba*>(event.collidedWith);
 	Block* block = dynamic_cast<Block*>(event.collidedWith);
 
 	if (event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
@@ -80,7 +79,6 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
 	{
 		if (block->IsSolid())
 		{
-			float targetSpeed = GameConfig::Enemies::Goomba::WALK_SPEED;
 			Vector2 vel = GetVelocity();
 			vel.x = -vel.x;
 			SetVelocity(vel);
@@ -310,8 +308,8 @@ void ParaGoomba::Update(float dt)
 			}
 		}
 		break;
-		Entity::Update(dt);
 		}
+		Entity::Update(dt);
 	}
 
 	m_animTimer += dt;
