@@ -35,6 +35,16 @@ using Keyboard = DirectX::Keyboard;
 #define B_BTN		Keyboard::J
 #define A_BTN		Keyboard::K
 
+//#define UP			Keyboard::Up
+//#define DOWN		Keyboard::Down
+//#define LEFT		Keyboard::Left
+//#define RIGHT		Keyboard::Right
+//
+//#define START		Keyboard::I
+//
+//#define B_BTN		Keyboard::A
+//#define A_BTN		Keyboard::S
+
 constexpr auto PLAYER_HOLD_THROW_SPEED = 4.0f * 60.0f;
 
 Mario::Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spriteSheet)

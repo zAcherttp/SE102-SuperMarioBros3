@@ -90,7 +90,8 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
 	if (event.contactNormal.y < 0 && block)
 	{
 		Vector2 vel = GetVelocity();
-		vel += event.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - event.contactTime);
+		//vel += event.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - event.contactTime);
+		vel.y = 0.0f;
 		SetVelocity(vel);
 		m_isJumping = false;
 		return;

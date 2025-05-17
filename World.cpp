@@ -138,6 +138,8 @@ void World::Update(float dt) {
 
 		pos.x = std::clamp(pos.x, 0.f + 8.f, m_width - 8.f);
 		m_player->SetPosition(pos);
+		
+		if (pos.y > 500.f) Game::GetInstance()->RestartWorld();
 
 		int gameWidth, gameHeight;
 		Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
@@ -191,7 +193,7 @@ void World::Reset() {
 }
 
 void World::Teleport() {
-	m_player->SetPosition(Vector2(2500, 400));
+	m_player->SetPosition(Vector2(700, 350));
 	m_player->SetVelocity(Vector2::Zero);
 }
 

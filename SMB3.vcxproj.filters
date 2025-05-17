@@ -199,11 +199,24 @@
     <ClInclude Include="FirePiranha.h">
       <Filter>Source\Entity\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="RedTroopas.h" />
-    <ClInclude Include="Effect.h" />
-    <ClInclude Include="EffectManager.h" />
-    <ClInclude Include="Mushroom.h" />
-    <ClInclude Include="FireLeaf.h" />
+    <ClInclude Include="Effect.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectManager.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="RedTroopas.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="FireLeaf.h">
+      <Filter>Source\Entity\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Mushroom.h">
+      <Filter>Source\Entity\Block</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -341,14 +354,27 @@
     <ClCompile Include="FirePiranha.cpp">
       <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="RedTroopas.cpp" />
-    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Game.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="EffectManager.cpp" />
-    <ClCompile Include="Mushroom.cpp" />
-    <ClCompile Include="FireLeaf.cpp" />
+    <ClCompile Include="Effect.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="RedTroopas.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="FireLeaf.cpp">
+      <Filter>Source\Entity\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="Mushroom.cpp">
+      <Filter>Source\Entity\Block</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">
