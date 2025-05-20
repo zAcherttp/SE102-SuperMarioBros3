@@ -130,15 +130,13 @@ void World::Update(float dt) {
 		m_collisionSystem->ProcessCollisions(dt);
 	}
 
-
-
 	if (m_player) {
 		m_player->Update(dt);
 		Vector2 pos = m_player->GetPosition();
 
 		pos.x = std::clamp(pos.x, 0.f + 8.f, m_width - 8.f);
 		m_player->SetPosition(pos);
-		
+
 		if (pos.y > 500.f) Game::GetInstance()->RestartWorld();
 
 		int gameWidth, gameHeight;

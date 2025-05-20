@@ -4,16 +4,19 @@
 #include "Effect.h"
 #include "EffectManager.h"
 #include "Game.h"
+#include "GameConfig.h"
 #include "Mario.h"
 #include "MarioPowerUpStates.h"
 #include "SimpleMath.h"
 #include <memory>
 #include <string>
 
-std::string MarioDieState::GetStateName() const { return "die"; }
-std::string MarioSmallState::GetStateName() const { return "small"; }
-std::string MarioSuperState::GetStateName() const { return "super"; }
-std::string MarioRaccoonState::GetStateName() const { return "raccoon"; }
+using namespace GameStrings;
+
+std::string MarioDieState::GetStateName() const { return DIE; }
+std::string MarioSmallState::GetStateName() const { return SMALL; }
+std::string MarioSuperState::GetStateName() const { return SUPER; }
+std::string MarioRaccoonState::GetStateName() const { return RACCOON; }
 
 int MarioDieState::GetStateAnimValue() const { return ID_ANIM_MARIO_DIE; }
 int MarioSmallState::GetStateAnimValue() const { return ID_ANIM_MARIO_SMALL; }

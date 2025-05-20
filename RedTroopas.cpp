@@ -1,12 +1,14 @@
 #include "pch.h"
-#include "RedTroopas.h"
-#include "Debug.h"
 #include "AssetIDs.h"
-#include "Mario.h"
-#include "GameConfig.h"
-#include "ParaGoomba.h"
 #include "Block.h"
+#include "Debug.h"
+#include "GameConfig.h"
 #include "Goomba.h"
+#include "Mario.h"
+#include "ParaGoomba.h"
+#include "RedTroopas.h"
+
+using namespace GameConstants;
 
 RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	: Enemy(position, size, spriteSheet)
@@ -31,7 +33,7 @@ RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	m_state = WALKING; // Initialize state to WALKING
 
 	// Set initial velocity - slow movement to the left
-	SetVelocity(Vector2(-GameConfig::Enemies::Troopas::WALK_SPEED, 0.0f));
+	SetVelocity(Vector2(-Enemies::Troopas::WALK_SPEED, 0.0f));
 
 	// Setup collision component
 	SetupCollisionComponent();
@@ -63,7 +65,7 @@ void RedTroopas::Die(DyingType type)
 		m_isDying = true;
 		m_state = DEAD;
 		m_animator->SetFlipVertical(true);
-		SetVelocity(Vector2(GameConfig::Enemies::Troopas::WALK_SPEED, -GameConfig::Enemies::DEATH_BOUNCE_VELOCITY));
+		SetVelocity(Vector2(Enemies::Troopas::WALK_SPEED, -Enemies::DEATH_BOUNCE_VELOCITY));
 		return;
 	}
 }
@@ -75,7 +77,7 @@ void RedTroopas::Update(float dt)
 
 	if (!m_isGrounded) {
 		Vector2 vel = GetVelocity();
-		vel.y += GameConfig::Physics::GRAVITY * dt;
+		vel.y += Enemies::Troopas::GRAVITY * dt;
 		SetVelocity(vel);
 	}
 
@@ -83,7 +85,7 @@ void RedTroopas::Update(float dt)
 		m_deathTimer += dt;
 		if (m_dyingType == DyingType::BONKED)
 		{
-			if (m_deathTimer >= GameConfig::Enemies::DEATH_BONK_ANI_TIME) {
+			if (m_deathTimer >= Enemies::DEATH_BONK_ANI_TIME) {
 				// After 2.0 seconds, deactivate the Goomba
 				m_isActive = false;
 				m_visible = false;// Remove collision component
@@ -193,7 +195,7 @@ void RedTroopas::OnCollision(const CollisionResult& event)
 		if (mario) {
 			if (m_state == WALKING) {
 				Vector2 vel = mario->GetVelocity();
-				vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+				vel.y = Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);
 				TransformToShell();
 				return;
@@ -201,14 +203,14 @@ void RedTroopas::OnCollision(const CollisionResult& event)
 			if (m_state == SHELL_IDLE) {
 
 				if (mario->GetPosition().x < GetPosition().x + 8.0f) {
-					SetVelocity(Vector2(GameConfig::Enemies::Troopas::WALK_SPEED * 7, 0.0f));
+					SetVelocity(Vector2(Enemies::Troopas::WALK_SPEED * 7, 0.0f));
 				}
 				else {
-					SetVelocity(Vector2(-GameConfig::Enemies::Troopas::WALK_SPEED * 7, 0.0f));
+					SetVelocity(Vector2(-Enemies::Troopas::WALK_SPEED * 7, 0.0f));
 				}
 
 				Vector2 vel = mario->GetVelocity();
-				vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+				vel.y = Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);
 
 				m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL_SLIDE, true);
@@ -217,7 +219,7 @@ void RedTroopas::OnCollision(const CollisionResult& event)
 			}
 			if (m_state == SHELL_SLIDE) {
 				Vector2 vel = mario->GetVelocity();
-				vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+				vel.y = Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);
 
 				m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL);
@@ -373,10 +375,10 @@ void RedTroopas::TransformToTroopa()
 		Vector2 goombaPos = GetPosition();
 
 		if (marioPos.x < goombaPos.x + 8.0f) {
-			SetVelocity(Vector2(-GameConfig::Enemies::Troopas::WALK_SPEED, 0.0f));
+			SetVelocity(Vector2(-Enemies::Troopas::WALK_SPEED, 0.0f));
 		}
 		else {
-			SetVelocity(Vector2(GameConfig::Enemies::Troopas::WALK_SPEED, 0.0f));
+			SetVelocity(Vector2(Enemies::Troopas::WALK_SPEED, 0.0f));
 		}
 	}
 	m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_WALK, true);

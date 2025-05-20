@@ -253,11 +253,19 @@
         "name": "mario_big_kick",
         "frames": [ "big-kick" ],
         "loop": false
-      },{
+      },
+      {
         "id": 300100,
         "name": "mario_raccoon_kick",
         "frames": [ "raccoon-kick" ],
         "loop": false
+      },
+      {
+        "id": 300110,
+        "name": "mario_raccoon_hover",
+        "frames": [ "raccoon-flap2", "raccoon-flap1", "raccoon-jump2" ],
+        "loop": true,
+        "timePerFrame": 0.1
       },
       {
         "id": 400000,

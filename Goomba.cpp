@@ -1,11 +1,13 @@
 #include "pch.h"
-#include "Goomba.h"
-#include "Debug.h"
 #include "AssetIDs.h"
-#include "Mario.h"
-#include "GameConfig.h"
-#include "ParaGoomba.h"
 #include "Block.h"
+#include "Debug.h"
+#include "GameConfig.h"
+#include "Goomba.h"
+#include "Mario.h"
+#include "ParaGoomba.h"
+
+using namespace GameConstants;
 
 Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	: Enemy(position, size, spriteSheet)
@@ -20,7 +22,7 @@ Goomba::Goomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	m_isDying = false; // Initialize dying state
 
 	// Set initial velocity - slow movement to the left
-	SetVelocity(Vector2(-GameConfig::Enemies::Goomba::WALK_SPEED, 0.0f));
+	SetVelocity(Vector2(-Enemies::Goomba::WALK_SPEED, 0.0f));
 
 	// Setup collision component
 	SetupCollisionComponent();
@@ -63,7 +65,7 @@ void Goomba::OnCollision(const CollisionResult& event)
 			Die(DyingType::STOMPED);
 
 			Vector2 vel = mario->GetVelocity();
-			vel.y = GameConfig::Mario::BOUNCE_FORCE;
+			vel.y = Player::BOUNCE_FORCE;
 			mario->SetVelocity(vel);
 		}
 		return;
@@ -94,7 +96,7 @@ void Goomba::Die(DyingType type)
 	if (type == DyingType::BONKED) {
 		SetAnimation(ID_ANIM_GOOMBA_WALK, false);
 		m_animator->SetFlipVertical(true);
-		SetVelocity(Vector2(GameConfig::Enemies::Goomba::WALK_SPEED, -GameConfig::Enemies::DEATH_BOUNCE_VELOCITY));
+		SetVelocity(Vector2(Enemies::Goomba::WALK_SPEED, -Enemies::DEATH_BOUNCE_VELOCITY));
 		return;
 	}
 }
@@ -104,7 +106,7 @@ void Goomba::Update(float dt)
 	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
 	if (!m_isGrounded) {
 		Vector2 vel = GetVelocity();
-		vel.y += GameConfig::Physics::GRAVITY * dt;
+		vel.y += Enemies::Goomba::GRAVITY * dt;
 		SetVelocity(vel);
 	}
 
@@ -112,7 +114,7 @@ void Goomba::Update(float dt)
 		m_deathTimer += dt;
 		if (m_dyingType == DyingType::STOMPED)
 		{
-			if (m_deathTimer >= GameConfig::Enemies::DEATH_STOMP_ANI_TIME) {
+			if (m_deathTimer >= Enemies::DEATH_STOMP_ANI_TIME) {
 
 				m_isActive = false;
 				m_visible = false;
@@ -121,7 +123,7 @@ void Goomba::Update(float dt)
 		}
 		if (m_dyingType == DyingType::BONKED)
 		{
-			if (m_deathTimer >= GameConfig::Enemies::DEATH_BONK_ANI_TIME) {
+			if (m_deathTimer >= Enemies::DEATH_BONK_ANI_TIME) {
 
 				m_isActive = false;
 				m_visible = false;

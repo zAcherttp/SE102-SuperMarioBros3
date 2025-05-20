@@ -123,7 +123,7 @@ void Mario::ItsAMe()
 {
 	// set default for now, later game class will have mario factory
 
-	m_powerupSM = std::make_unique<MarioSmallState>();
+	m_powerupSM = std::make_unique<MarioRaccoonState>();
 	m_movementSM = std::make_unique<MarioIdleState>(Direction::Right);
 	m_powerupSM->Enter(this);
 	m_movementSM->Enter(this);

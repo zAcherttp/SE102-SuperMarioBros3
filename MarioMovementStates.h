@@ -3,6 +3,8 @@
 #include "Debug.h"
 #include "MarioStateBase.h"
 #include "RedTroopas.h"
+#include <memory>
+#include <string>
 
 class Entity;
 
@@ -146,4 +148,39 @@ public:
 private:
 	Entity* m_entity;
 	float m_kickTimer = 0.4f;
+};
+
+class MarioFlyState : public MarioMovementState {
+public:
+	MarioFlyState(Direction dir) : MarioMovementState(dir) {};
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
+	void Update(Mario* mario, float dt) override;
+	std::string GetStateName() const override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
+private:
+	float m_flyTimer = 0.0f;
+};
+
+class MarioHoverState : public MarioMovementState {
+public:
+	MarioHoverState(Direction dir) : MarioMovementState(dir) {};
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
+	void Update(Mario* mario, float dt) override;
+	std::string GetStateName() const override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
+private:
+	float m_hoverTimer = 0.0f;
+	bool m_isHovering = false;
+};
+
+class MarioSweepState : public MarioMovementState {
+public:
+	MarioSweepState(Direction dir) : MarioMovementState(dir) {};
+	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
+	void Update(Mario* mario, float dt) override;
+	std::string GetStateName() const override;
+	int GetStateAnimValue() const override;
+	Vector2 GetStateSizeOffset() const override;
 };

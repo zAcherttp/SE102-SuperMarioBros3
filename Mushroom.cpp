@@ -1,10 +1,12 @@
 #include "pch.h"
-#include "Mushroom.h"
-#include "Debug.h"
 #include "AssetIDs.h"
-#include "Mario.h"
 #include "Block.h"
+#include "Debug.h"
 #include "GameConfig.h"
+#include "Mario.h"
+#include "Mushroom.h"
+
+using namespace GameConstants;
 
 Mushroom::Mushroom(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	: Entity(position, size, spriteSheet)
@@ -61,10 +63,9 @@ void Mushroom::Update(float dt)
 	}
 	}
 
-
 	if (!m_isGrounded && m_hasInitializedCollisionComponent) {
 		vel = GetVelocity();
-		vel.y += GameConfig::Physics::GRAVITY * dt;
+		vel.y += PowerUps::Mushroom::GRAVITY * dt;
 		SetVelocity(vel);
 	}
 

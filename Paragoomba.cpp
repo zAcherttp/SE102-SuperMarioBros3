@@ -1,13 +1,15 @@
 #include "pch.h"
-#include "ParaGoomba.h"
-#include "Debug.h"
 #include "AssetIDs.h"
-#include "Mario.h"
-#include "GameConfig.h"
-#include "World.h"
-#include "Goomba.h"
 #include "Block.h"
+#include "Debug.h"
+#include "GameConfig.h"
+#include "Goomba.h"
+#include "Mario.h"
+#include "ParaGoomba.h"
 #include "ScrewBlock.h"
+#include "World.h"
+
+using namespace GameConstants;
 
 ParaGoomba::ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	: Enemy(position, size, spriteSheet)
@@ -45,7 +47,7 @@ ParaGoomba::ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	SetAnimation(ID_ANIM_PARAGOOMBA_WALK, true);
 	m_visible = true;
 
-	SetVelocity(Vector2(-GameConfig::Enemies::Goomba::WALK_SPEED, 0.0f));
+	SetVelocity(Vector2(-Enemies::Goomba::WALK_SPEED, 0.0f));
 	SetupCollisionComponent();
 
 	m_isCollidable = true;
@@ -105,7 +107,7 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
 				TransformToGoomba();
 
 				Vector2 vel = mario->GetVelocity();
-				vel.y = GameConfig::Mario::BOUNCE_FORCE;
+				vel.y = Player::BOUNCE_FORCE;
 				mario->SetVelocity(vel);
 			}
 			else {
@@ -113,7 +115,7 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
 				Die(DyingType::STOMPED);
 
 				Vector2 vel = mario->GetVelocity();
-				vel.y = GameConfig::Mario::BOUNCE_FORCE;
+				vel.y = Player::BOUNCE_FORCE;
 				mario->SetVelocity(vel);
 			}
 		}
@@ -158,8 +160,8 @@ void ParaGoomba::Die(DyingType type)
 			m_deathTimer = 0.0f;
 			SetAnimation(ID_ANIM_PARAGOOMBA_WALK, false);
 			m_animator->SetFlipVertical(true);
-			SetVelocity(Vector2(GameConfig::Enemies::Goomba::WALK_SPEED,
-				-GameConfig::Enemies::DEATH_BOUNCE_VELOCITY));
+			SetVelocity(Vector2(Enemies::Goomba::WALK_SPEED,
+				-Enemies::DEATH_BOUNCE_VELOCITY));
 		}
 		return;
 	}
@@ -186,7 +188,7 @@ void ParaGoomba::Update(float dt)
 
 	if (!m_isGrounded) {
 		Vector2 vel = GetVelocity();
-		vel.y += GameConfig::Physics::GRAVITY * dt;
+		vel.y += Enemies::ParaGoomba::GRAVITY * dt;
 		SetVelocity(vel);
 	}
 
@@ -194,7 +196,7 @@ void ParaGoomba::Update(float dt)
 		m_deathTimer += dt;
 		if (m_dyingType == DyingType::STOMPED)
 		{
-			if (m_deathTimer >= GameConfig::Enemies::DEATH_STOMP_ANI_TIME) {
+			if (m_deathTimer >= Enemies::DEATH_STOMP_ANI_TIME) {
 				// After 0.5 seconds, deactivate the Goomba
 				m_isActive = false;
 				m_visible = false;// Remove collision component
@@ -203,7 +205,7 @@ void ParaGoomba::Update(float dt)
 		}
 		if (m_dyingType == DyingType::BONKED)
 		{
-			if (m_deathTimer >= GameConfig::Enemies::DEATH_BONK_ANI_TIME) {
+			if (m_deathTimer >= Enemies::DEATH_BONK_ANI_TIME) {
 				// After 2.0 seconds, deactivate the Goomba
 				m_isActive = false;
 				m_visible = false;// Remove collision component
@@ -390,11 +392,11 @@ void ParaGoomba::WalkInMarioDirection(Mario* mario)
 
 		SetVelocity(vel);
 		if (marioPos.x > goombaPos.x) {
-			vel.x = GameConfig::Enemies::Goomba::WALK_SPEED;
+			vel.x = Enemies::Goomba::WALK_SPEED;
 			SetVelocity(Vector2(vel));
 		}
 		else {
-			vel.x = -GameConfig::Enemies::Goomba::WALK_SPEED;
+			vel.x = -Enemies::Goomba::WALK_SPEED;
 			SetVelocity(Vector2(vel));
 		}
 	}

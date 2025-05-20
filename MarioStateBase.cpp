@@ -1,6 +1,7 @@
 #include "pch.h"
-#include "MarioStateBase.h"
+#include "Debug.h"
 #include "Mario.h"
+#include "MarioStateBase.h"
 
 void MarioStateBase::SetAnimation(Mario* mario, int animId) const {
 	mario->SetAnimId(animId);

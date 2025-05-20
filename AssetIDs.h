@@ -59,6 +59,8 @@ constexpr auto ID_ANIM_MARIO_HOLD = 1;
 constexpr auto ID_ANIM_MARIO_HOLD_JUMP = 2;
 constexpr auto ID_ANIM_MARIO_HOLD_FRONT = 3;
 constexpr auto ID_ANIM_MARIO_KICK = 100;
+constexpr auto ID_ANIM_MARIO_HOVER = 110;
+constexpr auto ID_ANIM_MARIO_SWEEP = 120;
 
 constexpr auto ID_ANIM_MARIO_SUPER_BONKED = 110;
 
