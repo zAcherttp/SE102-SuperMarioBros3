@@ -366,7 +366,8 @@ void Collision::ResolveOverlaps(Entity* entity, const std::vector<Entity*>& pote
 		return;
 	}
 	Mario* mario = dynamic_cast<Mario*>(entity);
-	if (!mario) return;
+	ParaGoomba* prgoomba = dynamic_cast<ParaGoomba*>(entity);
+	if (!mario || !prgoomba) return;
 
 	// Check for overlaps with each potential collision
 	for (Entity* other : potentialCollisions) {

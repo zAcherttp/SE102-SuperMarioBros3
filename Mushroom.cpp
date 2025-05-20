@@ -18,6 +18,7 @@ Mushroom::Mushroom(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 
 void Mushroom::Update(float dt)
 {
+	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
 	Vector2 m_pos = GetPosition();
 	Vector2 vel = GetVelocity();
 
@@ -60,7 +61,6 @@ void Mushroom::Update(float dt)
 	}
 	}
 
-	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
 
 	if (!m_isGrounded && m_hasInitializedCollisionComponent) {
 		vel = GetVelocity();
@@ -105,7 +105,8 @@ void Mushroom::OnCollision(const CollisionResult& event)
 	if (event.contactNormal.y < 0 && block)
 	{
 		Vector2 vel = GetVelocity();
-		vel += event.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - event.contactTime);
+		//vel += event.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - event.contactTime);
+		vel.y = 0.0f;
 		SetVelocity(vel);
 		return;
 	}
