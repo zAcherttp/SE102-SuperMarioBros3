@@ -62,6 +62,7 @@ constexpr auto ID_ANIM_MARIO_KICK = 100;
 constexpr auto ID_ANIM_MARIO_HOVER = 110;
 constexpr auto ID_ANIM_MARIO_SWEEP = 120;
 
+// single bonked frame animID = 110 so _HOVER is fine
 constexpr auto ID_ANIM_MARIO_SUPER_BONKED = 110;
 
 //Red Troopa

@@ -787,6 +787,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">mario/raccoon-sweep-side.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.391304,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,7,11,14</rect>
+                <key>scale9Paddings</key>
+                <rect>6,7,11,14</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">mario/small-holding-jump.png</key>
             <key type="filename">mario/small-holding-walk.png</key>
             <key type="filename">mario/small-skid.png</key>
@@ -1243,6 +1256,7 @@
             <filename>1-1/green-mid-left.png</filename>
             <filename>mario/big-to-small.png</filename>
             <filename>powerup/fireflower.png</filename>
+            <filename>mario/raccoon-sweep-side.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

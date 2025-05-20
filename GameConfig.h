@@ -31,6 +31,10 @@ namespace GameConstants
 		constexpr float HOVER_TIMER_THRESHOLD = 0.7f;
 		constexpr float HOVER_TIMER_LENGTH = 0.5f;
 		constexpr float HOVER_MAX_FALL_SPEED = 1.0f * 60.0f;
+
+		constexpr float SWEEP_TIMER_LENGTH = 0.5f;
+		constexpr float SWEEP_TIMER_HIT_RIGHT = 0.0f;
+		constexpr float SWEEP_TIMER_HIT_LEFT = 0.2f;
 	}
 
 	namespace Blocks {

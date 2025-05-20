@@ -3,10 +3,10 @@
 //
 
 #include "pch.h"
-#include "Game.h"
-#include "Helpers.h"
 #include "Debug.h"
 #include "DebugOverlay.h"
+#include "Game.h"
+#include "Helpers.h"
 #include "Mario.h"
 
 extern void ExitGame() noexcept;

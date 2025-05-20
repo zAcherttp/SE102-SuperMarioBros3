@@ -88,16 +88,16 @@ void Goomba::Die(DyingType type)
 		m_isDying = true;
 		m_isCollidable = false;
 		m_deathTimer = 0.0f;
-	}
-	if (type == DyingType::STOMPED) {
-		SetAnimation(ID_ANIM_GOOMBA_DIE, false);
-		return;
-	}
-	if (type == DyingType::BONKED) {
-		SetAnimation(ID_ANIM_GOOMBA_WALK, false);
-		m_animator->SetFlipVertical(true);
-		SetVelocity(Vector2(Enemies::Goomba::WALK_SPEED, -Enemies::DEATH_BOUNCE_VELOCITY));
-		return;
+		if (type == DyingType::STOMPED) {
+			SetAnimation(ID_ANIM_GOOMBA_DIE, false);
+			return;
+		}
+		if (type == DyingType::BONKED) {
+			SetAnimation(ID_ANIM_GOOMBA_WALK, false);
+			m_animator->SetFlipVertical(true);
+			SetVelocity(Vector2(Enemies::Goomba::WALK_SPEED, -Enemies::DEATH_BOUNCE_VELOCITY));
+			return;
+		}
 	}
 }
 

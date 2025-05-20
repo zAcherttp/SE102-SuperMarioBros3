@@ -140,6 +140,7 @@ class MarioRaccoonState : public MarioPowerUpState {
 public:
 	MarioRaccoonState(PowerUpType lastPowerUp = PowerUpType::NONE) : MarioPowerUpState(lastPowerUp) {
 		m_currentPowerUp = PowerUpType::RACCOON;
+		m_stateHealth = 100;
 	};
 	MarioRaccoonState(PowerUpType lastPowerUp, float invincibleTimer, bool isInvincible, float flashingTimer, bool isFlashing, bool takenDmg) : MarioPowerUpState(lastPowerUp) {
 		m_invincibleTimer = invincibleTimer;
@@ -148,6 +149,7 @@ public:
 		m_isFlashing = isFlashing;
 		m_takenDmg = takenDmg;
 		m_currentPowerUp = PowerUpType::RACCOON;
+		m_stateHealth = 100;
 	};
 	std::unique_ptr<MarioPowerUpState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;

@@ -264,6 +264,13 @@
         "id": 300110,
         "name": "mario_raccoon_hover",
         "frames": [ "raccoon-flap2", "raccoon-flap1", "raccoon-jump2" ],
+        "loop": false,
+        "timePerFrame": 0.1
+      },
+      {
+        "id": 300120,
+        "name": "mario_raccoon_sweep",
+        "frames": [ "raccoon-sweep-side", "raccoon-front", "raccoon-sweep-side", "raccoon-back", "raccoon-sweep-side" ],
         "loop": true,
         "timePerFrame": 0.1
       },

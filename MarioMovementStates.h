@@ -180,7 +180,12 @@ public:
 	MarioSweepState(Direction dir) : MarioMovementState(dir) {};
 	std::unique_ptr<MarioMovementState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
+	void Enter(Mario* mario) override;
+	void Sweep(Mario* mario, float dt) const;
 	std::string GetStateName() const override;
 	int GetStateAnimValue() const override;
 	Vector2 GetStateSizeOffset() const override;
+private:
+	float m_sweepTimer = 0.0f;
+	bool m_originalFlipState = false;
 };

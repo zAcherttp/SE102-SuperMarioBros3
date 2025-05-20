@@ -55,6 +55,7 @@ Vector2 MarioHoldState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioKickState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioHoverState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioFlyState::GetStateSizeOffset() const { return Vector2(0, 0); }
+Vector2 MarioSweepState::GetStateSizeOffset() const { return Vector2(0, 0); }
 
 void MarioMovementState::Enter(Mario* mario) {
 	mario->SetPosition(mario->GetPosition() - mario->GetCurrentMStateSizeOffset());
@@ -84,6 +85,16 @@ void MarioJumpState::Enter(Mario* mario) {
 	// Set initial jump velocity based on horizontal speed
 	mario->SetVelocity(
 		Vector2(mario->GetVelocity().x, Player::JUMP_FORCE[speedIndex]));
+
+	// Set animation and size
+	mario->SetSize(mario->GetCurrentPStateSizeOffset() +
+		mario->GetCurrentMStateSizeOffset());
+	SetAnimation(mario, mario->GetCurrentPStateAnimValue() +
+		mario->GetCurrentMStateAnimValue());
+}
+
+void MarioSweepState::Enter(Mario* mario) {
+	m_originalFlipState = mario->GetAnimator()->GetSpriteEffects() == SpriteEffects_FlipHorizontally;
 
 	// Set animation and size
 	mario->SetSize(mario->GetCurrentPStateSizeOffset() +
@@ -193,11 +204,14 @@ std::unique_ptr<MarioMovementState> MarioIdleState::HandleInput(Mario* mario) {
 		return std::make_unique<MarioWalkState>(Direction::Right);
 	}
 	if (input->isDownDown && mario->IsGrounded() &&
-		mario->GetCurrentPStateName() != "small") {
+		mario->GetCurrentPStateName() != SMALL) {
 		return std::make_unique<MarioSitState>(GetDirection());
 	}
 	if (input->isAPressed && mario->IsGrounded()) {
 		return std::make_unique<MarioJumpState>(GetDirection());
+	}
+	if (input->isBPressed && mario->GetCurrentPStateName() == RACCOON) {
+		return std::make_unique<MarioSweepState>(GetDirection());
 	}
 
 	return nullptr;
@@ -241,6 +255,10 @@ std::unique_ptr<MarioMovementState> MarioWalkState::HandleInput(Mario* mario) {
 		if (GetDirection() == Direction::Left && mario->IsGrounded()) {
 			return std::make_unique<MarioSkidState>(Direction::Left);
 		}
+	}
+
+	if (input->isBPressed && mario->GetCurrentPStateName() == RACCOON) {
+		return std::make_unique<MarioSweepState>(GetDirection());
 	}
 
 	if (input->isBDown && (input->isRightDown ^ input->isLeftDown)) {
@@ -337,7 +355,8 @@ std::unique_ptr<MarioMovementState> MarioRunState::HandleInput(Mario* mario) {
 	}
 
 	if (input->isRightDown == false && input->isLeftDown == false ||
-		input->isRightDown && input->isLeftDown && input->isBDown) {
+		input->isRightDown && input->isLeftDown && input->isBDown ||
+		!input->isBDown) {
 		return std::make_unique<MarioWalkState>(GetDirection());
 	}
 
@@ -809,7 +828,6 @@ void MarioKickState::Update(Mario* mario, float dt) {
 std::unique_ptr<MarioMovementState> MarioHoverState::HandleInput(Mario* mario) {
 	auto input = mario->GetInput();
 	auto vel = mario->GetVelocity();
-	auto absVelX = std::abs(vel.x);
 	bool isGrounded = mario->IsGrounded();
 
 	if (input->isAPressed) {
@@ -831,7 +849,6 @@ void MarioHoverState::Update(Mario* mario, float dt) {
 	m_hoverTimer += dt;
 	auto input = mario->GetInput();
 	Vector2 vel = mario->GetVelocity();
-	bool isGrounded = mario->IsGrounded();
 
 	// Handle horizontal movement in air
 	bool isLeftDown = input->isLeftDown;
@@ -878,9 +895,104 @@ void MarioFlyState::Update(Mario* mario, float dt) {
 
 std::unique_ptr<MarioMovementState> MarioSweepState::HandleInput(Mario* mario) {
 	mario;
+
+	if (m_sweepTimer > Player::SWEEP_TIMER_LENGTH) {
+		return std::make_unique<MarioIdleState>(GetDirection());
+	}
+
 	return nullptr;
 }
 
 void MarioSweepState::Update(Mario* mario, float dt) {
-	mario, dt;
+	Vector2 vel = mario->GetVelocity();
+	bool isGrounded = mario->IsGrounded();
+	auto input = mario->GetInput();
+	bool isLeftDown = input->isLeftDown;
+	bool isRightDown = input->isRightDown;
+	bool isPMeterFull = HeadUpDisplay::GetInstance()->IsPMeterFull();
+
+	m_sweepTimer += dt;
+
+	if (m_sweepTimer > 0.2f) {
+		mario->GetAnimator()->SetFlipHorizontal(!m_originalFlipState);
+	}
+	if (m_sweepTimer > 0.4f) {
+		mario->GetAnimator()->SetFlipHorizontal(m_originalFlipState);
+	}
+	Sweep(mario, dt);
+
+	if (isLeftDown != isRightDown) {
+		Direction hitDir = isLeftDown ? Direction::Left : Direction::Right;
+		float absDX = std::abs(vel.x);
+
+		// Accelerate up to run speed
+		if (absDX < Player::MAX_RUN_SPEED) {
+			vel.x += (int)hitDir * Player::ACCEL_NORMAL * dt;
+		}
+		// Maintain run speed
+		else if (absDX > Player::MAX_RUN_SPEED && isGrounded) {
+			// No slowing down in run state unless switching directions
+			if ((vel.x > 0 && hitDir == Direction::Right) ||
+				(vel.x < 0 && hitDir == Direction::Left)) {
+				// Maintain current speed
+				if (isPMeterFull && absDX < Player::MAX_SPRINT_SPEED) {
+					// continue accelerating when pmeter full and
+					vel.x += (int)hitDir * Player::ACCEL_NORMAL * dt;
+				}
+			}
+		}
+		else {
+			// Slow down if changing direction
+			vel.x -= (vel.x > 0 ? 1 : -1) * Player::ACCEL_FRIC * dt;
+		}
+	}
+	// No direction input, apply friction
+	else if (isGrounded) {
+		if (vel.x < 0) {
+			vel.x += Player::ACCEL_FRIC * dt;
+			if (vel.x > 0)
+				vel.x = 0;
+		}
+		else if (vel.x > 0) {
+			vel.x -= Player::ACCEL_FRIC * dt;
+			if (vel.x < 0)
+				vel.x = 0;
+		}
+	}
+}
+
+void MarioSweepState::Sweep(Mario* mario, float dt) const {
+	Vector2 pos = mario->GetPosition();
+	float rayLength = 16.f;
+
+	// Get cells around the entity
+	std::vector<std::pair<int, int>> cells = Collision::GetInstance()->GetEntityCells(mario, dt);
+
+	for (const auto& cell : cells) {
+		for (Entity* other : Collision::GetInstance()->GetGrid()[cell.first][cell.second].entities) {
+			// Skip if it's the same entity or not a static object (potential hit)
+			if (other != mario && !other->IsStatic() && other->IsActive() && other->IsCollidable()) {
+				Rectangle otherRect = other->GetCollisionComponent()->GetRectangle();
+				Vector2 rayStart = Vector2(pos.x, pos.y + 6.f);
+				Vector2 rayEnd = rayStart;
+				if (m_sweepTimer < Player::SWEEP_TIMER_HIT_LEFT)
+					rayEnd += Vector2(rayLength, 0.f);
+				else {
+					rayEnd += Vector2(-rayLength, 0.f);
+				}
+				Vector2 contactPoint, contactNormal;
+				float contactTime;
+
+				if (Collision::GetInstance()->RayVsRect(rayStart, rayEnd, otherRect, contactPoint, contactNormal, contactTime)
+					&& contactTime < 1.0f) {
+					//kill hit entity
+					Enemy* enemy = dynamic_cast<Enemy*>(other);
+					if (enemy) {
+						enemy->Die(DyingType::BONKED);
+						EffectManager::GetInstance()->CreateBonkEffect(other->GetPosition());
+					}
+				}
+			}
+		}
+	}
 }

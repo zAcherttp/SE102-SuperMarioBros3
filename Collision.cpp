@@ -1,13 +1,13 @@
 #include "pch.h"
+#include "Block.h"
 #include "Collision.h"
 #include "CollisionComponent.h"
-#include "Mario.h"
 #include "Debug.h"
-#include "RedTroopas.h"
-#include "Block.h"
-#include "Enemy.h"
-#include "Paragoomba.h"
 #include "DebugOverlay.h"
+#include "Enemy.h"
+#include "Mario.h"
+#include "Paragoomba.h"
+#include "RedTroopas.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
