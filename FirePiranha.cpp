@@ -9,7 +9,7 @@
 #include "RedTroopas.h"
 
 
-FirePiranha::FirePiranha(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
+FirePiranha::FirePiranha(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, int color)
 	: Enemy(position, size, spriteSheet)
 	, m_state(HIDDEN)
 	, m_timer(0.0f)
@@ -25,6 +25,8 @@ FirePiranha::FirePiranha(Vector2 position, Vector2 size, SpriteSheet* spriteShee
 	, BULLET_OFFSET(0.0f, -8.0f)
 	, m_flipTime(0.025f)
 	, m_flipTimer(0.0f)
+	, m_color(color)
+	, m_offset(0.0f)
 {
 	SetupCollisionComponent();
 	Log(__FUNCTION__, "Collision component initialized");
@@ -56,11 +58,6 @@ void FirePiranha::Update(float dt)
 			m_isFlipped = !m_isFlipped;
 			m_animator->SetFlipVertical(m_isFlipped);
 			m_flipTimer = 0.0f;
-		}
-
-		if (m_dyingType == DyingType::BONKED)
-		{
-
 		}
 
 		Entity::Update(dt);
@@ -101,24 +98,42 @@ void FirePiranha::Update(float dt)
 	case EMERGING:
 		// Set the appropriate animation based on vertical orientation (up/down)
 		if (m_isLookingUp) {
-			SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_UP);
+			if(m_color == 0)
+			{
+				SetAnimation(ID_ANIM_GREEN_PIRANHA_LOOK_UP);
+			}
+			else
+			{
+				SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_UP);
+			}
+
 		}
 		else {
-			SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_DOWN);
+			if(m_color == 0)
+			{
+				SetAnimation(ID_ANIM_GREEN_PIRANHA_LOOK_DOWN);
+			}
+			else
+			{
+				SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_DOWN);
+			}
 		}
 
 		// Apply the correct horizontal orientation based on Mario's position
 		if (GetAnimator()) {
 			GetAnimator()->SetFlipHorizontal(m_isFlipped);
 		}
-		if (m_pos.y > m_initialPosition.y - 32.0f) // If above the initial position
+
+		m_offset = m_color == 0 ? 24.0f : 32.0f;
+
+		if (m_pos.y > m_initialPosition.y - m_offset) // If above the initial position
 		{
 			vel.x = 0.0f;
 			vel.y = -50.0f;
 			SetVelocity(vel);
 			SetPosition(GetPosition() + GetVelocity() * dt);
 		}
-		if (m_pos.y <= m_initialPosition.y - 32.0f) // If at or below the initial position
+		if (m_pos.y <= m_initialPosition.y - m_offset) // If at or below the initial position
 		{
 			vel.x = 0.0f;   // No horizontal movement
 			vel.y = 0.0f;   // Stop vertical movement
@@ -134,10 +149,24 @@ void FirePiranha::Update(float dt)
 		// Set the appropriate "mouth open" animation based on vertical orientation
 
 		if (m_isLookingUp) {
-			SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_UP_OPEN, true);
+			if(m_color == 0)
+			{
+				SetAnimation(ID_ANIM_GREEN_PIRANHA_LOOK_UP_OPEN, true);
+			}
+			else
+			{
+				SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_UP_OPEN, true);
+			}
 		}
 		else {
-			SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_DOWN_OPEN, true);
+			if(m_color == 0)
+			{
+				SetAnimation(ID_ANIM_GREEN_PIRANHA_LOOK_DOWN_OPEN, true);
+			}
+			else
+			{
+				SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_DOWN_OPEN, true);
+			}
 		}
 
 		// Maintain the correct horizontal orientation
@@ -166,11 +195,25 @@ void FirePiranha::Update(float dt)
 	{
 		if (m_isLookingUp)
 		{
-			SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_UP);
+			if(m_color == 0)
+			{
+				SetAnimation(ID_ANIM_GREEN_PIRANHA_LOOK_UP);
+			}
+			else
+			{
+				SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_UP);
+			}
 		}
 		else
 		{
-			SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_DOWN);
+			if(m_color == 0)
+			{
+				SetAnimation(ID_ANIM_GREEN_PIRANHA_LOOK_DOWN);
+			}
+			else
+			{
+				SetAnimation(ID_ANIM_RED_PIRANHA_LOOK_DOWN);
+			}
 		}
 
 

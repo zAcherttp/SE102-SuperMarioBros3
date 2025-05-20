@@ -217,6 +217,7 @@
     <ClInclude Include="Mushroom.h">
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
+    <ClInclude Include="BitePiranha.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -375,6 +376,7 @@
     <ClCompile Include="Mushroom.cpp">
       <Filter>Source\Entity\Block</Filter>
     </ClCompile>
+    <ClCompile Include="BitePiranha.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">

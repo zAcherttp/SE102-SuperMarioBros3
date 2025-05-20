@@ -4,6 +4,7 @@
 #include "BlackBackground.h"
 #include "Brick.h"
 #include "Bush.h"
+#include "BitePiranha.h"
 #include "Cloud.h"
 #include "Coin.h"
 #include "Collision.h"
@@ -193,7 +194,7 @@ void World::Reset() {
 }
 
 void World::Teleport() {
-	m_player->SetPosition(Vector2(700, 350));
+	m_player->SetPosition(Vector2(2008, 334));
 	m_player->SetVelocity(Vector2::Zero);
 }
 
@@ -326,7 +327,8 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 	{
 		float width = data["width"];
 		float height = data["height"];
-		entity = new FirePiranha(position, Vector2(width, height), spriteSheet);
+		int color = data["color"];
+		entity = new FirePiranha(position, Vector2(width, height), spriteSheet, color);
 		break;
 	}
 	case ID_ENT_RED_TROOPA:
@@ -442,6 +444,14 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		float width = data["width"];
 		float height = data["height"];
 		entity = new EndPortal(position, Vector2(width, height), spriteSheet);
+		break;
+	}
+	case ID_ENT_BITE_PIRANHA:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		entity = new BitePiranha(position, Vector2(width,height),spriteSheet);
+		Log("Bit", "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		break;
 	}
 

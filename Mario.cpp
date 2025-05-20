@@ -25,25 +25,25 @@
 using namespace DirectX::SimpleMath;
 using Keyboard = DirectX::Keyboard;
 
-#define UP			Keyboard::W
-#define DOWN		Keyboard::S
-#define LEFT		Keyboard::A
-#define RIGHT		Keyboard::D
-
-#define START		Keyboard::I
-
-#define B_BTN		Keyboard::J
-#define A_BTN		Keyboard::K
-
-//#define UP			Keyboard::Up
-//#define DOWN		Keyboard::Down
-//#define LEFT		Keyboard::Left
-//#define RIGHT		Keyboard::Right
+//#define UP			Keyboard::W
+//#define DOWN		Keyboard::S
+//#define LEFT		Keyboard::A
+//#define RIGHT		Keyboard::D
 //
 //#define START		Keyboard::I
 //
-//#define B_BTN		Keyboard::A
-//#define A_BTN		Keyboard::S
+//#define B_BTN		Keyboard::J
+//#define A_BTN		Keyboard::K
+
+#define UP			Keyboard::Up
+#define DOWN		Keyboard::Down
+#define LEFT		Keyboard::Left
+#define RIGHT		Keyboard::Right
+
+#define START		Keyboard::I
+
+#define B_BTN		Keyboard::A
+#define A_BTN		Keyboard::S
 
 constexpr auto PLAYER_HOLD_THROW_SPEED = 4.0f * 60.0f;
 

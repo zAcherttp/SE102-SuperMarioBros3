@@ -11,13 +11,13 @@
       {
         "id": 200010,
         "name": "mario_big_idle",
-        "frames": [ "big-idle" ],
+        "frames": ["big-idle"],
         "loop": false
       },
       {
         "id": 300010,
         "name": "mario_raccoon_idle",
-        "frames": [ "raccoon-idle" ],
+        "frames": ["raccoon-idle"],
         "loop": false
       },
       {
@@ -34,17 +34,23 @@
       {
         "id": 200020,
         "name": "mario_big_walk",
-        "frames": [ "big-walk1", "big-jump2", "big-walk1","big-idle" ],
+        "frames": ["big-walk1", "big-jump2", "big-walk1", "big-idle"],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
         "minTimePerFrame": 0.05,
         "maxTimePerFrame": 0.2,
         "velocityScaleFactor": 0.015
-      },{
+      },
+      {
         "id": 300020,
         "name": "mario_big_walk",
-        "frames": [ "raccoon-walk", "raccoon-flap2", "raccoon-walk","raccoon-idle" ],
+        "frames": [
+          "raccoon-walk",
+          "raccoon-flap2",
+          "raccoon-walk",
+          "raccoon-idle"
+        ],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
@@ -66,17 +72,23 @@
       {
         "id": 200030,
         "name": "mario_big_sprint",
-        "frames": [ "big-sprint2", "big-sprint3", "big-sprint2", "big-sprint1" ],
+        "frames": ["big-sprint2", "big-sprint3", "big-sprint2", "big-sprint1"],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
         "minTimePerFrame": 0.01,
         "maxTimePerFrame": 0.2,
         "velocityScaleFactor": 0.02
-      },{
+      },
+      {
         "id": 300030,
         "name": "mario_raccoon_sprint",
-        "frames": [ "raccoon-sprint2", "raccoon-sprint3", "raccoon-sprint2", "raccoon-sprint1" ],
+        "frames": [
+          "raccoon-sprint2",
+          "raccoon-sprint3",
+          "raccoon-sprint2",
+          "raccoon-sprint1"
+        ],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
@@ -93,12 +105,13 @@
       {
         "id": 200040,
         "name": "mario_big_skid",
-        "frames": [ "big-skid" ],
+        "frames": ["big-skid"],
         "loop": false
-      },{
+      },
+      {
         "id": 300040,
         "name": "mario_raccoon_skid",
-        "frames": [ "raccoon-skid" ],
+        "frames": ["raccoon-skid"],
         "loop": false
       },
       {
@@ -116,18 +129,19 @@
       {
         "id": 200051,
         "name": "mario_big_jump",
-        "frames": [ "big-jump2" ],
+        "frames": ["big-jump2"],
         "loop": false
-      },{
+      },
+      {
         "id": 300050,
         "name": "mario_raccoon_jump",
-        "frames": [ "raccoon-jump1" ],
+        "frames": ["raccoon-jump1"],
         "loop": false
       },
       {
         "id": 300051,
         "name": "mario_raccoon_jump",
-        "frames": [ "raccoon-jump2" ],
+        "frames": ["raccoon-jump2"],
         "loop": false
       },
       {
@@ -139,23 +153,25 @@
       {
         "id": 200060,
         "name": "mario_big_powerjump1",
-        "frames": [ "big-sprint-jump2" ],
+        "frames": ["big-sprint-jump2"],
         "loop": false
-      },{
+      },
+      {
         "id": 300060,
         "name": "mario_raccoon_powerjump1",
-        "frames": [ "raccoon-fly1" ],
+        "frames": ["raccoon-fly1"],
         "loop": false
       },
       {
         "id": 200070,
         "name": "mario_big_sit",
-        "frames": [ "big-sit" ],
+        "frames": ["big-sit"],
         "loop": false
-      },{
+      },
+      {
         "id": 300070,
         "name": "mario_raccoon_sit",
-        "frames": [ "raccoon-sit" ],
+        "frames": ["raccoon-sit"],
         "loop": false
       },
       {
@@ -167,13 +183,13 @@
       {
         "id": 200090,
         "name": "mario_big_hold_idle",
-        "frames": [ "big-holding-walk1" ],
+        "frames": ["big-holding-walk1"],
         "loop": false
       },
       {
         "id": 300090,
         "name": "mario_big_hold_idle",
-        "frames": [ "raccoon-holding-walk1" ],
+        "frames": ["raccoon-holding-walk1"],
         "loop": false
       },
       {
@@ -190,17 +206,18 @@
       {
         "id": 200091,
         "name": "mario_big_hold",
-        "frames": [ "big-holding-walk2", "big-holding-walk1" ],
+        "frames": ["big-holding-walk2", "big-holding-walk1"],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
         "minTimePerFrame": 0.05,
         "maxTimePerFrame": 0.2,
         "velocityScaleFactor": 0.015
-      },{
+      },
+      {
         "id": 300091,
         "name": "mario_raccoon_hold",
-        "frames": [ "raccoon-holding-walk2", "raccoon-holding-walk1" ],
+        "frames": ["raccoon-holding-walk2", "raccoon-holding-walk1"],
         "loop": true,
         "timePerFrame": 0.1,
         "useVelocityScaling": true,
@@ -217,12 +234,13 @@
       {
         "id": 200092,
         "name": "mario_big_hold_jump",
-        "frames": [ "big-holding-jump" ],
+        "frames": ["big-holding-jump"],
         "loop": false
-      },{
+      },
+      {
         "id": 300092,
         "name": "mario_raccoon_hold_jump",
-        "frames": [ "raccoon-holding-jump" ],
+        "frames": ["raccoon-holding-jump"],
         "loop": false
       },
       {
@@ -234,12 +252,13 @@
       {
         "id": 200093,
         "name": "mario_big_hold_front",
-        "frames": [ "big-front" ],
+        "frames": ["big-front"],
         "loop": false
-      },{
+      },
+      {
         "id": 300093,
         "name": "mario_raccoon_hold_front",
-        "frames": [ "raccoon-front" ],
+        "frames": ["raccoon-front"],
         "loop": false
       },
       {
@@ -251,12 +270,13 @@
       {
         "id": 200100,
         "name": "mario_big_kick",
-        "frames": [ "big-kick" ],
+        "frames": ["big-kick"],
         "loop": false
-      },{
+      },
+      {
         "id": 300100,
         "name": "mario_raccoon_kick",
-        "frames": [ "raccoon-kick" ],
+        "frames": ["raccoon-kick"],
         "loop": false
       },
       {
@@ -916,14 +936,14 @@
         "name": "piranha-look-down",
         "frames": ["redpiranha-down1", "redpiranha-down2"],
         "loop": true,
-        "timePerFrame": 0.2
+        "timePerFrame": 0.15
       },
       {
         "id": 910,
         "name": "piranha-look-up",
         "frames": ["redpiranha-up1", "redpiranha-up2"],
         "loop": true,
-        "timePerFrame": 0.2
+        "timePerFrame": 0.15
       },
       {
         "id": 920,
@@ -939,10 +959,36 @@
       },
       {
         "id": 2910,
-        "name": "piranha-look-die",
+        "name": "piranha-die",
         "frames": ["pop1", "pop2", "pop3", "pop4"],
         "loop": true,
-        "timePerFrame": 0.1
+        "timePerFrame": 0.5
+      },
+      {
+        "id": 901,
+        "name": "green-piranha-look-down",
+        "frames": ["greenpiranha-down1", "greenpiranha-down2"],
+        "loop": true,
+        "timePerFrame": 0.15
+      },
+      {
+        "id": 911,
+        "name": "green-piranha-look-up",
+        "frames": ["greenpiranha-up1", "greenpiranha-up2"],
+        "loop": true,
+        "timePerFrame": 0.15
+      },
+      {
+        "id": 921,
+        "name": "green-piranha-look-down-open",
+        "frames": ["greenpiranha-down1"],
+        "loop": false
+      },
+      {
+        "id": 931,
+        "name": "green-piranha-look-up-open",
+        "frames": ["greenpiranha-up1"],
+        "loop": false
       }
     ]
   },
@@ -1004,6 +1050,18 @@
         "name": "flower",
         "frames": ["powerup-fireflower"],
         "loop": false
+      }
+    ]
+  },
+  {
+    "type": 7,
+    "sprites": [
+      {
+        "id": 700,
+        "name": "bite-piranha",
+        "frames": ["greenpiranha-bite-up2", "greenpiranha-bite-up1"],
+        "loop": true,
+        "timePerFrame": 0.15
       }
     ]
   }

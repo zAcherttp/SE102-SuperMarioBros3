@@ -8,8 +8,7 @@ constexpr auto ID_ENT_GREEN_TROOPA = 3;
 constexpr auto ID_ENT_RED_TROOPA = 4;
 constexpr auto ID_ENT_GOOMBA = 5;
 constexpr auto ID_ENT_PARAGOOMBA = 6;
-constexpr auto ID_ENT_GREEN_PIRANHA = 7;
-constexpr auto ID_ENT_GREEN_PIRANHA_SPIT_FIRE = 8;
+constexpr auto ID_ENT_BITE_PIRANHA = 7;
 constexpr auto ID_ENT_RED_PIRANHA_SPIT_FIRE = 9;
 constexpr auto ID_ENT_GROUND = 10;
 constexpr auto ID_ENT_WINGS = 12;
@@ -111,6 +110,15 @@ constexpr auto ID_ANIM_RED_PIRANHA_LOOK_DOWN = 900;
 constexpr auto ID_ANIM_RED_PIRANHA_LOOK_UP = 910;
 constexpr auto ID_ANIM_RED_PIRANHA_LOOK_DOWN_OPEN = 920;
 constexpr auto ID_ANIM_RED_PIRANHA_LOOK_UP_OPEN = 930;
+
+// Green Piranha
+constexpr auto ID_ANIM_GREEN_PIRANHA_LOOK_DOWN = 901;
+constexpr auto ID_ANIM_GREEN_PIRANHA_LOOK_UP = 911;
+constexpr auto ID_ANIM_GREEN_PIRANHA_LOOK_DOWN_OPEN = 921;
+constexpr auto ID_ANIM_GREEN_PIRANHA_LOOK_UP_OPEN = 931;
+
+// Bite Piranha
+constexpr auto ID_ANIM_BITE_PIRANHA = 700;
 
 
 // Brick
