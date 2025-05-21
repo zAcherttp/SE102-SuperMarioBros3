@@ -242,6 +242,10 @@
             <key type="filename">1-1/independent-platform.png</key>
             <key type="filename">1-1/inner-cactus-top-left.png</key>
             <key type="filename">1-1/inner-cactus-top-right.png</key>
+            <key type="filename">1-1/pbutton1.png</key>
+            <key type="filename">1-1/pbutton2.png</key>
+            <key type="filename">1-1/pbutton3.png</key>
+            <key type="filename">1-1/pbutton4.png</key>
             <key type="filename">1-1/pink-bot-left.png</key>
             <key type="filename">1-1/pink-bot-mid.png</key>
             <key type="filename">1-1/pink-bot-right.png</key>
@@ -936,6 +940,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">particles/shattered-brick.png</key>
             <key type="filename">piranha/fire-projectile.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -1245,6 +1250,11 @@
             <filename>mario/big-to-small.png</filename>
             <filename>powerup/fireflower.png</filename>
             <filename>mario/raccoon-sweep-side.png</filename>
+            <filename>particles/shattered-brick.png</filename>
+            <filename>1-1/pbutton2.png</filename>
+            <filename>1-1/pbutton3.png</filename>
+            <filename>1-1/pbutton4.png</filename>
+            <filename>1-1/pbutton1.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
