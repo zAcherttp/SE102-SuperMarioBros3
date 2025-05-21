@@ -765,6 +765,12 @@
         "frames": ["brick-1", "brick-2", "brick-3", "brick-4"],
         "loop": true,
         "timePerFrame": 0.3
+      },
+      {
+        "id": 2410,
+        "name": "brick_coin",
+        "frames": ["coin-1"],
+        "loop": false
       }
     ]
   },
@@ -806,6 +812,13 @@
         "name": "lucky-block-claimed",
         "frames": ["lucky-box-claimed"],
         "loop": false
+      },
+      {
+        "id": 2400,
+        "name": "brick",
+        "frames": ["brick-1", "brick-2", "brick-3", "brick-4"],
+        "loop": true,
+        "timePerFrame": 0.3
       }
     ]
   },

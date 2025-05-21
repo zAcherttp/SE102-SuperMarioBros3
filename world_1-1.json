@@ -949,22 +949,6 @@
     },
     {
       "type": 24,
-      "x": 2032.0,
-      "y": 400.0,
-      "width": 16,
-      "height": 16,
-      "solid": true
-    },
-    {
-      "type": 24,
-      "x": 2048.0,
-      "y": 400.0,
-      "width": 16,
-      "height": 16,
-      "solid": true
-    },
-    {
-      "type": 24,
       "x": 1968.0,
       "y": 384.0,
       "width": 16,
@@ -997,14 +981,6 @@
     },
     {
       "type": 24,
-      "x": 2032.0,
-      "y": 384.0,
-      "width": 16,
-      "height": 16,
-      "solid": true
-    },
-    {
-      "type": 24,
       "x": 1984.0,
       "y": 368.0,
       "width": 16,
@@ -1022,14 +998,6 @@
     {
       "type": 24,
       "x": 2016.0,
-      "y": 368.0,
-      "width": 16,
-      "height": 16,
-      "solid": true
-    },
-    {
-      "type": 24,
-      "x": 2032.0,
       "y": 368.0,
       "width": 16,
       "height": 16,
@@ -1260,7 +1228,8 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": false
+      "isSpecial": false,
+      "isMimic": false
     },
     {
       "type": 21,
@@ -1269,7 +1238,8 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": false
+      "isSpecial": false,
+      "isMimic": false
     },
     {
       "type": 21,
@@ -1278,7 +1248,8 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": false
+      "isSpecial": false,
+      "isMimic": false
     },
     {
       "type": 21,
@@ -1287,7 +1258,8 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": true
+      "isSpecial": true,
+      "isMimic": false
     },
     {
       "type": 21,
@@ -1296,7 +1268,8 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": false
+      "isSpecial": false,
+      "isMimic": false
     },
     {
       "type": 21,
@@ -1305,7 +1278,8 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": true
+      "isSpecial": true,
+      "isMimic": false
     },
     {
       "type": 21,
@@ -1314,7 +1288,8 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": false
+      "isSpecial": false,
+      "isMimic": false
     },
     {
       "type": 21,
@@ -1323,7 +1298,8 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": false
+      "isSpecial": false,
+      "isMimic": false
     },
     {
       "type": 21,
@@ -1332,7 +1308,18 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": true
+      "isSpecial": true,
+      "isMimic": false
+    },
+    {
+      "type": 21,
+      "x": 2032.0,
+      "y": 368.0,
+      "width": 16,
+      "height": 16,
+      "solid": true,
+      "isSpecial": true,
+      "isMimic": true
     },
     {
       "type": 17,

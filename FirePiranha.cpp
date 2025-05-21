@@ -321,7 +321,7 @@ BulletDirection FirePiranha::GetFireDirection() const
 	if (angleDeg <= 50.0f) {
 		return m_isFlipped ? TOP_RIGHT_45 : TOP_LEFT_45; // Right
 	}
-	else if (angleDeg <= 90.0f) {
+	else if (angleDeg <= 100.0f) {
 		return m_isFlipped ? TOP_RIGHT_60 : TOP_LEFT_60; // Up
 	}
 	else if (angleDeg < 125.0f) {

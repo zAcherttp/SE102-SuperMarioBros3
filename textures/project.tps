@@ -26,7 +26,7 @@
             </struct>
         </array>
         <key>allowRotation</key>
-        <true/>
+        <false/>
         <key>shapeDebug</key>
         <false/>
         <key>dpi</key>
@@ -70,7 +70,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>0</uint>
+        <uint>2</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -84,7 +84,7 @@
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png8</enum>
         <key>borderPadding</key>
-        <uint>0</uint>
+        <uint>2</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
@@ -108,7 +108,7 @@
             <key>sizeConstraints</key>
             <enum type="AlgorithmSettings::SizeConstraints">AnySize</enum>
             <key>forceSquared</key>
-            <false/>
+            <true/>
             <key>maxRects</key>
             <struct type="AlgorithmMaxRectsSettings">
                 <key>heuristic</key>
@@ -168,7 +168,7 @@
             <key>scaleMode</key>
             <enum type="ScaleMode">Smooth</enum>
             <key>extrude</key>
-            <uint>1</uint>
+            <uint>0</uint>
             <key>trimThreshold</key>
             <uint>1</uint>
             <key>trimMargin</key>
@@ -242,6 +242,10 @@
             <key type="filename">1-1/independent-platform.png</key>
             <key type="filename">1-1/inner-cactus-top-left.png</key>
             <key type="filename">1-1/inner-cactus-top-right.png</key>
+            <key type="filename">1-1/pbutton1.png</key>
+            <key type="filename">1-1/pbutton2.png</key>
+            <key type="filename">1-1/pbutton3.png</key>
+            <key type="filename">1-1/pbutton4.png</key>
             <key type="filename">1-1/pink-bot-left.png</key>
             <key type="filename">1-1/pink-bot-mid.png</key>
             <key type="filename">1-1/pink-bot-right.png</key>
@@ -667,6 +671,7 @@
             <key type="filename">mario/raccoon-fly1.png</key>
             <key type="filename">mario/raccoon-fly2.png</key>
             <key type="filename">mario/raccoon-sprint-jump1.png</key>
+            <key type="filename">mario/raccoon-sprint3.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.375,0.518519</point_f>
@@ -774,16 +779,16 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">mario/raccoon-sprint3.png</key>
+            <key type="filename">mario/raccoon-sweep-side.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
-                <point_f>0.375,0.481481</point_f>
+                <point_f>0.347826,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>6,7,12,13</rect>
+                <rect>6,7,11,14</rect>
                 <key>scale9Paddings</key>
-                <rect>6,7,12,13</rect>
+                <rect>6,7,11,14</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -935,6 +940,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">particles/shattered-brick.png</key>
             <key type="filename">piranha/fire-projectile.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -1243,6 +1249,12 @@
             <filename>1-1/green-mid-left.png</filename>
             <filename>mario/big-to-small.png</filename>
             <filename>powerup/fireflower.png</filename>
+            <filename>mario/raccoon-sweep-side.png</filename>
+            <filename>particles/shattered-brick.png</filename>
+            <filename>1-1/pbutton2.png</filename>
+            <filename>1-1/pbutton3.png</filename>
+            <filename>1-1/pbutton4.png</filename>
+            <filename>1-1/pbutton1.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

@@ -218,6 +218,8 @@
       <Filter>Source\Entity\Block</Filter>
     </ClInclude>
     <ClInclude Include="BitePiranha.h" />
+    <ClInclude Include="BrickParticle.h" />
+    <ClInclude Include="HiddenButton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -377,6 +379,8 @@
       <Filter>Source\Entity\Block</Filter>
     </ClCompile>
     <ClCompile Include="BitePiranha.cpp" />
+    <ClCompile Include="BrickParticle.cpp" />
+    <ClCompile Include="HiddenButton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">

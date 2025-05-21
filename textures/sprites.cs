@@ -4,7 +4,7 @@
  * Contains references to each image within the sprite sheet.
  *
  * https://www.codeandweb.com/texturepacker
- * $TexturePacker:SmartUpdate:ebddd76271d6233e2e57ca7dd42b7726:8295e25eaaef5393eca525594de013fd:9372a5c6e87557cd082219126b413cbe$
+ * $TexturePacker:SmartUpdate:2720feb65fbcca03e6acb6c266b4bfb8:28981e9d056ec8e71ddabb30f54f9d87:9372a5c6e87557cd082219126b413cbe$
  *
  */
 namespace TexturePackerMonoGameDefinitions
@@ -152,6 +152,10 @@ namespace TexturePackerMonoGameDefinitions
 		public const string Pause = "pause";
 		public const string Pbadge1 = "pbadge1";
 		public const string Pbadge2 = "pbadge2";
+		public const string Pbutton1 = "pbutton1";
+		public const string Pbutton2 = "pbutton2";
+		public const string Pbutton3 = "pbutton3";
+		public const string Pbutton4 = "pbutton4";
 		public const string Pink-bot-left = "pink-bot-left";
 		public const string Pink-bot-mid = "pink-bot-mid";
 		public const string Pink-bot-right = "pink-bot-right";
@@ -202,6 +206,7 @@ namespace TexturePackerMonoGameDefinitions
 		public const string Raccoon-sprint1 = "raccoon-sprint1";
 		public const string Raccoon-sprint2 = "raccoon-sprint2";
 		public const string Raccoon-sprint3 = "raccoon-sprint3";
+		public const string Raccoon-sweep-side = "raccoon-sweep-side";
 		public const string Raccoon-walk = "raccoon-walk";
 		public const string Redpiranha-down1 = "redpiranha-down1";
 		public const string Redpiranha-down2 = "redpiranha-down2";
@@ -218,6 +223,7 @@ namespace TexturePackerMonoGameDefinitions
 		public const string Shade-top-left = "shade-top-left";
 		public const string Shade-top-right = "shade-top-right";
 		public const string Shade-top = "shade-top";
+		public const string Shattered-brick = "shattered-brick";
 		public const string Sky-platform = "sky-platform";
 		public const string Small-die = "small-die";
 		public const string Small-holding-front = "small-holding-front";

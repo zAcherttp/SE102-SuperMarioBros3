@@ -37,6 +37,7 @@ constexpr auto ID_ENT_EFFECT = 29;
 
 constexpr auto ID_ENT_MUSHROOM = 30;
 constexpr auto ID_ENT_FIRE_LEAF = 31;
+constexpr auto ID_ENT_HIDDEN_BUTTON = 32;
 
 //Entities' animation IDs
 constexpr auto ID_ANIM_MARIO_SMALL = 100000;
@@ -123,6 +124,8 @@ constexpr auto ID_ANIM_BITE_PIRANHA = 700;
 
 // Brick
 constexpr auto ID_ANIM_BRICK = 2400;
+constexpr auto ID_ANIM_BRICK_COIN = 2410;
+constexpr auto ID_ANIM_BRICK_PARTICLE = 2420;
 
 // Coin
 constexpr auto ID_ANIM_COIN = 2800;
@@ -133,6 +136,9 @@ constexpr auto ID_ANIM_LUCKY_BLOCK_CLAIMED = 2110;
 
 // End Portal
 constexpr auto ID_ANIM_END_PORTAL = 2200;
+
+constexpr auto ID_ANIM_HIDDEN_BUTTON = 3200;
+constexpr auto ID_ANIM_HIDDEN_BUTTON_STOMPED = 3210;
 
 //Entities's Sprite IDs
 
@@ -263,4 +269,6 @@ constexpr auto ID_SPRITE_HUD_FIREFLOWER = 2909;
 constexpr auto ID_SPRITE_HUD_MUSHROOM = 2910;
 constexpr auto ID_SPRITE_HUD_STAR = 2911;
 constexpr auto ID_SPRITE_HUD_POWERUP_SLOT = 2912;
+
+// Hidden Button
 

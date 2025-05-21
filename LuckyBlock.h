@@ -1,5 +1,6 @@
 #pragma once
 #include "Block.h"
+#include "HiddenButton.h"
 
 enum class ItemType
 {
@@ -9,7 +10,7 @@ enum class ItemType
 class LuckyBlock : public Block
 {
 public:
-	LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial);
+	LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial, bool isMimic = false);
 
 	//static block so no update needed
 	void Update(float dt) override;
@@ -23,11 +24,16 @@ public:
 	void SpawnReward();
 	void SpawnCoin();
 	void SpawnPowerUp();
+	void SpawnButton();
+
 private:
 	int m_tileXcount = 1;
 	int m_tileYcount = 1;
 
+	HiddenButton* m_hiddenButton = nullptr;
+
 	bool m_isSpecial = false;
+	bool m_isMimic = false;
 
 	Vector2 m_origin;
 	bool m_isClaiming;

@@ -17,6 +17,7 @@ Effect::Effect(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, EffectT
 	, m_velocity(Vector2::Zero)
 	, m_gravity(750.0f)
 	, m_initialJumpSpeed(-300.0f)
+	, m_spriteSheet(spriteSheet)
 
 {
 	std::vector<const wchar_t*> frames;
@@ -57,7 +58,14 @@ Effect::Effect(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, EffectT
 
 void Effect::Render(DirectX::SpriteBatch* spriteBatch)
 {
-	Entity::Render(spriteBatch);
+    Entity::Render(spriteBatch);
+    
+    // Render brick particles if applicable
+    for (auto& particle : m_brickParticles) {
+        if (particle->IsActive()) {
+            particle->Render(spriteBatch);
+        }
+    }
 }
 
 void Effect::Update(float dt)
@@ -66,60 +74,81 @@ void Effect::Update(float dt)
 
 	switch (m_type)
 	{
-	case EffectType::BONK:
-	{
-		m_animTimer += dt;
-		m_flipTimer += dt;
-		if (m_animTimer > 0.5f)
+		case EffectType::BONK:
 		{
-			Deactivate();
-			return;
+			m_animTimer += dt;
+			m_flipTimer += dt;
+			if (m_animTimer > 0.5f)
+			{
+				Deactivate();
+				return;
+			}
+			if (m_flipTimer > m_flipTime)
+			{
+				m_isFlipped = !m_isFlipped;
+				m_animator->SetFlipHorizontal(m_isFlipped);
+				m_flipTimer = 0.0f;
+			}
+			break;
 		}
-		if (m_flipTimer > m_flipTime)
+		case EffectType::COIN:
 		{
-			m_isFlipped = !m_isFlipped;
-			m_animator->SetFlipHorizontal(m_isFlipped);
-			m_flipTimer = 0.0f;
-		}
-		break;
-	}
-	case EffectType::COIN:
-	{
-		m_animTimer += dt;
+			m_animTimer += dt;
 
-		m_velocity.y += m_gravity * dt;
+			m_velocity.y += m_gravity * dt;
 
-		// Update position based on velocity
-		Vector2 position = GetPosition();
-		position += m_velocity * dt;
-		SetPosition(position);
+			// Update position based on velocity
+			Vector2 position = GetPosition();
+			position += m_velocity * dt;
+			SetPosition(position);
 
-		if (m_animTimer > 0.7f)
-		{
-			Deactivate();
-			return;
+			if (m_animTimer > 0.7f)
+			{
+				Deactivate();
+				return;
+			}
+			break;
 		}
-		break;
-	}
-	case EffectType::SMOKE:
-	{
-		m_animTimer += dt;
-		m_flipTimer += dt;
-		if (m_animTimer > 0.4f)
+		case EffectType::SMOKE:
 		{
-			Deactivate();
-			return;
+			m_animTimer += dt;
+			m_flipTimer += dt;
+			if (m_animTimer > 0.4f)
+			{
+				Deactivate();
+				return;
+			}
+			if (m_flipTimer > m_flipTime)
+			{
+				m_isFlipped = !m_isFlipped;
+				m_animator->SetFlipHorizontal(m_isFlipped);
+				m_flipTimer = 0.0f;
+			}
+			break;
 		}
-		if (m_flipTimer > m_flipTime)
+		case EffectType::BRICK:
 		{
-			m_isFlipped = !m_isFlipped;
-			m_animator->SetFlipHorizontal(m_isFlipped);
-			m_flipTimer = 0.0f;
-		}
-		break;
+			SpawnBrickParticle();
+			// Update all particles
+			for (auto it = m_brickParticles.begin(); it != m_brickParticles.end();) {
+				if ((*it)->IsActive()) {
+					(*it)->Update(dt);
+					++it;
+				} else {
+					it = m_brickParticles.erase(it);
+				}
+			}
+			
+			// Deactivate effect when all particles are gone
+			if (m_brickParticles.empty() && m_animTimer > 0.1f) {
+				Deactivate();
+				return;
+			}
+			
+			m_animTimer += dt;
+			break;
+		}	
 	}
-	}
-
 	Entity::Update(dt);
 }
 
@@ -127,4 +156,34 @@ void Effect::Deactivate()
 {
 	m_isActive = false;
 	m_visible = false;
+}
+
+void Effect::SpawnBrickParticle()
+{
+    if (!m_brickParticles.empty()) return; // Only spawn once
+    
+    Vector2 position = GetPosition();
+
+	Vector2 positions[4] = {
+		position,
+		position + Vector2(16,0),
+		position + Vector2(0,16),
+		position + Vector2(16,16),
+	};
+
+    Vector2 particleSize(8,9); 
+    
+    // Create 4 particles with different trajectories
+    Vector2 velocities[4] = {
+        Vector2(-60, -350),  // Top-left
+        Vector2(60, -350),   // Top-right
+        Vector2(-40, -300),   // Bottom-left
+        Vector2(40, -300)     // Bottom-right
+    };
+    
+    for (int i = 0; i < 4; i++) {
+        auto particle = std::make_shared<BrickParticle>(positions[i], particleSize, 
+                                                      m_spriteSheet, velocities[i]);
+        m_brickParticles.push_back(particle);
+    }
 }

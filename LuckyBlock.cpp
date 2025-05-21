@@ -6,6 +6,7 @@
 #include "EffectManager.h"
 #include "FireLeaf.h"
 #include "Game.h"
+#include "HiddenButton.h"
 #include "LuckyBlock.h"
 #include "Mario.h"
 #include "MarioPowerUpStates.h"
@@ -16,8 +17,10 @@
 #include "World.h"
 #include <string>
 
-LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial)
+LuckyBlock::	LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial, bool isMimic)
 	: Block(position, size, spriteSheet)
+	, m_isMimic(isMimic)
+	, m_isSpecial(isSpecial)
 {
 	m_tileXcount = 1;
 	m_tileYcount = 1; // LuckyBlock is always 1 tile high
@@ -28,7 +31,6 @@ LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet
 	m_isCollidable = true;
 	m_isActive = true;
 	m_isCollidable = true;
-	m_isSpecial = isSpecial;
 	m_claimCoinTimer = 0.0f;
 	m_collectedCoin = false;
 
@@ -40,7 +42,14 @@ LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet
 	Vector2 newPos = position + Vector2(newSize.x / 2, newSize.y / 2);
 	m_collisionComponent->SetPosition(newPos);
 	m_origin = newPos;
-	SetAnimation(ID_ANIM_LUCKY_BLOCK, true);
+
+	if(isMimic) {
+		SetAnimation(ID_ANIM_BRICK, true);
+	}
+	else {
+		SetAnimation(ID_ANIM_LUCKY_BLOCK, true);
+	}
+
 
 	// Log(LOG_INFO, "Set Animation for: " + std::to_string(position.x) + ", " + std::to_string(position.y));
 }
@@ -52,6 +61,10 @@ void LuckyBlock::Render(DirectX::SpriteBatch* spriteBatch)
 	Vector2 pos = m_collisionComponent->GetPosition() - Vector2(size.x / 2 - tileSize.x / 2, size.y / 2 - tileSize.y / 2);
 
 	m_animator->Draw(spriteBatch, pos, 0.0f);
+
+	if(m_hiddenButton) {
+		m_hiddenButton->Render(spriteBatch);
+	}
 
 }
 
@@ -94,6 +107,10 @@ void LuckyBlock::Update(float dt)
 	}
 
 	m_animator->Update(dt);
+
+	if(m_hiddenButton) {
+		m_hiddenButton->Update(dt);
+	}
 }
 
 void LuckyBlock::Bump() {
@@ -124,6 +141,10 @@ void LuckyBlock::OnCollision(const CollisionResult& event)
 
 void LuckyBlock::SpawnReward()
 {
+	if(m_isMimic){
+		SpawnButton();
+		return;
+	}
 	if (m_isSpecial) {
 		SpawnPowerUp();
 	}
@@ -161,4 +182,11 @@ void LuckyBlock::SpawnPowerUp()
 			new Leaf(spawnPosition, Vector2(16, 16), Game::GetInstance()->GetSpriteSheet())
 		);
 	}
+}
+
+void LuckyBlock::SpawnButton()
+{
+	Log(LOG_INFO, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASpawned Hidden Button at: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
+	m_hiddenButton = new HiddenButton(GetPosition() + Vector2(0, -16), Vector2(16, 16), Game::GetInstance()->GetSpriteSheet());
+	World::GetInstance()->AddEntity(m_hiddenButton);
 }

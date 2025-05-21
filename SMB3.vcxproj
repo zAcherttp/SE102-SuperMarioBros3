@@ -186,6 +186,7 @@
     <ClInclude Include="BlackBackground.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="BrickParticle.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Bush.h" />
     <ClInclude Include="Camera.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="HeadUpDisplay.h" />
     <ClInclude Include="Helpers.h" />
+    <ClInclude Include="HiddenButton.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="RedTroopas.h" />
@@ -236,6 +238,7 @@
     <ClCompile Include="BlackBackground.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Brick.cpp" />
+    <ClCompile Include="BrickParticle.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Bush.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -257,6 +260,7 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="HeadUpDisplay.cpp" />
     <ClCompile Include="Helpers.cpp" />
+    <ClCompile Include="HiddenButton.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="RedTroopas.cpp" />
     <ClCompile Include="LuckyBlock.cpp" />

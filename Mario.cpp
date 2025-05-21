@@ -275,6 +275,12 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+
+	if(block && block->IsCollectible())
+	{	
+		return;
+	}
+
 	if (result.contactNormal.y < 0) {
 		if (block)
 		{
@@ -304,6 +310,12 @@ void Mario::OnTopHeadCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+
+	if(block && block->IsCollectible())
+	{
+		return;
+	}
+
 	if (result.contactNormal.y > 0) {
 		if (block && block->IsSolid())
 		{
@@ -338,6 +350,10 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
 	//TODO: change to universal Troopa class
+	if(block && block->IsCollectible())
+	{
+		return;
+	}
 	RedTroopas* shell = dynamic_cast<RedTroopas*>(result.collidedWith);
 	if (result.contactNormal.x < 0) {
 		if (block && block->IsSolid())
@@ -371,6 +387,10 @@ void Mario::OnLeftSideCollision(const CollisionResult& result) {
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
 	RedTroopas* shell = dynamic_cast<RedTroopas*>(result.collidedWith);
+	if(block && block->IsCollectible())
+	{
+		return;
+	}
 	if (result.contactNormal.x > 0) {
 		if (block && block->IsSolid())
 		{
