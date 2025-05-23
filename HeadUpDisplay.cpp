@@ -213,7 +213,7 @@ void HeadUpDisplay::UpdatePMeterTimer(float dt)
 void HeadUpDisplay::UpdateFlightTimer(float dt)
 {
 	// Convert to frame-based timing (assuming 60fps)
-	float frameTime = dt * 60.0f;
+	float frameTime = dt * 200.0f;
 
 	if (m_flightTimerActive) {
 		// Decrease the timer

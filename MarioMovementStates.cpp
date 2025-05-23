@@ -3,6 +3,8 @@
 #include "AssetIDs.h"
 #include "Debug.h"
 #include "Mario.h"
+#include "Troopa.h"
+#include "GreenTroopa.h"
 #include "RedTroopas.h"
 #include "Block.h"
 
@@ -111,11 +113,19 @@ void MarioKickState::Enter(Mario* mario) {
 	m_entity->SetVelocity(Vector2(PLAYER_HOLD_THROW_SPEED * (int)GetDirection(),
 		0.f));
 
-	RedTroopas* shell = dynamic_cast<RedTroopas*>(m_entity);
+	Troopa* shell = dynamic_cast<Troopa*>(m_entity);
 
 	if (shell && shell->GetState() == TroopaState::SHELL_IDLE) {
-		shell->SetState(TroopaState::SHELL_SLIDE);
-		shell->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL_SLIDE, true);
+		RedTroopas* redShell = dynamic_cast<RedTroopas*>(shell);
+		GreenTroopas* greenShell = dynamic_cast<GreenTroopas*>(shell);
+		if (redShell) {
+			redShell->SetState(TroopaState::SHELL_SLIDE);
+			redShell->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL_SLIDE, true);
+		}
+		else if (greenShell) {
+			greenShell->SetState(TroopaState::SHELL_SLIDE);
+			greenShell->SetAnimation(ID_ANIM_GREEN_TROOPAS_SHELL_SLIDE, true);
+		}
 	}
 
 
@@ -590,7 +600,7 @@ std::unique_ptr<MarioMovementState> MarioHoldState::HandleInput(Mario* mario) {
 void MarioHoldState::Update(Mario* mario, float dt) {
 	auto input = mario->GetInput();
 
-	RedTroopas* shell = dynamic_cast<RedTroopas*>(m_heldEntity);
+	Troopa* shell = dynamic_cast<Troopa*>(m_heldEntity);
 
 	if (shell && shell->GetState() != TroopaState::SHELL_IDLE)
 	{
@@ -711,14 +721,14 @@ void MarioHoldState::Update(Mario* mario, float dt) {
 	mario->SetVelocity(vel);
 	m_heldEntity->SetPosition(mario->GetPosition() + GetHeldEntityOffset(mario, state));
 
-	RedTroopas* troopas = dynamic_cast<RedTroopas*>(m_heldEntity);
+	Troopa* troopas = dynamic_cast<Troopa*>(m_heldEntity);
 
 	if (troopas && troopas->GetState() == TroopaState::SHELL_IDLE) {
 		CheckHeldShellCollisions(mario, troopas, dt);
 	}
 }
 
-void MarioHoldState::CheckHeldShellCollisions(Mario* mario, RedTroopas* shell, float dt) {
+void MarioHoldState::CheckHeldShellCollisions(Mario* mario, Troopa* shell, float dt) {
 
 	Vector2 shellPos = shell->GetPosition();
 	Vector2 shellSize = shell->GetSize();

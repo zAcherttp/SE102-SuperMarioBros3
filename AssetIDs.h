@@ -62,6 +62,13 @@ constexpr auto ID_ANIM_MARIO_KICK = 100;
 
 constexpr auto ID_ANIM_MARIO_SUPER_BONKED = 110;
 
+//Green Troopa
+constexpr auto ID_ANIM_GREEN_TROOPAS_WALK = 300;
+constexpr auto ID_ANIM_GREEN_TROOPAS_SHELL = 310;
+constexpr auto ID_ANIM_GREEN_TROOPAS_SHELL_SLIDE = 320;
+constexpr auto ID_ANIM_GREEN_TROOPAS_REVIVE_SLOW = 330;
+constexpr auto ID_ANIM_GREEN_TROOPAS_REVIVE_FAST = 340;
+
 //Red Troopa
 constexpr auto ID_ANIM_RED_TROOPAS_WALK = 400;
 constexpr auto ID_ANIM_RED_TROOPAS_SHELL = 410;

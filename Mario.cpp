@@ -12,7 +12,7 @@
 #include "MarioMovementStates.h"
 #include "MarioPowerUpStates.h"
 #include "MarioStateBase.h"
-#include "RedTroopas.h"
+#include "Troopa.h"
 #include "SimpleMath.h"
 #include "SpriteBatch.h"
 #include "SpriteSheet.h"
@@ -354,7 +354,7 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 	{
 		return;
 	}
-	RedTroopas* shell = dynamic_cast<RedTroopas*>(result.collidedWith);
+	Troopa* shell = dynamic_cast<Troopa*>(result.collidedWith);
 	if (result.contactNormal.x < 0) {
 		if (block && block->IsSolid())
 		{
@@ -365,7 +365,7 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 		else if (m_inputState->isBDown && m_movementSM->GetStateName() != "hold" && shell && shell->GetState() == TroopaState::SHELL_IDLE) {
 			m_movementSM->Exit(this);
 			auto state = std::make_unique<MarioHoldState>(m_movementSM->GetDirection(), result.collidedWith);
-			m_movementSM = std::move(state);
+			m_movementSM = std::move(state);																													
 			m_movementSM->Enter(this);
 		}
 	}
@@ -386,7 +386,7 @@ void Mario::OnLeftSideCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
-	RedTroopas* shell = dynamic_cast<RedTroopas*>(result.collidedWith);
+	Troopa* shell = dynamic_cast<Troopa*>(result.collidedWith);
 	if(block && block->IsCollectible())
 	{
 		return;

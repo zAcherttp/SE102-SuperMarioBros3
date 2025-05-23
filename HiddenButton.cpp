@@ -20,6 +20,7 @@ HiddenButton::HiddenButton(Vector2 position, Vector2 size, SpriteSheet* spriteSh
 
 void HiddenButton::Update(float dt)
 {
+
 	Entity::Update(dt);
 }
 
@@ -38,6 +39,7 @@ void HiddenButton::OnCollision(const CollisionResult& event)
         m_isCollidable = false;
 		mario->SetVelocity(Vector2(mario->GetVelocity().x, -5.0f));
 		m_isActivated = true;
+
 		TransformAllBricks();
 	}
 }
@@ -65,3 +67,4 @@ void HiddenButton::TransformAllBricks()
         }
     }
 }
+

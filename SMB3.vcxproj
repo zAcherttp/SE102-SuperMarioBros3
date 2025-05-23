@@ -207,6 +207,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameConfig.h" />
     <ClInclude Include="Goomba.h" />
+    <ClInclude Include="GreenTroopa.h" />
     <ClInclude Include="HeadUpDisplay.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="HiddenButton.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="State.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="Troopa.h" />
     <ClInclude Include="Wings.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
@@ -258,6 +260,7 @@
     <ClCompile Include="FirePiranha.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Goomba.cpp" />
+    <ClCompile Include="GreenTroopa.cpp" />
     <ClCompile Include="HeadUpDisplay.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="HiddenButton.cpp" />
@@ -281,6 +284,7 @@
     <ClCompile Include="SkyPlatform.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Troopa.cpp" />
     <ClCompile Include="Wings.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>

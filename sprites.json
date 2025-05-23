@@ -1006,6 +1006,49 @@
     ]
   },
   {
+    "type": 3,
+    "sprites": [
+      {
+        "id": 300,
+        "name": "green-troopa-walk",
+        "frames": ["greentroopa-walk1", "greentroopa-walk2"],
+        "loop": true,
+        "timePerFrame": 0.2
+      },
+      {
+        "id": 310,
+        "name": "green-troopa-shell",
+        "frames": ["greentroopa-shell1"],
+        "loop": false
+      },
+      {
+        "id": 320,
+        "name": "green-troopa-shell-slide",
+        "frames": [
+          "greentroopa-shell1",
+          "greentroopa-shell2",
+          "greentroopa-shell3"
+        ],
+        "loop": true,
+        "timePerFrame": 0.1
+      },
+      {
+        "id": 330,
+        "name": "green-troopa-revive-slow",
+        "frames": ["greentroopa-shell1", "greentroopa-shell1-alt"],
+        "loop": true,
+        "timePerFrame": 0.15
+      },
+      {
+        "id": 340,
+        "name": "green-troopa-revive-fast",
+        "frames": ["greentroopa-shell1", "greentroopa-shell1-alt"],
+        "loop": true,
+        "timePerFrame": 0.05
+      }
+    ]
+  },
+  {
     "type": 4,
     "sprites": [
       {

@@ -220,6 +220,8 @@
     <ClInclude Include="BitePiranha.h" />
     <ClInclude Include="BrickParticle.h" />
     <ClInclude Include="HiddenButton.h" />
+    <ClInclude Include="Troopa.h" />
+    <ClInclude Include="GreenTroopa.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -381,6 +383,8 @@
     <ClCompile Include="BitePiranha.cpp" />
     <ClCompile Include="BrickParticle.cpp" />
     <ClCompile Include="HiddenButton.cpp" />
+    <ClCompile Include="Troopa.cpp" />
+    <ClCompile Include="GreenTroopa.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">

@@ -28,7 +28,7 @@ void Entity::Update(float deltaTime) {
 	m_animator->Update(deltaTime, m_collisionComponent->GetVelocity().x);
 }
 
-void Entity::Render(DirectX::SpriteBatch* spriteBatch) {
+void Entity::Render(DirectX::SpriteBatch* spriteBatch) {	
 	if (m_visible) {
 		// Get the position
 		Vector2 pos = m_collisionComponent->GetPosition();

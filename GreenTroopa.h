@@ -1,12 +1,14 @@
 #pragma once
 #include "Troopa.h"
 #include "Effect.h"
+#include "Wings.h"
 #include <vector>
-class RedTroopas : public Troopa
+
+class GreenTroopas : public Troopa
 {
 public:
-	RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);
-	~RedTroopas() = default;
+	GreenTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, bool hasWing);
+	~GreenTroopas() = default;
 
 	void Update(float dt) override;
 	void Render(DirectX::SpriteBatch* spriteBatch) override;
@@ -21,15 +23,14 @@ public:
 	void TransformToShell();
 	void TransformToTroopa();
 
-
-
-	// Check for platform edges using raycasts
-	bool CheckEdge();
-
 	void OnCollision(const CollisionResult& event) override;
 
 	void StartVibration();
 	void UpdateVibration(float dt);
+
+    void InitializeWing();
+
+    void TransformToRegularTroopa();
 
 private:
 	float m_animTimer;
@@ -61,5 +62,9 @@ private:
 	std::map<InteractionPointType, bool> m_pointCollisionState;
 
 	bool m_canRevive = false;
+
+    Wings* m_wing = nullptr;
+    bool m_hasWing = false;
+    
 };
 

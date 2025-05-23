@@ -15,6 +15,7 @@
 #include "FirePiranha.h"
 #include "Game.h"
 #include "Goomba.h"
+#include "GreenTroopa.h"
 #include "Ground.h"
 #include "HeadUpDisplay.h"
 #include "Keyboard.h"
@@ -200,7 +201,7 @@ void World::Reset() {
 }
 
 void World::Teleport() {
-	m_player->SetPosition(Vector2(2008, 334));
+	m_player->SetPosition(Vector2(1320, 366));
 	m_player->SetVelocity(Vector2::Zero);
 }
 
@@ -335,6 +336,14 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		float height = data["height"];
 		int color = data["color"];
 		entity = new FirePiranha(position, Vector2(width, height), spriteSheet, color);
+		break;
+	}
+	case ID_ENT_GREEN_TROOPA:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		bool hasWing = data["hasWing"];
+		entity = new GreenTroopas(position, Vector2(width, height), spriteSheet, hasWing);
 		break;
 	}
 	case ID_ENT_RED_TROOPA:

@@ -129,8 +129,6 @@ void LuckyBlock::OnCollision(const CollisionResult& event)
 {
 	Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
 
-	//Log(LOG_INFO, "Collision with LuckyBlock at: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y) + " with: " + std::to_string(event.collidedWith->GetPosition().x) + ", " + std::to_string(event.collidedWith->GetPosition().y));
-
 	if (event.contactNormal.y < 0 && mario && !m_isClaimed)
 	{
 		Vector2 vel = mario->GetVelocity();
@@ -186,7 +184,6 @@ void LuckyBlock::SpawnPowerUp()
 
 void LuckyBlock::SpawnButton()
 {
-	Log(LOG_INFO, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASpawned Hidden Button at: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
 	m_hiddenButton = new HiddenButton(GetPosition() + Vector2(0, -16), Vector2(16, 16), Game::GetInstance()->GetSpriteSheet());
 	World::GetInstance()->AddEntity(m_hiddenButton);
 }

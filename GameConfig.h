@@ -39,6 +39,7 @@ namespace GameConfig
         {
             constexpr float WALK_SPEED = 30.0f;
             constexpr float SHELL_SPEED = 60.0f;
+            constexpr float BOUNCE_FORCE = 200.0f;
         }
         // ...other enemies
     }

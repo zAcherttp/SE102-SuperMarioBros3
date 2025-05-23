@@ -55,8 +55,13 @@ void Wings::Update(float dt, Vector2 ownerPosition, Vector2 ownerVelocity)
 void Wings::Render(DirectX::SpriteBatch* spriteBatch)
 {
 	if (!m_isActive) return;
-	// Use the standard Entity rendering which will use our animator
-	Entity::Render(spriteBatch);
+	if (m_visible) {
+		// Get the position
+		Vector2 pos = m_collisionComponent->GetPosition();
+		pos.x = (float)(int)(pos.x + 0.5f);
+		pos.y = (float)(int)(pos.y + 0.5f);
+		m_animator->Draw(spriteBatch, pos,0.0f);
+	}
 }
 
 void Wings::UpdatePosition(const Vector2& ownerPosition)
