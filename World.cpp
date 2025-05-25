@@ -15,6 +15,7 @@
 #include "FirePiranha.h"
 #include "Game.h"
 #include "Goomba.h"
+#include "Grass.h"
 #include "GreenTroopa.h"
 #include "Ground.h"
 #include "HeadUpDisplay.h"
@@ -467,7 +468,16 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		float width = data["width"];
 		float height = data["height"];
 		entity = new BitePiranha(position, Vector2(width,height),spriteSheet);
-		Log("Bit", "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		break;
+	}
+	case ID_ENT_GRASS_BLOCK:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		int countX = data["countX"];
+		int countY = data["countY"];
+		bool isSolid = data["solid"];
+		entity = new Grass(position, Vector2(width, height), countX, countY, isSolid, spriteSheet);
 		break;
 	}
 

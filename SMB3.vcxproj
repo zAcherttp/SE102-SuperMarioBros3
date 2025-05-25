@@ -207,6 +207,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameConfig.h" />
     <ClInclude Include="Goomba.h" />
+    <ClInclude Include="Grass.h" />
     <ClInclude Include="GreenTroopa.h" />
     <ClInclude Include="HeadUpDisplay.h" />
     <ClInclude Include="Helpers.h" />
@@ -260,6 +261,7 @@
     <ClCompile Include="FirePiranha.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Goomba.cpp" />
+    <ClCompile Include="Grass.cpp" />
     <ClCompile Include="GreenTroopa.cpp" />
     <ClCompile Include="HeadUpDisplay.cpp" />
     <ClCompile Include="Helpers.cpp" />
@@ -302,6 +304,7 @@
     <None Include="packages.config" />
     <None Include="textures\mario.spritefont" />
     <None Include="world_1-1.json" />
+    <None Include="world_1-4.json" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="textures\readme.txt" />

@@ -277,5 +277,10 @@ constexpr auto ID_SPRITE_HUD_MUSHROOM = 2910;
 constexpr auto ID_SPRITE_HUD_STAR = 2911;
 constexpr auto ID_SPRITE_HUD_POWERUP_SLOT = 2912;
 
-// Hidden Button
-
+//Grass
+constexpr auto ID_SPRITE_GRASS_TOP_LEFT = 2300;
+constexpr auto ID_SPRITE_GRASS_TOP_MID = 2310;
+constexpr auto ID_SPRITE_GRASS_TOP_RIGHT = 2320;
+constexpr auto ID_SPRITE_GRASS_BOT_LEFT = 2330;
+constexpr auto ID_SPRITE_GRASS_BOT_MID = 2340;
+constexpr auto ID_SPRITE_GRASS_BOT_RIGHT = 2350;

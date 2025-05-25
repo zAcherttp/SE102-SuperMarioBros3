@@ -33,7 +33,6 @@ void Coin::Render(DirectX::SpriteBatch* spriteBatch)
     
 }
 
-
 void Coin::Update(float dt)
 {
     m_animator->Update(dt);

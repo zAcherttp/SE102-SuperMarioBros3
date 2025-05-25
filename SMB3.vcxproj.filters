@@ -222,6 +222,7 @@
     <ClInclude Include="HiddenButton.h" />
     <ClInclude Include="Troopa.h" />
     <ClInclude Include="GreenTroopa.h" />
+    <ClInclude Include="Grass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -385,6 +386,7 @@
     <ClCompile Include="HiddenButton.cpp" />
     <ClCompile Include="Troopa.cpp" />
     <ClCompile Include="GreenTroopa.cpp" />
+    <ClCompile Include="Grass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">
@@ -413,6 +415,7 @@
     <None Include="packages.config">
       <Filter>Source\Core</Filter>
     </None>
+    <None Include="world_1-4.json" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="textures\readme.txt">
