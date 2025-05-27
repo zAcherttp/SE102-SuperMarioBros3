@@ -240,6 +240,9 @@ constexpr auto ID_SPRITE_CLOUD_FLOWER = 1501;
 constexpr auto ID_SPRITE_CLOUD_STAR = 1502;
 constexpr auto ID_SPRITE_CLOUD_MUSHROOM = 1503;
 
+constexpr auto ID_SPRITE_CLOUD_SMALL = 1560;
+constexpr auto ID_SPRITE_CLOUD_BIG_LEFT = 1570;
+constexpr auto ID_SPRITE_CLOUD_BIG_RIGHT = 1571;
 ///Pipe
 constexpr auto ID_SPRITE_PIPE_TOP_LEFT = 2700;
 constexpr auto ID_SPRITE_PIPE_TOP_RIGHT = 2710;

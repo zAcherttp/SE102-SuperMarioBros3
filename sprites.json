@@ -473,6 +473,24 @@
         "name": "cloud-mushroom",
         "frames": ["cloud-mushroom"],
         "loop": false
+      },
+      {
+        "id": 1560,
+        "name": "wide-cloud-small",
+        "frames": ["wide-cloud-small"],
+        "loop": false
+      },
+      {
+        "id": 1570,
+        "name": "wide-cloud-left",
+        "frames": ["wide-cloud-left"],
+        "loop": false
+      },
+      {
+        "id": 1571,
+        "name": "wide-cloud-right",
+        "frames": ["wide-cloud-right"],
+        "loop": false
       }
     ]
   },
