@@ -38,6 +38,7 @@ constexpr auto ID_ENT_EFFECT = 29;
 constexpr auto ID_ENT_MUSHROOM = 30;
 constexpr auto ID_ENT_FIRE_LEAF = 31;
 constexpr auto ID_ENT_HIDDEN_BUTTON = 32;
+constexpr auto ID_ENT_SECRET_WALL = 33;
 
 //Entities' animation IDs
 constexpr auto ID_ANIM_MARIO_SMALL = 100000;
@@ -244,6 +245,10 @@ constexpr auto ID_SPRITE_PIPE_TOP_LEFT = 2700;
 constexpr auto ID_SPRITE_PIPE_TOP_RIGHT = 2710;
 constexpr auto ID_SPRITE_PIPE_BOT_LEFT = 2720;
 constexpr auto ID_SPRITE_PIPE_BOT_RIGHT = 2730;
+constexpr auto ID_SPRITE_BONUS_PIPE_TOP_LEFT = 2740;
+constexpr auto ID_SPRITE_BONUS_PIPE_TOP_RIGHT = 2750;
+constexpr auto ID_SPRITE_BONUS_PIPE_BOT_LEFT = 2760;
+constexpr auto ID_SPRITE_BONUS_PIPE_BOT_RIGHT = 2770;
 
 //Sky Platform
 constexpr auto ID_SPRITE_SKY_PLATFORM = 1600;
@@ -284,3 +289,6 @@ constexpr auto ID_SPRITE_GRASS_TOP_RIGHT = 2320;
 constexpr auto ID_SPRITE_GRASS_BOT_LEFT = 2330;
 constexpr auto ID_SPRITE_GRASS_BOT_MID = 2340;
 constexpr auto ID_SPRITE_GRASS_BOT_RIGHT = 2350;
+
+//Secret Wall
+constexpr auto ID_SPRITE_SECRET_WALL = 3300;

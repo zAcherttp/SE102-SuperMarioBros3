@@ -225,6 +225,7 @@
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScrewBlock.h" />
+    <ClInclude Include="SecretWall.h" />
     <ClInclude Include="SkyPlatform.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="State.h" />
@@ -283,6 +284,7 @@
     </ClCompile>
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="ScrewBlock.cpp" />
+    <ClCompile Include="SecrectWall.cpp" />
     <ClCompile Include="SkyPlatform.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="Ground.cpp" />
@@ -304,6 +306,7 @@
     <None Include="packages.config" />
     <None Include="textures\mario.spritefont" />
     <None Include="world_1-1.json" />
+    <None Include="world_1-1_hidden.json" />
     <None Include="world_1-4.json" />
   </ItemGroup>
   <ItemGroup>

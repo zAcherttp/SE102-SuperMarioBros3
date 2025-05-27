@@ -753,6 +753,30 @@
         "name": "pipe-bot-right",
         "frames": ["pipe-bot-right"],
         "loop": false
+      },
+      {
+        "id": 2740,
+        "name": "bonus-pipe-top-left",
+        "frames": ["bonus-pipe-top-left"],
+        "loop": false
+      },
+      {
+        "id": 2750,
+        "name": "bonus-pipe-top-right",
+        "frames": ["bonus-pipe-top-right"],
+        "loop": false
+      },
+      {
+        "id": 2760,
+        "name": "bonus-pipe-bot-left",
+        "frames": ["bonus-pipe-bot-left"],
+        "loop": false
+      },
+      {
+        "id": 2770,
+        "name": "bonus-pipe-bot-right",
+        "frames": ["bonus-pipe-bot-right"],
+        "loop": false
       }
     ]
   },
@@ -1147,6 +1171,18 @@
         "name": "grass-bot-mid",
         "frames": ["grass-mid"],
         "loop": false
+      }
+    ]
+  },
+  {
+    "type": 33,
+    "sprites": [
+      {
+        "id": 3300,
+        "name": "secret-wall",
+        "frames": ["bonus-platform"],
+        "loop": true,
+        "timePerFrame": 0.1
       }
     ]
   }

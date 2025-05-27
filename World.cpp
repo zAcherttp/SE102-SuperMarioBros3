@@ -27,6 +27,7 @@
 #include "PrimitiveBatch.h"
 #include "RedTroopas.h"
 #include "ScrewBlock.h" 
+#include "SecretWall.h"
 #include "SimpleMath.h"
 #include "SkyPlatform.h"
 #include "SpriteBatch.h"
@@ -407,7 +408,8 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		int countY = data["countY"];
 		bool isSolid = data["solid"];
 		bool hasHead = data["hasHead"];
-		entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, hasHead);
+		bool isBonus = data["isBonus"];
+		entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, hasHead, isBonus);
 		break;
 	}
 	case ID_ENT_BRICK:
@@ -478,6 +480,15 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		int countY = data["countY"];
 		bool isSolid = data["solid"];
 		entity = new Grass(position, Vector2(width, height), countX, countY, isSolid, spriteSheet);
+		break;
+	}
+	case ID_ENT_SECRET_WALL:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		int countX = data["countX"];
+		int countY = data["countY"];
+		entity = new SecretWall(position, Vector2(width, height), countX, countY, spriteSheet);
 		break;
 	}
 

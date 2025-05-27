@@ -4,7 +4,7 @@
 class Pipe : public Block
 {
 public:
-    Pipe(Vector2 position, Vector2 size, int countX, int countY, bool isSolid, SpriteSheet* spriteSheet, bool hasHead = true); 
+    Pipe(Vector2 position, Vector2 size, int countX, int countY, bool isSolid, SpriteSheet* spriteSheet, bool hasHead = true, bool isBonus = false); 
 
     void Update(float dt) override;
 
@@ -15,7 +15,6 @@ private:
     int m_tileXcount;
     int m_tileYcount;
     bool m_hasHead;
-    
-
+    bool m_isBonus = false;
 };
 

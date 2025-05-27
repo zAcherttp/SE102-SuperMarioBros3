@@ -73,7 +73,7 @@ void Brick::TransformToBrick()
 
 void Brick::OnCollision(const CollisionResult& event)
 {
-    Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
+    Troopa* troopa = dynamic_cast<Troopa*>(event.collidedWith);
     if (m_state == BrickState::COIN)
     {
         m_isActive = false;
@@ -81,9 +81,10 @@ void Brick::OnCollision(const CollisionResult& event)
         return;
     }
 
-    if(m_state == BrickState::BRICK && mario)
+    if(m_state == BrickState::BRICK && troopa && troopa->GetState() == TroopaState::SHELL_SLIDE)
     {
+        // If a Troopa in shell state collides with the brick, it should break
         Break();
+        return;
     }
- 
 }
