@@ -74,7 +74,8 @@ void Brick::TransformToBrick()
 void Brick::OnCollision(const CollisionResult& event)
 {
     Troopa* troopa = dynamic_cast<Troopa*>(event.collidedWith);
-    if (m_state == BrickState::COIN)
+    Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
+    if (m_state == BrickState::COIN && mario)
     {
         m_isActive = false;
         m_visible = false;

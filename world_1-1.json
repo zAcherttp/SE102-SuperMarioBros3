@@ -56,7 +56,7 @@
     {
       "type": 4,
       "x": 2096.0,
-      "y": 360.0,
+      "y": 357.0,
       "width": 16,
       "height": 27
     },
@@ -883,7 +883,8 @@
       "countY": 3,
       "solid": true,
       "hasHead": true,
-      "isBonus": false
+      "isBonus": false,
+      "isCollidable": true
     },
     {
       "type": 27,
@@ -895,7 +896,8 @@
       "countY": 2,
       "solid": true,
       "hasHead": true,
-      "isBonus": false
+      "isBonus": false,
+      "isCollidable": true
     },
     {
       "type": 27,
@@ -907,7 +909,8 @@
       "countY": 3,
       "solid": true,
       "hasHead": true,
-      "isBonus": false
+      "isBonus": false,
+      "isCollidable": true
     },
     {
       "type": 27,
@@ -919,7 +922,8 @@
       "countY": 12,
       "solid": true,
       "hasHead": true,
-      "isBonus": false
+      "isBonus": false,
+      "isCollidable": true
     },
     {
       "type": 27,
@@ -931,7 +935,8 @@
       "countY": 2,
       "solid": true,
       "hasHead": false,
-      "isBonus": false
+      "isBonus": false,
+      "isCollidable": true
     },
     {
       "type": 27,
@@ -943,7 +948,8 @@
       "countY": 2,
       "solid": true,
       "hasHead": true,
-      "isBonus": false
+      "isBonus": false,
+      "isCollidable": true
     },
     {
       "type": 24,
@@ -1061,6 +1067,30 @@
       "type": 24,
       "x": 2096.0,
       "y": 384.0,
+      "width": 16,
+      "height": 16,
+      "solid": true
+    },
+    {
+      "type": 24,
+      "x": 2032.0,
+      "y": 384.0,
+      "width": 16,
+      "height": 16,
+      "solid": true
+    },
+    {
+      "type": 24,
+      "x": 2032.0,
+      "y": 400.0,
+      "width": 16,
+      "height": 16,
+      "solid": true
+    },
+    {
+      "type": 24,
+      "x": 2048.0,
+      "y": 400.0,
       "width": 16,
       "height": 16,
       "solid": true

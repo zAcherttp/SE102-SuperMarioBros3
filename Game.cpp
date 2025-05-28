@@ -342,8 +342,10 @@ void Game::LoadGameConfig(const json& config)
 	m_wndHeight = config["window"]["height"];
 	Log(__FUNCTION__, "Window size set to: " + std::to_string(m_wndWidth) + "x" + std::to_string(m_wndHeight));
 
-	m_nextWorldId = config["game"]["world"]["startWorldId"];
+	m_startWorldId = m_nextWorldId = config["game"]["world"]["startWorldId"];
 	Log(__FUNCTION__, "Start world id: " + std::to_string(m_nextWorldId));
+
+	
 
 	std::string spritePath = config["game"]["sprites"]["path"];
 	m_spritePath = std::wstring(spritePath.begin(), spritePath.end());

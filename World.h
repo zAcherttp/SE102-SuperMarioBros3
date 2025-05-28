@@ -22,6 +22,7 @@ public:
 	void Reset();
 	void Teleport();
 	void TogglePause();
+	void SetNextWorld();
 
 	Entity* GetPlayer();
 	static World* GetInstance();

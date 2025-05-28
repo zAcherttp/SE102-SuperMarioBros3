@@ -201,10 +201,10 @@ void RedTroopas::OnCollision(const CollisionResult& event)
 			if (m_state == SHELL_IDLE) {
 
 				if (mario->GetPosition().x < GetPosition().x + 8.0f) {
-					SetVelocity(Vector2(GameConfig::Enemies::Troopas::WALK_SPEED * 7, 0.0f));
+					SetVelocity(Vector2(GameConfig::Enemies::Troopas::SHELL_SPEED, 0.0f));
 				}
 				else {
-					SetVelocity(Vector2(-GameConfig::Enemies::Troopas::WALK_SPEED * 7, 0.0f));
+					SetVelocity(Vector2(-GameConfig::Enemies::Troopas::SHELL_SPEED, 0.0f));
 				}
 
 				Vector2 vel = mario->GetVelocity();

@@ -648,7 +648,8 @@
       "countY": 4,
       "solid": true,
       "hasHead": true,
-      "isBonus": false
+      "isBonus": false,
+      "isCollidable": true
     },
     {
       "type": 28,

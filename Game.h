@@ -73,6 +73,11 @@ public:
 
 	SpriteSheet* GetSpriteSheet() const;
 	DirectX::SpriteBatch* GetSpriteBatch() const;
+
+	int GetCurrentWorldId() const { return m_currentWorldId; }
+	int GetStartWorldId() const { return m_startWorldId; }
+
+	Camera* GetCamera() const { return m_camera.get(); }
 private:
 
 	static Game* s_instance;
@@ -140,6 +145,8 @@ private:
 	std::unordered_map<int, World*> m_worlds;
 	int m_currentWorldId;
 	int m_nextWorldId;
+
+	int m_startWorldId;
 
 	bool m_isLoading;
 	bool m_requestReset;

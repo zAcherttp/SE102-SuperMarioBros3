@@ -87,7 +87,6 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 	if (kbsTracker->IsKeyPressed(Keys::I)) {
 		TogglePause();
 	}
-
 	if (!m_player || !m_player->IsActive() || m_isPaused) return;
 	Mario* mario = dynamic_cast<Mario*>(m_player);
 	if (!mario || mario->IsTransitioning()) return;
@@ -98,6 +97,9 @@ void World::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 	}
 	if (kbsTracker->IsKeyPressed(Keys::T)) {
 		Teleport();
+	}
+	if (kbsTracker->IsKeyPressed(Keys::P)) {
+		SetNextWorld();
 	}
 }
 
@@ -203,13 +205,21 @@ void World::Reset() {
 }
 
 void World::Teleport() {
-	m_player->SetPosition(Vector2(1320, 366));
+	m_player->SetPosition(Vector2(2159, 335));
 	m_player->SetVelocity(Vector2::Zero);
 }
 
 void World::TogglePause()
 {
 	m_isPaused = !m_isPaused;
+}
+
+void World::SetNextWorld()
+{
+	Game* game = Game::GetInstance();
+	int currentWorldId = game->GetCurrentWorldId();
+	int startWorldId = game->GetStartWorldId();
+	game->SetNextWorldId(currentWorldId == 1 ?  startWorldId : currentWorldId - 1 );
 }
 
 void World::Load(SpriteSheet* spriteSheet)
@@ -409,7 +419,8 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		bool isSolid = data["solid"];
 		bool hasHead = data["hasHead"];
 		bool isBonus = data["isBonus"];
-		entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, hasHead, isBonus);
+		bool isCollidable = data["isCollidable"];
+		entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid, spriteSheet, hasHead, isBonus, isCollidable);
 		break;
 	}
 	case ID_ENT_BRICK:

@@ -7,6 +7,7 @@
 #include "GameConfig.h"
 #include "World.h"
 #include "Brick.h"
+#include "EffectManager.h"
 
 HiddenButton::HiddenButton(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	: Block(position, size, spriteSheet)
@@ -39,7 +40,6 @@ void HiddenButton::OnCollision(const CollisionResult& event)
         m_isCollidable = false;
 		mario->SetVelocity(Vector2(mario->GetVelocity().x, -5.0f));
 		m_isActivated = true;
-
 		TransformAllBricks();
 	}
 }
