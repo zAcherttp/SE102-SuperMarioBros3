@@ -82,7 +82,7 @@ void GreenTroopas::Die(DyingType type)
 void GreenTroopas::Update(float dt)
 {
 	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
-	Log(LOG_INFO, "GreenTroopas Animation: " + std::to_string(m_animator->GetCurrentAnimation()));
+	// Log(LOG_INFO, "GreenTroopas Animation: " + std::to_string(m_animator->GetCurrentAnimation()));
 
 	if (!m_isGrounded) {
 		Vector2 vel = GetVelocity();

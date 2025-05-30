@@ -308,6 +308,7 @@
     <None Include="world_1-1.json" />
     <None Include="world_1-1_hidden.json" />
     <None Include="world_1-4.json" />
+    <None Include="world_1-4_end.json" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="textures\readme.txt" />

@@ -885,11 +885,11 @@
     "type": 22,
     "sprites": [
       {
-        "id": 2200,
+        "id": 2201,
         "name": "end-portal",
-        "frames": ["powerup-mushroom", "leafpowerup-mushroom"],
+        "frames": ["mushroom", "powerup-star"],
         "loop": true,
-        "timePerFrame": 0.3
+        "timePerFrame": 0.15
       },
       {
         "id": 2200,

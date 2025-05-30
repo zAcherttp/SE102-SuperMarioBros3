@@ -143,7 +143,7 @@ constexpr auto ID_ANIM_LUCKY_BLOCK = 2100;
 constexpr auto ID_ANIM_LUCKY_BLOCK_CLAIMED = 2110;
 
 // End Portal
-constexpr auto ID_ANIM_END_PORTAL = 2200;
+constexpr auto ID_ANIM_END_PORTAL = 2201;
 
 constexpr auto ID_ANIM_HIDDEN_BUTTON = 3200;
 constexpr auto ID_ANIM_HIDDEN_BUTTON_STOMPED = 3210;
