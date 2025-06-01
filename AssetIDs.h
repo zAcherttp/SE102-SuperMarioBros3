@@ -11,10 +11,11 @@ constexpr auto ID_ENT_PARAGOOMBA = 6;
 constexpr auto ID_ENT_BITE_PIRANHA = 7;
 constexpr auto ID_ENT_RED_PIRANHA_SPIT_FIRE = 9;
 constexpr auto ID_ENT_GROUND = 10;
+constexpr auto ID_ENT_BUSH = 11;
 constexpr auto ID_ENT_WINGS = 12;
 constexpr auto ID_ENT_BULLET = 13;
 
-constexpr auto ID_ENT_BUSH = 11;
+constexpr auto ID_ENT_BOOMERANG = 14;
 
 constexpr auto ID_ENT_CLOUD = 15;
 constexpr auto ID_ENT_SKY_PLATFORM = 16;
@@ -92,6 +93,12 @@ constexpr auto ID_ANIM_WINGS_FLAP_DOWN = 1220; // Down position
 
 // Bullet
 constexpr auto ID_ANIM_BULLET = 1300;
+
+// Boomerang Bro
+constexpr auto ID_ANIM_BOOMERANG_BRO_THROW = 100;
+constexpr auto ID_ANIM_BOOMERANG_BRO_WALK = 110;
+
+
 
 // Effects
 constexpr auto ID_ANIM_EFFECT_BONK = 2900;
@@ -175,6 +182,9 @@ constexpr auto ID_SPRITE_END_BUSH_LEFT_SIDE = 1101;
 constexpr auto ID_SPRITE_END_BUSH_RIGHT_SIDE = 1111;
 constexpr auto ID_SPRITE_END_BUSH_TOP_LEFT = 1121;
 constexpr auto ID_SPRITE_END_BUSH_TOP_RIGHT = 1131;
+
+// Boomerang
+constexpr auto ID_ANIM_BOOMERANG = 1400;
 
 //Screw Block
 /// white (color 0)

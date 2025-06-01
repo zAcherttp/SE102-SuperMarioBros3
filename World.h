@@ -36,6 +36,8 @@ public:
 
 	void AddEntity(Entity* entity);
 	std::vector<Entity*> GetEntities();
+	static void ResetInstance() { s_instance = nullptr; }
+	std::unique_ptr<Collision> m_collisionSystem;
 private:
 	std::string m_path;
 	std::string m_name;
@@ -49,7 +51,6 @@ private:
 
 	bool m_isPaused;
 
-	std::unique_ptr<Collision> m_collisionSystem;
 
 	//Modules of the load function
 	json LoadJsonFile(const std::string& filePath);

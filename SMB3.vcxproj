@@ -185,6 +185,8 @@
     <ClInclude Include="BitePiranha.h" />
     <ClInclude Include="BlackBackground.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Boomerang.h" />
+    <ClInclude Include="BoomerangBro.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="BrickParticle.h" />
     <ClInclude Include="Bullet.h" />
@@ -241,6 +243,8 @@
     <ClCompile Include="BitePiranha.cpp" />
     <ClCompile Include="BlackBackground.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Boomerang.cpp" />
+    <ClCompile Include="BoomerangBro.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="BrickParticle.cpp" />
     <ClCompile Include="Bullet.cpp" />

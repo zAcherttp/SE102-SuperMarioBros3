@@ -5,6 +5,7 @@
 #include "Brick.h"
 #include "Bush.h"
 #include "BitePiranha.h"
+#include "BoomerangBro.h"
 #include "Cloud.h"
 #include "Coin.h"
 #include "Collision.h"
@@ -51,6 +52,9 @@ World* World::s_instance = nullptr;
 
 World::World(std::string wPath, std::string name)
 {
+	if (s_instance != nullptr && s_instance != this) {
+        s_instance = nullptr;
+    }
 	s_instance = this; // singleton instance
 
 	m_path = wPath;
@@ -500,6 +504,13 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		int countX = data["countX"];
 		int countY = data["countY"];
 		entity = new SecretWall(position, Vector2(width, height), countX, countY, spriteSheet);
+		break;
+	}
+	case ID_ENT_BOOMERANG_BRO:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		entity = new BoomerangBro(position, Vector2(width, height), spriteSheet);
 		break;
 	}
 

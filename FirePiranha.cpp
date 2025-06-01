@@ -342,8 +342,6 @@ void FirePiranha::Fire(BulletDirection direction)
 
 	// Calculate bullet spawn position based on plant's mouth position
 	Vector2 bulletPosition = GetPosition();
-	Vector2 size = GetSize();
-
 
 	// Create the bullet with the appropriate direction
 	Game* game = Game::GetInstance();

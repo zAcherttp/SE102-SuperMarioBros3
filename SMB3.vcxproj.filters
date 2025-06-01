@@ -224,6 +224,8 @@
     <ClInclude Include="GreenTroopa.h" />
     <ClInclude Include="Grass.h" />
     <ClInclude Include="SecretWall.h" />
+    <ClInclude Include="BoomerangBro.h" />
+    <ClInclude Include="Boomerang.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -389,6 +391,8 @@
     <ClCompile Include="GreenTroopa.cpp" />
     <ClCompile Include="Grass.cpp" />
     <ClCompile Include="SecrectWall.cpp" />
+    <ClCompile Include="BoomerangBro.cpp" />
+    <ClCompile Include="Boomerang.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">

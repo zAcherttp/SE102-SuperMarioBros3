@@ -1203,5 +1203,44 @@
         "timePerFrame": 0.1
       }
     ]
+  },
+  {
+    "type": 1,
+    "sprites": [
+      {
+        "id": 100,
+        "name": "boomerang-throw",
+        "frames": [
+          "boomerang-thrown1",
+          "boomerang-thrown2",
+          "boomerang-thrown1",
+          "boomerang-thrown2",
+          "boomerang-hold1",
+          "boomerang-hold2",
+          "boomerang-thrown1",
+          "boomerang-thrown2"
+        ],
+        "loop": true,
+        "timePerFrame": 0.12
+      },
+      {
+        "id": 110,
+        "name": "boomerang-hold",
+        "frames": ["boomerang-thrown1", "boomerang-thrown2"],
+        "loop": true,
+        "timePerFrame": 0.12
+      }
+    ]
+  },
+  {
+    "type": 14,
+    "sprites": [
+      {
+        "id": 1400,
+        "name": "boomerang-flying",
+        "frames": ["boomerang"],
+        "loop": false
+      }
+    ]
   }
 ]

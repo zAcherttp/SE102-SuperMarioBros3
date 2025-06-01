@@ -412,8 +412,10 @@ void Game::SwitchWorld()
 {
 	if (m_nextWorldId < 0) return;
 	m_isLoading = true;
+
 	if (m_worlds[m_currentWorldId] != NULL)
 		m_worlds[m_currentWorldId]->Unload();
+		
 	m_currentWorldId = m_nextWorldId;
 
 	//TODO: clean up sprites/anims
