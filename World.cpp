@@ -366,7 +366,8 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 	{
 		float width = data["width"];
 		float height = data["height"];
-		entity = new RedTroopas(position, Vector2(width, height), spriteSheet);
+		bool hasWing = data["hasWing"];
+		entity = new RedTroopas(position, Vector2(width, height), spriteSheet, hasWing);
 		break;
 	}
 	case ID_ENT_GROUND:

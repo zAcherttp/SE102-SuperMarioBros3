@@ -51,14 +51,16 @@
       "x": 570.0,
       "y": 354.0,
       "width": 16,
-      "height": 27
+      "height": 27,
+      "hasWing": false
     },
     {
       "type": 4,
       "x": 2096.0,
       "y": 357.0,
       "width": 16,
-      "height": 27
+      "height": 27,
+      "hasWing": false
     },
     {
       "type": 5,

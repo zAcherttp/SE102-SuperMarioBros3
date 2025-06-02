@@ -1,11 +1,16 @@
 #pragma once
 #include "Troopa.h"
 #include "Effect.h"
+#include "Wings.h"
 #include <vector>
+
+#define FLY_HEIGHT 110.0f // Height at which the Troopa flies
+#define MAX_FLYING_SPEED 70.0f // Maximum speed when flying
+#define VERTICAL_ACCELERATION 100.0f // Acceleration when flying
 class RedTroopas : public Troopa
 {
 public:
-	RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);
+	RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, bool hasWing = false);
 	~RedTroopas() = default;
 
 	void Update(float dt) override;
@@ -21,6 +26,7 @@ public:
 	void TransformToShell();
 	void TransformToTroopa();
 
+	void InitializeWing();
 
 
 	// Check for platform edges using raycasts
@@ -49,6 +55,11 @@ private:
 	bool m_firstRevivePhase;
 	bool m_secondRevivePhase;
 
+	Wings* m_wing;
+	bool m_hasWing = false;
+	float m_startPositionY;
+	bool m_isGoingUp;
+
 	float m_reviveTimer;
 	float m_reviveTime;
 
@@ -61,5 +72,6 @@ private:
 	std::map<InteractionPointType, bool> m_pointCollisionState;
 
 	bool m_canRevive = false;
+
 };
 
