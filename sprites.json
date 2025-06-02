@@ -1229,6 +1229,12 @@
         "frames": ["boomerang-thrown1", "boomerang-thrown2"],
         "loop": true,
         "timePerFrame": 0.12
+      },
+      {
+        "id": 120,
+        "name": "boomerang-die",
+        "frames": ["boomerang-thrown1"],
+        "loop": false
       }
     ]
   },

@@ -10,24 +10,21 @@ enum class BoomerangState
 	HOLDING
 };	
 
-#define BOOMERANG_HORIZONTAL_SPEED 140.0f     
-#define BOOMERANG_VERTICAL_SPEED 60.0f       
-#define BOOMERANG_MAX_VERTICAL_SPEED 140.0f 
-#define BOOMERANG_INITAL_UPWARD_SPEED 60.0f  
-#define BOOMERANG_GRAVITY 25.0f             
-#define BOOMERANG_VERTICAL_ACCE 10.0f      
-#define BOOMERANG_HORIZONTAL_ACCE 75.0f     
-#define BOOMERANG_VERTICAL_DECEL 225.0f      
-#define BOOMERANG_HORIZONTAL_LENGTH 48.0f  
+#define BOOMERANG_HORIZONTAL_SPEED 220.0f  
+#define BOOMERANG_MAX_VERTICAL_SPEED 220.0f 
+#define BOOMERANG_INITAL_UPWARD_SPEED 80.0f  
+#define BOOMERANG_GRAVITY 53.0f             
+#define BOOMERANG_VERTICAL_ACCE 20.0f      
+#define BOOMERANG_HORIZONTAL_ACCE 180.0f     
 #define BOOMERANG_WIDTH 16
 #define BOOMERANG_HEIGHT 16
 
-#define BOOMERANG_LIFETIME 7.0f // Lifetime of the boomerang in seconds
+#define BOOMERANG_LIFETIME 10.0f 
 
 class Boomerang : public Enemy
 {
 public:
-	Boomerang(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);
+	Boomerang(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, bool direction = true);
 	~Boomerang() = default;
 
 	// Implementation of Entity's pure virtual function
@@ -66,8 +63,8 @@ private:
 	float BOOMERANG_VERTICAL_LENGTH;
 
 
-	float m_accelerationX = BOOMERANG_HORIZONTAL_ACCE;
-	float m_accelerationY = BOOMERANG_VERTICAL_ACCE;
+	float m_accelerationX;
+	float m_accelerationY;
 
 	float m_startPositionX;
 	float m_startPositionY;

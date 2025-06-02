@@ -47,9 +47,15 @@ public:
 
 	bool CheckAABBCollision(const Entity* entityA, const Entity* entityB);
 
+	void Die(DyingType type) override;
+
 private:
 	int m_leftX;
     int m_rightX;
+
+	float m_deathTimer;
+	bool m_isDying;
+
 
     BoomerangBroState m_state;
 	bool m_isThrowingPhase;
@@ -67,7 +73,7 @@ private:
     Boomerang* m_boomerang2; // Second boomerang for dual-wielding
 
 	// References needed for gameplay functionality
-	Mario* m_mario;
+	Mario* m_mario; // Reference to Mario for orientation and interaction
 	World* m_world;
 	// Position tracking
 

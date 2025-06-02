@@ -97,6 +97,7 @@ constexpr auto ID_ANIM_BULLET = 1300;
 // Boomerang Bro
 constexpr auto ID_ANIM_BOOMERANG_BRO_THROW = 100;
 constexpr auto ID_ANIM_BOOMERANG_BRO_WALK = 110;
+constexpr auto ID_ANIM_BOOMERANG_BRO_DIE = 120;
 
 
 

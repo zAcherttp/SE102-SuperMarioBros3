@@ -21,37 +21,51 @@ BoomerangBro::BoomerangBro(Vector2 position, Vector2 size, SpriteSheet* spriteSh
     , m_phaseTimer(0.0f)
     , m_waitTimer(0.0f)
     , m_jumpTimer(0.0f)
+    , m_isDying(false)
 {
     SetupCollisionComponent();
     Log(__FUNCTION__, "Collision component initialized");
-    m_mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
     m_isCollidable = true;
 
     // m_boomerang1 = new Boomerang(position + BULLET_OFFSET, Vector2(BULLET_WIDTH, BULLET_HEIGHT), spriteSheet);
     // m_boomerang2 = new Boomerang(position + BULLET_OFFSET + Vector2(16.0f, 0.0f), Vector2(BULLET_WIDTH, BULLET_HEIGHT), spriteSheet);
-    SetAnimation(ID_ANIM_BOOMERANG_BRO_THROW);
+    SetAnimation(ID_ANIM_BOOMERANG_BRO_WALK);
     m_leftX = position.x;
-    m_rightX = position.x + 48;
+    m_rightX = position.x + 48.0f;
     m_jumpTime = rand() % 3 + 5;
+    m_mario = dynamic_cast<Mario*>(Game::GetInstance()->GetCurrentWorld()->GetPlayer());
 }
 
 void BoomerangBro::Update(float dt)
-{
+{  
     Vector2 pos = GetPosition();
     Vector2 vel = GetVelocity();
     
     m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
-    
 	if (!m_isGrounded) {
         vel.y += GameConfig::Physics::GRAVITY * dt;
 		SetVelocity(vel);
 	}
-    
+
+	if (m_isDying && m_isActive) {
+		m_deathTimer += dt;
+		if (m_dyingType == DyingType::STOMPED)
+		{
+			if (m_deathTimer >= GameConfig::Enemies::DEATH_BONK_ANI_TIME) { 
+				m_isActive = false;
+				m_visible = false;
+				return;
+			}
+			SetPosition(GetPosition() + GetVelocity() * dt);
+            Entity::Update(dt);
+			return;
+		}
+	}
     m_phaseTimer += dt;
-    // Log(LOG_INFO, "BoomerangBro phase timer: " + std::to_string(m_phaseTimer));
+
     if (m_phaseTimer >= 2.54f) {
         m_isThrowingPhase = !m_isThrowingPhase;
-        m_phaseTimer = 0.0f; // Reset phase timer
+        m_phaseTimer = 0.0f; 
         m_isThrowingPhase ? SetAnimation(ID_ANIM_BOOMERANG_BRO_THROW) : SetAnimation(ID_ANIM_BOOMERANG_BRO_WALK);
         m_state = BoomerangBroState::WALKRIGHT;
     }
@@ -60,60 +74,60 @@ void BoomerangBro::Update(float dt)
     {
         m_boomerang1->m_lifeTimer += dt;
         if (m_boomerang1->m_lifeTimer >= BOOMERANG_LIFETIME) {
-            m_boomerang1->Deactivate(); // Deactivate boomerang after its life time
-            m_boomerang1 = nullptr; // Remove reference to the boomerang
+            m_boomerang1->Deactivate();
+            m_boomerang1 = nullptr; 
         }
     }
     if(m_boomerang2)
     {
         m_boomerang2->m_lifeTimer += dt;
         if (m_boomerang2->m_lifeTimer >= BOOMERANG_LIFETIME) {
-            m_boomerang2->Deactivate(); // Deactivate boomerang after its life time
-            m_boomerang2 = nullptr; // Remove reference to the boomerang
+            m_boomerang2->Deactivate(); 
+            m_boomerang2 = nullptr; 
         }
     }
 
     m_jumpTimer += dt;
     if (m_jumpTimer >= m_jumpTime) {
-        Jump(); // Trigger jump after the specified time
-        m_jumpTimer = 0.0f; // Reset jump timer
-        m_jumpTime = rand() % 3 + 5; // Randomize jump time between 1 and 2 seconds
+        Jump(); 
+        m_jumpTimer = 0.0f; 
+        m_jumpTime = rand() % 3 + 5; 
     }
     
     switch (m_state)
     {
         case BoomerangBroState::WALKRIGHT:
         if (pos.x < m_rightX) {
-            vel.x = 50.0f; // Move right
+            vel.x = 50.0f; 
         }
         if(pos.x >= m_rightX) {
-            m_state = BoomerangBroState::WAIT; // Switch to wait state
-            vel.x = 0.0f; // Stop moving
-            m_waitTimer = 0.0f; // Reset wait timer
-            pos.x = m_rightX; // Ensure position is clamped to right boundary
+            m_state = BoomerangBroState::WAIT; 
+            vel.x = 0.0f; 
+            m_waitTimer = 0.0f; 
+            pos.x = m_rightX; 
         }
         SetVelocity(Vector2(vel.x, GetVelocity().y));
         break;
         case BoomerangBroState::WALKLEFT:
         if (pos.x > m_leftX) {
-            vel.x = -50.0f; // Move left
+            vel.x = -50.0f; 
         }
         if(pos.x <= m_leftX) {
-            m_state = BoomerangBroState::WAIT; // Switch to wait state
-            vel.x = 0.0f; // Stop moving
-            m_waitTimer = 0.0f; // Reset wait timer
-            pos.x = m_leftX; // Ensure position is clamped to left boundary
+            m_state = BoomerangBroState::WAIT; 
+            vel.x = 0.0f; 
+            m_waitTimer = 0.0f; 
+            pos.x = m_leftX; 
         }
         SetVelocity(Vector2(vel.x, GetVelocity().y));
         break;
         case BoomerangBroState::WAIT:
-        m_animator->Pause(); // Pause animation while waiting
-        vel.x = 0.0f; // Stop moving
+        m_animator->Pause(); 
+        vel.x = 0.0f; 
         m_waitTimer += dt;
-        if (m_waitTimer >= 0.3f) { // Wait for 0.3 seconds
-            m_animator->Play(); // Resume animation
+        if (m_waitTimer >= 0.3f) { 
+            m_animator->Play(); 
             pos.x >= m_rightX ? m_state = BoomerangBroState::WALKLEFT : m_state = BoomerangBroState::WALKRIGHT;
-            m_waitTimer = 0.0f; // Reset wait timer
+            m_waitTimer = 0.0f; 
         }
 
         SetVelocity(Vector2(vel.x, GetVelocity().y));
@@ -127,21 +141,14 @@ void BoomerangBro::Update(float dt)
         OnBoomerangCaught(m_boomerang2);
     }
 
-    // Update bro's orientation based on Mario's position
-    UpdateBroOrientation(m_mario);
 
-    // Update boomerangs if they exist
-    if (m_boomerang1) {
-        m_boomerang1->Update(dt);
-    }
-    if (m_boomerang2) {
-        m_boomerang2->Update(dt);
-    }
+    if(!m_isDying) UpdateBroOrientation(m_mario);
+
 
     if(m_isThrowingPhase) {
         if(m_animator->GetCurrentFrame() == 4 || m_animator->GetCurrentFrame() == 5) {
             if(!m_isBommerangCreated) {
-                CreateBoomerangs(); // Create boomerangs only once when entering throwing phase
+                CreateBoomerangs(); 
                 m_isBommerangCreated = true;
                 m_isBoomerangThrown = false; 
             }
@@ -149,15 +156,15 @@ void BoomerangBro::Update(float dt)
         }
         else if (m_animator->GetCurrentFrame() == 6 || m_animator->GetCurrentFrame() == 7) {
             if (!m_isBoomerangThrown) {
-                Throw(); // Throw boomerangs when in throwing phase
-                m_isBommerangCreated = false; // Reset boomerang creation flag
+                Throw(); 
+                m_isBommerangCreated = false; 
                 m_isBoomerangThrown = true;
             }
         }
     }
     else {
-        m_isBommerangCreated = false; // Reset boomerang creation flag when not in throwing phase
-        m_isBoomerangThrown = false; // Reset boomerang thrown flag when not in throwing phase
+        m_isBommerangCreated = false; 
+        m_isBoomerangThrown = false; 
     }
 
     SetPosition(GetPosition() + GetVelocity() * dt);
@@ -166,7 +173,12 @@ void BoomerangBro::Update(float dt)
 
 void BoomerangBro::Render(DirectX::SpriteBatch* spriteBatch)
 {
-    Entity::Render(spriteBatch);
+	if (m_visible) {
+		Vector2 pos = m_collisionComponent->GetPosition();
+		pos.x = (float)(int)(pos.x + 0.5f);
+		pos.y = (float)(int)(pos.y + 0.5f);
+		m_animator->Draw(spriteBatch, pos, 0.01f);
+	}
     if (m_boomerang1) {
         m_boomerang1->Render(spriteBatch);
     }
@@ -179,44 +191,27 @@ void BoomerangBro::OnCollision(const CollisionResult& event)
 {
 	Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
 	Block* block = dynamic_cast<Block*>(event.collidedWith);
-    Boomerang* boomerang = dynamic_cast<Boomerang*>(event.collidedWith);
 
 
 	if (event.contactNormal.y < 0 && block)
 	{
 		Vector2 vel = GetVelocity();
-		//vel += event.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - event.contactTime);
 		vel.y = 0.0f;
 		SetVelocity(vel);
 		return;
 	}
 
-	if (event.contactNormal.y > 0) // Collision from above
+	if (event.contactNormal.y > 0) 
 	{
 		if (mario) 
         {
 				Die(DyingType::STOMPED);
-
 				Vector2 vel = mario->GetVelocity();
 				vel.y = GameConfig::Mario::BOUNCE_FORCE;
 				mario->SetVelocity(vel);
 		}
 		return;
 	}
-
-    if(boomerang)
-    {
-        if(m_boomerang1 == boomerang)
-        {
-            boomerang->Deactivate();
-            OnBoomerangCaught(m_boomerang1);
-        }
-        else if(m_boomerang2 == boomerang)
-        {
-            boomerang->Deactivate();
-            OnBoomerangCaught(m_boomerang2);
-        }
-    }
 
 }
 
@@ -246,16 +241,19 @@ void BoomerangBro::Jump()
 {
     if (m_isGrounded) {
         Vector2 vel = GetVelocity();
-        vel.y = -150.0f; // Apply jump force
+        vel.y = -150.0f;
         SetVelocity(vel);
-        m_isGrounded = false; // Set grounded to false after jumping
+        m_isGrounded = false; 
     }
 }
 
 void BoomerangBro::UpdateBroOrientation(Mario* mario)
 {
+
 	if (mario == nullptr)
+    {
 		return;
+	}
 
 	Vector2 marioPos = mario->GetPosition();
 	Vector2 broPos = GetPosition();
@@ -265,11 +263,8 @@ void BoomerangBro::UpdateBroOrientation(Mario* mario)
 	if (shouldFlip != m_isFlipped)
 	{
 		m_isFlipped = shouldFlip;
-		if (GetAnimator())
-		{
-			GetAnimator()->SetFlipHorizontal(m_isFlipped);
-		}
-	}
+        this->GetAnimator()->SetFlipHorizontal(m_isFlipped);
+    }
 }
 
 void BoomerangBro::CreateBoomerangs()
@@ -280,14 +275,14 @@ void BoomerangBro::CreateBoomerangs()
     // Always try to create boomerang1 first
     if (!m_boomerang1 && !m_boomerang2)
     {
-        m_boomerang1 = new Boomerang(GetPosition(), Vector2(BOOMERANG_WIDTH, BOOMERANG_HEIGHT), spriteSheet);
+        m_boomerang1 = new Boomerang(GetPosition(), Vector2(BOOMERANG_WIDTH, BOOMERANG_HEIGHT), spriteSheet, !m_isFlipped);
         Game::GetInstance()->GetCurrentWorld()->AddEntity(m_boomerang1);
         Log(LOG_INFO, "Boomerang1 created");
     }
     // If boomerang1 exists and is active, create boomerang2
     else if (m_boomerang1 && !m_boomerang2)
     {
-        m_boomerang2 = new Boomerang(GetPosition(), Vector2(BOOMERANG_WIDTH, BOOMERANG_HEIGHT), spriteSheet);
+        m_boomerang2 = new Boomerang(GetPosition(), Vector2(BOOMERANG_WIDTH, BOOMERANG_HEIGHT), spriteSheet, !m_isFlipped);
         Game::GetInstance()->GetCurrentWorld()->AddEntity(m_boomerang2);
         Log(LOG_INFO, "Boomerang2 created while boomerang1 is active");
     }
@@ -296,17 +291,17 @@ void BoomerangBro::CreateBoomerangs()
 void BoomerangBro::SetupCollisionComponent()
 {
 	Vector2 curSize = m_collisionComponent->GetSize();
-	Vector2 newSize = Vector2(curSize.x, curSize.y); // Make collision box slightly smaller
+	Vector2 newSize = Vector2(curSize.x, curSize.y); 
 	m_collisionComponent->SetSize(newSize);
 
 	m_collisionComponent->SetPosition(GetPosition() + Vector2(newSize.x / 2, newSize.y / 2));
 
-	m_collisionComponent->SetSize(newSize); // Make collision box smaller than visual size
+	m_collisionComponent->SetSize(newSize); 
 }
 
 void BoomerangBro::OnBoomerangCaught(Boomerang* boomerang)
 {
-    // Clear the appropriate pointer to prevent access violation
+
     if (m_boomerang1 == boomerang) {
         m_boomerang1 = nullptr;
         Log(LOG_INFO, "Boomerang1 caught and deactivated");
@@ -335,4 +330,25 @@ bool BoomerangBro::CheckAABBCollision(const Entity* entityA, const Entity* entit
             boxA.x + boxA.width > boxB.x &&
             boxA.y < boxB.y + boxB.height &&
             boxA.y + boxA.height > boxB.y);
+}
+
+void BoomerangBro::Die(DyingType type)
+{
+    if (type == DyingType::STOMPED)
+	{
+        Log(LOG_INFO, "BoomerangBro is dying by being stomped");
+		if (!m_isDying) {
+			m_dyingType = type;
+			m_isDying = true;
+			m_isCollidable = false;
+			m_deathTimer = 0.0f;
+            m_visible = true;
+			SetAnimation(ID_ANIM_BOOMERANG_BRO_DIE);
+			m_animator->SetFlipVertical(true);
+            m_animator->SetFlipHorizontal(m_isFlipped);
+			SetVelocity(Vector2(GetVelocity().x * 0.4f, 70.0f));
+            Log(LOG_INFO,"Animation:" + std::to_string(m_animator->GetCurrentAnimation()) + " for BoomerangBro: " + std::to_string(GetPosition().x) + ", flipped: " + std::to_string(m_isFlipped));
+		}
+		return;
+	}
 }
