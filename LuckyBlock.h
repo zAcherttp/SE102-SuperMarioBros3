@@ -10,7 +10,7 @@ enum class ItemType
 class LuckyBlock : public Block
 {
 public:
-	LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial, bool isMimic = false);
+	LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial, bool isMimic = false, bool isMushroom = false);
 
 	//static block so no update needed
 	void Update(float dt) override;
@@ -25,6 +25,7 @@ public:
 	void SpawnCoin();
 	void SpawnPowerUp();
 	void SpawnButton();
+	void SpawnMushroom();
 
 private:
 	int m_tileXcount = 1;
@@ -34,6 +35,12 @@ private:
 
 	bool m_isSpecial = false;
 	bool m_isMimic = false;
+	bool m_isButton = false;
+	bool m_isMushroom = false;
+	bool m_isCoin = false;
+
+	int m_maxClaimCoinCount = 7;
+	int m_claimCoinCount = 0;
 
 	Vector2 m_origin;
 	bool m_isClaiming;

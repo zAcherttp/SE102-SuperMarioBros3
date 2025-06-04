@@ -17,10 +17,11 @@
 #include "World.h"
 #include <string>
 
-LuckyBlock::	LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial, bool isMimic)
+LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet, bool isSpecial, bool isMimic, bool isMushroom)
 	: Block(position, size, spriteSheet)
 	, m_isMimic(isMimic)
 	, m_isSpecial(isSpecial)
+	, m_isMushroom(isMushroom)
 {
 	m_tileXcount = 1;
 	m_tileYcount = 1; // LuckyBlock is always 1 tile high
@@ -50,8 +51,9 @@ LuckyBlock::	LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteShee
 		SetAnimation(ID_ANIM_LUCKY_BLOCK, true);
 	}
 
+	if(isSpecial && isMushroom) m_isButton = true;
+	if(!isSpecial && !isMushroom) m_isCoin = true;
 
-	// Log(LOG_INFO, "Set Animation for: " + std::to_string(position.x) + ", " + std::to_string(position.y));
 }
 
 void LuckyBlock::Render(DirectX::SpriteBatch* spriteBatch)
@@ -98,7 +100,15 @@ void LuckyBlock::Update(float dt)
 			SetVelocity(vel);
 			SetPosition(m_origin);
 			SpawnReward();
-
+			if(m_isMimic && m_isCoin) {
+				m_isClaimed = false;
+				m_claimCoinCount++;
+				if(m_claimCoinCount >= m_maxClaimCoinCount) {
+					m_isClaimed = true;
+					m_isClaiming = false;
+					SetAnimId(ID_ANIM_LUCKY_BLOCK_CLAIMED);
+				}
+			}
 		}
 		else {
 			SetVelocity(vel);
@@ -115,12 +125,17 @@ void LuckyBlock::Update(float dt)
 
 void LuckyBlock::Bump() {
 	if (m_isClaimed || m_isClaiming) return;
+	if(m_isMimic && m_isCoin)
+	{
+		m_isClaiming = true;
+		m_isClaimed = false;
+		SetVelocity(Vector2(0, -240.f));
+		return;
+	}
 	m_isClaiming = true;
 	m_isClaimed = false;
 	SetAnimId(ID_ANIM_LUCKY_BLOCK_CLAIMED);
 	SetVelocity(Vector2(0, -240.f));
-
-
 
 	//Log(LOG_INFO, "Bumped LuckyBlock at: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
 }
@@ -139,15 +154,21 @@ void LuckyBlock::OnCollision(const CollisionResult& event)
 
 void LuckyBlock::SpawnReward()
 {
-	if(m_isMimic){
+	if (m_isButton) {
 		SpawnButton();
+		return;
+	}
+	if(m_isMushroom){
+		SpawnMushroom();
 		return;
 	}
 	if (m_isSpecial) {
 		SpawnPowerUp();
+		return;
 	}
-	else {
+	if (m_isCoin) {
 		SpawnCoin();
+		return;
 	}
 }
 
@@ -186,4 +207,11 @@ void LuckyBlock::SpawnButton()
 {
 	m_hiddenButton = new HiddenButton(GetPosition() + Vector2(0, -16), Vector2(16, 16), Game::GetInstance()->GetSpriteSheet());
 	World::GetInstance()->AddEntity(m_hiddenButton);
+}
+
+void LuckyBlock::SpawnMushroom()
+{
+	World::GetInstance()->AddEntity(
+		new Mushroom(GetPosition(), Vector2(16, 16), Game::GetInstance()->GetSpriteSheet(), true)
+	);
 }

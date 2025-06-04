@@ -118,6 +118,7 @@ constexpr auto ID_ANIM_EFFECT_SMOKE = 2940;
 
 //Mushroom
 constexpr auto ID_ANIM_MUSHROOM = 3000;
+constexpr auto ID_ANIM_MUSHROOM_GREEN = 3010;
 
 // Fire Leaf
 constexpr auto ID_ANIM_FIRE_LEAF = 3100;

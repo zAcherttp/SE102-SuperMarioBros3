@@ -460,7 +460,8 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		bool isSolid = data["solid"];
 		bool isSpecial = data["isSpecial"];
 		bool isMimic = data["isMimic"];
-		entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet, isSpecial, isMimic);
+		bool isMushroom = data["isMushroom"];
+		entity = new LuckyBlock(position, Vector2(width, height), isSolid, spriteSheet, isSpecial, isMimic, isMushroom);
 		break;
 	}
 	case ID_ENT_BLACK_BACKGROUND:

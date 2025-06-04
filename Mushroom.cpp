@@ -6,13 +6,16 @@
 #include "Block.h"
 #include "GameConfig.h"
 
-Mushroom::Mushroom(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
+Mushroom::Mushroom(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, bool isGreen)
 	: Entity(position, size, spriteSheet)
 	, m_phase(MushroomPhase::GROWING)
 	, m_initialPosition(position)
+	, m_isGreen(isGreen)
 {
 	DefineAnimation(ID_ANIM_MUSHROOM, { L"mushroom" }, false, 0.1f);
-	SetAnimation(ID_ANIM_MUSHROOM, false);
+	DefineAnimation(ID_ANIM_MUSHROOM_GREEN, { L"mushroom-1up" }, false, 0.1f);
+	if(!m_isGreen) SetAnimation(ID_ANIM_MUSHROOM, false);
+	else SetAnimation(ID_ANIM_MUSHROOM_GREEN, false);
 
 }
 
@@ -116,7 +119,7 @@ void Mushroom::OnCollision(const CollisionResult& event)
 		// Handle the interaction with Mario
 		//EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100);
 		//EffectManager::GetInstance()->CreateCoinEffect(GetPosition());
-		mario->PowerUp(PowerUpType::SUPER);
+		if(!m_isGreen)mario->PowerUp(PowerUpType::SUPER);
 		m_isActive = false;
 	}
 

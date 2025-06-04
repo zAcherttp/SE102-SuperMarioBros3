@@ -1137,6 +1137,12 @@
         "name": "mushroom",
         "frames": ["powerup-mushroom"],
         "loop": false
+      },
+      {
+        "id": 3010,
+        "name": "mushroom",
+        "frames": ["powerup-mushroom"],
+        "loop": false
       }
     ]
   },

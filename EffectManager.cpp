@@ -37,6 +37,10 @@ Effect* EffectManager::CreateBrickEffect(const Vector2& position) {
 	return CreateEffect(position, Vector2::Zero, EffectType::BRICK);
 }
 
+Effect* EffectManager::CreateSmokeEffect(const Vector2& position) {
+	return CreateEffect(position, Vector2::Zero, EffectType::SMOKE);
+}
+
 Effect* EffectManager::CreateEffect(const Vector2& position, Vector2 size, EffectType type) {
 
 	if (!m_spriteSheet) {
