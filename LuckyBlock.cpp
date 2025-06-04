@@ -155,6 +155,7 @@ void LuckyBlock::OnCollision(const CollisionResult& event)
 void LuckyBlock::SpawnReward()
 {
 	if (m_isButton) {
+		EffectManager::GetInstance()->CreateSmokeEffect(GetPosition() + Vector2(0, -16));
 		SpawnButton();
 		return;
 	}

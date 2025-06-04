@@ -115,6 +115,7 @@ constexpr auto ID_ANIM_EFFECT_POINT_8000 = 2927;
 
 constexpr auto ID_ANIM_EFFECT_COIN = 2930;
 constexpr auto ID_ANIM_EFFECT_SMOKE = 2940;
+constexpr auto ID_ANIM_EFFECT_ONE_UP = 2950;
 
 //Mushroom
 constexpr auto ID_ANIM_MUSHROOM = 3000;

@@ -82,10 +82,19 @@ void Brick::OnCollision(const CollisionResult& event)
         return;
     }
 
-    if(m_state == BrickState::BRICK && troopa && troopa->GetState() == TroopaState::SHELL_SLIDE)
+    if(m_state == BrickState::BRICK && troopa && troopa->GetState() == TroopaState::SHELL_SLIDE && event.contactNormal.x != 0)
     {
-        // If a Troopa in shell state collides with the brick, it should break
+        // If a Troopa in shell state collides with the brick from above, it should break
         Break();
+        return;
+    }
+
+    if(m_state == BrickState::BRICK && mario && event.contactNormal.y < 0)
+    {
+        // If Mario hits the brick from above, it should break
+        Break();
+        Vector2 vel = mario->GetVelocity();
+        mario->SetVelocity(Vector2(vel.x, -vel.y));
         return;
     }
 }

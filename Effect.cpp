@@ -49,7 +49,14 @@ Effect::Effect(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, EffectT
 		frames = { L"pop1", L"pop2", L"pop3" , L"pop4" };
 		DefineAnimation(ID_ANIM_EFFECT_SMOKE, frames, true, 0.1f);
 		SetAnimation(ID_ANIM_EFFECT_SMOKE, true);
-		m_velocity.y = m_initialJumpSpeed;
+		break;
+	}	
+	case EffectType::ONE_UP:
+	{
+		frames = { L"1up" };
+		DefineAnimation(ID_ANIM_EFFECT_ONE_UP, frames, false);
+		SetAnimation(ID_ANIM_EFFECT_ONE_UP, false);
+		m_velocity.y = -30.0f;
 		break;
 	}
 
@@ -139,7 +146,6 @@ void Effect::Update(float dt)
 				}
 			}
 			
-			// Deactivate effect when all particles are gone
 			if (m_brickParticles.empty() && m_animTimer > 0.1f) {
 				Deactivate();
 				return;
@@ -148,6 +154,19 @@ void Effect::Update(float dt)
 			m_animTimer += dt;
 			break;
 		}	
+		case EffectType::ONE_UP:
+		{
+			m_animTimer += dt;
+			Vector2 position = GetPosition();
+			position += m_velocity * dt;
+			SetPosition(position);
+			if (m_animTimer >= 1.0f)
+			{
+				Deactivate();
+				return;
+			}
+			break;
+		}
 	}
 	Entity::Update(dt);
 }

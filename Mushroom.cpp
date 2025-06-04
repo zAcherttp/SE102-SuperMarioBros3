@@ -16,7 +16,6 @@ Mushroom::Mushroom(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, boo
 	DefineAnimation(ID_ANIM_MUSHROOM_GREEN, { L"mushroom-1up" }, false, 0.1f);
 	if(!m_isGreen) SetAnimation(ID_ANIM_MUSHROOM, false);
 	else SetAnimation(ID_ANIM_MUSHROOM_GREEN, false);
-
 }
 
 void Mushroom::Update(float dt)
@@ -120,6 +119,7 @@ void Mushroom::OnCollision(const CollisionResult& event)
 		//EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100);
 		//EffectManager::GetInstance()->CreateCoinEffect(GetPosition());
 		if(!m_isGreen)mario->PowerUp(PowerUpType::SUPER);
+		if(m_isGreen) EffectManager::GetInstance()->CreateOneUpEffect(GetPosition());
 		m_isActive = false;
 	}
 

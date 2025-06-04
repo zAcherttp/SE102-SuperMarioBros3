@@ -8,7 +8,8 @@ enum class EffectType
 	BONK,
     COIN,
 	SMOKE,
-	BRICK
+	BRICK,
+	ONE_UP
 };
 
 class Effect : public Entity

@@ -26,7 +26,10 @@ void HiddenButton::Update(float dt)
 
 void HiddenButton::Render(DirectX::SpriteBatch* spriteBatch)
 {
-	Entity::Render(spriteBatch);
+	Vector2 pos = m_collisionComponent->GetPosition();
+	pos.x = (float)(int)(pos.x + 0.5f);
+	pos.y = (float)(int)(pos.y + 0.5f);
+	m_animator->Draw(spriteBatch, pos, 1.0f);
 }
 
 void HiddenButton::OnCollision(const CollisionResult& event)
@@ -40,7 +43,6 @@ void HiddenButton::OnCollision(const CollisionResult& event)
 		mario->SetVelocity(Vector2(mario->GetVelocity().x, -5.0f));
 		m_isActivated = true;
 		TransformAllBricks();
-		EffectManager::GetInstance()->CreateSmokeEffect(GetPosition());
 	}
 }
 
