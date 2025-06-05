@@ -202,6 +202,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FireLeaf.h" />
     <ClInclude Include="FirePiranha.h" />
+    <ClInclude Include="FloatingPlatform.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameConfig.h" />
     <ClInclude Include="Goomba.h" />
@@ -251,6 +252,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FireLeaf.cpp" />
     <ClCompile Include="FirePiranha.cpp" />
+    <ClCompile Include="FloatingPlatform.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="HeadUpDisplay.cpp" />

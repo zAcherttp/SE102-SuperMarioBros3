@@ -42,6 +42,9 @@ namespace GameConstants
 			constexpr float BUMP_TIME = 1.f;
 			constexpr float BUMP_VEL = 20.f;
 		}
+		namespace FloatingPlatform {
+			constexpr float ACCEL_FALL = 225.f;
+		}
 	}
 
 	namespace PowerUps {

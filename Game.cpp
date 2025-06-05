@@ -86,6 +86,7 @@ void Game::Update(DX::StepTimer const& timer) {
 
 	if (m_worlds[m_currentWorldId]) {
 		m_worlds[m_currentWorldId]->Update(elapsedTime);
+		m_camera->Update(elapsedTime);
 	}
 
 	if (m_nextWorldId != m_currentWorldId || m_requestReset) {
@@ -109,6 +110,10 @@ void Game::HandleInput() {
 	}
 	if (m_keys->IsKeyPressed(Keyboard::F4)) {
 		DebugOverlay::ToggleCollisionBox();
+	}
+	if (m_keys->IsKeyPressed(Keyboard::F5)) {
+		//function testing key
+		m_camera->Shake(Vector2(0.f, 4.f), 8, .25f);
 	}
 	if (m_worlds[m_currentWorldId]) {
 		m_worlds[m_currentWorldId]->HandleInput(&kbs, m_keys.get());

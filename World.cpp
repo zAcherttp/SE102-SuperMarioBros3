@@ -12,6 +12,7 @@
 #include "EndPortal.h"
 #include "Entity.h"
 #include "FirePiranha.h"
+#include "FloatingPlatform.h"
 #include "Game.h"
 #include "Goomba.h"
 #include "Ground.h"
@@ -440,6 +441,15 @@ Entity* World::CreateEntity(int entType, const json& data, SpriteSheet* spriteSh
 		float width = data["width"];
 		float height = data["height"];
 		entity = new EndPortal(position, Vector2(width, height), spriteSheet);
+		break;
+	}
+	case ID_ENT_MOVING_PLATFORM:
+	{
+		float width = data["width"];
+		float height = data["height"];
+		bool isSolid = data["solid"];
+		int countX = data["countX"];
+		entity = new FloatingPlatform(position, Vector2(width, height), countX, isSolid, spriteSheet, Vector2(32.f, 0), 2.0f);
 		break;
 	}
 

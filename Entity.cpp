@@ -1,12 +1,10 @@
 #pragma once
 #include "pch.h"
-#include "Entity.h"
 #include "Collision.h"
 #include "Debug.h"
+#include "Entity.h"
 
 using namespace DirectX::SimpleMath;
-
-
 
 Entity::Entity(Vector2 position, SpriteSheet* spriteSheet) {
 	m_collisionComponent = std::make_unique<CollisionComponent>(this);
@@ -67,6 +65,16 @@ void Entity::SetVelocity(const Vector2& vel)
 {
 	m_collisionComponent->SetVelocity(vel);
 }
+
+//Vector2 Entity::GetRelativeVelocity() const
+//{
+//	return m_collisionComponent->GetRelativeVelocity();
+//}
+//
+//void Entity::SetRelativeVelocity(const Vector2& vel)
+//{
+//	m_collisionComponent->SetRelativeVelocity(vel);
+//}
 
 bool Entity::IsActive() const {
 	return m_isActive;

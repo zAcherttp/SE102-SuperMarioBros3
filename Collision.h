@@ -77,7 +77,7 @@ public:
 
 	static Collision* GetInstance();
 	std::vector<std::pair<int, int>> GetEntityCells(const Entity* entity, float dt);
-	bool RayVsRect(const Vector2& origin, const Vector2& end, const Rectangle& rect, Vector2& contactPoint, Vector2& contactNormal, float& contactTime);
+	bool RayVsRect(const Vector2& origin, const Vector2& end, const DirectX::SimpleMath::Rectangle& rect, Vector2& contactPoint, Vector2& contactNormal, float& contactTime);
 
 	// Get access to the spatial grid
 	const std::vector<std::vector<SpatialGridCell>>& GetGrid() const { return m_grid; }

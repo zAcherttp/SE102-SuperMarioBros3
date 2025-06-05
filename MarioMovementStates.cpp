@@ -58,7 +58,7 @@ Vector2 MarioFlyState::GetStateSizeOffset() const { return Vector2(0, 0); }
 Vector2 MarioSweepState::GetStateSizeOffset() const { return Vector2(0, 0); }
 
 void MarioMovementState::Enter(Mario* mario) {
-	mario->SetPosition(mario->GetPosition() - mario->GetCurrentMStateSizeOffset());
+	mario->SetPosition(mario->GetPosition() - mario->GetCurrentMStateSizeOffset() / 2.f);
 	mario->SetSize(mario->GetCurrentPStateSizeOffset() +
 		mario->GetCurrentMStateSizeOffset());
 	SetAnimation(mario, mario->GetCurrentPStateAnimValue() +
@@ -66,7 +66,7 @@ void MarioMovementState::Enter(Mario* mario) {
 }
 
 void MarioMovementState::Exit(Mario* mario) {
-	//mario->SetPosition(mario->GetPosition() + mario->GetCurrentMStateSizeOffset());
+	mario->SetPosition(mario->GetPosition() + mario->GetCurrentMStateSizeOffset() / 2.f);
 	mario->SetSize(mario->GetCurrentPStateSizeOffset() -
 		mario->GetCurrentMStateSizeOffset());
 	SetAnimation(mario, mario->GetCurrentPStateAnimValue() -
@@ -133,13 +133,13 @@ void MarioMovementState::Update(Mario* mario, float dt) {
 		mario->SetDirection((int)Direction::Left);
 
 	// Determine gravity based on jump button and upward momentum
-	if (!mario->IsGrounded()) {
-		float gravity = (vel.y < -2.0f * 60.0f && input->isADown)
-			? Player::ACCEL_GRAVITY_SLOW
-			: Player::ACCEL_GRAVITY_FAST;
+	//if (!mario->IsGrounded()) {
+	float gravity = (vel.y < -2.0f * 60.0f && input->isADown)
+		? Player::ACCEL_GRAVITY_SLOW
+		: Player::ACCEL_GRAVITY_FAST;
 
-		vel.y += gravity * dt;
-	}
+	vel.y += gravity * dt;
+	//}
 	/*if(input->isUpDown) {
 			vel.y -= Player::ACCEL_NORMAL * dt;
 	}
@@ -462,14 +462,16 @@ std::unique_ptr<MarioMovementState> MarioJumpState::HandleInput(Mario* mario) {
 		return std::make_unique<MarioHoverState>(GetDirection());
 	}
 
-	if (mario->IsGrounded() && absVelX < Player::MAX_WALK_SPEED && vel.y == 0.f ||
-		mario->IsGrounded() && absVelX >= Player::MAX_WALK_SPEED &&
-		!input->isBDown && vel.y == 0.f) {
-		return std::make_unique<MarioWalkState>(GetDirection());
-	}
-	if (mario->IsGrounded() && absVelX >= Player::MAX_WALK_SPEED &&
-		input->isBDown && vel.y == 0.f) {
-		return std::make_unique<MarioRunState>(GetDirection());
+	if (std::abs(vel.y) < 5.f) {
+		if (mario->IsGrounded() && absVelX < Player::MAX_WALK_SPEED ||
+			mario->IsGrounded() && absVelX >= Player::MAX_WALK_SPEED &&
+			!input->isBDown) {
+			return std::make_unique<MarioWalkState>(GetDirection());
+		}
+		if (mario->IsGrounded() && absVelX >= Player::MAX_WALK_SPEED &&
+			input->isBDown) {
+			return std::make_unique<MarioRunState>(GetDirection());
+		}
 	}
 
 	return nullptr;
@@ -959,6 +961,8 @@ void MarioSweepState::Update(Mario* mario, float dt) {
 				vel.x = 0;
 		}
 	}
+
+	MarioMovementState::Update(mario, dt);
 }
 
 void MarioSweepState::Sweep(Mario* mario, float dt) const {

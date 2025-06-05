@@ -1,9 +1,9 @@
 #pragma once
-#include "State.h"
 #include "Animator.h"
 #include "Collision.h"
 #include "CollisionComponent.h"
 #include "Game.h"
+#include "State.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -28,7 +28,7 @@ class Entity
 public:
 	Entity(Vector2 pos, SpriteSheet* spriteSheet);
 	Entity(Vector2 pos, Vector2 size, SpriteSheet* spriteSheet);
-	
+
 	virtual ~Entity() = default;
 
 	virtual void Update(float dt) = 0;
@@ -42,6 +42,9 @@ public:
 
 	Vector2 GetVelocity() const;
 	void SetVelocity(const Vector2& vel);
+
+	Vector2 GetRelativeVelocity() const;
+	void SetRelativeVelocity(const Vector2& vel);
 
 	bool IsActive() const;
 	bool IsCollidable() const;

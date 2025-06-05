@@ -6,6 +6,14 @@ void Log(const char* label, std::string value)
 	OutputDebugStringA(("[" + std::string(label) + "] " + value + "\n").c_str());
 }
 
+void Log(const char* label, const DirectX::SimpleMath::Vector2& velocity) {
+	Log(label, "velocity x: " + std::to_string(velocity.x) + ", y: " + std::to_string(velocity.y));
+}
+
+void Log(const int& label, const DirectX::SimpleMath::Vector2& velocity) {
+	Log(label, "velocity x: " + std::to_string(velocity.x) + ", y: " + std::to_string(velocity.y));
+}
+
 void Log(const int& labelType, std::string value)
 {
 	std::string lbl;

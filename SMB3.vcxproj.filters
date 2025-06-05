@@ -217,6 +217,9 @@
     <ClInclude Include="RedTroopas.h">
       <Filter>Source\Entity\Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="FloatingPlatform.h">
+      <Filter>Source\Entity\Block</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -374,6 +377,9 @@
     </ClCompile>
     <ClCompile Include="RedTroopas.cpp">
       <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatingPlatform.cpp">
+      <Filter>Source\Entity\Block</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

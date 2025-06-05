@@ -6,6 +6,7 @@
 #include "CollisionComponent.h"
 #include "Debug.h"
 #include "Entity.h"
+#include "FloatingPlatform.h"
 #include "HeadUpDisplay.h"
 #include "Keyboard.h"
 #include "Mario.h"
@@ -181,6 +182,7 @@ void Mario::Update(float dt)
 	m_movementSM->Update(this, dt);
 	m_animator->Update(dt, m_collisionComponent->GetVelocity().x);
 
+	//Log(__FUNCTION__, GetVelocity());
 
 	HeadUpDisplay::GetInstance()->UpdatePMeter(
 		m_collisionComponent->GetVelocity().Length(),
@@ -269,16 +271,22 @@ void Mario::OnNoCollision(float dt, Axis axis) {
 	else {
 		SetPosition(GetPosition() + Vector2(0, vel.y * dt));
 	}
+
+	m_collisionComponent->SetPlatform(nullptr);
 }
 
 void Mario::OnFootCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+	FloatingPlatform* moving = dynamic_cast<FloatingPlatform*>(result.collidedWith);
 	if (result.contactNormal.y < 0) {
-		if (block)
-		{
-			Vector2 vel = GetVelocity();
+		Vector2 vel = GetVelocity();
+		m_collisionComponent->SetPlatform(moving);
+		if (moving) {
+			//moving->Fall();
+		}
+		if (block) {
 			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
 			SetVelocity(vel);
 		}
@@ -337,6 +345,7 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+	FloatingPlatform* moving = dynamic_cast<FloatingPlatform*>(result.collidedWith);
 	//TODO: change to universal Troopa class
 	RedTroopas* shell = dynamic_cast<RedTroopas*>(result.collidedWith);
 	if (result.contactNormal.x < 0) {
@@ -370,6 +379,7 @@ void Mario::OnLeftSideCollision(const CollisionResult& result) {
 	if (!result.collidedWith) return;
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+	FloatingPlatform* moving = dynamic_cast<FloatingPlatform*>(result.collidedWith);
 	RedTroopas* shell = dynamic_cast<RedTroopas*>(result.collidedWith);
 	if (result.contactNormal.x > 0) {
 		if (block && block->IsSolid())

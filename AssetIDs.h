@@ -39,6 +39,8 @@ constexpr auto ID_ENT_EFFECT = 29;
 constexpr auto ID_ENT_MUSHROOM = 30;
 constexpr auto ID_ENT_FIRE_LEAF = 31;
 
+constexpr auto ID_ENT_MOVING_PLATFORM = 32;
+
 //Entities' animation IDs
 constexpr auto ID_ANIM_MARIO_SMALL = 100000;
 constexpr auto ID_ANIM_MARIO_SUPER = 200000;
@@ -258,4 +260,9 @@ constexpr auto ID_SPRITE_HUD_FIREFLOWER = 2909;
 constexpr auto ID_SPRITE_HUD_MUSHROOM = 2910;
 constexpr auto ID_SPRITE_HUD_STAR = 2911;
 constexpr auto ID_SPRITE_HUD_POWERUP_SLOT = 2912;
+
+//floating platforms
+constexpr auto ID_SPRITE_MOVING_PLATFORM_LEFT = 3200;
+constexpr auto ID_SPRITE_MOVING_PLATFORM_MID = 3201;
+constexpr auto ID_SPRITE_MOVING_PLATFORM_RIGHT = 3202;
 

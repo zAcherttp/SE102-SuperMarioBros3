@@ -1021,5 +1021,28 @@
         "loop": false
       }
     ]
+  },
+  {
+    "type": 32,
+    "sprites": [
+      {
+        "id": 3200,
+        "name": "moving_platform",
+        "frames": [ "moving-platform-left" ],
+        "loop": false
+      },
+      {
+        "id": 3201,
+        "name": "moving_platform_mid",
+        "frames": [ "moving-platform-mid" ],
+        "loop": false
+      },
+      {
+        "id": 3202,
+        "name": "moving_platform_right",
+        "frames": [ "moving-platform-right" ],
+        "loop": false
+      }
+    ]
   }
 ]
