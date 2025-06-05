@@ -26,7 +26,8 @@ public:
 	void SpawnPowerUp();
 	void SpawnButton();
 	void SpawnMushroom();
-
+	
+	bool m_isClaiming;
 private:
 	int m_tileXcount = 1;
 	int m_tileYcount = 1;
@@ -43,7 +44,6 @@ private:
 	int m_claimCoinCount = 0;
 
 	Vector2 m_origin;
-	bool m_isClaiming;
 
 	float m_claimCoinTimer;
 	bool m_collectedCoin;

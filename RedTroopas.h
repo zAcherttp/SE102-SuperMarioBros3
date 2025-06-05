@@ -37,7 +37,15 @@ public:
 	void StartVibration();
 	void UpdateVibration(float dt);
 
+	void HandleBounceCollision();
+
 private:
+
+	bool m_isBouncing = false;
+	int m_bounceCount = 0;
+	float m_bounceForce = 100.0f;
+	float m_bounceDamping = 0.6f;
+
 	float m_animTimer;
 	float m_frameTime;
 	bool m_flipFrame;
@@ -66,6 +74,8 @@ private:
 	bool m_isColliding;
 
 	float m_lastDirectionX;
+
+	bool m_isFlipped;
 
 	std::vector<Effect*> m_bonkEffects;
 

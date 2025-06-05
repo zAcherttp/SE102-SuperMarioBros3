@@ -7,6 +7,7 @@
 #include "ParaGoomba.h"
 #include "Block.h"
 #include "Goomba.h"
+#include "LuckyBlock.h"
 
 RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, bool hasWing)
 	: Troopa(position, size, spriteSheet)
@@ -24,7 +25,7 @@ RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet,
 	, m_vibrateCount(0)
 	, m_maxVibrateCount(0)
 	, m_hasWing(hasWing)
-
+	, m_isFlipped(false)
 {
 	SetAnimation(ID_ANIM_RED_TROOPAS_WALK, true);
 	m_visible = true; // Set visibility to true
@@ -87,6 +88,13 @@ void RedTroopas::Update(float dt)
 {
 	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
 
+	if(m_isFlipped){
+		m_animator->SetFlipVertical(true);
+	}
+	else {
+		m_animator->SetFlipVertical(false);
+	}
+	
 	if(m_hasWing && m_wing && m_wing->IsActive()) {
 
 		Vector2 pos = GetPosition();
@@ -184,11 +192,9 @@ void RedTroopas::Update(float dt)
 		m_reviveTimer = 0.0f;
 	}
 
-
-
 	// Check for platform edges using raycasting if the entity is grounded
 	if (m_isGrounded && m_state == WALKING) {
-		CheckEdge(); // Use our new raycast-based edge detection
+		CheckEdge();
 	}
 
 	UpdateSpriteDirection();
@@ -208,6 +214,7 @@ void RedTroopas::OnCollision(const CollisionResult& event)
 {
 	Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
 	Block* block = dynamic_cast<Block*>(event.collidedWith);
+	LuckyBlock* luckyBlock = dynamic_cast<LuckyBlock*>(event.collidedWith);
 
 	if (event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID && event.contactNormal.x != 0) {
 		return;
@@ -254,6 +261,11 @@ void RedTroopas::OnCollision(const CollisionResult& event)
 
 	if (event.contactNormal.y < 0 && block) // foot collision
 	{
+		if(m_isBouncing)
+		{
+			HandleBounceCollision();
+			return;
+		}
 		Vector2 vel = GetVelocity();
 		vel.y = 0.0f;
 		SetVelocity(vel);
@@ -374,6 +386,21 @@ bool RedTroopas::CheckEdge()
 			Vector2 contactPoint, contactNormal;
 			float contactTime;
 
+			LuckyBlock* luckyBlock = dynamic_cast<LuckyBlock*>(other);
+			if( luckyBlock && luckyBlock->m_isClaiming) {
+				m_isBouncing = true;
+				m_bounceCount = 0;
+				
+				Vector2 vel = GetVelocity();
+				TransformToShell();
+			
+				float horizontalVel = vel.x >= 0 ? 50.0f : -50.0f;
+
+				SetVelocity(Vector2(horizontalVel, -m_bounceForce)); 
+				m_isFlipped = true;
+				break;
+			}
+
 			if (Collision::GetInstance()->RayVsRect(rayStartPos, rayEndPos, otherRect,
 				contactPoint, contactNormal, contactTime)) {
 				if (contactTime < 1.0f) {
@@ -440,6 +467,8 @@ void RedTroopas::TransformToShell()
 
 void RedTroopas::TransformToTroopa()
 {
+	if(m_isFlipped) m_isFlipped = false;
+	
 	if(m_hasWing) {
 		m_wing->Deactivate();
 		m_wing = nullptr;
@@ -565,4 +594,29 @@ void RedTroopas::InitializeWing()
     
     // Initially set animation to wings down
     m_wing->SetAnimation(ID_ANIM_WINGS_FLAP_DOWN, false);
+}
+
+void RedTroopas::HandleBounceCollision()
+{
+	Vector2 vel = GetVelocity();
+    vel.y = 0.0f; 
+    
+    if (m_bounceCount < 1) {
+		float currentBounceForce = m_bounceForce * pow(m_bounceDamping, m_bounceCount);
+        vel.x *= 0.4f;
+		vel.y = -currentBounceForce; 
+		m_bounceCount++;
+		Log("k", "horizontal velocity: " + std::to_string(vel.x));
+
+    } 
+	else {
+
+        m_isBouncing = false;
+        m_bounceCount = 0;
+        vel.x = 0.0f; 
+        
+    }
+    
+    SetVelocity(vel);
+    m_isGrounded = true;
 }
