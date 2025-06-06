@@ -215,6 +215,7 @@
     <ClInclude Include="HeadUpDisplay.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="HiddenButton.h" />
+    <ClInclude Include="HitBox.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="RedTroopas.h" />
@@ -273,6 +274,7 @@
     <ClCompile Include="HeadUpDisplay.cpp" />
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="HiddenButton.cpp" />
+    <ClCompile Include="HitBox.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="RedTroopas.cpp" />
     <ClCompile Include="LuckyBlock.cpp" />

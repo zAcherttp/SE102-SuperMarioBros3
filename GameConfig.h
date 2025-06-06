@@ -82,7 +82,7 @@ namespace GameConstants {
 	} // namespace Enemies
 
 	namespace Physics {
-		constexpr float GRAVITY = 60.0f;
+		constexpr float GRAVITY = 9.8f * 60.0f;
 	}
 } // namespace GameConstants
 

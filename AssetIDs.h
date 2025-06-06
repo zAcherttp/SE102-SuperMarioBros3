@@ -41,7 +41,9 @@ constexpr auto ID_ENT_FIRE_LEAF = 31;
 constexpr auto ID_ENT_HIDDEN_BUTTON = 32;
 constexpr auto ID_ENT_SECRET_WALL = 33;
 
-constexpr auto ID_ENT_MOVING_PLATFORM = 32;
+constexpr auto ID_ENT_MOVING_PLATFORM = 34;
+
+constexpr auto ID_ENT_HIT_BOX = 35;
 
 // Entities' animation IDs
 constexpr auto ID_ANIM_MARIO_SMALL = 100000;

@@ -21,6 +21,7 @@
 #include "GreenTroopa.h"
 #include "Ground.h"
 #include "HeadUpDisplay.h"
+#include "HitBox.h"
 #include "Keyboard.h"
 #include "LuckyBlock.h"
 #include "Mario.h"
@@ -507,8 +508,15 @@ Entity* World::CreateEntity(int entType, const json& data,
 			isSolid, spriteSheet, Vector2(32.f, 0), 2.0f);
 		break;
 	}
+	case ID_ENT_HIT_BOX: {
+		float width = data["width"];
+		float height = data["height"];
+		bool isSolid = data["solid"];
+		entity = new HitBox(position, Vector2(width, height), isSolid, spriteSheet);
+		break;
+	}
 
-							   //// Add more entity types here as needed
+	//// Add more entity types here as needed
 	default:
 		Log(__FUNCTION__, "Unknown entity type: " + std::to_string(entType));
 		break;

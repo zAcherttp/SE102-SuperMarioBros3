@@ -7,6 +7,7 @@
 #include "Mario.h"
 #include "ParaGoomba.h"
 #include "RedTroopas.h"
+#include "HitBox.h"
 
 using namespace GameConstants;
 #include "LuckyBlock.h"
@@ -205,6 +206,7 @@ void RedTroopas::OnCollision(const CollisionResult& event) {
 	Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
 	Block* block = dynamic_cast<Block*>(event.collidedWith);
 	LuckyBlock* luckyBlock = dynamic_cast<LuckyBlock*>(event.collidedWith);
+	HitBox* hitBox = dynamic_cast<HitBox*>(event.collidedWith);
 
 	if (event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID &&
 		event.contactNormal.x != 0) {
@@ -213,6 +215,15 @@ void RedTroopas::OnCollision(const CollisionResult& event) {
 
 	if (event.contactNormal.x != 0) // side collision
 	{
+		if(hitBox) {
+			if(event.contactNormal.x <= 0)	return;
+			else{
+				Vector2 vel = GetVelocity();
+				vel.x = -vel.x;
+				SetVelocity(vel);
+				return;
+			} 
+		}
 		if (block) {
 			if (block->IsSolid()) {
 				Vector2 vel = GetVelocity();
@@ -443,7 +454,7 @@ void RedTroopas::UpdateSpriteDirection() {
 void RedTroopas::TransformToShell() {
 	m_state = SHELL_IDLE;
 
-	Vector2 newSize = Vector2(16.0f, 16.0f);
+	Vector2 newSize = Vector2(10.0f, 16.0f);
 	m_collisionComponent->SetSize(newSize);
 	m_collisionComponent->SetPosition(GetPosition());
 	SetPosition(GetPosition() + Vector2(0.0f, 5.0f));
