@@ -8,7 +8,7 @@ using namespace DirectX::SimpleMath;
 
 constexpr auto PLAYER_INVINCIBLE_TIME = 2.0f;
 constexpr auto PLAYER_DEATH_TIME = 5.0f;
-constexpr auto PLAYER_DEATH_BOUNCE_DELAY = 1.0f;
+constexpr auto PLAYER_DEATH_BOUNCE_DELAY = 0.7f;
 constexpr auto PLAYER_DEATH_BOUNCE_VEL = 180.f;
 
 enum class PowerUpType {

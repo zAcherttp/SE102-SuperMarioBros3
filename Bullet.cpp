@@ -135,7 +135,7 @@ void Bullet::UpdateRotation(float dt)
 
 void Bullet::Render(DirectX::SpriteBatch* spriteBatch)
 {
-	Entity::Render(spriteBatch);
+	m_animator->Draw(spriteBatch, GetPosition(), 0.0f);
 }
 
 void Bullet::Deactivate()

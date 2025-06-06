@@ -33,6 +33,19 @@ Effect* EffectManager::CreateCoinEffect(const Vector2& position) {
 	return CreateEffect(position, Vector2::Zero, EffectType::COIN);
 }
 
+Effect* EffectManager::CreateBrickEffect(const Vector2& position) {
+	return CreateEffect(position, Vector2::Zero, EffectType::BRICK);
+}
+
+Effect* EffectManager::CreateSmokeEffect(const Vector2& position) {
+	return CreateEffect(position, Vector2::Zero, EffectType::SMOKE);
+}
+
+Effect *EffectManager::CreateOneUpEffect(const Vector2 &position)
+{
+	return CreateEffect(position, Vector2::Zero, EffectType::ONE_UP);
+}
+
 Effect* EffectManager::CreateEffect(const Vector2& position, Vector2 size, EffectType type) {
 
 	if (!m_spriteSheet) {

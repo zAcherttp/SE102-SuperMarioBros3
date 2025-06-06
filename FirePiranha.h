@@ -12,7 +12,7 @@ class World;
 class FirePiranha : public Enemy
 {
 public:
-	FirePiranha(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);
+	FirePiranha(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, int color = 1);
 	~FirePiranha();
 
 	void Update(float dt) override;
@@ -38,6 +38,7 @@ public:
 	void UpdatePlantOrientation(Mario* mario);
 
 private:
+	int m_color; // Color of the plant (0: green, 1: red)
 	PlantState m_state;
 	float m_timer;
 	float m_emergeTime; // Time to emerge from pipe
@@ -65,6 +66,8 @@ private:
 
 	float m_flipTime;
 	float m_flipTimer;
+
+	float m_offset;
 
 
 	// Determine which direction to fire based on Mario's position

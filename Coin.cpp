@@ -2,14 +2,15 @@
 #include "AssetIDs.h"
 #include "Debug.h"
 #include "Coin.h"
+#include "Mario.h"
 
 Coin::Coin(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteSheet)
 	: Block(position, size, spriteSheet)
 {
 	m_tileXcount = 1;
 	m_tileYcount = 1; // Coin is always 1 tile high
-	m_isSolid = isSolid;
-	m_isStatic = true;
+    m_isCollectible = true;
+    m_isSolid = false;
 
 	// update the collision box to match the size of the ground
 	Vector2 curSize = m_collisionComponent->GetSize();
@@ -33,9 +34,21 @@ void Coin::Render(DirectX::SpriteBatch* spriteBatch)
     
 }
 
-
 void Coin::Update(float dt)
 {
     m_animator->Update(dt);
 
 }
+
+void Coin::OnCollision(const CollisionResult& event)
+{
+    Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
+    if (mario)
+    {
+        m_isActive = false;
+        m_visible = false;
+        return;
+    }
+}
+
+

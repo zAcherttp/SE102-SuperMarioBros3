@@ -70,10 +70,19 @@ public:
 	void SetWorldSize(int width, int height);
 	void SetCameraPosition(const DirectX::SimpleMath::Vector2& pos, bool oneAxis);
 	void MoveCamera(const DirectX::SimpleMath::Vector2& delta);
-
+	
 	SpriteSheet* GetSpriteSheet() const;
 	DirectX::SpriteBatch* GetSpriteBatch() const;
-private:
+	
+	int GetCurrentWorldId() const { return m_currentWorldId; }
+	int GetStartWorldId() const { return m_startWorldId; }
+	World* GetCurrentWorld() const { return m_worlds.at(m_currentWorldId); }
+	
+	Camera* GetCamera() const { return m_camera.get(); }
+	std::unordered_map<int, World*> m_worlds;
+	int m_currentWorldId;
+	
+	private:
 
 	static Game* s_instance;
 
@@ -137,9 +146,9 @@ private:
 	int m_wndWidth;
 	int m_wndHeight;
 
-	std::unordered_map<int, World*> m_worlds;
-	int m_currentWorldId;
 	int m_nextWorldId;
+
+	int m_startWorldId;
 
 	bool m_isLoading;
 	bool m_requestReset;

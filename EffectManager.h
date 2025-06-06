@@ -34,6 +34,9 @@ public:
     Effect* CreateBonkEffect(const Vector2& position);
     Effect* CreatePointEffect(const Vector2& position, int points);
     Effect* CreateCoinEffect(const Vector2& position);
+    Effect* CreateBrickEffect(const Vector2& position);
+    Effect* CreateSmokeEffect(const Vector2& position);
+    Effect* CreateOneUpEffect(const Vector2& position);
     
     // General create effect method
     Effect* CreateEffect(const Vector2& position, Vector2 size, EffectType type);

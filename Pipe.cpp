@@ -4,7 +4,7 @@
 #include "Pipe.h"
 #include "Mario.h"
 
-Pipe::Pipe(Vector2 position, Vector2 size, int countX, int countY, bool isSolid, SpriteSheet* spriteSheet, bool hasHead)
+Pipe::Pipe(Vector2 position, Vector2 size, int countX, int countY, bool isSolid, SpriteSheet* spriteSheet, bool hasHead, bool isBonus , bool isColliable)
 	: Block(position, size, spriteSheet)
 {
 	m_tileXcount = countX;
@@ -12,6 +12,8 @@ Pipe::Pipe(Vector2 position, Vector2 size, int countX, int countY, bool isSolid,
 	m_isSolid = isSolid;
 	m_isStatic = true;
     m_hasHead = hasHead;
+	m_isBonus = isBonus;
+	m_isCollidable = isColliable;
 
 	// update the collision box to match the size of the screw block
 	Vector2 curSize = m_collisionComponent->GetSize();
@@ -27,15 +29,29 @@ void Pipe::Render(DirectX::SpriteBatch* spriteBatch)
     Vector2 tileSize = Vector2(size.x / m_tileXcount, size.y / m_tileYcount);
     Vector2 pos = m_collisionComponent->GetPosition() - Vector2(size.x / 2 - tileSize.x / 2, size.y / 2 - tileSize.y / 2);
 
-    if(m_hasHead)
-    {
-        m_animator->Draw(spriteBatch, ID_SPRITE_PIPE_TOP_LEFT, pos + Vector2(0, 0), 0.0f); // Draw the head above the pipe
-        m_animator->Draw(spriteBatch, ID_SPRITE_PIPE_TOP_RIGHT, pos + Vector2(16, 0), 0.0f); // Draw the head above the pipe
+    if(!m_isBonus){
+        if(m_hasHead)
+        {
+            m_animator->Draw(spriteBatch, ID_SPRITE_PIPE_TOP_LEFT, pos + Vector2(0, 0), 0.01f); // Draw the head above the pipe
+            m_animator->Draw(spriteBatch, ID_SPRITE_PIPE_TOP_RIGHT, pos + Vector2(16, 0), 0.01f); // Draw the head above the pipe
+        }
+        for(int j = m_hasHead ? 1 : 0; j < m_tileYcount; j++)
+        {
+            m_animator->Draw(spriteBatch, ID_SPRITE_PIPE_BOT_LEFT, pos + Vector2(0, j * tileSize.y), 0.01f);
+            m_animator->Draw(spriteBatch, ID_SPRITE_PIPE_BOT_RIGHT, pos + Vector2(16, j * tileSize.y), 0.01f);
+        }
     }
-    for(int j = m_hasHead ? 1 : 0; j < m_tileYcount; j++)
-    {
-        m_animator->Draw(spriteBatch, ID_SPRITE_PIPE_BOT_LEFT, pos + Vector2(0, j * tileSize.y), 0.0f);
-        m_animator->Draw(spriteBatch, ID_SPRITE_PIPE_BOT_RIGHT, pos + Vector2(16, j * tileSize.y), 0.0f);
+    else{
+    if(m_hasHead)
+        {
+            m_animator->Draw(spriteBatch, ID_SPRITE_BONUS_PIPE_TOP_LEFT, pos + Vector2(0.0f, 16.0f * (m_tileYcount - 1)),0.01f); // Draw the head above the pipe
+            m_animator->Draw(spriteBatch, ID_SPRITE_BONUS_PIPE_TOP_RIGHT, pos + Vector2(16.0f, 16.0f * (m_tileYcount - 1)), 0.01f); // Draw the head above the pipe
+        }
+        for(int j = 0; j < m_tileYcount - m_hasHead ? 1 : 0; j++)
+        {
+            m_animator->Draw(spriteBatch, ID_SPRITE_BONUS_PIPE_BOT_LEFT, pos + Vector2(0, j * tileSize.y), 0.01f);
+            m_animator->Draw(spriteBatch, ID_SPRITE_BONUS_PIPE_BOT_RIGHT, pos + Vector2(16, j * tileSize.y), 0.01f);
+        }
     }
     
 }
@@ -45,3 +61,5 @@ void Pipe::Update(float dt)
     //do nothing
     dt;
 }
+
+

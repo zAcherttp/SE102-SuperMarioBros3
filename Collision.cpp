@@ -576,6 +576,12 @@ bool Collision::GroundCheck(const Entity* entity, float dt)
 			// Skip if it's the same entity or not a static object (potential ground)
 			if (other != entity && other->IsStatic() && other->IsActive() && other->IsCollidable()) {
 
+				Block* block = dynamic_cast<Block*>(other);
+				if(block && block->IsCollectible())
+				{
+					continue;
+				}
+
 				// Print the class name of the entity
 				//Log(LOG_INFO, std::string(typeid(*other).name()));
 

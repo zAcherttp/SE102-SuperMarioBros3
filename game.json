@@ -5,7 +5,7 @@
       "width": 256,
       "height": 240,
       "world": {
-        "startWorldId": 1
+        "startWorldId": 4
       },
       "sprites": {
         "path": "textures/sprites.png",
@@ -21,6 +21,21 @@
   "worlds": [
     {
       "id": 1,
+      "name": "world_1-4_end.json",
+      "path": "world_1-4_end.json"
+    },
+    {
+      "id": 2,
+      "name": "world_1-4.json",
+      "path": "world_1-4.json"
+    },
+    {
+      "id": 3,
+      "name": "World_1-1_hidden",
+      "path": "world_1-1_hidden.json"
+    },
+    {
+      "id": 4,
       "name": "World_1-1",
       "path": "world_1-1.json"
     }
