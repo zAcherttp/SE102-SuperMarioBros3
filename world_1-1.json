@@ -48,19 +48,12 @@
     },
     {
       "type": 4,
-      "x": 190.0,
-      "y": 325.0,
-      "width": 16,
-      "height": 27,
-      "hasWing": false
-    },
-    {
-      "type": 4,
       "x": 570.0,
       "y": 354.0,
       "width": 16,
       "height": 27,
-      "hasWing": false
+      "hasWing": false,
+      "hasSpecialSize": false
     },
     {
       "type": 4,
@@ -68,7 +61,8 @@
       "y": 357.0,
       "width": 16,
       "height": 27,
-      "hasWing": false
+      "hasWing": false,
+      "hasSpecialSize": true
     },
     {
       "type": 5,
@@ -1116,14 +1110,6 @@
     },
     {
       "type": 28,
-      "x": 1712.0,
-      "y": 320.0,
-      "width": 16,
-      "height": 16,
-      "solid": false
-    },
-    {
-      "type": 28,
       "x": 1136.0,
       "y": 256.0,
       "width": 16,
@@ -1392,7 +1378,7 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": false,
+      "isSpecial": true,
       "isMimic": false,
       "isMushroom": false
     },
@@ -1464,6 +1450,14 @@
       "y": 400.0,
       "width": 16,
       "height": 32
+    },
+    {
+      "type": 35,
+      "x": 2224.0,
+      "y": 398.0,
+      "width": 16,
+      "height": 32,
+      "solid": true
     }
   ]
 }

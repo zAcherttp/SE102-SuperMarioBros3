@@ -21,6 +21,7 @@
 #include "GreenTroopa.h"
 #include "Ground.h"
 #include "HeadUpDisplay.h"
+#include "HitBox.h"
 #include "Keyboard.h"
 #include "LuckyBlock.h"
 #include "Mario.h"
@@ -211,7 +212,7 @@ void World::RenderDebug(
 void World::Reset() { Game::GetInstance()->SwitchWorld(); }
 
 void World::Teleport() {
-	m_player->SetPosition(Vector2(2159, 335));
+	m_player->SetPosition(Vector2(1389, 378));
 	m_player->SetVelocity(Vector2::Zero);
 }
 
@@ -362,8 +363,9 @@ Entity* World::CreateEntity(int entType, const json& data,
 		float width = data["width"];
 		float height = data["height"];
 		bool hasWing = data["hasWing"];
+		bool hasSpecialSize = data["hasSpecialSize"];
 		entity =
-			new RedTroopas(position, Vector2(width, height), spriteSheet, hasWing);
+			new RedTroopas(position, Vector2(width, height), spriteSheet, hasWing, hasSpecialSize);
 		break;
 	}
 	case ID_ENT_GROUND: {
@@ -513,8 +515,15 @@ Entity* World::CreateEntity(int entType, const json& data,
 			isSolid, spriteSheet, Vector2(32.f, 0), 2.0f);
 		break;
 	}
+	case ID_ENT_HIT_BOX: {
+		float width = data["width"];
+		float height = data["height"];
+		bool isSolid = data["solid"];
+		entity = new HitBox(position, Vector2(width, height), isSolid, spriteSheet);
+		break;
+	}
 
-							   //// Add more entity types here as needed
+	//// Add more entity types here as needed
 	default:
 		Log(__FUNCTION__, "Unknown entity type: " + std::to_string(entType));
 		break;

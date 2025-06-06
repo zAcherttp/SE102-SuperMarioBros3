@@ -32,12 +32,18 @@ public:
 
     void TransformToRegularTroopa();
 
+	void HandleBounceCollision() override;
+	void HandleSweepCollision(float x_force, float y_force, bool spawnEffect) override;
+
+
 private:
 	float m_animTimer;
 	float m_frameTime;
 	bool m_flipFrame;
 	float m_deathTimer;
 	bool m_isDying;
+
+	bool m_isFlipped = false;
 
 	bool m_isVibrating;
 	float m_vibrateTimer;

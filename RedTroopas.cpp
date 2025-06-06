@@ -7,15 +7,15 @@
 #include "Mario.h"
 #include "ParaGoomba.h"
 #include "RedTroopas.h"
+#include "HitBox.h"
 
 using namespace GameConstants;
+using namespace Enemies::Troopas;
 #include "LuckyBlock.h"
 
-RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet,
-	bool hasWing)
-	: Troopa(position, size, spriteSheet), m_animTimer(0.0f),
-	m_frameTime(0.15f), m_flipFrame(false), m_lastDirectionX(-1.0f),
-	m_isColliding(false), m_reviveTimer(0.0f), m_reviveTime(5.0f),
+RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet,bool hasWing, bool hasSpecialSize)
+	: Troopa(position, size, spriteSheet), m_animTimer(0.0f),	m_frameTime(FRAME_TIME), m_flipFrame(false), m_lastDirectionX(-1.0f),
+	m_isColliding(false), m_reviveTimer(0.0f), m_reviveTime(REVIVE_TIME),
 	m_isVibrating(false), m_vibrateTimer(0.0f), m_vibrateInterval(0.0f),
 	m_vibrateAmplitude(0.0f), m_vibrateCount(0), m_maxVibrateCount(0),
 	m_hasWing(hasWing), m_isFlipped(false) {
@@ -24,7 +24,7 @@ RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet,
 	m_isDying = false; // Initialize dying state
 
 	// Set initial velocity - slow movement to the left
-	SetVelocity(Vector2(-Enemies::Troopas::WALK_SPEED, 0.0f));
+	SetVelocity(Vector2(-WALK_SPEED, 0.0f));
 
 	// Setup collision component
 	SetupCollisionComponent();
@@ -44,6 +44,12 @@ RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet,
 	}
 	else
 		m_state = WALKING;
+	if (hasSpecialSize) {
+		m_ShellSize = Vector2(SHELL_SIZE_SPECIAL_WIDTH, SHELL_SIZE_SPECIAL_HEIGHT);
+	}
+	else {
+		m_ShellSize = Vector2(SHELL_SIZE_NORMAL_WIDTH, SHELL_SIZE_NORMAL_HEIGHT);
+	}
 }
 
 void RedTroopas::Render(DirectX::SpriteBatch* spriteBatch) {
@@ -68,7 +74,7 @@ void RedTroopas::Die(DyingType type) {
 		m_state = DEAD;
 		m_animator->SetFlipVertical(true);
 		SetVelocity(
-			Vector2(Enemies::Troopas::WALK_SPEED, -Enemies::DEATH_BOUNCE_VELOCITY));
+			Vector2(WALK_SPEED, -Enemies::DEATH_BOUNCE_VELOCITY));
 		return;
 	}
 }
@@ -89,50 +95,43 @@ void RedTroopas::Update(float dt) {
 		Vector2 vel = GetVelocity();
 		// Update wing position
 		m_wing->UpdatePosition(GetPosition());
-
 		m_wing->SetDirection(m_lastDirectionX > 0 ? 1 : -1);
-		m_wing->HandleFlapping(dt, 0.1f);
+		m_wing->HandleFlapping(dt, WING_FLAP_RATE);
 		m_wing->Update(dt);
 
 		float destinationY = m_startPositionY + (!m_isGoingUp ? FLY_HEIGHT : 0);
 		float distanceToDestination = abs(pos.y - destinationY);
-
 		if (m_isGoingUp) {
 
-			if (distanceToDestination > 48.0f) {
+			if (distanceToDestination > FLY_DISTANCE_THRESHOLD_FAR) {
 				vel.y -= VERTICAL_ACCELERATION * dt;
 			}
-			else if (distanceToDestination > 28.0f) {
-				float accelerationMultiplier = distanceToDestination / 25.0f;
+			else if (distanceToDestination > FLY_DISTANCE_THRESHOLD_NEAR) {
+				float accelerationMultiplier = distanceToDestination / FLY_ACCELERATION_DIVISOR;
 				vel.y -= VERTICAL_ACCELERATION * dt * accelerationMultiplier;
 			}
 			else {
 
 				m_isGoingUp = false;
-				float velocityScaler = distanceToDestination / 28.0f;
+				float velocityScaler = distanceToDestination / FLY_DISTANCE_THRESHOLD_NEAR;
 				vel.y = vel.y * velocityScaler;
 			}
 		}
 		else {
-			if (distanceToDestination > 48.0f) {
+			if (distanceToDestination > FLY_DISTANCE_THRESHOLD_FAR) {
 				vel.y += VERTICAL_ACCELERATION * dt;
 			}
-			else if (distanceToDestination > 28.0f) {
-				float accelerationMultiplier = distanceToDestination / 25.0f;
+			else if (distanceToDestination > FLY_DISTANCE_THRESHOLD_NEAR) {
+				float accelerationMultiplier = distanceToDestination / FLY_ACCELERATION_DIVISOR;
 				vel.y += VERTICAL_ACCELERATION * dt * accelerationMultiplier;
 			}
 			else {
 				m_isGoingUp = true;
-				float velocityScaler = distanceToDestination / 28.0f;
+				float velocityScaler = distanceToDestination / FLY_DISTANCE_THRESHOLD_NEAR;
 				vel.y = vel.y * velocityScaler;
 			}
 		}
 
-		Log(LOG_INFO, "Is Going Up: " + std::to_string(m_isGoingUp) +
-			" | Destination Y: " + std::to_string(destinationY) +
-			" | Current Y: " + std::to_string(pos.y) +
-			" | Distance to Destination: " +
-			std::to_string(distanceToDestination));
 		// Cap the vertical speed
 		if (vel.y > MAX_FLYING_SPEED) {
 			vel.y = MAX_FLYING_SPEED;
@@ -149,7 +148,7 @@ void RedTroopas::Update(float dt) {
 
 	if (!m_isGrounded) {
 		Vector2 vel = GetVelocity();
-		vel.y += Enemies::Troopas::GRAVITY * dt;
+		vel.y += GRAVITY * dt;
 		SetVelocity(vel);
 	}
 
@@ -172,10 +171,9 @@ void RedTroopas::Update(float dt) {
 		Entity::Update(dt);
 		return;
 	}
-
 	if (m_state == SHELL_IDLE) {
 		m_reviveTimer += dt;
-		if (m_reviveTimer >= 5.0f && !m_isVibrating) {
+		if (m_reviveTimer >= REVIVE_TIME && !m_isVibrating) {
 			StartVibration();
 			m_reviveTimer = 0.0f;
 		}
@@ -205,6 +203,7 @@ void RedTroopas::OnCollision(const CollisionResult& event) {
 	Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
 	Block* block = dynamic_cast<Block*>(event.collidedWith);
 	LuckyBlock* luckyBlock = dynamic_cast<LuckyBlock*>(event.collidedWith);
+	HitBox* hitBox = dynamic_cast<HitBox*>(event.collidedWith);
 
 	if (event.collidedWith->GetCollisionGroup() == CollisionGroup::NONSOLID &&
 		event.contactNormal.x != 0) {
@@ -213,6 +212,15 @@ void RedTroopas::OnCollision(const CollisionResult& event) {
 
 	if (event.contactNormal.x != 0) // side collision
 	{
+		if(hitBox) {
+			if(event.contactNormal.x <= 0)	return;
+			else{
+				Vector2 vel = GetVelocity();
+				vel.x = -vel.x;
+				SetVelocity(vel);
+				return;
+			} 
+		}
 		if (block) {
 			if (block->IsSolid()) {
 				Vector2 vel = GetVelocity();
@@ -224,7 +232,7 @@ void RedTroopas::OnCollision(const CollisionResult& event) {
 		}
 
 		if (mario) {
-			if (m_state == SHELL_IDLE) {
+			if (m_state == SHELL_IDLE && mario->GetCurrentMStateName() != GameStrings::SWEEP) {
 				Direction dir =
 					event.contactNormal.x < 0 ? Direction::Left : Direction::Right;
 				if (mario->Kick(dir, this)) {
@@ -279,13 +287,12 @@ void RedTroopas::OnCollision(const CollisionResult& event) {
 				return;
 			}
 			if (m_state == SHELL_IDLE) {
-
-				if (mario->GetPosition().x < GetPosition().x + 8.0f) {
-					SetVelocity(Vector2(Enemies::Troopas::WALK_SPEED * 7, 0.0f));
-				}
-				else {
-					SetVelocity(Vector2(-Enemies::Troopas::WALK_SPEED * 7, 0.0f));
-				}
+			if (mario->GetPosition().x < GetPosition().x + COLLISION_OFFSET_X) {
+				SetVelocity(Vector2(SHELL_SLIDE_SPEED, 0.0f));
+			}
+			else {
+				SetVelocity(Vector2(-SHELL_SLIDE_SPEED, 0.0f));
+			}
 
 				Vector2 vel = mario->GetVelocity();
 				vel.y = Player::BOUNCE_FORCE; // Use Mario's bounce force
@@ -328,13 +335,12 @@ bool RedTroopas::CheckEdge() {
 	Vector2 position = GetPosition();
 	Vector2 size = GetSize();
 	Vector2 velocity = GetVelocity();
-
 	// Cast rays downward from left and right edges of RedTroopas
-	Vector2 leftFootPos = position + Vector2(-size.x / 4, size.y / 2 - 3.0f);
-	Vector2 rightFootPos = position + Vector2(size.x / 4, size.y / 2 - 3.0f);
+	Vector2 leftFootPos = position + Vector2(-size.x / FOOT_OFFSET_DIVISOR, size.y / SIZE_HALF_DIVISOR - EDGE_CHECK_OFFSET_Y);
+	Vector2 rightFootPos = position + Vector2(size.x / FOOT_OFFSET_DIVISOR, size.y / SIZE_HALF_DIVISOR - EDGE_CHECK_OFFSET_Y);
 
 	// Ray length - slightly longer than needed to detect edges
-	float rayLength = 5.0f;
+	float rayLength = RAY_LENGTH;
 
 	// Determine which ray to check based on movement direction
 	Vector2 rayStartPos;
@@ -348,10 +354,9 @@ bool RedTroopas::CheckEdge() {
 	}
 
 	Vector2 rayEndPos = rayStartPos + Vector2(0, rayLength);
-
 	// Get cells around the entity for collision check
 	std::vector<std::pair<int, int>> cells =
-		Collision::GetInstance()->GetEntityCells(this, 0.016f);
+		Collision::GetInstance()->GetEntityCells(this, ENTITY_CELLS_DT);
 
 	// Flag to track if we found ground under the ray
 	bool foundGround = false;
@@ -375,20 +380,9 @@ bool RedTroopas::CheckEdge() {
 
 			// Cast a ray downward
 			Vector2 contactPoint, contactNormal;
-			float contactTime;
-
-			LuckyBlock* luckyBlock = dynamic_cast<LuckyBlock*>(other);
+			float contactTime;			LuckyBlock* luckyBlock = dynamic_cast<LuckyBlock*>(other);
 			if (luckyBlock && luckyBlock->m_isClaiming) {
-				m_isBouncing = true;
-				m_bounceCount = 0;
-
-				Vector2 vel = GetVelocity();
-				TransformToShell();
-
-				float horizontalVel = vel.x >= 0 ? 50.0f : -50.0f;
-
-				SetVelocity(Vector2(horizontalVel, -m_bounceForce));
-				m_isFlipped = true;
+				HandleSweepCollision(SWEEP_COLLISION_FORCE,m_bounceForce, false);
 				break;
 			}
 
@@ -441,12 +435,12 @@ void RedTroopas::UpdateSpriteDirection() {
 }
 
 void RedTroopas::TransformToShell() {
+	Vector2 offset = m_state == SHELL_IDLE ? Vector2(0.0f, 0.0f) : Vector2(0.0f, SHELL_OFFSET_Y);
 	m_state = SHELL_IDLE;
 
-	Vector2 newSize = Vector2(16.0f, 16.0f);
-	m_collisionComponent->SetSize(newSize);
+	m_collisionComponent->SetSize(m_ShellSize);
 	m_collisionComponent->SetPosition(GetPosition());
-	SetPosition(GetPosition() + Vector2(0.0f, 5.0f));
+	SetPosition(GetPosition() + offset);
 	SetVelocity(Vector2(0.0f, 0.0f));
 
 	m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL);
@@ -464,20 +458,19 @@ void RedTroopas::TransformToTroopa() {
 	m_state = WALKING;
 
 	Mario* m_mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
-
-	Vector2 newSize = Vector2(16.0f, 27.0f);
+	Vector2 newSize = Vector2(TROOPA_SIZE_WIDTH, TROOPA_SIZE_HEIGHT);
 	m_collisionComponent->SetSize(newSize);
-	m_collisionComponent->SetPosition(GetPosition() - Vector2(0.0f, 5.0f));
+	m_collisionComponent->SetPosition(GetPosition() - Vector2(0.0f, SHELL_OFFSET_Y));
 
 	if (m_mario) {
 		Vector2 marioPos = m_mario->GetPosition();
 		Vector2 goombaPos = GetPosition();
 
-		if (marioPos.x < goombaPos.x + 8.0f) {
-			SetVelocity(Vector2(-Enemies::Troopas::WALK_SPEED, 0.0f));
+		if (marioPos.x < goombaPos.x + COLLISION_OFFSET_X) {
+			SetVelocity(Vector2(-WALK_SPEED, 0.0f));
 		}
 		else {
-			SetVelocity(Vector2(Enemies::Troopas::WALK_SPEED, 0.0f));
+			SetVelocity(Vector2(WALK_SPEED, 0.0f));
 		}
 	}
 	m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_WALK, true);
@@ -487,10 +480,10 @@ void RedTroopas::StartVibration() {
 	if (!m_isVibrating) {
 		m_isVibrating = true;
 		m_vibrateTimer = 0.0f;
-		m_vibrateInterval = 0.03f;
-		m_vibrateAmplitude = 1.0f;
+		m_vibrateInterval = VIBRATION_INTERVAL;
+		m_vibrateAmplitude = VIBRATION_AMPLITUDE;
 		m_vibrateCount = 0;
-		m_maxVibrateCount = 20;
+		m_maxVibrateCount = MAX_VIBRATION_COUNT;
 		m_vibrateDirection = true;
 		m_firstRevivePhase = false;
 		m_secondRevivePhase = false;
@@ -498,7 +491,7 @@ void RedTroopas::StartVibration() {
 		m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_REVIVE_SLOW, false);
 
 		m_reviveTimer = 0.0f;
-		m_reviveTime = 1.77f;
+		m_reviveTime = VIBRATION_TIME;
 	}
 }
 
@@ -546,13 +539,12 @@ void RedTroopas::UpdateVibration(float dt) {
 
 		SetPosition(GetPosition() + Vector2(offsetX, 0.0f));
 	}
-
-	if (m_reviveTimer > 0.5f && m_reviveTimer < 1.12f && !m_firstRevivePhase) {
+	if (m_reviveTimer > REVIVE_PHASE_1_TIME && m_reviveTimer < REVIVE_PHASE_2_TIME && !m_firstRevivePhase) {
 		m_firstRevivePhase = true;
 		m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_REVIVE_SLOW, true);
 	}
 
-	if (m_reviveTimer >= 1.12f && !m_secondRevivePhase) {
+	if (m_reviveTimer >= REVIVE_PHASE_2_TIME && !m_secondRevivePhase) {
 		m_secondRevivePhase = true;
 		m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_REVIVE_FAST, true);
 	}
@@ -575,10 +567,9 @@ void RedTroopas::InitializeWing() {
 	// Create a single wing positioned behind the Troopa
 	m_wing = new Wings(GetPosition(), Vector2(WINGS_WIDTH, WINGS_HEIGHT),
 		m_spriteSheet);
-
 	// Position the wing behind the Troopa
 	m_wing->SetOffset(
-		Vector2(4.0f, -9.0f)); // Centered horizontally, slightly above center
+		Vector2(WING_OFFSET_X, WING_OFFSET_Y)); // Centered horizontally, slightly above center
 
 	// Set the wing's direction based on the Troopa's initial direction
 	m_wing->SetDirection(GetVelocity().x < 0 ? -1 : 1);
@@ -590,11 +581,10 @@ void RedTroopas::InitializeWing() {
 void RedTroopas::HandleBounceCollision() {
 	Vector2 vel = GetVelocity();
 	vel.y = 0.0f;
-
 	if (m_bounceCount < 1) {
 		float currentBounceForce =
 			m_bounceForce * pow(m_bounceDamping, m_bounceCount);
-		vel.x *= 0.4f;
+		vel.x *= BOUNCE_DAMPING;
 		vel.y = -currentBounceForce;
 		m_bounceCount++;
 		Log("k", "horizontal velocity: " + std::to_string(vel.x));
@@ -609,4 +599,24 @@ void RedTroopas::HandleBounceCollision() {
 
 	SetVelocity(vel);
 	m_isGrounded = true;
+}
+
+void RedTroopas::HandleSweepCollision(float x_Force, float y_Force, bool spawnEffect) {
+	if(m_isBouncing) {
+		return;
+	}	
+	if(spawnEffect) {
+		EffectManager::GetInstance()->CreateBonkEffect(GetPosition());
+	}
+	m_isBouncing = true;
+	m_bounceCount = 0;
+	m_reviveTimer = 0.0f;
+
+	Vector2 vel = GetVelocity();
+	TransformToShell();
+
+	float horizontalVel = vel.x >= 0 ? x_Force : -x_Force;
+
+	SetVelocity(Vector2(horizontalVel, -y_Force));
+	m_isFlipped = true;
 }

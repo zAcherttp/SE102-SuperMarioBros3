@@ -17,3 +17,12 @@ TroopaState Troopa::GetState() const
 {
 	return m_state;
 }
+
+void Troopa::HandleBounceCollision()
+{
+	// Default implementation does nothing, can be overridden by derived classes
+}
+void Troopa::HandleSweepCollision(float x_force, float y_force, bool spawnEffect)
+{
+	// Default implementation does nothing, can be overridden by derived classes
+}

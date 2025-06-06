@@ -1097,6 +1097,12 @@ void MarioSweepState::Sweep(Mario* mario, float dt) const {
 					contactTime < 1.0f) {
 					// kill hit entity
 					Enemy* enemy = dynamic_cast<Enemy*>(other);
+					Troopa* troopa = dynamic_cast<Troopa*>(other);
+					if(troopa)
+					{
+						troopa->HandleSweepCollision(-20.0f,300.0f, true);
+						return;
+					}
 					if (enemy) {
 						enemy->Die(DyingType::BONKED);
 						EffectManager::GetInstance()->CreateBonkEffect(

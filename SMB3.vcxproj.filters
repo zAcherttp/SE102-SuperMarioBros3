@@ -230,6 +230,7 @@
     <ClInclude Include="SecretWall.h" />
     <ClInclude Include="BoomerangBro.h" />
     <ClInclude Include="Boomerang.h" />
+    <ClInclude Include="HitBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -400,6 +401,7 @@
     <ClCompile Include="SecrectWall.cpp" />
     <ClCompile Include="BoomerangBro.cpp" />
     <ClCompile Include="Boomerang.cpp" />
+    <ClCompile Include="HitBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">

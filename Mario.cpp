@@ -8,6 +8,7 @@
 #include "Entity.h"
 #include "FloatingPlatform.h"
 #include "HeadUpDisplay.h"
+#include "HitBox.h"
 #include "Keyboard.h"
 #include "Mario.h"
 #include "MarioMovementStates.h"
@@ -283,7 +284,10 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 		return;
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
-
+	HitBox* hitBox = dynamic_cast<HitBox*>(result.collidedWith);
+	if (hitBox) {
+		return;
+	}
 	if (block && block->IsCollectible()) {
 		return;
 	}
@@ -322,6 +326,11 @@ void Mario::OnTopHeadCollision(const CollisionResult& result) {
 	if (!result.collidedWith)
 		return;
 
+	HitBox* hitBox = dynamic_cast<HitBox*>(result.collidedWith);
+	if (hitBox) {
+		return;
+	}
+
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
 
 	if (block && block->IsCollectible()) {
@@ -359,6 +368,11 @@ void Mario::OnTopHeadCollision(const CollisionResult& result) {
 void Mario::OnRightSideCollision(const CollisionResult& result) {
 	if (!result.collidedWith)
 		return;
+
+	HitBox* hitBox = dynamic_cast<HitBox*>(result.collidedWith);
+	if (hitBox) {
+		return;
+	}
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
 	FloatingPlatform* moving =
@@ -400,7 +414,11 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 void Mario::OnLeftSideCollision(const CollisionResult& result) {
 	if (!result.collidedWith)
 		return;
-
+		
+	HitBox* hitBox = dynamic_cast<HitBox*>(result.collidedWith);
+	if (hitBox) {
+		return;
+	}
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
 	FloatingPlatform* moving =
 		dynamic_cast<FloatingPlatform*>(result.collidedWith);

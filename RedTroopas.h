@@ -10,7 +10,7 @@
 class RedTroopas : public Troopa
 {
 public:
-	RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, bool hasWing = false);
+	RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, bool hasWing = false, bool hasSpecialSize = false);
 	~RedTroopas() = default;
 
 	void Update(float dt) override;
@@ -37,15 +37,10 @@ public:
 	void StartVibration();
 	void UpdateVibration(float dt);
 
-	void HandleBounceCollision();
+	void HandleBounceCollision() override;
+	void HandleSweepCollision(float x_force, float y_force, bool spawnEffect) override;
 
 private:
-
-	bool m_isBouncing = false;
-	int m_bounceCount = 0;
-	float m_bounceForce = 100.0f;
-	float m_bounceDamping = 0.6f;
-
 	float m_animTimer;
 	float m_frameTime;
 	bool m_flipFrame;
@@ -75,7 +70,7 @@ private:
 
 	float m_lastDirectionX;
 
-	bool m_isFlipped;
+	bool m_isFlipped = false;
 
 	std::vector<Effect*> m_bonkEffects;
 
@@ -83,5 +78,6 @@ private:
 
 	bool m_canRevive = false;
 
+	Vector2 m_ShellSize;
 };
 
