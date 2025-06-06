@@ -175,6 +175,12 @@
         "loop": false
       },
       {
+        "id": 300080,
+        "name": "mario_raccoon_fly",
+        "frames": [ "raccoon-fly2" ],
+        "loop": false
+      },
+      {
         "id": 100090,
         "name": "mario_small_hold_idle",
         "frames": ["small-holding-walk"],
@@ -297,6 +303,13 @@
           "raccoon-sweep-side"
         ],
         "loop": true,
+        "timePerFrame": 0.1
+      },
+      {
+        "id": 300130,
+        "name": "mario_raccoon_flap",
+        "frames": [ "raccoon-fly1", "raccoon-fly3", "raccoon-fly1", "raccoon-fly2" ],
+        "loop": false,
         "timePerFrame": 0.1
       },
       {

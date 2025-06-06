@@ -40,6 +40,10 @@ namespace GameConstants {
 		constexpr float SWEEP_TIMER_LENGTH = 0.5f;
 		constexpr float SWEEP_TIMER_HIT_RIGHT = 0.0f;
 		constexpr float SWEEP_TIMER_HIT_LEFT = 0.2f;
+
+		constexpr float FLY_TIMER_LENGTH = 4.0f;
+		constexpr float FLY_FLAP_TIMER_THRESHOLD = 0.4f;
+		constexpr float FLY_UP_SPEED = 1.8f * 60.0f;
 	} // namespace Player
 
 	namespace Blocks {
@@ -82,7 +86,7 @@ namespace GameConstants {
 	} // namespace Enemies
 
 	namespace Physics {
-		constexpr float GRAVITY = 60.0f;
+		constexpr float GRAVITY = 60.0f * 9.8f;
 	}
 } // namespace GameConstants
 

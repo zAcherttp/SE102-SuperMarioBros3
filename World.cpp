@@ -124,7 +124,9 @@ void World::Update(float dt) {
 	if (m_isPaused)
 		return;
 	Mario* mario = dynamic_cast<Mario*>(m_player);
-	bool skip = mario && mario->IsTransitioning() || mario->IsDying();
+	bool skip = false;
+	if (mario)
+		skip = mario->IsTransitioning() || mario->IsDying();
 
 	if (m_collisionSystem && !skip) {
 
@@ -156,7 +158,11 @@ void World::Update(float dt) {
 		Vector2 cameraPos = pos - Vector2(gameWidth / 2.f, gameHeight / 2.f);
 		// clamp position to nearest pixel to avoid pixel rendering artifacts
 		// cameraPos.x = (int)(cameraPos.x + 0.5f);
-		cameraPos.y = 239;
+		if (pos.x < 970) cameraPos.y = 239;
+		else {
+			pos.y = std::clamp(pos.y, 138.f, 359.f);
+			cameraPos.y = pos.y - gameHeight / 2.f;
+		}
 
 		Game::GetInstance()->SetCameraPosition(cameraPos, false);
 		// Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));

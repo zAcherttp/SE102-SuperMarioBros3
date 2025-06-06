@@ -46,7 +46,7 @@ int MarioHoldState::GetStateAnimValue() const {
 }
 int MarioKickState::GetStateAnimValue() const { return ID_ANIM_MARIO_KICK; }
 int MarioHoverState::GetStateAnimValue() const { return ID_ANIM_MARIO_JUMP; }
-int MarioFlyState::GetStateAnimValue() const { return ID_ANIM_MARIO_JUMP; }
+int MarioFlyState::GetStateAnimValue() const { return ID_ANIM_MARIO_FLY; }
 int MarioSweepState::GetStateAnimValue() const { return ID_ANIM_MARIO_SWEEP; }
 
 Vector2 MarioDieMState::GetStateSizeOffset() const { return Vector2(0, 0); }
@@ -83,6 +83,22 @@ void MarioMovementState::Exit(Mario* mario) {
 void MarioDieMState::Enter(Mario* mario) { mario; }
 
 void MarioJumpState::Enter(Mario* mario) {
+	// Determine jump force based on current horizontal speed
+	float absSpeed = std::abs(mario->GetVelocity().x);
+	int speedIndex = std::min(3, (int)std::floor(absSpeed / 60.0f));
+
+	// Set initial jump velocity based on horizontal speed
+	mario->SetVelocity(
+		Vector2(mario->GetVelocity().x, Player::JUMP_FORCE[speedIndex]));
+
+	// Set animation and size
+	mario->SetSize(mario->GetCurrentPStateSizeOffset() +
+		mario->GetCurrentMStateSizeOffset());
+	SetAnimation(mario, mario->GetCurrentPStateAnimValue() +
+		mario->GetCurrentMStateAnimValue());
+}
+
+void MarioFlyState::Enter(Mario* mario) {
 	// Determine jump force based on current horizontal speed
 	float absSpeed = std::abs(mario->GetVelocity().x);
 	int speedIndex = std::min(3, (int)std::floor(absSpeed / 60.0f));
@@ -335,6 +351,10 @@ std::unique_ptr<MarioMovementState> MarioRunState::HandleInput(Mario* mario) {
 	bool isPMeterFull = HeadUpDisplay::GetInstance()->IsPMeterFull();
 
 	if (input->isAPressed && mario->IsGrounded()) {
+		if (isPMeterFull && mario->GetCurrentPStateName() == RACCOON) {
+			Log(__FUNCTION__, "");
+			return std::make_unique<MarioFlyState>(GetDirection());
+		}
 		return std::make_unique<MarioJumpState>(GetDirection());
 	}
 	if (input->isLeftDown && input->isRightDown == false) {
@@ -915,13 +935,64 @@ void MarioHoverState::Update(Mario* mario, float dt) {
 }
 
 std::unique_ptr<MarioMovementState> MarioFlyState::HandleInput(Mario* mario) {
-	mario;
+	auto input = mario->GetInput();
+	bool isGrounded = mario->IsGrounded();
+
+	if (isGrounded) {
+		return std::make_unique<MarioWalkState>(GetDirection());
+	}
+
+	if (input->isADown && m_isFlying) {
+		mario->SetVelocity(Vector2(mario->GetVelocity().x, -Player::FLY_UP_SPEED));
+	}
+
+	if (input->isAPressed && m_isFlying) {
+		if (m_flapTimer <= Player::FLY_FLAP_TIMER_THRESHOLD) {
+			mario->SetAnimation(
+				mario->GetCurrentPStateAnimValue() + ID_ANIM_MARIO_FLAP, true);
+		}
+		m_flapTimer = 0.0f;
+	}
+
 	return nullptr;
 }
 
 void MarioFlyState::Update(Mario* mario, float dt) {
 	mario, dt;
-	m_flyTimer += dt;
+	if (m_isFlying) m_flyTimer += dt;
+	m_flapTimer += dt;
+
+	auto input = mario->GetInput();
+	Vector2 vel = mario->GetVelocity();
+
+	// Handle horizontal movement in air
+	bool isLeftDown = input->isLeftDown;
+	bool isRightDown = input->isRightDown;
+
+	if (isLeftDown != isRightDown) {
+		Direction hitDir = isLeftDown ? Direction::Left : Direction::Right;
+
+		float speedCap = Player::MAX_RUN_SPEED;
+
+		// Apply air control - same speed and accel as walk
+		vel.x += (int)hitDir * Player::ACCEL_NORMAL * dt;
+
+		if (std::abs(vel.x) > speedCap) {
+			vel.x -= (vel.x > 0 ? 1 : -1) * Player::ACCEL_FRIC * dt;
+		}
+	}
+
+	if (m_flyTimer <= Player::FLY_TIMER_LENGTH) {
+		//fly
+	}
+	else {
+		m_isFlying = false;
+		SetAnimation(mario, mario->GetCurrentPStateAnimValue() +
+			mario->GetCurrentMStateAnimValue());
+	}
+
+	mario->SetVelocity(vel);
+	MarioMovementState::Update(mario, dt);
 }
 
 std::unique_ptr<MarioMovementState> MarioSweepState::HandleInput(Mario* mario) {

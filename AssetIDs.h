@@ -65,6 +65,7 @@ constexpr auto ID_ANIM_MARIO_HOLD_FRONT = 3;
 constexpr auto ID_ANIM_MARIO_KICK = 100;
 constexpr auto ID_ANIM_MARIO_HOVER = 110;
 constexpr auto ID_ANIM_MARIO_SWEEP = 120;
+constexpr auto ID_ANIM_MARIO_FLAP = 130;
 
 // single bonked frame animID = 110 so _HOVER is fine
 constexpr auto ID_ANIM_MARIO_SUPER_BONKED = 110;
@@ -299,6 +300,7 @@ constexpr auto ID_SPRITE_HUD_FIREFLOWER = 2909;
 constexpr auto ID_SPRITE_HUD_MUSHROOM = 2910;
 constexpr auto ID_SPRITE_HUD_STAR = 2911;
 constexpr auto ID_SPRITE_HUD_POWERUP_SLOT = 2912;
+constexpr auto ID_SPRITE_HUD_BACKGROUND = 2913;
 
 // floating platforms
 constexpr auto ID_SPRITE_MOVING_PLATFORM_LEFT = 3200;

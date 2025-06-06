@@ -43,9 +43,6 @@ public:
 	Vector2 GetVelocity() const;
 	void SetVelocity(const Vector2& vel);
 
-	Vector2 GetRelativeVelocity() const;
-	void SetRelativeVelocity(const Vector2& vel);
-
 	bool IsActive() const;
 	bool IsCollidable() const;
 	bool IsStatic() const;
