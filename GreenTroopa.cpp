@@ -1,12 +1,14 @@
 #include "pch.h"
-#include "GreenTroopa.h"
-#include "Debug.h"
 #include "AssetIDs.h"
-#include "Mario.h"
-#include "GameConfig.h"
-#include "ParaGoomba.h"
 #include "Block.h"
+#include "Debug.h"
+#include "GameConfig.h"
 #include "Goomba.h"
+#include "GreenTroopa.h"
+#include "Mario.h"
+#include "ParaGoomba.h"
+
+using namespace GameConstants::Enemies::Troopas;
 
 GreenTroopas::GreenTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, bool hasWing)
 	: Troopa(position, size, spriteSheet)
@@ -32,7 +34,7 @@ GreenTroopas::GreenTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSh
 	m_state = WALKING; // Initialize state to WALKING
 
 	// Set initial velocity - slow movement to the left
-	SetVelocity(Vector2(-GameConfig::Enemies::Troopas::WALK_SPEED, 0.0f));
+	SetVelocity(Vector2(-WALK_SPEED, 0.0f));
 
 	// Setup collision component
 	SetupCollisionComponent();
@@ -44,25 +46,25 @@ GreenTroopas::GreenTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSh
 	m_pointCollisionState[InteractionPointType::LeftFoot] = true;
 	m_pointCollisionState[InteractionPointType::RightFoot] = true;
 
-    if (m_hasWing) {
-        InitializeWing();
-    }
+	if (m_hasWing) {
+		InitializeWing();
+	}
 }
 
 void GreenTroopas::Render(DirectX::SpriteBatch* spriteBatch)
 {
-    if (m_bonkEffects.size() > 0) {
-        for (auto& effect : m_bonkEffects) {
-            effect->Render(spriteBatch);
-        }
-    }
-    
-    // Render wing behind the Troopa if active
-    if (m_hasWing && m_wing && m_wing->IsActive()) {
-        m_wing->Render(spriteBatch);
-    }
-    
-    Entity::Render(spriteBatch);
+	if (m_bonkEffects.size() > 0) {
+		for (auto& effect : m_bonkEffects) {
+			effect->Render(spriteBatch);
+		}
+	}
+
+	// Render wing behind the Troopa if active
+	if (m_hasWing && m_wing && m_wing->IsActive()) {
+		m_wing->Render(spriteBatch);
+	}
+
+	Entity::Render(spriteBatch);
 }
 
 void GreenTroopas::Die(DyingType type)
@@ -73,7 +75,7 @@ void GreenTroopas::Die(DyingType type)
 		m_isDying = true;
 		m_state = DEAD;
 		m_animator->SetFlipVertical(true);
-		SetVelocity(Vector2(GameConfig::Enemies::Troopas::WALK_SPEED, -GameConfig::Enemies::DEATH_BOUNCE_VELOCITY));
+		SetVelocity(Vector2(WALK_SPEED, -GameConstants::Enemies::DEATH_BOUNCE_VELOCITY));
 		return;
 	}
 }
@@ -86,31 +88,31 @@ void GreenTroopas::Update(float dt)
 
 	if (!m_isGrounded) {
 		Vector2 vel = GetVelocity();
-		vel.y += GameConfig::Physics::GRAVITY * dt;
+		vel.y += GameConstants::Physics::GRAVITY * dt;
 		SetVelocity(vel);
 	}
 
-    if (m_hasWing && m_wing && m_wing->IsActive()) {
-        // Update wing position
-        m_wing->UpdatePosition(GetPosition());
-        
-        // Update wing direction based on Troopa direction
-        m_wing->SetDirection(m_lastDirectionX > 0 ? 1 : -1);
+	if (m_hasWing && m_wing && m_wing->IsActive()) {
+		// Update wing position
+		m_wing->UpdatePosition(GetPosition());
 
-        m_wing->HandleFlapping(dt, 0.2f);
+		// Update wing direction based on Troopa direction
+		m_wing->SetDirection(m_lastDirectionX > 0 ? 1 : -1);
 
-		if(m_isGrounded)
+		m_wing->HandleFlapping(dt, 0.2f);
+
+		if (m_isGrounded)
 		{
 			Vector2 vel = GetVelocity();
-			SetVelocity(Vector2(vel.x, -GameConfig::Enemies::Troopas::BOUNCE_FORCE));
+			SetVelocity(Vector2(vel.x, -BOUNCE_FORCE));
 		}
-    }
+	}
 
 	if (m_state == DEAD && m_isActive) {
 		m_deathTimer += dt;
 		if (m_dyingType == DyingType::BONKED)
 		{
-			if (m_deathTimer >= GameConfig::Enemies::DEATH_BONK_ANI_TIME) {
+			if (m_deathTimer >= GameConstants::Enemies::DEATH_BONK_ANI_TIME) {
 				// After 2.0 seconds, deactivate the Goomba
 				m_isActive = false;
 				m_visible = false;// Remove collision component
@@ -147,7 +149,7 @@ void GreenTroopas::Update(float dt)
 			effect->Update(dt);
 		}
 	}
-    // Log(LOG_INFO, "GreenTroopas::Update - Position: " + std::to_string(GetPosition().x) + ", " + std::to_string(GetPosition().y));
+	// Log(LOG_INFO, "GreenTroopas::Update - Position: " + std::to_string(GetPosition().x) + ", " + std::to_string(GetPosition().y));
 	Entity::Update(dt);
 }
 
@@ -207,26 +209,26 @@ void GreenTroopas::OnCollision(const CollisionResult& event)
 		SetVelocity(vel);
 		m_isGrounded = true;
 		return;
-		
+
 		if (mario) {
-				// mario->Damage();
+			// mario->Damage();
 		}
 	}
 
 	if (event.contactNormal.y > 0) // Collision from above
 	{
 		if (mario) {
-            if (m_hasWing) {
-                TransformToRegularTroopa();
-                Vector2 vel = mario->GetVelocity();
-				vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+			if (m_hasWing) {
+				TransformToRegularTroopa();
+				Vector2 vel = mario->GetVelocity();
+				vel.y = GameConstants::Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);
-                return;
-            }
+				return;
+			}
 
 			if (m_state == WALKING) {
 				Vector2 vel = mario->GetVelocity();
-				vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+				vel.y = GameConstants::Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);
 				TransformToShell();
 				return;
@@ -234,14 +236,14 @@ void GreenTroopas::OnCollision(const CollisionResult& event)
 			if (m_state == SHELL_IDLE) {
 
 				if (mario->GetPosition().x < GetPosition().x + 8.0f) {
-					SetVelocity(Vector2(GameConfig::Enemies::Troopas::WALK_SPEED * 7, 0.0f));
+					SetVelocity(Vector2(WALK_SPEED * 7, 0.0f));
 				}
 				else {
-					SetVelocity(Vector2(-GameConfig::Enemies::Troopas::WALK_SPEED * 7, 0.0f));
+					SetVelocity(Vector2(-WALK_SPEED * 7, 0.0f));
 				}
 
 				Vector2 vel = mario->GetVelocity();
-				vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+				vel.y = GameConstants::Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);
 
 				m_animator->SetAnimation(ID_ANIM_GREEN_TROOPAS_SHELL_SLIDE, true);
@@ -250,7 +252,7 @@ void GreenTroopas::OnCollision(const CollisionResult& event)
 			}
 			if (m_state == SHELL_SLIDE) {
 				Vector2 vel = mario->GetVelocity();
-				vel.y = GameConfig::Mario::BOUNCE_FORCE; // Use Mario's bounce force
+				vel.y = GameConstants::Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);
 
 				m_animator->SetAnimation(ID_ANIM_GREEN_TROOPAS_SHELL);
@@ -325,10 +327,10 @@ void GreenTroopas::TransformToTroopa()
 		Vector2 goombaPos = GetPosition();
 
 		if (marioPos.x < goombaPos.x + 8.0f) {
-			SetVelocity(Vector2(-GameConfig::Enemies::Troopas::WALK_SPEED, 0.0f));
+			SetVelocity(Vector2(-WALK_SPEED, 0.0f));
 		}
 		else {
-			SetVelocity(Vector2(GameConfig::Enemies::Troopas::WALK_SPEED, 0.0f));
+			SetVelocity(Vector2(WALK_SPEED, 0.0f));
 		}
 	}
 	m_animator->SetAnimation(ID_ANIM_GREEN_TROOPAS_WALK, true);
@@ -416,31 +418,31 @@ void GreenTroopas::UpdateVibration(float dt) {
 
 void GreenTroopas::InitializeWing()
 {
-    if (!m_hasWing) return;
+	if (!m_hasWing) return;
 
-    SpriteSheet* m_spriteSheet = Game::GetInstance()->GetSpriteSheet();
-    
-    // Create a single wing positioned behind the Troopa
-    m_wing = new Wings(GetPosition(), Vector2(WINGS_WIDTH, WINGS_HEIGHT), m_spriteSheet);
-    
-    // Position the wing behind the Troopa
-    m_wing->SetOffset(Vector2(4.0f, -9.0f)); // Centered horizontally, slightly above center
-    
-    // Set the wing's direction based on the Troopa's initial direction
-    m_wing->SetDirection(GetVelocity().x < 0 ? -1 : 1);
-    
-    // Initially set animation to wings down
-    m_wing->SetAnimation(ID_ANIM_WINGS_FLAP_DOWN, false);
+	SpriteSheet* m_spriteSheet = Game::GetInstance()->GetSpriteSheet();
+
+	// Create a single wing positioned behind the Troopa
+	m_wing = new Wings(GetPosition(), Vector2(WINGS_WIDTH, WINGS_HEIGHT), m_spriteSheet);
+
+	// Position the wing behind the Troopa
+	m_wing->SetOffset(Vector2(4.0f, -9.0f)); // Centered horizontally, slightly above center
+
+	// Set the wing's direction based on the Troopa's initial direction
+	m_wing->SetDirection(GetVelocity().x < 0 ? -1 : 1);
+
+	// Initially set animation to wings down
+	m_wing->SetAnimation(ID_ANIM_WINGS_FLAP_DOWN, false);
 }
 
 void GreenTroopas::TransformToRegularTroopa()
 {
-    if (m_hasWing && m_wing) {
-        // Deactivate wing
-        m_wing->Deactivate();
-        m_hasWing = false;
-        
-        // Continue moving as a regular Troopa
-        SetVelocity(Vector2(-GameConfig::Enemies::Troopas::WALK_SPEED, 0.0f));
-    }
+	if (m_hasWing && m_wing) {
+		// Deactivate wing
+		m_wing->Deactivate();
+		m_hasWing = false;
+
+		// Continue moving as a regular Troopa
+		SetVelocity(Vector2(-WALK_SPEED, 0.0f));
+	}
 }

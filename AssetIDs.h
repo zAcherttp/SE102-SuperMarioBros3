@@ -305,11 +305,6 @@ constexpr auto ID_SPRITE_MOVING_PLATFORM_LEFT = 3200;
 constexpr auto ID_SPRITE_MOVING_PLATFORM_MID = 3201;
 constexpr auto ID_SPRITE_MOVING_PLATFORM_RIGHT = 3202;
 
-// floating platforms
-constexpr auto ID_SPRITE_MOVING_PLATFORM_LEFT = 3200;
-constexpr auto ID_SPRITE_MOVING_PLATFORM_MID = 3201;
-constexpr auto ID_SPRITE_MOVING_PLATFORM_RIGHT = 3202;
-
 // Grass
 constexpr auto ID_SPRITE_GRASS_TOP_LEFT = 2300;
 constexpr auto ID_SPRITE_GRASS_TOP_MID = 2310;

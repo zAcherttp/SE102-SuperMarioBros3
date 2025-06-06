@@ -1,20 +1,20 @@
 #include "pch.h"
-#include "HiddenButton.h"
-#include "Debug.h"
 #include "AssetIDs.h"
-#include "Mario.h"
 #include "Block.h"
-#include "GameConfig.h"
-#include "World.h"
 #include "Brick.h"
+#include "Debug.h"
 #include "EffectManager.h"
+#include "GameConfig.h"
+#include "HiddenButton.h"
+#include "Mario.h"
+#include "World.h"
 
 HiddenButton::HiddenButton(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	: Block(position, size, spriteSheet)
 {
-    m_isSolid = true;
+	m_isSolid = true;
 	DefineAnimation(ID_ANIM_HIDDEN_BUTTON, { L"pbutton1", L"pbutton2", L"pbutton3" }, true, 0.3f);
-	DefineAnimation(ID_ANIM_HIDDEN_BUTTON_STOMPED, { L"pbutton4"},false);
+	DefineAnimation(ID_ANIM_HIDDEN_BUTTON_STOMPED, { L"pbutton4" }, false);
 	SetAnimation(ID_ANIM_HIDDEN_BUTTON, true);
 	SetupCollisionComponent();
 }
@@ -38,8 +38,8 @@ void HiddenButton::OnCollision(const CollisionResult& event)
 
 	if (event.contactNormal.y > 0 && mario)
 	{
-        SetAnimation(ID_ANIM_HIDDEN_BUTTON_STOMPED, false);
-        m_isCollidable = false;
+		SetAnimation(ID_ANIM_HIDDEN_BUTTON_STOMPED, false);
+		m_isCollidable = false;
 		mario->SetVelocity(Vector2(mario->GetVelocity().x, -5.0f));
 		m_isActivated = true;
 		TransformAllBricks();
@@ -56,17 +56,19 @@ void HiddenButton::SetupCollisionComponent()
 
 void HiddenButton::TransformAllBricks()
 {
-    World* world = World::GetInstance();
-    
-    // Find all bricks in the world and transform them to coins
-    std::vector<Entity*> entities = world->GetEntities();
-    for (auto* entity : entities)
-    {
-        Brick* brick = dynamic_cast<Brick*>(entity);
-        if (brick)
-        {
-            brick->TransformToCoin();
-        }
-    }
+	World* world = World::GetInstance();
+
+	Game::GetInstance()->GetCamera()->Shake(Vector2(0.f, 4.f), 8, .25f);
+
+	// Find all bricks in the world and transform them to coins
+	std::vector<Entity*> entities = world->GetEntities();
+	for (auto* entity : entities)
+	{
+		Brick* brick = dynamic_cast<Brick*>(entity);
+		if (brick)
+		{
+			brick->TransformToCoin();
+		}
+	}
 }
 
