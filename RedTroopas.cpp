@@ -12,8 +12,7 @@
 using namespace GameConstants;
 #include "LuckyBlock.h"
 
-RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet,
-	bool hasWing)
+RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet,bool hasWing, bool hasSpecialSize)
 	: Troopa(position, size, spriteSheet), m_animTimer(0.0f),
 	m_frameTime(0.15f), m_flipFrame(false), m_lastDirectionX(-1.0f),
 	m_isColliding(false), m_reviveTimer(0.0f), m_reviveTime(5.0f),
@@ -45,6 +44,13 @@ RedTroopas::RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet,
 	}
 	else
 		m_state = WALKING;
+
+	if (hasSpecialSize) {
+		m_ShellSize = Vector2(10.0f, 16.0f);
+	}
+	else {
+		m_ShellSize = Vector2(16.0f, 16.0f);
+	}
 }
 
 void RedTroopas::Render(DirectX::SpriteBatch* spriteBatch) {
@@ -129,11 +135,6 @@ void RedTroopas::Update(float dt) {
 			}
 		}
 
-		Log(LOG_INFO, "Is Going Up: " + std::to_string(m_isGoingUp) +
-			" | Destination Y: " + std::to_string(destinationY) +
-			" | Current Y: " + std::to_string(pos.y) +
-			" | Distance to Destination: " +
-			std::to_string(distanceToDestination));
 		// Cap the vertical speed
 		if (vel.y > MAX_FLYING_SPEED) {
 			vel.y = MAX_FLYING_SPEED;
@@ -235,7 +236,7 @@ void RedTroopas::OnCollision(const CollisionResult& event) {
 		}
 
 		if (mario) {
-			if (m_state == SHELL_IDLE) {
+			if (m_state == SHELL_IDLE && mario->GetCurrentMStateName() != GameStrings::SWEEP) {
 				Direction dir =
 					event.contactNormal.x < 0 ? Direction::Left : Direction::Right;
 				if (mario->Kick(dir, this)) {
@@ -390,16 +391,7 @@ bool RedTroopas::CheckEdge() {
 
 			LuckyBlock* luckyBlock = dynamic_cast<LuckyBlock*>(other);
 			if (luckyBlock && luckyBlock->m_isClaiming) {
-				m_isBouncing = true;
-				m_bounceCount = 0;
-
-				Vector2 vel = GetVelocity();
-				TransformToShell();
-
-				float horizontalVel = vel.x >= 0 ? 50.0f : -50.0f;
-
-				SetVelocity(Vector2(horizontalVel, -m_bounceForce));
-				m_isFlipped = true;
+				HandleSweepCollision(50.0f,m_bounceForce, false);
 				break;
 			}
 
@@ -452,12 +444,12 @@ void RedTroopas::UpdateSpriteDirection() {
 }
 
 void RedTroopas::TransformToShell() {
+	Vector2 offset = m_state == SHELL_IDLE ? Vector2(0.0f, 0.0f) : Vector2(0.0f, 5.0f);
 	m_state = SHELL_IDLE;
 
-	Vector2 newSize = Vector2(10.0f, 16.0f);
-	m_collisionComponent->SetSize(newSize);
+	m_collisionComponent->SetSize(m_ShellSize);
 	m_collisionComponent->SetPosition(GetPosition());
-	SetPosition(GetPosition() + Vector2(0.0f, 5.0f));
+	SetPosition(GetPosition() + offset);
 	SetVelocity(Vector2(0.0f, 0.0f));
 
 	m_animator->SetAnimation(ID_ANIM_RED_TROOPAS_SHELL);
@@ -620,4 +612,24 @@ void RedTroopas::HandleBounceCollision() {
 
 	SetVelocity(vel);
 	m_isGrounded = true;
+}
+
+void RedTroopas::HandleSweepCollision(float x_Force, float y_Force, bool spawnEffect) {
+	if(m_isBouncing) {
+		return;
+	}	
+	if(spawnEffect) {
+		EffectManager::GetInstance()->CreateBonkEffect(GetPosition());
+	}
+	m_isBouncing = true;
+	m_bounceCount = 0;
+	m_reviveTimer = 0.0f;
+
+	Vector2 vel = GetVelocity();
+	TransformToShell();
+
+	float horizontalVel = vel.x >= 0 ? x_Force : -x_Force;
+
+	SetVelocity(Vector2(horizontalVel, -y_Force));
+	m_isFlipped = true;
 }

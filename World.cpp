@@ -206,7 +206,7 @@ void World::RenderDebug(
 void World::Reset() { Game::GetInstance()->SwitchWorld(); }
 
 void World::Teleport() {
-	m_player->SetPosition(Vector2(2159, 335));
+	m_player->SetPosition(Vector2(1389, 378));
 	m_player->SetVelocity(Vector2::Zero);
 }
 
@@ -357,8 +357,9 @@ Entity* World::CreateEntity(int entType, const json& data,
 		float width = data["width"];
 		float height = data["height"];
 		bool hasWing = data["hasWing"];
+		bool hasSpecialSize = data["hasSpecialSize"];
 		entity =
-			new RedTroopas(position, Vector2(width, height), spriteSheet, hasWing);
+			new RedTroopas(position, Vector2(width, height), spriteSheet, hasWing, hasSpecialSize);
 		break;
 	}
 	case ID_ENT_GROUND: {

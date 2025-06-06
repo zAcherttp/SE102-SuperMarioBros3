@@ -26,6 +26,7 @@ GreenTroopas::GreenTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSh
 	, m_vibrateCount(0)
 	, m_maxVibrateCount(0)
 	, m_hasWing(hasWing)
+	, m_isFlipped(false)
 
 {
 	SetAnimation(ID_ANIM_GREEN_TROOPAS_WALK, true);
@@ -84,6 +85,14 @@ void GreenTroopas::Die(DyingType type)
 void GreenTroopas::Update(float dt)
 {
 	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
+
+	if (m_isFlipped) {
+		m_animator->SetFlipVertical(true);
+	}
+	else {
+		m_animator->SetFlipVertical(false);
+	}
+
 	// Log(LOG_INFO, "GreenTroopas Animation: " + std::to_string(m_animator->GetCurrentAnimation()));
 
 	if (!m_isGrounded) {
@@ -204,6 +213,10 @@ void GreenTroopas::OnCollision(const CollisionResult& event)
 
 	if (event.contactNormal.y < 0 && block) // foot collision
 	{
+		if (m_isBouncing) {
+			HandleBounceCollision();
+			return;
+		}
 		Vector2 vel = GetVelocity();
 		vel.y = 0.0f;
 		SetVelocity(vel);
@@ -314,6 +327,8 @@ void GreenTroopas::TransformToShell()
 
 void GreenTroopas::TransformToTroopa()
 {
+	if (m_isFlipped)
+		m_isFlipped = false;
 	m_state = WALKING;
 
 	Mario* m_mario = dynamic_cast<Mario*>(World::GetInstance()->GetPlayer());
@@ -445,4 +460,49 @@ void GreenTroopas::TransformToRegularTroopa()
 		// Continue moving as a regular Troopa
 		SetVelocity(Vector2(-WALK_SPEED, 0.0f));
 	}
+}
+
+
+void GreenTroopas::HandleBounceCollision() {
+	Vector2 vel = GetVelocity();
+	vel.y = 0.0f;
+
+	if (m_bounceCount < 1) {
+		float currentBounceForce =
+			m_bounceForce * pow(m_bounceDamping, m_bounceCount);
+		vel.x *= 0.4f;
+		vel.y = -currentBounceForce;
+		m_bounceCount++;
+		Log("k", "horizontal velocity: " + std::to_string(vel.x));
+
+	}
+	else {
+
+		m_isBouncing = false;
+		m_bounceCount = 0;
+		vel.x = 0.0f;
+	}
+
+	SetVelocity(vel);
+	m_isGrounded = true;
+}
+
+void GreenTroopas::HandleSweepCollision(float x_Force, float y_Force, bool spawnEffect) {
+	if(m_isBouncing) {
+		return;
+	}	
+	if(spawnEffect) {
+		EffectManager::GetInstance()->CreateBonkEffect(GetPosition());
+	}
+	m_isBouncing = true;
+	m_bounceCount = 0;
+	m_reviveTimer = 0.0f;
+
+	Vector2 vel = GetVelocity();
+	TransformToShell();
+
+	float horizontalVel = vel.x >= 0 ? x_Force : -x_Force;
+
+	SetVelocity(Vector2(horizontalVel, -y_Force));
+	m_isFlipped = true;
 }
