@@ -10,6 +10,8 @@
 #include "Game.h"
 #include "Block.h"
 
+using namespace GameConstants::Enemies::BoomerangBro;
+
 Boomerang::Boomerang(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, bool direction) : 
     Enemy(position, size, spriteSheet)
     , m_animTimer(0.0f)
@@ -29,13 +31,11 @@ Boomerang::Boomerang(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, b
     m_startPositionY = position.y;
 
     BOOMERANG_VERTICAL_LENGTH = 0.0f;
-    SetAnimation(ID_ANIM_BOOMERANG);
-    SetupCollisionComponent();
-
+    SetAnimation(ID_ANIM_BOOMERANG);    SetupCollisionComponent();    
     int nx = direction ? 1 : -1;
-    m_accelerationX = BOOMERANG_HORIZONTAL_ACCE * nx;
-    m_accelerationY = BOOMERANG_GRAVITY * nx;
-    SetVelocity(Vector2(-BOOMERANG_HORIZONTAL_SPEED * nx,-BOOMERANG_MAX_VERTICAL_SPEED)); 
+    m_accelerationX = HORIZONTAL_ACCELERATION * nx;
+    m_accelerationY = GRAVITY * nx;
+    SetVelocity(Vector2(-HORIZONTAL_SPEED * nx,-MAX_VERTICAL_SPEED));
 }
 
 void Boomerang::Update(float dt)
@@ -45,14 +45,12 @@ void Boomerang::Update(float dt)
     Vector2 pos = GetPosition();
     vel.y += m_accelerationY * dt; 
     vel.x += m_accelerationX * dt; 
-    
-    if(abs(vel.y) > BOOMERANG_MAX_VERTICAL_SPEED)
+      if(abs(vel.y) > MAX_VERTICAL_SPEED)
     {
-        vel.y = (vel.y > 0) ? BOOMERANG_MAX_VERTICAL_SPEED : -BOOMERANG_MAX_VERTICAL_SPEED; 
-    }
-    if(abs(vel.x) > BOOMERANG_HORIZONTAL_SPEED)
+        vel.y = (vel.y > 0) ? MAX_VERTICAL_SPEED : -MAX_VERTICAL_SPEED;
+    }    if(abs(vel.x) > HORIZONTAL_SPEED)
     {
-        vel.x = (vel.x > 0) ? BOOMERANG_HORIZONTAL_SPEED : -BOOMERANG_HORIZONTAL_SPEED;
+        vel.x = (vel.x > 0) ? HORIZONTAL_SPEED : -HORIZONTAL_SPEED;
     }
     if(vel.y > 0 && pos.y >= m_startPositionY)
     {
@@ -99,12 +97,11 @@ void Boomerang::SetState(BoomerangState state)
     Vector2 vel = GetVelocity();
     Vector2 pos = GetPosition();
 	switch (state)
-	{
-	case BoomerangState::OUTWARD:
+	{	case BoomerangState::OUTWARD:
         m_state = BoomerangState::OUTWARD;
-		vel.y = -BOOMERANG_INITAL_UPWARD_SPEED;
-		m_accelerationY = BOOMERANG_GRAVITY * 2;
-		vel.x = BOOMERANG_HORIZONTAL_SPEED* 2 * (m_direction ? -1 : 1);
+		vel.y = -INITIAL_UPWARD_SPEED;
+		m_accelerationY = GRAVITY * 2;
+		vel.x = HORIZONTAL_SPEED* 2 * (m_direction ? -1 : 1);
         SetVelocity(vel);
 		break;
 	case BoomerangState::RETURN:

@@ -69,16 +69,99 @@ namespace GameConstants {
 		} // namespace Goomba
 		namespace ParaGoomba {
 			constexpr float GRAVITY = 9.8f * 60.0f;
+			constexpr float SMALL_JUMP_FORCE = -1.5f * 60.0f;
+			constexpr float BIG_JUMP_FORCE = -3.5f * 60.0f;
+			constexpr float MEDIUM_FLAP_SPEED = 0.17f; 
+			constexpr float RAPID_FLAP_SPEED = 0.066f;
+			constexpr float RAPID_FLAP_DURATION = 1.0f;
+			constexpr float MEDIUM_FLAP_DURATION = 0.2f;
+			constexpr float CLOSED_WINGS_DURATION = 0.5f;
+			constexpr float FRAME_TIME = 0.15f; 
+			constexpr float JUMP_INTERVAL = 0.5f; 
+			constexpr int JUMPS_BEFORE_BIG_JUMP = 3;
 		}
-
-		namespace Koopa {}
-
 		namespace Troopas {
 			constexpr float WALK_SPEED = 30.0f;
-			constexpr float SHELL_SPEED = 130.0f;
+			constexpr float SHELL_SLIDE_SPEED = 210.0f;
 			constexpr float BOUNCE_FORCE = 200.0f;
 			constexpr float GRAVITY = 9.8f * 60.0f;
+			
+			// Flying Troopa constants
+			constexpr float FLY_HEIGHT = 110.0f;
+			constexpr float MAX_FLYING_SPEED = 70.0f;
+			constexpr float VERTICAL_ACCELERATION = 100.0f;
+			constexpr float WING_FLAP_RATE = 0.1f;
+			
+			// Size constants
+			constexpr float SHELL_SIZE_NORMAL_WIDTH = 16.0f;
+			constexpr float SHELL_SIZE_NORMAL_HEIGHT = 16.0f;
+			constexpr float SHELL_SIZE_SPECIAL_WIDTH = 10.0f;
+			constexpr float SHELL_SIZE_SPECIAL_HEIGHT = 16.0f;
+			constexpr float TROOPA_SIZE_WIDTH = 16.0f;
+			constexpr float TROOPA_SIZE_HEIGHT = 27.0f;
+			
+			// Timing constants
+			constexpr float REVIVE_TIME = 5.0f;
+			constexpr float VIBRATION_TIME = 1.77f;
+			constexpr float VIBRATION_INTERVAL = 0.03f;
+			constexpr float VIBRATION_AMPLITUDE = 1.0f;
+			constexpr int MAX_VIBRATION_COUNT = 20;
+			constexpr float FRAME_TIME = 0.15f;
+			
+			// Position offsets
+			constexpr float SHELL_OFFSET_Y = 5.0f;
+			constexpr float COLLISION_OFFSET_X = 8.0f;
+			constexpr float EDGE_CHECK_OFFSET_Y = 3.0f;
+			constexpr float FOOT_OFFSET_DIVISOR = 4.0f; // size.x / 4 and size.y / 2
+			constexpr float SIZE_HALF_DIVISOR = 2.0f;
+			
+			// Raycast constants
+			constexpr float RAY_LENGTH = 5.0f;
+			constexpr float SWEEP_COLLISION_FORCE = 50.0f;
+			constexpr float ENTITY_CELLS_DT = 0.016f;
+			
+			// Bounce constants
+			constexpr float BOUNCE_DAMPING = 0.4f;
+			constexpr int MAX_BOUNCE_COUNT = 1;
+			
+			// Revive phase timing
+			constexpr float REVIVE_PHASE_1_TIME = 0.5f;
+			constexpr float REVIVE_PHASE_2_TIME = 1.12f;
+			
+			// Wing constants
+			constexpr float WINGS_WIDTH = 16.0f;
+			constexpr float WINGS_HEIGHT = 16.0f;
+			constexpr float WING_OFFSET_X = 4.0f;
+			constexpr float WING_OFFSET_Y = -9.0f;
+			
+			// Flying physics constants
+			constexpr float FLY_DISTANCE_THRESHOLD_FAR = 48.0f;
+			constexpr float FLY_DISTANCE_THRESHOLD_NEAR = 28.0f;			constexpr float FLY_ACCELERATION_DIVISOR = 25.0f;
 		} // namespace Troopas
+		
+		namespace BoomerangBro {
+			// Boomerang physics constants
+			constexpr float HORIZONTAL_SPEED = 220.0f;
+			constexpr float MAX_VERTICAL_SPEED = 220.0f;
+			constexpr float INITIAL_UPWARD_SPEED = 80.0f;
+			constexpr float GRAVITY = 53.0f;
+			constexpr float VERTICAL_ACCELERATION = 20.0f;
+			constexpr float HORIZONTAL_ACCELERATION = 180.0f;
+			
+			// Boomerang size constants
+			constexpr float BOOMERANG_WIDTH = 16.0f;
+			constexpr float BOOMERANG_HEIGHT = 16.0f;
+			constexpr float BULLET_WIDTH = 12.0f;
+			constexpr float BULLET_HEIGHT = 12.0f;
+			
+			// Boomerang timing constants
+			constexpr float LIFETIME = 10.0f;
+			constexpr float PHASE_DURATION = 2.54f;
+			
+			// Movement constants
+			constexpr float PATROL_DISTANCE = 48.0f;
+			constexpr float BOOMERANG_OFFSET_X = 16.0f;
+		} // namespace BoomerangBro
 	} // namespace Enemies
 
 	namespace Physics {

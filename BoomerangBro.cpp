@@ -10,6 +10,8 @@
 #include "Mario.h"
 #include "World.h"
 
+using namespace GameConstants::Enemies::BoomerangBro;
+
 BoomerangBro::BoomerangBro(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	: Enemy(position, size, spriteSheet)  // 2 seconds in firing state
 	, m_boomerang1(nullptr)
@@ -27,11 +29,10 @@ BoomerangBro::BoomerangBro(Vector2 position, Vector2 size, SpriteSheet* spriteSh
 	Log(__FUNCTION__, "Collision component initialized");
 	m_isCollidable = true;
 
-	// m_boomerang1 = new Boomerang(position + BULLET_OFFSET, Vector2(BULLET_WIDTH, BULLET_HEIGHT), spriteSheet);
-	// m_boomerang2 = new Boomerang(position + BULLET_OFFSET + Vector2(16.0f, 0.0f), Vector2(BULLET_WIDTH, BULLET_HEIGHT), spriteSheet);
+	// m_boomerang1 = new Boomerang(position + BULLET_OFFSET, Vector2(BULLET_WIDTH, BULLET_HEIGHT), spriteSheet);	// m_boomerang2 = new Boomerang(position + BULLET_OFFSET + Vector2(BOOMERANG_OFFSET_X, 0.0f), Vector2(BULLET_WIDTH, BULLET_HEIGHT), spriteSheet);
 	SetAnimation(ID_ANIM_BOOMERANG_BRO_WALK);
 	m_leftX = (int)position.x;
-	m_rightX = (int)(position.x + 48.0f);
+	m_rightX = (int)(position.x + PATROL_DISTANCE);
 	m_jumpTime = (float)(rand() % 3 + 5);
 	m_mario = dynamic_cast<Mario*>(Game::GetInstance()->GetCurrentWorld()->GetPlayer());
 }
@@ -63,17 +64,16 @@ void BoomerangBro::Update(float dt)
 	}
 	m_phaseTimer += dt;
 
-	if (m_phaseTimer >= 2.54f) {
+	if (m_phaseTimer >= PHASE_DURATION) {
 		m_isThrowingPhase = !m_isThrowingPhase;
 		m_phaseTimer = 0.0f;
 		m_isThrowingPhase ? SetAnimation(ID_ANIM_BOOMERANG_BRO_THROW) : SetAnimation(ID_ANIM_BOOMERANG_BRO_WALK);
 		m_state = BoomerangBroState::WALKRIGHT;
 	}
-
 	if (m_boomerang1)
 	{
 		m_boomerang1->m_lifeTimer += dt;
-		if (m_boomerang1->m_lifeTimer >= BOOMERANG_LIFETIME) {
+		if (m_boomerang1->m_lifeTimer >= LIFETIME) {
 			m_boomerang1->Deactivate();
 			m_boomerang1 = nullptr;
 		}
@@ -81,7 +81,7 @@ void BoomerangBro::Update(float dt)
 	if (m_boomerang2)
 	{
 		m_boomerang2->m_lifeTimer += dt;
-		if (m_boomerang2->m_lifeTimer >= BOOMERANG_LIFETIME) {
+		if (m_boomerang2->m_lifeTimer >= LIFETIME) {
 			m_boomerang2->Deactivate();
 			m_boomerang2 = nullptr;
 		}

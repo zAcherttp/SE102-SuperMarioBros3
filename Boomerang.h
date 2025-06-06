@@ -1,25 +1,12 @@
 #pragma once
 #include "Enemy.h"
-#define BULLET_WIDTH 12
-#define BULLET_HEIGHT 12
 
 enum class BoomerangState
 {
 	OUTWARD,
 	RETURN,
 	HOLDING
-};	
-
-#define BOOMERANG_HORIZONTAL_SPEED 220.0f  
-#define BOOMERANG_MAX_VERTICAL_SPEED 220.0f 
-#define BOOMERANG_INITAL_UPWARD_SPEED 80.0f  
-#define BOOMERANG_GRAVITY 53.0f             
-#define BOOMERANG_VERTICAL_ACCE 20.0f      
-#define BOOMERANG_HORIZONTAL_ACCE 180.0f     
-#define BOOMERANG_WIDTH 16
-#define BOOMERANG_HEIGHT 16
-
-#define BOOMERANG_LIFETIME 10.0f 
+};
 
 class Boomerang : public Enemy
 {

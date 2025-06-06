@@ -10,30 +10,31 @@
 #include "World.h"
 
 using namespace GameConstants;
+using namespace Enemies::ParaGoomba;
 
 ParaGoomba::ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	: Enemy(position, size, spriteSheet)
 	, m_animTimer(0.0f)
-	, m_frameTime(0.15f)
+	, m_frameTime(FRAME_TIME)  // Time per frame for animation
 	, m_flipFrame(false)
 	, m_deathTimer(0.0f)
 	, m_isDying(false)
 	, m_jumpTimer(0.0f)
-	, m_jumpInterval(0.5f)  // Time between jumps
+	, m_jumpInterval(JUMP_INTERVAL)  // Time between jumps
 	, m_isJumping(false)
 	, m_jumpCount(0)
-	, m_jumpsBeforeBigJump(3)  // After 3 small jumps, do a big jump
+	, m_jumpsBeforeBigJump(JUMPS_BEFORE_BIG_JUMP)  // After 3 small jumps, do a big jump
 	, m_hasWings(true)  // Start with wings
 	, m_currentPhase(0)  // Start with closed wings
 	, m_phaseTimer(0.0f)
 
-	, m_closedWingsDuration(0.5f)   // Walk with wings closed for 3 seconds
-	, m_mediumFlapsDuration(2.0f)   // Medium flaps for 2 seconds (3 small jumps)
-	, m_rapidFlapsDuration(1.0f)    // Rapid flaps for 1 second (big jump)
-	, m_mediumFlapSpeed(0.17f)       // Medium flap every 0.2 seconds
-	, m_rapidFlapSpeed(0.066f)        // Rapid flap every 0.1 seconds
-	, m_smallJumpForce(-1.5f * 60.0f)  // Small jump force
-	, m_bigJumpForce(-3.5f * 60.0f)    // Big jump force
+	, m_closedWingsDuration(CLOSED_WINGS_DURATION) 
+	, m_mediumFlapsDuration(MEDIUM_FLAP_DURATION)  
+	, m_rapidFlapsDuration(RAPID_FLAP_DURATION)   
+	, m_mediumFlapSpeed(MEDIUM_FLAP_SPEED)     
+	, m_rapidFlapSpeed(RAPID_FLAP_SPEED)        
+	, m_smallJumpForce(SMALL_JUMP_FORCE)
+	, m_bigJumpForce(BIG_JUMP_FORCE)    
 	, m_animDelay(0.0f)
 {
 	m_wing_left = new Wings(position, Vector2(WINGS_WIDTH, WINGS_HEIGHT), spriteSheet);
@@ -130,6 +131,7 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
 	}
 
 	else if (mario && !m_isDying) {
+		mario->Damage();
 	}
 }
 
@@ -263,7 +265,7 @@ void ParaGoomba::Update(float dt)
 		{
 			m_jumpTimer += dt;
 
-			if (m_isGrounded && m_jumpCount < 3 && m_jumpTimer >= 0.35f)
+			if (m_isGrounded && m_jumpCount < m_jumpsBeforeBigJump && m_jumpTimer >= 0.35f)
 			{
 				m_jumpCount++;
 				m_jumpTimer = 0.0f;
@@ -272,7 +274,7 @@ void ParaGoomba::Update(float dt)
 				// SetPosition(GetPosition() + vel * dt);
 			}
 
-			if ((m_jumpCount == 3 && m_isGrounded)) {
+			if ((m_jumpCount == m_jumpsBeforeBigJump && m_isGrounded)) {
 				m_currentPhase = 2;
 				m_phaseTimer = 0.0f;
 				m_jumpTimer = 0.0f;

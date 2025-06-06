@@ -20,8 +20,6 @@ Coin::Coin(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteShee
 	m_collisionComponent->SetPosition(position + Vector2(newSize.x / 2 , newSize.y / 2));
      SetAnimation(ID_ANIM_COIN, true);
     // Log(LOG_INFO, "Set Animation for: " + std::to_string(position.x) + ", " + std::to_string(position.y));
-
-
 }
 
 void Coin::Render(DirectX::SpriteBatch* spriteBatch)
