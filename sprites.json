@@ -1231,25 +1231,37 @@
       {
         "id": 2300,
         "name": "grass-top-left",
-        "frames": ["grass-top-left"],
+        "frames": [ "grass-top-left" ],
         "loop": false
       },
       {
         "id": 2310,
         "name": "grass-top-mid",
-        "frames": ["grass-top-mid"],
+        "frames": [ "grass-top-mid" ],
+        "loop": false
+      },
+      {
+        "id": 2320,
+        "name": "grass-top-right",
+        "frames": [ "grass-top-right" ],
         "loop": false
       },
       {
         "id": 2330,
         "name": "grass-bot-left",
-        "frames": ["grass-mid-left"],
+        "frames": [ "grass-mid-left" ],
         "loop": false
       },
       {
         "id": 2340,
         "name": "grass-bot-mid",
-        "frames": ["grass-mid"],
+        "frames": [ "grass-mid" ],
+        "loop": false
+      },
+      {
+        "id": 2350,
+        "name": "grass-mid-right",
+        "frames": [ "grass-mid-right" ],
         "loop": false
       }
     ]
