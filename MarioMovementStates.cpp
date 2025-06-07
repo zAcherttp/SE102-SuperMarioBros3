@@ -504,6 +504,10 @@ std::unique_ptr<MarioMovementState> MarioJumpState::HandleInput(Mario* mario) {
 		}
 	}
 
+	if (input->isBPressed && mario->GetCurrentPStateName() == RACCOON) {
+		return std::make_unique<MarioSweepState>(GetDirection());
+	}
+
 	return nullptr;
 }
 
@@ -1098,9 +1102,9 @@ void MarioSweepState::Sweep(Mario* mario, float dt) const {
 					// kill hit entity
 					Enemy* enemy = dynamic_cast<Enemy*>(other);
 					Troopa* troopa = dynamic_cast<Troopa*>(other);
-					if(troopa)
+					if (troopa)
 					{
-						troopa->HandleSweepCollision(-20.0f,300.0f, true);
+						troopa->HandleSweepCollision(-20.0f, 300.0f, true);
 						return;
 					}
 					if (enemy) {

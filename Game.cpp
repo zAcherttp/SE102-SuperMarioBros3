@@ -131,6 +131,11 @@ void Game::AddScore(const int& score)
 	m_hud->AddScore(score);
 }
 
+void Game::AddCoin(const int& coin)
+{
+	m_hud->AddCoins(coin);
+}
+
 void Game::RestartWorld()
 {
 	m_requestReset = true;

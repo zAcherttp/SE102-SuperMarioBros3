@@ -175,7 +175,7 @@ void World::Update(float dt) {
 			cameraPos.x = 0.0f;
 			cameraPos.y = 239.f;
 			Game::GetInstance()->SetCameraPosition(cameraPos, true);
-			Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
+			Game::GetInstance()->MoveCamera(Vector2(32.f * dt, 0));
 
 			//clamp mario position to camera's edges
 			Vector2 clampedPos = pos;

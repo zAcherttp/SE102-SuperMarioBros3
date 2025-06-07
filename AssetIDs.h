@@ -305,9 +305,9 @@ constexpr auto ID_SPRITE_HUD_POWERUP_SLOT = 2912;
 constexpr auto ID_SPRITE_HUD_BACKGROUND = 2913;
 
 // floating platforms
-constexpr auto ID_SPRITE_MOVING_PLATFORM_LEFT = 3200;
-constexpr auto ID_SPRITE_MOVING_PLATFORM_MID = 3201;
-constexpr auto ID_SPRITE_MOVING_PLATFORM_RIGHT = 3202;
+constexpr auto ID_SPRITE_MOVING_PLATFORM_LEFT = 3400;
+constexpr auto ID_SPRITE_MOVING_PLATFORM_MID = 3401;
+constexpr auto ID_SPRITE_MOVING_PLATFORM_RIGHT = 3402;
 
 // Grass
 constexpr auto ID_SPRITE_GRASS_TOP_LEFT = 2300;

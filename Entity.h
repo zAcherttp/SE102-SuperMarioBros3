@@ -34,7 +34,7 @@ public:
 	virtual void Update(float dt) = 0;
 	virtual void Render(DirectX::SpriteBatch* spriteBatch) = 0;
 
-	Vector2 GetSize() const;
+	virtual Vector2 GetSize() const;
 	void SetSize(const Vector2& size);
 
 	Vector2 GetPosition() const;
