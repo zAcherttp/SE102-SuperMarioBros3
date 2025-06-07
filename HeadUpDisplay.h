@@ -49,6 +49,8 @@ public:
 	void SetMarioPowerupType(int powerupType);
 	int GetMarioPowerupType() const;
 
+	void Reset();
+
 private:
 	static HeadUpDisplay* s_instance;
 

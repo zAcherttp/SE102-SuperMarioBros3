@@ -1,9 +1,9 @@
 #pragma once
-#include "State.h"
 #include "Animator.h"
 #include "Collision.h"
 #include "CollisionComponent.h"
 #include "Game.h"
+#include "State.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -28,13 +28,13 @@ class Entity
 public:
 	Entity(Vector2 pos, SpriteSheet* spriteSheet);
 	Entity(Vector2 pos, Vector2 size, SpriteSheet* spriteSheet);
-	
+
 	virtual ~Entity() = default;
 
 	virtual void Update(float dt) = 0;
 	virtual void Render(DirectX::SpriteBatch* spriteBatch) = 0;
 
-	Vector2 GetSize() const;
+	virtual Vector2 GetSize() const;
 	void SetSize(const Vector2& size);
 
 	Vector2 GetPosition() const;

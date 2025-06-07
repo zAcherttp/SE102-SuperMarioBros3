@@ -1,0 +1,233 @@
+{
+  "width": 512,
+  "height": 192,
+  "background": {
+    "r": 0.0,
+    "b": 0.0,
+    "g": 0.0,
+    "a": 1
+  },
+  "cameraMode": 0,
+  "spritesData": "sprites.json",
+  "entities": [
+    {
+      "type": 0,
+      "x": 144.0,
+      "y": 1.0
+    },
+    {
+      "type": 33,
+      "x": 0.0,
+      "y": 0.0,
+      "width": 16,
+      "height": 16,
+      "countX": 8,
+      "countY": 12
+    },
+    {
+      "type": 33,
+      "x": 128.0,
+      "y": 160.0,
+      "width": 16,
+      "height": 16,
+      "countX": 24,
+      "countY": 2
+    },
+    {
+      "type": 33,
+      "x": 160.0,
+      "y": 0.0,
+      "width": 16,
+      "height": 12,
+      "countX": 12,
+      "countY": 1
+    },
+    {
+      "type": 33,
+      "x": 384.0,
+      "y": 0.0,
+      "width": 16,
+      "height": 16,
+      "countX": 8,
+      "countY": 10
+    },
+    {
+      "type": 33,
+      "x": 336.0,
+      "y": 64.0,
+      "width": 16,
+      "height": 16,
+      "countX": 3,
+      "countY": 6
+    },
+    {
+      "type": 33,
+      "x": 288.0,
+      "y": 112.0,
+      "width": 16,
+      "height": 16,
+      "countX": 3,
+      "countY": 3
+    },
+    {
+      "type": 33,
+      "x": 320.0,
+      "y": 80.0,
+      "width": 16,
+      "height": 16,
+      "countX": 1,
+      "countY": 2
+    },
+    {
+      "type": 33,
+      "x": 304.0,
+      "y": 96.0,
+      "width": 16,
+      "height": 16,
+      "countX": 1,
+      "countY": 1
+    },
+    {
+      "type": 33,
+      "x": 272.0,
+      "y": 128.0,
+      "width": 16,
+      "height": 16,
+      "countX": 1,
+      "countY": 2
+    },
+    {
+      "type": 33,
+      "x": 256.0,
+      "y": 144.0,
+      "width": 16,
+      "height": 16,
+      "countX": 1,
+      "countY": 1
+    },
+    {
+      "type": 27,
+      "x": 128.0,
+      "y": 0.0,
+      "width": 16,
+      "height": 16,
+      "countX": 2,
+      "countY": 2,
+      "solid": true,
+      "hasHead": true,
+      "isBonus": true,
+      "isCollidable": false
+    },
+    {
+      "type": 27,
+      "x": 352.0,
+      "y": 0.0,
+      "width": 16,
+      "height": 16,
+      "countX": 2,
+      "countY": 2,
+      "solid": true,
+      "hasHead": true,
+      "enterable": true,
+      "enterType": 2,
+      "isBonus": true,
+      "isCollidable": true
+    },
+    {
+      "type": 28,
+      "x": 240.0,
+      "y": 128.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    },
+    {
+      "type": 28,
+      "x": 224.0,
+      "y": 128.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    },
+    {
+      "type": 28,
+      "x": 208.0,
+      "y": 112.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    },
+    {
+      "type": 28,
+      "x": 256.0,
+      "y": 112.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    },
+    {
+      "type": 28,
+      "x": 256.0,
+      "y": 96.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    },
+    {
+      "type": 28,
+      "x": 256.0,
+      "y": 64.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    },
+    {
+      "type": 28,
+      "x": 256.0,
+      "y": 48.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    },
+    {
+      "type": 28,
+      "x": 240.0,
+      "y": 80.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    },
+    {
+      "type": 28,
+      "x": 224.0,
+      "y": 80.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    },
+    {
+      "type": 28,
+      "x": 240.0,
+      "y": 32.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    },
+    {
+      "type": 28,
+      "x": 224.0,
+      "y": 32.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    },
+    {
+      "type": 28,
+      "x": 208.0,
+      "y": 48.0,
+      "width": 16,
+      "height": 16,
+      "solid": false
+    }
+  ]
+}

@@ -83,9 +83,8 @@ void Leaf::OnCollision(const CollisionResult& event)
 	Mario* mario = dynamic_cast<Mario*>(event.collidedWith);
 	if (mario)
 	{
-		// Handle the interaction with Mario
-		//EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100);
-		//EffectManager::GetInstance()->CreateCoinEffect(GetPosition());
+
+		EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 1000);
 
 		mario->PowerUp(PowerUpType::RACCOON);
 		m_isActive = false;

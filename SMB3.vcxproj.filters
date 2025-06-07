@@ -3,7 +3,8 @@
   <ItemGroup>
     <Filter Include="Resources">
       <UniqueIdentifier>d439e338-f767-4ef7-9b54-da8b4177f705</UniqueIdentifier>
-      <Extensions>ico;cur;bmp;dds;dlg;fbx;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+      <Extensions>
+        ico;cur;bmp;dds;dlg;fbx;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Resources\Texture">
       <UniqueIdentifier>{a5bc49fd-4ff4-4276-a3ea-6d4c7989657e}</UniqueIdentifier>
@@ -199,11 +200,37 @@
     <ClInclude Include="FirePiranha.h">
       <Filter>Source\Entity\Enemies</Filter>
     </ClInclude>
-    <ClInclude Include="RedTroopas.h" />
-    <ClInclude Include="Effect.h" />
-    <ClInclude Include="EffectManager.h" />
-    <ClInclude Include="Mushroom.h" />
-    <ClInclude Include="FireLeaf.h" />
+    <ClInclude Include="EffectManager.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="FireLeaf.h">
+      <Filter>Source\Entity\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="Mushroom.h">
+      <Filter>Source\Entity\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="RedTroopas.h">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatingPlatform.h">
+      <Filter>Source\Entity\Block</Filter>
+    </ClInclude>
+    <ClInclude Include="BitePiranha.h" />
+    <ClInclude Include="BrickParticle.h" />
+    <ClInclude Include="HiddenButton.h" />
+    <ClInclude Include="Troopa.h" />
+    <ClInclude Include="GreenTroopa.h" />
+    <ClInclude Include="Grass.h" />
+    <ClInclude Include="SecretWall.h" />
+    <ClInclude Include="BoomerangBro.h" />
+    <ClInclude Include="Boomerang.h" />
+    <ClInclude Include="HitBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp">
@@ -341,14 +368,40 @@
     <ClCompile Include="FirePiranha.cpp">
       <Filter>Source\Entity\Enemies</Filter>
     </ClCompile>
-    <ClCompile Include="RedTroopas.cpp" />
-    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Game.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="EffectManager.cpp" />
-    <ClCompile Include="Mushroom.cpp" />
-    <ClCompile Include="FireLeaf.cpp" />
+    <ClCompile Include="Effect.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="FireLeaf.cpp">
+      <Filter>Source\Entity\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="Mushroom.cpp">
+      <Filter>Source\Entity\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="RedTroopas.cpp">
+      <Filter>Source\Entity\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatingPlatform.cpp">
+      <Filter>Source\Entity\Block</Filter>
+    </ClCompile>
+    <ClCompile Include="BitePiranha.cpp" />
+    <ClCompile Include="BrickParticle.cpp" />
+    <ClCompile Include="HiddenButton.cpp" />
+    <ClCompile Include="Troopa.cpp" />
+    <ClCompile Include="GreenTroopa.cpp" />
+    <ClCompile Include="Grass.cpp" />
+    <ClCompile Include="SecrectWall.cpp" />
+    <ClCompile Include="BoomerangBro.cpp" />
+    <ClCompile Include="Boomerang.cpp" />
+    <ClCompile Include="HitBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="textures\font.png">
@@ -377,6 +430,9 @@
     <None Include="packages.config">
       <Filter>Source\Core</Filter>
     </None>
+    <None Include="world_1-4.json" />
+    <None Include="world_1-1_hidden.json" />
+    <None Include="world_1-4_end.json" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="textures\readme.txt">

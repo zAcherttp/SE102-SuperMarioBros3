@@ -4,15 +4,15 @@
 
 #pragma once
 
-#include "DeviceResources.h"
-#include "SpriteSheet.h"
 #include "Animator.h"
 #include "Camera.h"
-#include "World.h"
-#include "StepTimer.h"
+#include "DeviceResources.h"
+#include "EffectManager.h"
 #include "HeadUpDisplay.h"
 #include "json.hpp"
-#include "EffectManager.h"
+#include "SpriteSheet.h"
+#include "StepTimer.h"
+#include "World.h"
 
 using json = nlohmann::json;
 
@@ -64,6 +64,9 @@ public:
 	void UpdateHUD(float dt);
 
 	void AddScore(const int& score);
+	void AddCoin(const int& coin);
+
+	void SetEnterPosition(const Vector2& pos);
 
 	void RestartWorld();
 
@@ -73,6 +76,17 @@ public:
 
 	SpriteSheet* GetSpriteSheet() const;
 	DirectX::SpriteBatch* GetSpriteBatch() const;
+
+	int GetCurrentWorldId() const { return m_currentWorldId; }
+	int GetStartWorldId() const { return m_startWorldId; }
+	World* GetCurrentWorld() const { return m_worlds.at(m_currentWorldId); }
+
+	HeadUpDisplay* GetHUD() const { return m_hud.get(); }
+
+	Camera* GetCamera() const { return m_camera.get(); }
+	std::unordered_map<int, World*> m_worlds;
+	int m_currentWorldId;
+
 private:
 
 	static Game* s_instance;
@@ -137,9 +151,9 @@ private:
 	int m_wndWidth;
 	int m_wndHeight;
 
-	std::unordered_map<int, World*> m_worlds;
-	int m_currentWorldId;
 	int m_nextWorldId;
+	Vector2 m_worldStartPosition;
+	int m_startWorldId;
 
 	bool m_isLoading;
 	bool m_requestReset;

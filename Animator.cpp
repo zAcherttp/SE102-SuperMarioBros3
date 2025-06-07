@@ -1,6 +1,6 @@
 #include "pch.h"
-#include "Debug.h"
 #include "Animator.h"
+#include "Debug.h"
 
 void Animator::SetSpriteSheet(SpriteSheet* spriteSheet)
 {
@@ -22,44 +22,32 @@ void Animator::DefineAnimation(const int& name, const std::vector<const wchar_t*
 	{
 		//std::wstring fname = std::wstring(frameName);
 		//std::string fstr = std::string(fname.begin(), fname.end());
-		// Log(__FUNCTION__, "Finding frame: " + fstr); // Updated to use 'fstr' instead of 'name.c_str()'
+		//Log(__FUNCTION__, "Finding frame: " + fstr); // Updated to use 'fstr' instead of 'name.c_str()'
 		auto frame = m_spriteSheet->Find(frameName);
 		if (frame)
 		{
 			sequence.frames.push_back(frame);
-			//Log(__FUNCTION__, "Found frame:" + str);
+			//Log(__FUNCTION__, "Found frame:" + fstr);
 		}
 		else {
-			// Log(__FUNCTION__, "Frame not found");
+			//Log(__FUNCTION__, "Frame not found");
 		}
 	}
 
 	// Save the animation
 	m_animations[name] = sequence;
 
-	// Log(__FUNCTION__, "Loaded animation: " + std::to_string(name));
-
+	/*if (name < 500000 && name > 100000) {
+		Log(__FUNCTION__, "Loaded animation: " + std::to_string(name) + " with " + std::to_string(sequence.frames.size()) + " frames");
+	}*/
 }
 
 // Set the current animation and optionally reset it
 void Animator::SetAnimation(const int& id, bool reset)
 {
-
 	// Don't change if it's the same animation unless reset is requested
 	if (m_currentSequence == id && !reset)
-	{
 		return;
-	}
-
-	// Find the animation in the unordered map
-	auto it = m_animations.find(id);
-
-
-	m_currentSequence = id;
-	//Log(__FUNCTION__, "Animation set: " + std::to_string(id));
-	//Log(__FUNCTION__, "Animation frames: " + std::to_string(m_animations[id].frames.size()));
-
-
 
 	if (reset)
 	{
@@ -67,6 +55,8 @@ void Animator::SetAnimation(const int& id, bool reset)
 		m_totalElapsed = 0.f;
 		m_paused = false;
 	}
+
+	m_currentSequence = id;
 }
 
 // Update the animation based on elapsed time and current velocity
@@ -142,10 +132,15 @@ void Animator::Draw(DirectX::SpriteBatch* batch, const DirectX::XMFLOAT2& positi
 	// Get the current frame to draw
 	const SpriteSheet::SpriteFrame* frame = sequence.frames[m_currentFrame];
 
+
+	//if (m_currentSequence < 500000 && m_currentSequence > 100000)
+		//Log(LOG_INFO, "Drawing frame: " + std::to_string(m_currentFrame) + " of animation: " + std::to_string(m_currentSequence) + " at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
+
 	// Draw the sprite with current effects (flipping)
 	m_spriteSheet->Draw(batch, *frame, position, DirectX::Colors::White,
 		m_rotation, m_scale, m_spriteEffects, depth == 0.5f ? m_depth : depth);
-	//  Log(LOG_INFO, "Drawing frame: " + std::to_string(m_currentFrame) + " of animation: " + std::to_string(m_currentSequence) + " at position: " + std::to_string(position.x) + ", " + std::to_string(position.y));
+
+
 }
 
 /// <summary>

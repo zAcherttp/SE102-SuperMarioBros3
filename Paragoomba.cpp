@@ -1,37 +1,40 @@
 #include "pch.h"
-#include "ParaGoomba.h"
-#include "Debug.h"
 #include "AssetIDs.h"
-#include "Mario.h"
-#include "GameConfig.h"
-#include "World.h"
-#include "Goomba.h"
 #include "Block.h"
+#include "Debug.h"
+#include "GameConfig.h"
+#include "Goomba.h"
+#include "Mario.h"
+#include "ParaGoomba.h"
 #include "ScrewBlock.h"
+#include "World.h"
+
+using namespace GameConstants;
+using namespace Enemies::ParaGoomba;
 
 ParaGoomba::ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	: Enemy(position, size, spriteSheet)
 	, m_animTimer(0.0f)
-	, m_frameTime(0.15f)
+	, m_frameTime(FRAME_TIME)  // Time per frame for animation
 	, m_flipFrame(false)
 	, m_deathTimer(0.0f)
 	, m_isDying(false)
 	, m_jumpTimer(0.0f)
-	, m_jumpInterval(0.5f)  // Time between jumps
+	, m_jumpInterval(JUMP_INTERVAL)  // Time between jumps
 	, m_isJumping(false)
 	, m_jumpCount(0)
-	, m_jumpsBeforeBigJump(3)  // After 3 small jumps, do a big jump
+	, m_jumpsBeforeBigJump(JUMPS_BEFORE_BIG_JUMP)  // After 3 small jumps, do a big jump
 	, m_hasWings(true)  // Start with wings
 	, m_currentPhase(0)  // Start with closed wings
 	, m_phaseTimer(0.0f)
 
-	, m_closedWingsDuration(0.5f)   // Walk with wings closed for 3 seconds
-	, m_mediumFlapsDuration(2.0f)   // Medium flaps for 2 seconds (3 small jumps)
-	, m_rapidFlapsDuration(1.0f)    // Rapid flaps for 1 second (big jump)
-	, m_mediumFlapSpeed(0.17f)       // Medium flap every 0.2 seconds
-	, m_rapidFlapSpeed(0.066f)        // Rapid flap every 0.1 seconds
-	, m_smallJumpForce(-1.5f * 60.0f)  // Small jump force
-	, m_bigJumpForce(-3.5f * 60.0f)    // Big jump force
+	, m_closedWingsDuration(CLOSED_WINGS_DURATION) 
+	, m_mediumFlapsDuration(MEDIUM_FLAP_DURATION)  
+	, m_rapidFlapsDuration(RAPID_FLAP_DURATION)   
+	, m_mediumFlapSpeed(MEDIUM_FLAP_SPEED)     
+	, m_rapidFlapSpeed(RAPID_FLAP_SPEED)        
+	, m_smallJumpForce(SMALL_JUMP_FORCE)
+	, m_bigJumpForce(BIG_JUMP_FORCE)    
 	, m_animDelay(0.0f)
 {
 	m_wing_left = new Wings(position, Vector2(WINGS_WIDTH, WINGS_HEIGHT), spriteSheet);
@@ -45,7 +48,7 @@ ParaGoomba::ParaGoomba(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
 	SetAnimation(ID_ANIM_PARAGOOMBA_WALK, true);
 	m_visible = true;
 
-	SetVelocity(Vector2(-GameConfig::Enemies::Goomba::WALK_SPEED, 0.0f));
+	SetVelocity(Vector2(-Enemies::Goomba::WALK_SPEED, 0.0f));
 	SetupCollisionComponent();
 
 	m_isCollidable = true;
@@ -90,7 +93,8 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
 	if (event.contactNormal.y < 0 && block)
 	{
 		Vector2 vel = GetVelocity();
-		vel += event.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - event.contactTime);
+		//vel += event.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - event.contactTime);
+		vel.y = 0.0f;
 		SetVelocity(vel);
 		m_isJumping = false;
 		return;
@@ -100,11 +104,11 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
 	{
 		if (mario) {
 			if (m_hasWings) {
-
+				EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 				TransformToGoomba();
 
 				Vector2 vel = mario->GetVelocity();
-				vel.y = GameConfig::Mario::BOUNCE_FORCE;
+				vel.y = Player::BOUNCE_FORCE;
 				mario->SetVelocity(vel);
 			}
 			else {
@@ -112,7 +116,7 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
 				Die(DyingType::STOMPED);
 
 				Vector2 vel = mario->GetVelocity();
-				vel.y = GameConfig::Mario::BOUNCE_FORCE;
+				vel.y = Player::BOUNCE_FORCE;
 				mario->SetVelocity(vel);
 			}
 		}
@@ -127,11 +131,13 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
 	}
 
 	else if (mario && !m_isDying) {
+		mario->Damage();
 	}
 }
 
 void ParaGoomba::Die(DyingType type)
 {
+	EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 	if (type == DyingType::STOMPED)
 	{
 		if (!m_isDying) {
@@ -157,8 +163,8 @@ void ParaGoomba::Die(DyingType type)
 			m_deathTimer = 0.0f;
 			SetAnimation(ID_ANIM_PARAGOOMBA_WALK, false);
 			m_animator->SetFlipVertical(true);
-			SetVelocity(Vector2(GameConfig::Enemies::Goomba::WALK_SPEED,
-				-GameConfig::Enemies::DEATH_BOUNCE_VELOCITY));
+			SetVelocity(Vector2(Enemies::Goomba::WALK_SPEED,
+				-Enemies::DEATH_BOUNCE_VELOCITY));
 		}
 		return;
 	}
@@ -185,7 +191,7 @@ void ParaGoomba::Update(float dt)
 
 	if (!m_isGrounded) {
 		Vector2 vel = GetVelocity();
-		vel.y += GameConfig::Physics::GRAVITY * dt;
+		vel.y += Enemies::ParaGoomba::GRAVITY * dt;
 		SetVelocity(vel);
 	}
 
@@ -193,7 +199,7 @@ void ParaGoomba::Update(float dt)
 		m_deathTimer += dt;
 		if (m_dyingType == DyingType::STOMPED)
 		{
-			if (m_deathTimer >= GameConfig::Enemies::DEATH_STOMP_ANI_TIME) {
+			if (m_deathTimer >= Enemies::DEATH_STOMP_ANI_TIME) {
 				// After 0.5 seconds, deactivate the Goomba
 				m_isActive = false;
 				m_visible = false;// Remove collision component
@@ -202,7 +208,7 @@ void ParaGoomba::Update(float dt)
 		}
 		if (m_dyingType == DyingType::BONKED)
 		{
-			if (m_deathTimer >= GameConfig::Enemies::DEATH_BONK_ANI_TIME) {
+			if (m_deathTimer >= Enemies::DEATH_BONK_ANI_TIME) {
 				// After 2.0 seconds, deactivate the Goomba
 				m_isActive = false;
 				m_visible = false;// Remove collision component
@@ -260,7 +266,7 @@ void ParaGoomba::Update(float dt)
 		{
 			m_jumpTimer += dt;
 
-			if (m_isGrounded && m_jumpCount < 3 && m_jumpTimer >= 0.35f)
+			if (m_isGrounded && m_jumpCount < m_jumpsBeforeBigJump && m_jumpTimer >= 0.35f)
 			{
 				m_jumpCount++;
 				m_jumpTimer = 0.0f;
@@ -269,7 +275,7 @@ void ParaGoomba::Update(float dt)
 				// SetPosition(GetPosition() + vel * dt);
 			}
 
-			if ((m_jumpCount == 3 && m_isGrounded)) {
+			if ((m_jumpCount == m_jumpsBeforeBigJump && m_isGrounded)) {
 				m_currentPhase = 2;
 				m_phaseTimer = 0.0f;
 				m_jumpTimer = 0.0f;
@@ -389,11 +395,11 @@ void ParaGoomba::WalkInMarioDirection(Mario* mario)
 
 		SetVelocity(vel);
 		if (marioPos.x > goombaPos.x) {
-			vel.x = GameConfig::Enemies::Goomba::WALK_SPEED;
+			vel.x = Enemies::Goomba::WALK_SPEED;
 			SetVelocity(Vector2(vel));
 		}
 		else {
-			vel.x = -GameConfig::Enemies::Goomba::WALK_SPEED;
+			vel.x = -Enemies::Goomba::WALK_SPEED;
 			SetVelocity(Vector2(vel));
 		}
 	}

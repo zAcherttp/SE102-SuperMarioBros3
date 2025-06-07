@@ -1,13 +1,13 @@
 #include "pch.h"
+#include "Block.h"
 #include "Collision.h"
 #include "CollisionComponent.h"
-#include "Mario.h"
 #include "Debug.h"
-#include "RedTroopas.h"
-#include "Block.h"
-#include "Enemy.h"
-#include "Paragoomba.h"
 #include "DebugOverlay.h"
+#include "Enemy.h"
+#include "Mario.h"
+#include "Paragoomba.h"
+#include "RedTroopas.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -366,7 +366,8 @@ void Collision::ResolveOverlaps(Entity* entity, const std::vector<Entity*>& pote
 		return;
 	}
 	Mario* mario = dynamic_cast<Mario*>(entity);
-	if (!mario) return;
+	ParaGoomba* prgoomba = dynamic_cast<ParaGoomba*>(entity);
+	if (!mario || !prgoomba) return;
 
 	// Check for overlaps with each potential collision
 	for (Entity* other : potentialCollisions) {
@@ -574,6 +575,12 @@ bool Collision::GroundCheck(const Entity* entity, float dt)
 		for (Entity* other : m_grid[cell.first][cell.second].entities) {
 			// Skip if it's the same entity or not a static object (potential ground)
 			if (other != entity && other->IsStatic() && other->IsActive() && other->IsCollidable()) {
+
+				Block* block = dynamic_cast<Block*>(other);
+				if(block && block->IsCollectible())
+				{
+					continue;
+				}
 
 				// Print the class name of the entity
 				//Log(LOG_INFO, std::string(typeid(*other).name()));

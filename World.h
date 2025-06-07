@@ -1,11 +1,16 @@
 #pragma once
-#include <vector>
-#include <memory>
 #include "json.hpp"
+#include <memory>
+#include <vector>
 
 using json = nlohmann::json;
 class Entity;
 class Collision;
+
+enum class CameraMode {
+	DEFAULT = 0,
+	AUTOSCROLL = 1
+};
 
 class World
 {
@@ -22,6 +27,7 @@ public:
 	void Reset();
 	void Teleport();
 	void TogglePause();
+	void SetNextWorld();
 
 	Entity* GetPlayer();
 	static World* GetInstance();
@@ -34,6 +40,11 @@ public:
 	void HandleInput(DirectX::Keyboard::State* kbState, DirectX::Keyboard::KeyboardStateTracker* kbsTracker);
 
 	void AddEntity(Entity* entity);
+	std::vector<Entity*> GetEntities();
+	static void ResetInstance() { s_instance = nullptr; }
+	std::unique_ptr<Collision> m_collisionSystem;
+	CameraMode m_cameraMode;
+
 private:
 	std::string m_path;
 	std::string m_name;
@@ -47,7 +58,6 @@ private:
 
 	bool m_isPaused;
 
-	std::unique_ptr<Collision> m_collisionSystem;
 
 	//Modules of the load function
 	json LoadJsonFile(const std::string& filePath);

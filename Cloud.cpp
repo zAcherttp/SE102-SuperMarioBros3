@@ -27,9 +27,15 @@ Cloud::Cloud(Vector2 position, int count, SpriteSheet* spriteSheet, int type)
         case 1:
         case 2: 
         case 3: 
+        case 4:
             m_tileXcount = 1;
             m_tileYcount = 1;
             newSize = Vector2(16.f, 16.f);
+            break;
+        case 5: // big cloud
+            m_tileXcount = 2;
+            m_tileYcount = 1;
+            newSize = Vector2(32.f, 16.f);
             break;
         default:
             Log(__FUNCTION__, "Unknown cloud type: " + std::to_string(m_type));
@@ -69,6 +75,13 @@ void Cloud::Render(DirectX::SpriteBatch* spriteBatch)
             break;
         case 3: 
             m_animator->Draw(spriteBatch, ID_SPRITE_CLOUD_FLOWER, pos);
+            break;
+        case 4: 
+            m_animator->Draw(spriteBatch, ID_SPRITE_CLOUD_SMALL, pos);
+            break;
+        case 5:
+            m_animator->Draw(spriteBatch, ID_SPRITE_CLOUD_BIG_LEFT, pos);
+            m_animator->Draw(spriteBatch, ID_SPRITE_CLOUD_BIG_RIGHT, pos + Vector2(tileSize.x, 0));
             break;
 
         default:

@@ -4,16 +4,19 @@
 #include "Effect.h"
 #include "EffectManager.h"
 #include "Game.h"
+#include "GameConfig.h"
 #include "Mario.h"
 #include "MarioPowerUpStates.h"
 #include "SimpleMath.h"
 #include <memory>
 #include <string>
 
-std::string MarioDieState::GetStateName() const { return "die"; }
-std::string MarioSmallState::GetStateName() const { return "small"; }
-std::string MarioSuperState::GetStateName() const { return "super"; }
-std::string MarioRaccoonState::GetStateName() const { return "raccoon"; }
+using namespace GameStrings;
+
+std::string MarioDieState::GetStateName() const { return DIE; }
+std::string MarioSmallState::GetStateName() const { return SMALL; }
+std::string MarioSuperState::GetStateName() const { return SUPER; }
+std::string MarioRaccoonState::GetStateName() const { return RACCOON; }
 
 int MarioDieState::GetStateAnimValue() const { return ID_ANIM_MARIO_DIE; }
 int MarioSmallState::GetStateAnimValue() const { return ID_ANIM_MARIO_SMALL; }
@@ -349,6 +352,7 @@ void MarioRaccoonState::Damage(Mario* mario) {
 	m_flashingTimer = 0.0f;
 	m_isFlashing = false;
 
+	m_smokeTimer = 0.0f;
 	EffectManager::GetInstance()->CreateEffect(mario->GetPosition(), Vector2(16, 16), EffectType::SMOKE);
 
 	return;
@@ -356,18 +360,19 @@ void MarioRaccoonState::Damage(Mario* mario) {
 
 void MarioRaccoonState::Update(Mario* mario, float dt)
 {
-	// Process invincible state
-	mario;
+	m_smokeTimer += dt;
 	if (m_isInvincible) {
 		m_invincibleTimer += dt;
-		m_smokeTimer += dt;
 
 		if (m_smokeTimer > 0.5f) {
-			if (m_stateHealth <= 0) m_powerDown = true;
+			if (m_stateHealth <= 0) {
+				m_powerDown = true;
+				return;
+			}
 		}
 
 		// End invincibility after the set time
-		if (m_invincibleTimer >= PLAYER_INVINCIBLE_TIME / 4.f) {
+		if (m_invincibleTimer >= 0.5f) {
 			m_isInvincible = false;
 			m_isFlashing = false;
 			m_takenDmg = false;
@@ -383,7 +388,7 @@ PowerUpType MarioPowerUpState::GetCurrentPowerUp() const
 }
 
 bool MarioPowerUpState::IsTransitioning() const {
-	return m_isInvincible && m_invincibleTimer < PLAYER_INVINCIBLE_TIME / 2.f;
+	return m_isInvincible && m_invincibleTimer < PLAYER_INVINCIBLE_TIME / 4.f;
 }
 
 bool MarioPowerUpState::IsDying() const

@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "CollisionComponent.h"
-#include "Entity.h"
-#include "DebugOverlay.h"
 #include "Debug.h"
+#include "DebugOverlay.h"
+#include "Entity.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -16,6 +16,7 @@ CollisionComponent::CollisionComponent(Entity* owner)
 	m_pushVel((0.f, 0.f)),
 	m_pushedDistance(0)
 {
+	m_platform = nullptr;
 }
 
 RECT CollisionComponent::GetRect() const
@@ -39,7 +40,7 @@ Vector2 CollisionComponent::GetSize() const
 	return m_size;
 }
 
-void CollisionComponent::SetSize(DirectX::SimpleMath::Vector2 size)
+void CollisionComponent::SetSize(const DirectX::SimpleMath::Vector2& size)
 {
 	m_size = size;
 }
@@ -49,7 +50,7 @@ Vector2 CollisionComponent::GetPosition() const
 	return m_pos;
 }
 
-void CollisionComponent::SetPosition(DirectX::SimpleMath::Vector2 position)
+void CollisionComponent::SetPosition(const DirectX::SimpleMath::Vector2& position)
 {
 	m_pos = position;
 }
@@ -59,12 +60,26 @@ Vector2 CollisionComponent::GetVelocity() const
 	return m_vel;
 }
 
-void CollisionComponent::SetVelocity(DirectX::SimpleMath::Vector2 velocity)
+void CollisionComponent::SetVelocity(const DirectX::SimpleMath::Vector2& velocity)
 {
 	m_vel = velocity;
 }
 
+void CollisionComponent::SetPlatform(Entity* ent)
+{
+	if (ent) {
+		m_platform = ent->GetCollisionComponent();
+		return;
+	}
+	m_platform = nullptr;
+}
+
 void CollisionComponent::Update(float dt) {
+	// move along platform
+	if (m_platform) {
+		m_pos += m_platform->GetVelocity() * dt;
+	}
+
 	// consume push
 	if (m_isBeingPushed) {
 		Vector2 delta = m_pushVel * dt;

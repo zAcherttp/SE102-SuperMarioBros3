@@ -3,10 +3,10 @@
 //
 
 #include "pch.h"
-#include "Game.h"
-#include "Helpers.h"
 #include "Debug.h"
 #include "DebugOverlay.h"
+#include "Game.h"
+#include "Helpers.h"
 #include "Mario.h"
 
 extern void ExitGame() noexcept;
@@ -86,6 +86,7 @@ void Game::Update(DX::StepTimer const& timer) {
 
 	if (m_worlds[m_currentWorldId]) {
 		m_worlds[m_currentWorldId]->Update(elapsedTime);
+		m_camera->Update(elapsedTime);
 	}
 
 	if (m_nextWorldId != m_currentWorldId || m_requestReset) {
@@ -110,6 +111,10 @@ void Game::HandleInput() {
 	if (m_keys->IsKeyPressed(Keyboard::F4)) {
 		DebugOverlay::ToggleCollisionBox();
 	}
+	if (m_keys->IsKeyPressed(Keyboard::F5)) {
+		//function testing key
+		m_camera->Shake(Vector2(0.f, 4.f), 8, .25f);
+	}
 	if (m_worlds[m_currentWorldId]) {
 		m_worlds[m_currentWorldId]->HandleInput(&kbs, m_keys.get());
 		DebugOverlay::UpdateMarioState((Mario*)m_worlds[m_currentWorldId]->GetPlayer());
@@ -124,6 +129,16 @@ void Game::UpdateHUD(float dt)
 void Game::AddScore(const int& score)
 {
 	m_hud->AddScore(score);
+}
+
+void Game::AddCoin(const int& coin)
+{
+	m_hud->AddCoins(coin);
+}
+
+void Game::SetEnterPosition(const Vector2& pos)
+{
+	m_worldStartPosition = pos;
 }
 
 void Game::RestartWorld()
@@ -342,8 +357,10 @@ void Game::LoadGameConfig(const json& config)
 	m_wndHeight = config["window"]["height"];
 	Log(__FUNCTION__, "Window size set to: " + std::to_string(m_wndWidth) + "x" + std::to_string(m_wndHeight));
 
-	m_nextWorldId = config["game"]["world"]["startWorldId"];
+	m_startWorldId = m_nextWorldId = config["game"]["world"]["startWorldId"];
 	Log(__FUNCTION__, "Start world id: " + std::to_string(m_nextWorldId));
+
+
 
 	std::string spritePath = config["game"]["sprites"]["path"];
 	m_spritePath = std::wstring(spritePath.begin(), spritePath.end());
@@ -410,8 +427,10 @@ void Game::SwitchWorld()
 {
 	if (m_nextWorldId < 0) return;
 	m_isLoading = true;
+
 	if (m_worlds[m_currentWorldId] != NULL)
 		m_worlds[m_currentWorldId]->Unload();
+
 	m_currentWorldId = m_nextWorldId;
 
 	//TODO: clean up sprites/anims
@@ -421,7 +440,18 @@ void Game::SwitchWorld()
 	Log(__FUNCTION__, "Loading into world: " + world->GetName());
 	world->Load(m_spriteSheet.get());
 
+	if (m_worldStartPosition.x > 0 && m_worldStartPosition.y > 0) {
+		world->GetPlayer()->SetPosition(m_worldStartPosition);
+		m_worldStartPosition = Vector2(-1, -1);
+	}
+
+	m_camera->SetPosition(Vector2(0.f, 0.f), false);
+
 	m_isLoading = false;
+
+	m_hud->SetLives(3);
+	m_hud->SetScore(0);
+	m_hud->SetCoins(0);
 }
 #pragma endregion
 

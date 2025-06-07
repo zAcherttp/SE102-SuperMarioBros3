@@ -7,3 +7,7 @@ constexpr auto LOG_ERROR = 2;
 void Log(const char* label, std::string value);
 
 void Log(const int& label, std::string value);
+
+void Log(const char* label, const DirectX::SimpleMath::Vector2& velocity);
+
+void Log(const int& label, const DirectX::SimpleMath::Vector2& velocity);

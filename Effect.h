@@ -1,18 +1,21 @@
 #pragma once
 #include "Entity.h"
+#include "BrickParticle.h"
 
 enum class EffectType
 {
 	POINT,
 	BONK,
     COIN,
-	SMOKE
+	SMOKE,
+	BRICK,
+	ONE_UP
 };
 
 class Effect : public Entity
 {
 public:
-	Effect(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, EffectType type);
+	Effect(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, EffectType type, int points = 0);
 	~Effect() = default;
 
 	// Implementation of Entity's pure virtual function
@@ -23,7 +26,14 @@ public:
 	void Deactivate();
 	bool IsActive() const { return m_isActive; }
 
+	void SpawnBrickParticle();
+
 private:
+
+	std::vector<std::shared_ptr<BrickParticle>> m_brickParticles;
+
+	SpriteSheet* m_spriteSheet;
+
 	float m_animTimer;
 	EffectType m_type;
 

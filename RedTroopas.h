@@ -1,20 +1,16 @@
 #pragma once
-#include "Enemy.h"
+#include "Troopa.h"
 #include "Effect.h"
+#include "Wings.h"
 #include <vector>
 
-enum TroopaState
-{
-	WALKING,
-	SHELL_IDLE,
-	SHELL_SLIDE,
-	DEAD
-};
-
-class RedTroopas : public Enemy
+#define FLY_HEIGHT 110.0f // Height at which the Troopa flies
+#define MAX_FLYING_SPEED 70.0f // Maximum speed when flying
+#define VERTICAL_ACCELERATION 100.0f // Acceleration when flying
+class RedTroopas : public Troopa
 {
 public:
-	RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet);
+	RedTroopas(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, bool hasWing = false, bool hasSpecialSize = false);
 	~RedTroopas() = default;
 
 	void Update(float dt) override;
@@ -30,8 +26,8 @@ public:
 	void TransformToShell();
 	void TransformToTroopa();
 
-	void SetState(TroopaState state);
-	TroopaState GetState() const;
+	void InitializeWing();
+
 
 	// Check for platform edges using raycasts
 	bool CheckEdge();
@@ -40,6 +36,9 @@ public:
 
 	void StartVibration();
 	void UpdateVibration(float dt);
+
+	void HandleBounceCollision() override;
+	void HandleSweepCollision(float x_force, float y_force, bool spawnEffect) override;
 
 private:
 	float m_animTimer;
@@ -59,6 +58,11 @@ private:
 	bool m_firstRevivePhase;
 	bool m_secondRevivePhase;
 
+	Wings* m_wing;
+	bool m_hasWing = false;
+	float m_startPositionY;
+	bool m_isGoingUp;
+
 	float m_reviveTimer;
 	float m_reviveTime;
 
@@ -66,12 +70,14 @@ private:
 
 	float m_lastDirectionX;
 
+	bool m_isFlipped = false;
+
 	std::vector<Effect*> m_bonkEffects;
 
 	std::map<InteractionPointType, bool> m_pointCollisionState;
 
-	TroopaState m_state;
-
 	bool m_canRevive = false;
+
+	Vector2 m_ShellSize;
 };
 

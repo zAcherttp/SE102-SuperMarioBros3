@@ -1,23 +1,28 @@
 #include "pch.h"
-#include "Mushroom.h"
-#include "Debug.h"
 #include "AssetIDs.h"
-#include "Mario.h"
 #include "Block.h"
+#include "Debug.h"
 #include "GameConfig.h"
+#include "Mario.h"
+#include "Mushroom.h"
 
-Mushroom::Mushroom(Vector2 position, Vector2 size, SpriteSheet* spriteSheet)
+using namespace GameConstants;
+
+Mushroom::Mushroom(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, bool isGreen)
 	: Entity(position, size, spriteSheet)
 	, m_phase(MushroomPhase::GROWING)
 	, m_initialPosition(position)
+	, m_isGreen(isGreen)
 {
 	DefineAnimation(ID_ANIM_MUSHROOM, { L"mushroom" }, false, 0.1f);
-	SetAnimation(ID_ANIM_MUSHROOM, false);
-
+	DefineAnimation(ID_ANIM_MUSHROOM_GREEN, { L"mushroom-1up" }, false, 0.1f);
+	if(!m_isGreen) SetAnimation(ID_ANIM_MUSHROOM, false);
+	else SetAnimation(ID_ANIM_MUSHROOM_GREEN, false);
 }
 
 void Mushroom::Update(float dt)
 {
+	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
 	Vector2 m_pos = GetPosition();
 	Vector2 vel = GetVelocity();
 
@@ -60,11 +65,9 @@ void Mushroom::Update(float dt)
 	}
 	}
 
-	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
-
 	if (!m_isGrounded && m_hasInitializedCollisionComponent) {
 		vel = GetVelocity();
-		vel.y += GameConfig::Physics::GRAVITY * dt;
+		vel.y += PowerUps::Mushroom::GRAVITY * dt;
 		SetVelocity(vel);
 	}
 
@@ -105,20 +108,24 @@ void Mushroom::OnCollision(const CollisionResult& event)
 	if (event.contactNormal.y < 0 && block)
 	{
 		Vector2 vel = GetVelocity();
-		vel += event.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - event.contactTime);
+		//vel += event.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - event.contactTime);
+		vel.y = 0.0f;
 		SetVelocity(vel);
 		return;
 	}
 
 	if (mario)
 	{
-		// Handle the interaction with Mario
-		//EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100);
-		//EffectManager::GetInstance()->CreateCoinEffect(GetPosition());
-		mario->PowerUp(PowerUpType::SUPER);
+		if(!m_isGreen)
+		{
+			EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 1000);
+			mario->PowerUp(PowerUpType::SUPER);
+		}
+		else{ EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 1000, true); }
+		if(m_isGreen) EffectManager::GetInstance()->CreateOneUpEffect(GetPosition());
+		Game::GetInstance()->GetHUD()->SetLives(Game::GetInstance()->GetHUD()->GetLives() + 1);
 		m_isActive = false;
 	}
-
 }
 
 void Mushroom::SetupCollisionComponent()

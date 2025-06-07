@@ -80,6 +80,10 @@ void HeadUpDisplay::Render(DirectX::SpriteBatch* spriteBatch, DirectX::SpriteFon
 	Vector2 worldNumPos(48, 203);
 	Vector2 livesPos(48, 211);
 
+	for (int i = 0; i < 16; i++) {
+		m_animator->Draw(spriteBatch, ID_SPRITE_HUD_BACKGROUND, topLeft + (Vector2(8.f + 16.f * i, 217.f)) * scale, 0.0f, scale);
+	}
+
 	// Draw hud board and powerup slots
 	// 			draw with center pos							  top left pos		 offset to top left	
 	m_animator->Draw(spriteBatch, ID_SPRITE_HUD_BOARD, topLeft + (Vector2(13.f, 197.f) + Vector2(75.f, 13.f)) * scale, 0.0f, scale);
@@ -213,7 +217,7 @@ void HeadUpDisplay::UpdatePMeterTimer(float dt)
 void HeadUpDisplay::UpdateFlightTimer(float dt)
 {
 	// Convert to frame-based timing (assuming 60fps)
-	float frameTime = dt * 60.0f;
+	float frameTime = dt * 200.0f;
 
 	if (m_flightTimerActive) {
 		// Decrease the timer
@@ -270,6 +274,7 @@ void HeadUpDisplay::LoadSprites()
 	m_animator->DefineAnimation(ID_SPRITE_HUD_MUSHROOM, { L"powerup-mushroom" }, false);
 	m_animator->DefineAnimation(ID_SPRITE_HUD_STAR, { L"powerup-star" }, false);
 	m_animator->DefineAnimation(ID_SPRITE_HUD_POWERUP_SLOT, { L"powerupslot" }, false);
+	m_animator->DefineAnimation(ID_SPRITE_HUD_BACKGROUND, { L"hud-background" }, false);
 }
 
 void HeadUpDisplay::AddCoins(int amount)
@@ -365,4 +370,11 @@ const char* HeadUpDisplay::GetRTimeChar() const
 	static char timeBuffer[4];
 	sprintf_s(timeBuffer, "%03d", m_timeRemaining);
 	return timeBuffer;
+}
+
+void HeadUpDisplay::Reset()
+{
+	m_lives = 3;
+	m_score = 0;
+	m_coins = 0;
 }

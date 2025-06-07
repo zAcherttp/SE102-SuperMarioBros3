@@ -6,16 +6,19 @@
 #include "CollisionComponent.h"
 #include "Debug.h"
 #include "Entity.h"
+#include "FloatingPlatform.h"
 #include "HeadUpDisplay.h"
+#include "HitBox.h"
 #include "Keyboard.h"
 #include "Mario.h"
 #include "MarioMovementStates.h"
 #include "MarioPowerUpStates.h"
 #include "MarioStateBase.h"
-#include "RedTroopas.h"
+#include "Pipe.h"
 #include "SimpleMath.h"
 #include "SpriteBatch.h"
 #include "SpriteSheet.h"
+#include "Troopa.h"
 #include <cstdlib>
 #include <memory>
 #include <string>
@@ -35,17 +38,29 @@ using Keyboard = DirectX::Keyboard;
 #define B_BTN		Keyboard::J
 #define A_BTN		Keyboard::K
 
+//#define UP Keyboard::Up
+//#define DOWN Keyboard::Down
+//#define LEFT Keyboard::Left
+//#define RIGHT Keyboard::Right
+//
+//#define START Keyboard::I
+//
+//#define B_BTN Keyboard::A
+//#define A_BTN Keyboard::S
+
 constexpr auto PLAYER_HOLD_THROW_SPEED = 4.0f * 60.0f;
 
-Mario::Mario(Vector2 position, int lives, int score, int coins, SpriteSheet* spriteSheet)
-	: Entity(position, spriteSheet), m_lives(lives), m_score(score), m_coins(coins)
-{
+Mario::Mario(Vector2 position, int lives, int score, int coins,
+	SpriteSheet* spriteSheet)
+	: Entity(position, spriteSheet), m_lives(lives), m_score(score),
+	m_coins(coins) {
 	m_powerupSM = nullptr;
 	m_movementSM = nullptr;
 	m_inputState = new InputState();
 }
 
-void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker* kbsTracker) {
+void Mario::HandleInput(Keyboard::State* kbState,
+	Keyboard::KeyboardStateTracker* kbsTracker) {
 
 	m_inputState->isStartPressed = kbsTracker->IsKeyPressed(START);
 
@@ -68,7 +83,8 @@ void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 	m_inputState->isAPressed = kbsTracker->IsKeyPressed(A_BTN);
 	m_inputState->isBPressed = kbsTracker->IsKeyPressed(B_BTN);
 
-	if (!m_movementSM || !m_powerupSM || IsTransitioning()) return;
+	if (!m_movementSM || !m_powerupSM || IsTransitioning())
+		return;
 
 	auto mPState = m_powerupSM->HandleInput(this);
 	auto mMState = m_movementSM->HandleInput(this);
@@ -91,51 +107,49 @@ void Mario::HandleInput(Keyboard::State* kbState, Keyboard::KeyboardStateTracker
 	}
 }
 
-std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetInteractionPoints() const
-{
-	//TODO: change to this
-	//if (m_powerupSM && typeid(*m_powerupSM) == typeid(MarioSuperState)) {
+std::vector<std::pair<InteractionPointType, Vector2>>
+Mario::GetInteractionPoints() const {
+	// TODO: change to this
+	// if (m_powerupSM && typeid(*m_powerupSM) == typeid(MarioSuperState)) {
 	//	if (m_movementSM && typeid(*m_movementSM) == typeid(MarioSitState)) {
 	//		return GetBigMarioSitInteractionPoints();
 	//	}
 	//	return GetBigMarioInteractionPoints();
-	//}
+	// }
 
 	return GetSmallMarioInteractionPoints();
 }
 
-bool Mario::UsesInteractionPoints() const
-{
-	return true;
-}
+bool Mario::UsesInteractionPoints() const { return true; }
 
-void Mario::ItsAMe()
-{
+void Mario::ItsAMe() {
 	// set default for now, later game class will have mario factory
 
-	m_powerupSM = std::make_unique<MarioSmallState>();
+	m_powerupSM = std::make_unique<MarioSuperState>();
 	m_movementSM = std::make_unique<MarioIdleState>(Direction::Right);
 	m_powerupSM->Enter(this);
 	m_movementSM->Enter(this);
 	SetDirection(1);
 
-	Log(LOG_INFO, "Mario position: " + std::to_string(GetPosition().x) + ", " + std::to_string(GetPosition().y));
+	Log(LOG_INFO, "Mario position: " + std::to_string(GetPosition().x) + ", " +
+		std::to_string(GetPosition().y));
 	Log(LOG_INFO, "It's A Me, Mario");
 }
 
 void Mario::Damage() {
-	if (m_powerupSM) m_powerupSM->Damage(this);
+	if (m_powerupSM)
+		m_powerupSM->Damage(this);
 }
 
-void Mario::PowerUp(PowerUpType type)
-{
+void Mario::PowerUp(PowerUpType type) {
 	PowerUpType currentType = m_powerupSM->GetCurrentPowerUp();
 	if (currentType == type || IsTransitioning()) {
 		return;
 	}
 	switch (type) {
 	case PowerUpType::SUPER:
-		if (currentType > type) return;
+		if (currentType > type)
+			return;
 		m_powerupSM->PowerUp(this);
 		break;
 	case PowerUpType::RACCOON:
@@ -144,8 +158,7 @@ void Mario::PowerUp(PowerUpType type)
 	}
 }
 
-bool Mario::Kick(Direction dir, Entity* ent)
-{
+bool Mario::Kick(Direction dir, Entity* ent) {
 	if (m_movementSM->GetStateName() == "hold") {
 		return false;
 	}
@@ -157,24 +170,25 @@ bool Mario::Kick(Direction dir, Entity* ent)
 	return true;
 }
 
-void Mario::Update(float dt)
-{
-	if (!m_movementSM || !m_powerupSM) return;
+void Mario::Update(float dt) {
+	if (!m_movementSM || !m_powerupSM)
+		return;
 
 	m_isGrounded = Collision::GetInstance()->GroundCheck(this, dt);
 
 	m_collisionComponent->Update(dt);
 	m_powerupSM->Update(this, dt);
 
-	if (m_powerupSM->IsDying() || IsTransitioning()) return;
+	if (m_powerupSM->IsDying() || IsTransitioning())
+		return;
 
 	m_movementSM->Update(this, dt);
 	m_animator->Update(dt, m_collisionComponent->GetVelocity().x);
 
+	// Log(__FUNCTION__, GetVelocity());
 
 	HeadUpDisplay::GetInstance()->UpdatePMeter(
-		m_collisionComponent->GetVelocity().Length(),
-		IsGrounded(),
+		m_collisionComponent->GetVelocity().Length(), IsGrounded(),
 		m_inputState->isBDown,
 		m_inputState->isLeftDown || m_inputState->isRightDown);
 }
@@ -187,66 +201,69 @@ void Mario::Render(DirectX::SpriteBatch* spriteBatch) {
 	}
 }
 
-std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetSmallMarioInteractionPoints() const
-{
+std::vector<std::pair<InteractionPointType, Vector2>>
+Mario::GetSmallMarioInteractionPoints() const {
 	std::vector<std::pair<InteractionPointType, Vector2>> points;
 	Vector2 size = GetCollisionComponent()->GetSize();
 
 	points.push_back({ InteractionPointType::TopHead, Vector2(0, -size.y / 2) });
-	points.push_back({ InteractionPointType::LeftUpper, Vector2(-size.x / 2, -size.y / 4) });
-	points.push_back({ InteractionPointType::LeftLower, Vector2(-size.x / 2, size.y / 4) });
-	points.push_back({ InteractionPointType::RightUpper, Vector2(size.x / 2, -size.y / 4) });
-	points.push_back({ InteractionPointType::RightLower, Vector2(size.x / 2, size.y / 4) });
-	points.push_back({ InteractionPointType::LeftFoot, Vector2(-size.x / 4, size.y / 2) });
-	points.push_back({ InteractionPointType::RightFoot, Vector2(size.x / 4, size.y / 2) });
+	points.push_back(
+		{ InteractionPointType::LeftUpper, Vector2(-size.x / 2, -size.y / 4) });
+	points.push_back(
+		{ InteractionPointType::LeftLower, Vector2(-size.x / 2, size.y / 4) });
+	points.push_back(
+		{ InteractionPointType::RightUpper, Vector2(size.x / 2, -size.y / 4) });
+	points.push_back(
+		{ InteractionPointType::RightLower, Vector2(size.x / 2, size.y / 4) });
+	points.push_back(
+		{ InteractionPointType::LeftFoot, Vector2(-size.x / 4, size.y / 2) });
+	points.push_back(
+		{ InteractionPointType::RightFoot, Vector2(size.x / 4, size.y / 2) });
 
 	return points;
 }
 
-std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetBigMarioInteractionPoints() const
-{
+std::vector<std::pair<InteractionPointType, Vector2>>
+Mario::GetBigMarioInteractionPoints() const {
 	std::vector<std::pair<InteractionPointType, Vector2>> points;
 	Vector2 size = GetCollisionComponent()->GetSize();
 
 	points.push_back({ InteractionPointType::TopHead, Vector2(0, -size.y / 2) });
-	points.push_back({ InteractionPointType::LeftUpper, Vector2(-size.x / 2, -size.y / 3) });
+	points.push_back(
+		{ InteractionPointType::LeftUpper, Vector2(-size.x / 2, -size.y / 3) });
 	points.push_back({ InteractionPointType::LeftLower, Vector2(-size.x / 2, 0) });
-	points.push_back({ InteractionPointType::RightUpper, Vector2(size.x / 2, -size.y / 3) });
+	points.push_back(
+		{ InteractionPointType::RightUpper, Vector2(size.x / 2, -size.y / 3) });
 	points.push_back({ InteractionPointType::RightLower, Vector2(size.x / 2, 0) });
-	points.push_back({ InteractionPointType::LeftFoot, Vector2(-size.x / 4, size.y / 2) });
-	points.push_back({ InteractionPointType::RightFoot, Vector2(size.x / 4, size.y / 2) });
+	points.push_back(
+		{ InteractionPointType::LeftFoot, Vector2(-size.x / 4, size.y / 2) });
+	points.push_back(
+		{ InteractionPointType::RightFoot, Vector2(size.x / 4, size.y / 2) });
 
 	return points;
 }
 
-std::vector<std::pair<InteractionPointType, Vector2>> Mario::GetBigMarioSitInteractionPoints() const
-{
+std::vector<std::pair<InteractionPointType, Vector2>>
+Mario::GetBigMarioSitInteractionPoints() const {
 	return std::vector<std::pair<InteractionPointType, Vector2>>();
 }
 
-PowerUpType Mario::GetPowerUpState() const
-{
+PowerUpType Mario::GetPowerUpState() const {
 	return m_powerupSM->GetCurrentPowerUp();
 }
 
-bool Mario::IsTransitioning() const
-{
-	return m_powerupSM->IsTransitioning();
-}
+bool Mario::IsTransitioning() const { return m_powerupSM->IsTransitioning(); }
 
-bool Mario::IsDying() const
-{
-	return m_powerupSM->IsDying();
-}
+bool Mario::IsDying() const { return m_powerupSM->IsDying(); }
 
 void Mario::OnCollision(const CollisionResult& result) {
 	/*if (!result.collidedWith) return;
 
 	if (result.contactNormal.Dot(Vector2(0, 1)) == 0) {
-		SetVelocity(Vector2(0, GetVelocity().y));
+			SetVelocity(Vector2(0, GetVelocity().y));
 	}
 	if(result.contactNormal.Dot(Vector2(1, 0)) == 0) {
-		SetVelocity(Vector2(GetVelocity().x, 0));
+			SetVelocity(Vector2(GetVelocity().x, 0));
 	}*/
 	result;
 }
@@ -259,23 +276,54 @@ void Mario::OnNoCollision(float dt, Axis axis) {
 	else {
 		SetPosition(GetPosition() + Vector2(0, vel.y * dt));
 	}
+
+	m_collisionComponent->SetPlatform(nullptr);
 }
 
 void Mario::OnFootCollision(const CollisionResult& result) {
-	if (!result.collidedWith) return;
+	if (!result.collidedWith)
+		return;
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+	HitBox* hitBox = dynamic_cast<HitBox*>(result.collidedWith);
+	if (hitBox) {
+		return;
+	}
+	if (block && block->IsCollectible()) {
+		return;
+	}
+
+	FloatingPlatform* moving = dynamic_cast<FloatingPlatform*>(result.collidedWith);
+	Pipe* pipe = dynamic_cast<Pipe*>(result.collidedWith);
 	if (result.contactNormal.y < 0) {
-		if (block)
-		{
-			Vector2 vel = GetVelocity();
-			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
+		Vector2 vel = GetVelocity();
+		m_collisionComponent->SetPlatform(moving);
+		if (moving) {
+			moving->Fall();
+		}
+		if (block) {
+			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) *
+				(1.0f - result.contactTime);
 			SetVelocity(vel);
+		}
+		if (pipe) {
+			if (pipe->GetEnterable()) {
+				int worldID;
+				Vector2 pos;
+				switch (pipe->GetEnterType()) {
+				case 1:
+					worldID = 3;
+					break;
+				case 3:
+					worldID = 1;
+					break;
+				}
+				Game::GetInstance()->SetNextWorldId(worldID);
+			}
 		}
 	}
 	else if (result.contactNormal.x != 0) {
-		if (block && block->IsSolid())
-		{
+		if (block && block->IsSolid() && !moving) {
 			Vector2 otherSize = result.collidedWith->GetSize();
 			Vector2 otherPos = result.collidedWith->GetPosition();
 			Vector2 pos = GetPosition();
@@ -291,23 +339,43 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 }
 
 void Mario::OnTopHeadCollision(const CollisionResult& result) {
-	if (!result.collidedWith) return;
+	if (!result.collidedWith)
+		return;
+
+	HitBox* hitBox = dynamic_cast<HitBox*>(result.collidedWith);
+	if (hitBox) {
+		return;
+	}
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
+
+	if (block && block->IsCollectible()) {
+		return;
+	}
+	Pipe* pipe = dynamic_cast<Pipe*>(result.collidedWith);
+
 	if (result.contactNormal.y > 0) {
-		if (block && block->IsSolid())
-		{
+		if (block && block->IsSolid()) {
 			// resolve velocity
 			Vector2 vel = GetVelocity();
-			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
+			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) *
+				(1.0f - result.contactTime);
 			SetVelocity(vel);
 
 			block->Bump();
 		}
+		if (pipe) {
+			if (pipe->GetEnterable()) {
+				if (pipe->GetEnterType() == 2) {
+					Game::GetInstance()->SetNextWorldId(4);
+					Game::GetInstance()->SetEnterPosition(Vector2(2336, 363));
+				}
+
+			}
+		}
 	}
 	else if (result.contactNormal.x != 0) {
-		if (block && block->IsSolid())
-		{
+		if (block && block->IsSolid()) {
 			Vector2 otherSize = result.collidedWith->GetSize();
 			Vector2 otherPos = result.collidedWith->GetPosition();
 			Vector2 pos = GetPosition();
@@ -324,28 +392,40 @@ void Mario::OnTopHeadCollision(const CollisionResult& result) {
 }
 
 void Mario::OnRightSideCollision(const CollisionResult& result) {
-	if (!result.collidedWith) return;
+	if (!result.collidedWith)
+		return;
+
+	HitBox* hitBox = dynamic_cast<HitBox*>(result.collidedWith);
+	if (hitBox) {
+		return;
+	}
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
-	//TODO: change to universal Troopa class
-	RedTroopas* shell = dynamic_cast<RedTroopas*>(result.collidedWith);
+	// TODO: change to universal Troopa class
+	if (block && block->IsCollectible()) {
+		return;
+	}
+	FloatingPlatform* moving = dynamic_cast<FloatingPlatform*>(result.collidedWith);
+	Troopa* shell = dynamic_cast<Troopa*>(result.collidedWith);
 	if (result.contactNormal.x < 0) {
-		if (block && block->IsSolid())
-		{
+		if (block && block->IsSolid()) {
 			Vector2 vel = GetVelocity();
-			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
+			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) *
+				(1.0f - result.contactTime);
 			SetVelocity(vel);
 		}
-		else if (m_inputState->isBDown && m_movementSM->GetStateName() != "hold" && shell && shell->GetState() == TroopaState::SHELL_IDLE) {
+		else if (m_inputState->isBDown &&
+			m_movementSM->GetStateName() != "hold" && shell &&
+			shell->GetState() == TroopaState::SHELL_IDLE) {
 			m_movementSM->Exit(this);
-			auto state = std::make_unique<MarioHoldState>(m_movementSM->GetDirection(), result.collidedWith);
+			auto state = std::make_unique<MarioHoldState>(
+				m_movementSM->GetDirection(), result.collidedWith);
 			m_movementSM = std::move(state);
 			m_movementSM->Enter(this);
 		}
 	}
-	else if (result.contactNormal.y != 0) {
-		if (block && block->IsSolid())
-		{
+	else if (result.contactNormal.y != 0 && !moving) {
+		if (block && block->IsSolid()) {
 			Vector2 otherSize = result.collidedWith->GetSize();
 			Vector2 otherPos = result.collidedWith->GetPosition();
 
@@ -357,27 +437,38 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 }
 
 void Mario::OnLeftSideCollision(const CollisionResult& result) {
-	if (!result.collidedWith) return;
+	if (!result.collidedWith)
+		return;
 
+	HitBox* hitBox = dynamic_cast<HitBox*>(result.collidedWith);
+	if (hitBox) {
+		return;
+	}
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
-	RedTroopas* shell = dynamic_cast<RedTroopas*>(result.collidedWith);
+	Troopa* shell = dynamic_cast<Troopa*>(result.collidedWith);
+	if (block && block->IsCollectible()) {
+		return;
+	}
+	FloatingPlatform* moving = dynamic_cast<FloatingPlatform*>(result.collidedWith);
 	if (result.contactNormal.x > 0) {
-		if (block && block->IsSolid())
-		{
+		if (block && block->IsSolid()) {
 			Vector2 vel = GetVelocity();
-			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) * (1.0f - result.contactTime);
+			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) *
+				(1.0f - result.contactTime);
 			SetVelocity(vel);
 		}
-		else if (m_inputState->isBDown && m_movementSM->GetStateName() != "hold" && shell && shell->GetState() == TroopaState::SHELL_IDLE) {
+		else if (m_inputState->isBDown &&
+			m_movementSM->GetStateName() != "hold" && shell &&
+			shell->GetState() == TroopaState::SHELL_IDLE) {
 			m_movementSM->Exit(this);
-			auto state = std::make_unique<MarioHoldState>(m_movementSM->GetDirection(), result.collidedWith);
+			auto state = std::make_unique<MarioHoldState>(
+				m_movementSM->GetDirection(), result.collidedWith);
 			m_movementSM = std::move(state);
 			m_movementSM->Enter(this);
 		}
 	}
-	else if (result.contactNormal.y != 0) {
-		if (block && block->IsSolid())
-		{
+	else if (result.contactNormal.y != 0 && !moving) {
+		if (block && block->IsSolid()) {
 			Vector2 otherSize = result.collidedWith->GetSize();
 			Vector2 otherPos = result.collidedWith->GetPosition();
 

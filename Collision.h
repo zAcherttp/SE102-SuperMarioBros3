@@ -1,8 +1,8 @@
 #pragma once
 #include "pch.h"
 #include "CollisionComponent.h"
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 constexpr float DEBUG_COLLISION_TTL = 2.f;
 using namespace DirectX;
@@ -46,7 +46,7 @@ enum class Axis { X, Y };
 
 class Collision {
 public:
-	Collision(int worldWidth, int worldHeight, int cellSize = 313);
+	Collision(int worldWidth, int worldHeight, int cellSize = 53);
 	~Collision();
 
 	Collision(const Collision&) = delete;
@@ -77,7 +77,7 @@ public:
 
 	static Collision* GetInstance();
 	std::vector<std::pair<int, int>> GetEntityCells(const Entity* entity, float dt);
-	bool RayVsRect(const Vector2& origin, const Vector2& end, const Rectangle& rect, Vector2& contactPoint, Vector2& contactNormal, float& contactTime);
+	bool RayVsRect(const Vector2& origin, const Vector2& end, const DirectX::SimpleMath::Rectangle& rect, Vector2& contactPoint, Vector2& contactNormal, float& contactTime);
 
 	// Get access to the spatial grid
 	const std::vector<std::vector<SpatialGridCell>>& GetGrid() const { return m_grid; }
@@ -87,7 +87,6 @@ private:
 	void CheckInteractionPointCollision(Entity* entity, Entity* other, float dt, CollisionResult& result, Axis axis);
 	void ResolveCollision(Entity* entity, const CollisionResult& result, float dt, Axis axis);
 	bool RayEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt, Axis axis);
-	bool SweptEntVsEnt(const Entity& in, const Entity& target, Vector2& contactPoint, Vector2& contactNormal, float& contactTime, float dt);
 
 private:
 	static Collision* s_instance;

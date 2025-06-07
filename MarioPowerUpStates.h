@@ -8,7 +8,7 @@ using namespace DirectX::SimpleMath;
 
 constexpr auto PLAYER_INVINCIBLE_TIME = 2.0f;
 constexpr auto PLAYER_DEATH_TIME = 5.0f;
-constexpr auto PLAYER_DEATH_BOUNCE_DELAY = 1.0f;
+constexpr auto PLAYER_DEATH_BOUNCE_DELAY = 0.7f;
 constexpr auto PLAYER_DEATH_BOUNCE_VEL = 180.f;
 
 enum class PowerUpType {
@@ -140,6 +140,7 @@ class MarioRaccoonState : public MarioPowerUpState {
 public:
 	MarioRaccoonState(PowerUpType lastPowerUp = PowerUpType::NONE) : MarioPowerUpState(lastPowerUp) {
 		m_currentPowerUp = PowerUpType::RACCOON;
+		m_stateHealth = 1;
 	};
 	MarioRaccoonState(PowerUpType lastPowerUp, float invincibleTimer, bool isInvincible, float flashingTimer, bool isFlashing, bool takenDmg) : MarioPowerUpState(lastPowerUp) {
 		m_invincibleTimer = invincibleTimer;
@@ -148,6 +149,7 @@ public:
 		m_isFlashing = isFlashing;
 		m_takenDmg = takenDmg;
 		m_currentPowerUp = PowerUpType::RACCOON;
+		m_stateHealth = 1;
 	};
 	std::unique_ptr<MarioPowerUpState> HandleInput(Mario* mario) override;
 	void Update(Mario* mario, float dt) override;
