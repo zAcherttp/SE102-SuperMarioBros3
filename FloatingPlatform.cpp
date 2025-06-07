@@ -90,7 +90,6 @@ void FloatingPlatform::Update(float dt)
 
 		SetPosition(GetPosition() + GetVelocity() * dt);
 
-
 	}
 	else {
 		Vector2 velocity = GetVelocity();
@@ -100,6 +99,9 @@ void FloatingPlatform::Update(float dt)
 		SetVelocity(velocity);
 		SetPosition(position);
 	}
+
+
+	Collision::GetInstance()->UpdateEntity(this, dt);
 
 	// Update entities on platform after platform movement
 	UpdateEntitiesOnPlatform(dt);

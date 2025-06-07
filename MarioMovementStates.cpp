@@ -492,7 +492,7 @@ std::unique_ptr<MarioMovementState> MarioJumpState::HandleInput(Mario* mario) {
 		return std::make_unique<MarioHoverState>(GetDirection());
 	}
 
-	if (std::abs(vel.y) < 5.f) {
+	if (std::abs(vel.y) < 12.f) {
 		if (mario->IsGrounded() && absVelX < Player::MAX_WALK_SPEED ||
 			mario->IsGrounded() && absVelX >= Player::MAX_WALK_SPEED &&
 			!input->isBDown) {
