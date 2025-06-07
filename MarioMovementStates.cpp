@@ -127,7 +127,7 @@ void MarioSweepState::Enter(Mario* mario) {
 
 void MarioKickState::Enter(Mario* mario) {
 	m_entity->SetVelocity(
-		Vector2(Player::HOLD_THROW_SPEED * (int)GetDirection(), 0.f));
+		Vector2(Enemies::Troopas::SHELL_SLIDE_SPEED * (int)GetDirection(), 0.f));
 
 	Troopa* shell = dynamic_cast<Troopa*>(m_entity);
 

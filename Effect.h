@@ -15,7 +15,7 @@ enum class EffectType
 class Effect : public Entity
 {
 public:
-	Effect(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, EffectType type);
+	Effect(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, EffectType type, int points = 0);
 	~Effect() = default;
 
 	// Implementation of Entity's pure virtual function

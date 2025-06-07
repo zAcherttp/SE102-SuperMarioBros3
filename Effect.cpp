@@ -7,7 +7,7 @@
 #include "SpriteSheet.h"
 #include <vector>
 
-Effect::Effect(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, EffectType type)
+Effect::Effect(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, EffectType type,int points)
 	: Entity(position, size, spriteSheet)
 	, m_animTimer(0.0f)
 	, m_type(type)
@@ -26,6 +26,72 @@ Effect::Effect(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, EffectT
 	{
 	case EffectType::POINT:
 	{
+		switch (points)
+		{
+			case 100:
+			{
+				frames = { L"100" };
+				DefineAnimation(ID_ANIM_EFFECT_POINT_100, frames, false);
+				SetAnimation(ID_ANIM_EFFECT_POINT_100, false);
+				break;
+			}
+			case 200:
+			{
+				frames = { L"200" };
+				DefineAnimation(ID_ANIM_EFFECT_POINT_200, frames, false);
+				SetAnimation(ID_ANIM_EFFECT_POINT_200, false);
+				break;
+			}
+			case 400:
+			{
+				frames = { L"400" };
+				DefineAnimation(ID_ANIM_EFFECT_POINT_400, frames, false);
+				SetAnimation(ID_ANIM_EFFECT_POINT_400, false);
+				break;
+			}
+			case 800:
+			{
+				frames = { L"800" };
+				DefineAnimation(ID_ANIM_EFFECT_POINT_800, frames, false);
+				SetAnimation(ID_ANIM_EFFECT_POINT_800, false);
+				break;
+			}
+			case 1000:
+			{
+				frames = { L"1000" };
+				DefineAnimation(ID_ANIM_EFFECT_POINT_1000, frames, false);
+				SetAnimation(ID_ANIM_EFFECT_POINT_1000, false);
+				break;
+			}
+			case 2000:
+			{
+				frames = { L"2000" };
+				DefineAnimation(ID_ANIM_EFFECT_POINT_2000, frames, false);
+				SetAnimation(ID_ANIM_EFFECT_POINT_2000, false);
+				break;
+			}
+			case 4000:
+			{
+				frames = { L"4000" };
+				DefineAnimation(ID_ANIM_EFFECT_POINT_4000, frames, false);
+				SetAnimation(ID_ANIM_EFFECT_POINT_4000, false);
+				break;
+			}
+			case 8000:
+			{
+				frames = { L"8000" };
+				DefineAnimation(ID_ANIM_EFFECT_POINT_8000, frames, false);
+				SetAnimation(ID_ANIM_EFFECT_POINT_8000, false);
+				break;
+			}
+			default:
+				frames = { L"100" };
+				DefineAnimation(ID_ANIM_EFFECT_POINT_100, frames, false);
+				SetAnimation(ID_ANIM_EFFECT_POINT_100, false);
+				break;
+
+		}
+		m_velocity.y = -30.0f;
 		break;
 	}
 	case EffectType::BONK:
@@ -33,7 +99,6 @@ Effect::Effect(Vector2 position, Vector2 size, SpriteSheet* spriteSheet, EffectT
 		frames = { L"spark1", L"spark2" };
 		DefineAnimation(ID_ANIM_EFFECT_BONK, frames, true, 0.1f);
 		SetAnimation(ID_ANIM_EFFECT_BONK, true);
-
 		break;
 	}
 	case EffectType::COIN:
@@ -112,6 +177,7 @@ void Effect::Update(float dt)
 			if (m_animTimer > 0.7f)
 			{
 				Deactivate();
+				EffectManager::GetInstance()->CreatePointEffect(GetPosition() + Vector2(0.0f, 16.0f), 100, true);
 				return;
 			}
 			break;
@@ -161,6 +227,19 @@ void Effect::Update(float dt)
 			position += m_velocity * dt;
 			SetPosition(position);
 			if (m_animTimer >= 1.0f)
+			{
+				Deactivate();
+				return;
+			}
+			break;
+		}
+		case EffectType::POINT:
+		{
+			m_animTimer += dt;
+			Vector2 position = GetPosition();
+			position += m_velocity * dt;
+			SetPosition(position);
+			if (m_animTimer >= 0.75f)
 			{
 				Deactivate();
 				return;

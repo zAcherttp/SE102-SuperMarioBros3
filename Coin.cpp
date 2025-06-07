@@ -19,7 +19,6 @@ Coin::Coin(Vector2 position, Vector2 size, bool isSolid, SpriteSheet* spriteShee
 	// update the position as size is the center of the entity
 	m_collisionComponent->SetPosition(position + Vector2(newSize.x / 2 , newSize.y / 2));
      SetAnimation(ID_ANIM_COIN, true);
-    // Log(LOG_INFO, "Set Animation for: " + std::to_string(position.x) + ", " + std::to_string(position.y));
 }
 
 void Coin::Render(DirectX::SpriteBatch* spriteBatch)
@@ -45,6 +44,7 @@ void Coin::OnCollision(const CollisionResult& event)
     {
         m_isActive = false;
         m_visible = false;
+        Game::GetInstance()->GetHUD()->AddCoins(1);
         return;
     }
 }

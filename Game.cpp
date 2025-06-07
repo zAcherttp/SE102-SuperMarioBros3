@@ -431,6 +431,10 @@ void Game::SwitchWorld()
 	world->Load(m_spriteSheet.get());
 
 	m_isLoading = false;
+
+	m_hud->SetLives(3);
+	m_hud->SetScore(0);
+	m_hud->SetCoins(0);
 }
 #pragma endregion
 

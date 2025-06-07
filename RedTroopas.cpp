@@ -273,6 +273,7 @@ void RedTroopas::OnCollision(const CollisionResult& event) {
 	{
 		if (mario) {
 			if (m_hasWing) {
+				EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 				TransformToTroopa();
 				Vector2 vel = mario->GetVelocity();
 				vel.y = Player::BOUNCE_FORCE; // Use Mario's bounce force
@@ -280,6 +281,7 @@ void RedTroopas::OnCollision(const CollisionResult& event) {
 				return;
 			}
 			if (m_state == WALKING) {
+				EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 				Vector2 vel = mario->GetVelocity();
 				vel.y = Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);
@@ -287,6 +289,7 @@ void RedTroopas::OnCollision(const CollisionResult& event) {
 				return;
 			}
 			if (m_state == SHELL_IDLE) {
+				EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 			if (mario->GetPosition().x < GetPosition().x + COLLISION_OFFSET_X) {
 				SetVelocity(Vector2(SHELL_SLIDE_SPEED, 0.0f));
 			}
@@ -303,6 +306,7 @@ void RedTroopas::OnCollision(const CollisionResult& event) {
 				return;
 			}
 			if (m_state == SHELL_SLIDE) {
+				EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 				Vector2 vel = mario->GetVelocity();
 				vel.y = Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);

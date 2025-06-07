@@ -371,3 +371,10 @@ const char* HeadUpDisplay::GetRTimeChar() const
 	sprintf_s(timeBuffer, "%03d", m_timeRemaining);
 	return timeBuffer;
 }
+
+void HeadUpDisplay::Reset()
+{
+	m_lives = 3;
+	m_score = 0;
+	m_coins = 0;
+}

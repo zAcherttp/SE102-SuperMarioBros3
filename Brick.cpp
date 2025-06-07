@@ -50,6 +50,7 @@ void Brick::Update(float dt)
 
 void Brick::Break()
 {
+    Game::GetInstance()->GetHUD()->AddScore(10);
     EffectManager::GetInstance()->CreateBrickEffect(GetPosition());
     m_isActive = false;
     m_visible = false;

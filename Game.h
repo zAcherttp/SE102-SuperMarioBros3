@@ -77,7 +77,9 @@ public:
 	int GetCurrentWorldId() const { return m_currentWorldId; }
 	int GetStartWorldId() const { return m_startWorldId; }
 	World* GetCurrentWorld() const { return m_worlds.at(m_currentWorldId); }
-	
+
+	HeadUpDisplay* GetHUD() const { return m_hud.get(); }
+
 	Camera* GetCamera() const { return m_camera.get(); }
 	std::unordered_map<int, World*> m_worlds;
 	int m_currentWorldId;

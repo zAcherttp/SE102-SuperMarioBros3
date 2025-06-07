@@ -88,6 +88,7 @@ void Goomba::Die(DyingType type)
 		m_isDying = true;
 		m_isCollidable = false;
 		m_deathTimer = 0.0f;
+		EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 		if (type == DyingType::STOMPED) {
 			SetAnimation(ID_ANIM_GOOMBA_DIE, false);
 			return;

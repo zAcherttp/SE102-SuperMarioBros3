@@ -116,14 +116,16 @@ void Mushroom::OnCollision(const CollisionResult& event)
 
 	if (mario)
 	{
-		// Handle the interaction with Mario
-		//EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100);
-		//EffectManager::GetInstance()->CreateCoinEffect(GetPosition());
-		if(!m_isGreen)mario->PowerUp(PowerUpType::SUPER);
+		if(!m_isGreen)
+		{
+			EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 1000);
+			mario->PowerUp(PowerUpType::SUPER);
+		}
+		else{ EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 1000, true); }
 		if(m_isGreen) EffectManager::GetInstance()->CreateOneUpEffect(GetPosition());
+		Game::GetInstance()->GetHUD()->SetLives(Game::GetInstance()->GetHUD()->GetLives() + 1);
 		m_isActive = false;
 	}
-
 }
 
 void Mushroom::SetupCollisionComponent()

@@ -104,7 +104,7 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
 	{
 		if (mario) {
 			if (m_hasWings) {
-
+				EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 				TransformToGoomba();
 
 				Vector2 vel = mario->GetVelocity();
@@ -137,6 +137,7 @@ void ParaGoomba::OnCollision(const CollisionResult& event)
 
 void ParaGoomba::Die(DyingType type)
 {
+	EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 	if (type == DyingType::STOMPED)
 	{
 		if (!m_isDying) {

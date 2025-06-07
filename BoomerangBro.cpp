@@ -205,6 +205,7 @@ void BoomerangBro::OnCollision(const CollisionResult& event)
 	{
 		if (mario)
 		{
+			EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 1000);
 			Die(DyingType::STOMPED);
 			Vector2 vel = mario->GetVelocity();
 			vel.y = GameConstants::Player::BOUNCE_FORCE;
