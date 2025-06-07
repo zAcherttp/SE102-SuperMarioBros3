@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Camera.h"
 #include "Debug.h"
+#include "Game.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -137,22 +138,73 @@ void Camera::SetWorldSize(int width, int height) {
 void Camera::SetPosition(const Vector2& position, bool oneAxis = false) {
 	Vector2 clampedPosition = position;
 	if (oneAxis) {
-		if (position.x == 0) {
-			clampedPosition.y = std::max(0.0f, std::min(clampedPosition.y, static_cast<float>(m_gameWorldHeight - m_gameHeight)));
+		if (position.x == 0.f) {
+			//clampedPosition.y = std::max(0.0f, std::min(clampedPosition.y, static_cast<float>(m_gameWorldHeight - m_gameHeight)));
+			m_targetPosition.y = clampedPosition.y;
 		}
 		else {
 			clampedPosition.x = std::max(0.0f, std::min(clampedPosition.x, static_cast<float>(m_gameWorldWidth - m_gameWidth)));
+			m_targetPosition.x = clampedPosition.x;
 		}
 	}
 	else {
 		clampedPosition.x = std::max(0.0f, std::min(clampedPosition.x, static_cast<float>(m_gameWorldWidth - m_gameWidth)));
 		clampedPosition.y = std::max(0.0f, std::min(clampedPosition.y, static_cast<float>(m_gameWorldHeight - m_gameHeight)));
+		m_targetPosition = clampedPosition;
 	}
-	m_targetPosition = clampedPosition;
 	UpdateViewMatrix();
 }
 
+DirectX::SimpleMath::Vector2 Camera::GetPosition() const {
+	return m_position;
+}
+
 void Camera::Move(const Vector2& delta) {
-	m_targetPosition = m_position + delta;
-	UpdateViewMatrix();
+	m_targetPosition = m_targetPosition + delta;
+}
+
+const DirectX::SimpleMath::Matrix& Camera::GetGameViewMatrix() const { return m_gameViewMatrix; }
+
+const DirectX::SimpleMath::Matrix& Camera::GetScreenTransformMatrix() const { return m_screenTransformMatrix; }
+
+const DirectX::SimpleMath::Matrix& Camera::GetDebugViewMatrix() const { return m_debugViewMatrix; }
+
+const DirectX::SimpleMath::Matrix& Camera::GetDebugProjectionMatrix() const { return m_debugProjectionMatrix; }
+
+const RECT& Camera::GetGameViewRect() const { return m_gameViewRect; }
+
+void Camera::ClampPointInView(DirectX::SimpleMath::Vector2& position) const {
+	int gameWidth, gameHeight;
+	Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
+	position.x = std::clamp(position.x, m_targetPosition.x + 8.f, m_targetPosition.x + gameWidth - 8.f);
+}
+
+const bool Camera::IsInGameView(const DirectX::SimpleMath::Vector2& position, const int padding) const {
+	return (position.x >= m_gameViewRect.left - padding && position.x <= m_gameViewRect.right + padding &&
+		position.y >= m_gameViewRect.top - padding && position.y <= m_gameViewRect.bottom + padding);
+}
+
+void Camera::Shake(const DirectX::SimpleMath::Vector2& shakeOffset, const int amount, const float duration) {
+	if (m_isShaking) {
+		// If already shaking, reset timer and amount
+		m_shakeAmount = amount;
+	}
+	else {
+		// If not shaking, start shaking
+		m_isShaking = true;
+		m_shakeOffset = shakeOffset;
+		m_shakeDuration = duration;
+		m_shakeAmount = amount;
+	}
+	m_shakeTimer = 0.0f;
+}
+
+int Camera::GetGameWidth() const { return m_gameWidth; }
+
+int Camera::GetGameHeight() const { return m_gameHeight; }
+
+int Camera::GetWindowWidth() const { return m_windowWidth; }
+
+int Camera::GetWindowHeight() const {
+	return m_windowHeight;
 }

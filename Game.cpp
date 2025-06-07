@@ -350,7 +350,7 @@ void Game::LoadGameConfig(const json& config)
 	m_startWorldId = m_nextWorldId = config["game"]["world"]["startWorldId"];
 	Log(__FUNCTION__, "Start world id: " + std::to_string(m_nextWorldId));
 
-	
+
 
 	std::string spritePath = config["game"]["sprites"]["path"];
 	m_spritePath = std::wstring(spritePath.begin(), spritePath.end());
@@ -420,7 +420,7 @@ void Game::SwitchWorld()
 
 	if (m_worlds[m_currentWorldId] != NULL)
 		m_worlds[m_currentWorldId]->Unload();
-		
+
 	m_currentWorldId = m_nextWorldId;
 
 	//TODO: clean up sprites/anims
@@ -429,6 +429,8 @@ void Game::SwitchWorld()
 	World* world = m_worlds[m_currentWorldId];
 	Log(__FUNCTION__, "Loading into world: " + world->GetName());
 	world->Load(m_spriteSheet.get());
+
+	m_camera->SetPosition(Vector2(0.f, 0.f), false);
 
 	m_isLoading = false;
 }

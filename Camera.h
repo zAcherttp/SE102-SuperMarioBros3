@@ -12,41 +12,26 @@ public:
 	void Update(float dt);
 
 	void SetPosition(const DirectX::SimpleMath::Vector2& position, bool oneAxis);
+	DirectX::SimpleMath::Vector2 GetPosition() const;
 	void SetWorldSize(int width, int height);
 	void Move(const DirectX::SimpleMath::Vector2& delta);
 
-	const DirectX::SimpleMath::Matrix& GetGameViewMatrix() const { return m_gameViewMatrix; }
-	const DirectX::SimpleMath::Matrix& GetScreenTransformMatrix() const { return m_screenTransformMatrix; }
-	const DirectX::SimpleMath::Matrix& GetDebugViewMatrix() const { return m_debugViewMatrix; }
-	const DirectX::SimpleMath::Matrix& GetDebugProjectionMatrix() const { return m_debugProjectionMatrix; }
-	const RECT& GetGameViewRect() const { return m_gameViewRect; }
+	const DirectX::SimpleMath::Matrix& GetGameViewMatrix() const;
+	const DirectX::SimpleMath::Matrix& GetScreenTransformMatrix() const;
+	const DirectX::SimpleMath::Matrix& GetDebugViewMatrix() const;
+	const DirectX::SimpleMath::Matrix& GetDebugProjectionMatrix() const;
+	const RECT& GetGameViewRect() const;
 
-	const bool IsInGameView(const DirectX::SimpleMath::Vector2& position, const int padding = 0) const {
-		return (position.x >= m_gameViewRect.left - padding && position.x <= m_gameViewRect.right + padding &&
-			position.y >= m_gameViewRect.top - padding && position.y <= m_gameViewRect.bottom + padding);
-	}
+	void ClampPointInView(DirectX::SimpleMath::Vector2& position) const;
 
-	void Shake(const DirectX::SimpleMath::Vector2& shakeOffset, const int amount = 4, const float duration = 0.5f) {
-		if (m_isShaking) {
-			// If already shaking, reset timer and amount
-			m_shakeAmount = amount;
-		}
-		else {
-			// If not shaking, start shaking
-			m_isShaking = true;
-			m_shakeOffset = shakeOffset;
-			m_shakeDuration = duration;
-			m_shakeAmount = amount;
-		}
-		m_shakeTimer = 0.0f;
-	}
+	const bool IsInGameView(const DirectX::SimpleMath::Vector2& position, const int padding = 0) const;
 
-	int GetGameWidth() const { return m_gameWidth; }
-	int GetGameHeight() const { return m_gameHeight; }
-	int GetWindowWidth() const { return m_windowWidth; }
-	int GetWindowHeight() const {
-		return m_windowHeight;
-	}
+	void Shake(const DirectX::SimpleMath::Vector2& shakeOffset, const int amount = 4, const float duration = 0.5f);
+
+	int GetGameWidth() const;
+	int GetGameHeight() const;
+	int GetWindowWidth() const;
+	int GetWindowHeight() const;
 
 private:
 	int m_gameWidth;
