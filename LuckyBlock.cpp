@@ -76,8 +76,6 @@ void LuckyBlock::Update(float dt)
 	if (m_claimCoinTimer > 0.7f && !m_collectedCoin) {
 		m_collectedCoin = true;
 
-		Game::GetInstance()->AddScore(100);
-
 		Log(LOG_INFO, "Collected Coin from LuckyBlock at: " + std::to_string(m_collisionComponent->GetPosition().x) + ", " + std::to_string(m_collisionComponent->GetPosition().y));
 
 	}
@@ -161,7 +159,7 @@ void LuckyBlock::SpawnReward()
 	}
 	if (m_isMushroom) {
 		SpawnMushroom();
-		return;
+		return;																															
 	}
 	if (m_isSpecial) {
 		SpawnPowerUp();
@@ -177,6 +175,7 @@ void LuckyBlock::SpawnReward()
 void LuckyBlock::SpawnCoin()
 {
 	EffectManager::GetInstance()->CreateCoinEffect(GetPosition());
+	Game::GetInstance()->GetHUD()->AddCoins(1);
 }
 
 void LuckyBlock::SpawnPowerUp()

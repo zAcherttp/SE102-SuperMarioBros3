@@ -162,6 +162,7 @@ void BitePiranha::SetupCollisionComponent()
 void BitePiranha::Die(DyingType type)
 {
 	if (!m_isDying) {
+		EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 		m_dyingType = type;
 		m_isDying = true;
 		m_isCollidable = false;

@@ -76,6 +76,7 @@ void GreenTroopas::Die(DyingType type)
 		m_state = DEAD;
 		m_animator->SetFlipVertical(true);
 		SetVelocity(Vector2(WALK_SPEED, -GameConstants::Enemies::DEATH_BOUNCE_VELOCITY));
+		EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 		return;
 	}
 }
@@ -222,7 +223,7 @@ void GreenTroopas::OnCollision(const CollisionResult& event)
 		return;
 
 		if (mario) {
-			// mario->Damage();
+			 mario->Damage();
 		}
 	}
 
@@ -234,6 +235,7 @@ void GreenTroopas::OnCollision(const CollisionResult& event)
 				Vector2 vel = mario->GetVelocity();
 				vel.y = GameConstants::Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);
+				EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 				return;
 			}
 
@@ -242,9 +244,11 @@ void GreenTroopas::OnCollision(const CollisionResult& event)
 				vel.y = GameConstants::Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);
 				TransformToShell();
+				EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 				return;
 			}
-			if (m_state == SHELL_IDLE) {				if (mario->GetPosition().x < GetPosition().x + COLLISION_OFFSET_X) {
+			if (m_state == SHELL_IDLE) {				
+				if (mario->GetPosition().x < GetPosition().x + COLLISION_OFFSET_X) {
 					SetVelocity(Vector2(SHELL_SLIDE_SPEED, 0.0f));
 				}
 				else {
@@ -254,12 +258,13 @@ void GreenTroopas::OnCollision(const CollisionResult& event)
 				Vector2 vel = mario->GetVelocity();
 				vel.y = GameConstants::Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);
-
+				EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 				m_animator->SetAnimation(ID_ANIM_GREEN_TROOPAS_SHELL_SLIDE, true);
 				m_state = SHELL_SLIDE;
 				return;
 			}
 			if (m_state == SHELL_SLIDE) {
+				EffectManager::GetInstance()->CreatePointEffect(GetPosition(), 100, true);
 				Vector2 vel = mario->GetVelocity();
 				vel.y = GameConstants::Player::BOUNCE_FORCE; // Use Mario's bounce force
 				mario->SetVelocity(vel);

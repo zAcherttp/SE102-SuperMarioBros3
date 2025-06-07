@@ -438,6 +438,10 @@ void Game::SwitchWorld()
 	m_camera->SetPosition(Vector2(0.f, 0.f), false);
 
 	m_isLoading = false;
+
+	m_hud->SetLives(3);
+	m_hud->SetScore(0);
+	m_hud->SetCoins(0);
 }
 #pragma endregion
 

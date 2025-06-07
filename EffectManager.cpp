@@ -10,7 +10,6 @@ EffectManager* EffectManager::s_instance = nullptr;
 
 EffectManager::EffectManager(SpriteSheet* spriteSheet) : m_spriteSheet(spriteSheet) {
 	s_instance = this;
-	Log(__FUNCTION__, "EffectManager created");
 }
 
 EffectManager::~EffectManager() {
@@ -24,9 +23,21 @@ Effect* EffectManager::CreateBonkEffect(const Vector2& position) {
 	return CreateEffect(position, Vector2::Zero, EffectType::BONK);
 }
 
-Effect* EffectManager::CreatePointEffect(const Vector2& position, int points) {
-	points;
-	return CreateEffect(position, Vector2::Zero, EffectType::POINT);
+Effect* EffectManager::CreatePointEffect(const Vector2& position, int points, bool isCombo) {
+	int comboPoints;
+	if(isCombo) {
+		m_comboCount++;
+		m_comboTimer = 0.0f;
+		comboPoints = CalculateComboPoints(points);
+	} else {
+		m_comboCount = 0;
+		m_comboTimer = 0.0f;
+		comboPoints = points;
+	}
+
+	Game::GetInstance()->AddScore(comboPoints);
+
+	return CreateEffect(position + Vector2(0, -16), Vector2::Zero, EffectType::POINT, comboPoints);
 }
 
 Effect* EffectManager::CreateCoinEffect(const Vector2& position) {
@@ -46,13 +57,13 @@ Effect *EffectManager::CreateOneUpEffect(const Vector2 &position)
 	return CreateEffect(position, Vector2::Zero, EffectType::ONE_UP);
 }
 
-Effect* EffectManager::CreateEffect(const Vector2& position, Vector2 size, EffectType type) {
+Effect* EffectManager::CreateEffect(const Vector2& position, Vector2 size, EffectType type, int points) {
 
 	if (!m_spriteSheet) {
 		m_spriteSheet = Game::GetInstance()->GetSpriteSheet();
 	}
 
-	std::unique_ptr<Effect> effect = std::make_unique<Effect>(position, size, m_spriteSheet, type);
+	std::unique_ptr<Effect> effect = std::make_unique<Effect>(position, size, m_spriteSheet, type, points);
 
 	Effect* effectPtr = effect.get();
 	m_effects.push_back(std::move(effect));
@@ -61,6 +72,7 @@ Effect* EffectManager::CreateEffect(const Vector2& position, Vector2 size, Effec
 }
 
 void EffectManager::Update(float dt) {
+	UpdateCombo(dt);
 	for (auto& effect : m_effects) {
 		if (effect->IsActive()) {
 			effect->Update(dt);
@@ -85,4 +97,35 @@ void EffectManager::Render(DirectX::SpriteBatch* spriteBatch) {
 
 void EffectManager::ClearEffects() {
 	m_effects.clear();
+}
+
+
+int EffectManager::CalculateComboPoints(int basePoints) {
+    // SMB3 combo system: 100, 200, 400, 800, 1000, 2000, 4000, 8000
+    switch (m_comboCount) {
+        case 1: return 100;
+        case 2: return 200;
+        case 3: return 400;
+        case 4: return 800;
+        case 5: return 1000;
+        case 6: return 2000;
+        case 7: return 4000;
+        case 8: return 8000;
+        default: return basePoints;
+    }
+}
+
+void EffectManager::UpdateCombo(float dt) {
+    if (m_comboCount > 0) {
+        m_comboTimer += dt;
+
+        if (m_comboTimer >= COMBO_TIMEOUT) {
+            ResetCombo();
+        }
+    }
+}
+
+void EffectManager::ResetCombo() {
+    m_comboCount = 0;
+    m_comboTimer = 0.0f;
 }

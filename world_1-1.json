@@ -50,7 +50,7 @@
     {
       "type": 4,
       "x": 570.0,
-      "y": 354.0,
+      "y": 357.0,
       "width": 16,
       "height": 27,
       "hasWing": false,
@@ -1390,9 +1390,9 @@
       "width": 16,
       "height": 16,
       "solid": true,
-      "isSpecial": true,
+      "isSpecial": false,
       "isMimic": false,
-      "isMushroom": false
+      "isMushroom": true
     },
     {
       "type": 21,
