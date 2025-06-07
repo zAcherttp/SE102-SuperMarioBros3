@@ -7,6 +7,7 @@
     "g": 0.0,
     "a": 1
   },
+  "cameraMode": 0,
   "spritesData": "sprites.json",
   "entities": [
     {

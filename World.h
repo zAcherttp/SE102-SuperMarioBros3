@@ -1,11 +1,16 @@
 #pragma once
-#include <vector>
-#include <memory>
 #include "json.hpp"
+#include <memory>
+#include <vector>
 
 using json = nlohmann::json;
 class Entity;
 class Collision;
+
+enum class CameraMode {
+	DEFAULT = 0,
+	AUTOSCROLL = 1
+};
 
 class World
 {
@@ -38,6 +43,8 @@ public:
 	std::vector<Entity*> GetEntities();
 	static void ResetInstance() { s_instance = nullptr; }
 	std::unique_ptr<Collision> m_collisionSystem;
+	CameraMode m_cameraMode;
+
 private:
 	std::string m_path;
 	std::string m_name;

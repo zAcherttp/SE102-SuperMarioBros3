@@ -65,6 +65,7 @@ World::World(std::string wPath, std::string name) {
 	m_background = {};
 	m_height = m_width = 0;
 	m_isPaused = false;
+	m_cameraMode = CameraMode::DEFAULT;
 }
 
 World::~World() {
@@ -157,16 +158,32 @@ void World::Update(float dt) {
 		int gameWidth, gameHeight;
 		Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
 		Vector2 cameraPos = pos - Vector2(gameWidth / 2.f, gameHeight / 2.f);
-		// clamp position to nearest pixel to avoid pixel rendering artifacts
-		// cameraPos.x = (int)(cameraPos.x + 0.5f);
-		if (pos.x < 970) cameraPos.y = 239;
-		else {
-			pos.y = std::clamp(pos.y, 138.f, 359.f);
-			cameraPos.y = pos.y - gameHeight / 2.f;
-		}
 
-		Game::GetInstance()->SetCameraPosition(cameraPos, false);
-		// Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
+		switch (m_cameraMode) {
+		case CameraMode::DEFAULT:
+			// clamp position to nearest pixel to avoid pixel rendering artifacts
+			// cameraPos.x = (int)(cameraPos.x + 0.5f);
+			if (pos.x < 970) cameraPos.y = 239;
+			else {
+				pos.y = std::clamp(pos.y, 138.f, 359.f);
+				cameraPos.y = pos.y - gameHeight / 2.f;
+			}
+
+			Game::GetInstance()->SetCameraPosition(cameraPos, false);
+			break;
+		case CameraMode::AUTOSCROLL:
+			cameraPos.x = 0.0f;
+			cameraPos.y = 239.f;
+			Game::GetInstance()->SetCameraPosition(cameraPos, true);
+			Game::GetInstance()->MoveCamera(Vector2(20.f * dt, 0));
+
+			//clamp mario position to camera's edges
+			Vector2 clampedPos = pos;
+			Game::GetInstance()->GetCamera()->ClampPointInView(clampedPos);
+			m_player->SetPosition(clampedPos);
+
+			break;
+		}
 	}
 
 	if (skip)
@@ -212,7 +229,7 @@ void World::RenderDebug(
 void World::Reset() { Game::GetInstance()->SwitchWorld(); }
 
 void World::Teleport() {
-	m_player->SetPosition(Vector2(1389, 378));
+	m_player->SetPosition(Vector2(2271, 0));
 	m_player->SetVelocity(Vector2::Zero);
 }
 
@@ -297,6 +314,7 @@ json World::LoadJsonFile(const std::string& filePath) {
 void World::LoadWorldConfig(const json& data) {
 	m_width = data["width"];
 	m_height = data["height"];
+	m_cameraMode = static_cast<CameraMode>(data["cameraMode"]);
 
 	Game::GetInstance()->SetWorldSize(m_width, m_height);
 
@@ -523,7 +541,7 @@ Entity* World::CreateEntity(int entType, const json& data,
 		break;
 	}
 
-	//// Add more entity types here as needed
+					   //// Add more entity types here as needed
 	default:
 		Log(__FUNCTION__, "Unknown entity type: " + std::to_string(entType));
 		break;

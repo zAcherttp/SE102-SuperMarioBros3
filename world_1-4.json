@@ -7,12 +7,13 @@
     "g": 0.9411764705882353,
     "a": 1
   },
+  "cameraMode": 1,
   "spritesData": "sprites.json",
   "entities": [
     {
       "type": 0,
       "x": 32.0,
-      "y": 335.0
+      "y": 305.0
     },
     {
       "type": 23,

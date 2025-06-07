@@ -372,7 +372,7 @@ void MarioRaccoonState::Update(Mario* mario, float dt)
 		}
 
 		// End invincibility after the set time
-		if (m_invincibleTimer >= PLAYER_INVINCIBLE_TIME) {
+		if (m_invincibleTimer >= 0.5f) {
 			m_isInvincible = false;
 			m_isFlashing = false;
 			m_takenDmg = false;

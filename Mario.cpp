@@ -124,7 +124,7 @@ bool Mario::UsesInteractionPoints() const { return true; }
 void Mario::ItsAMe() {
 	// set default for now, later game class will have mario factory
 
-	m_powerupSM = std::make_unique<MarioRaccoonState>();
+	m_powerupSM = std::make_unique<MarioSuperState>();
 	m_movementSM = std::make_unique<MarioIdleState>(Direction::Right);
 	m_powerupSM->Enter(this);
 	m_movementSM->Enter(this);
@@ -414,7 +414,7 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 void Mario::OnLeftSideCollision(const CollisionResult& result) {
 	if (!result.collidedWith)
 		return;
-		
+
 	HitBox* hitBox = dynamic_cast<HitBox*>(result.collidedWith);
 	if (hitBox) {
 		return;
