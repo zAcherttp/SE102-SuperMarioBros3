@@ -4,15 +4,15 @@
 
 #pragma once
 
-#include "DeviceResources.h"
-#include "SpriteSheet.h"
 #include "Animator.h"
 #include "Camera.h"
-#include "World.h"
-#include "StepTimer.h"
+#include "DeviceResources.h"
+#include "EffectManager.h"
 #include "HeadUpDisplay.h"
 #include "json.hpp"
-#include "EffectManager.h"
+#include "SpriteSheet.h"
+#include "StepTimer.h"
+#include "World.h"
 
 using json = nlohmann::json;
 
@@ -64,25 +64,26 @@ public:
 	void UpdateHUD(float dt);
 
 	void AddScore(const int& score);
+	void AddCoin(const int& coin);
 
 	void RestartWorld();
 
 	void SetWorldSize(int width, int height);
 	void SetCameraPosition(const DirectX::SimpleMath::Vector2& pos, bool oneAxis);
 	void MoveCamera(const DirectX::SimpleMath::Vector2& delta);
-	
+
 	SpriteSheet* GetSpriteSheet() const;
 	DirectX::SpriteBatch* GetSpriteBatch() const;
-	
+
 	int GetCurrentWorldId() const { return m_currentWorldId; }
 	int GetStartWorldId() const { return m_startWorldId; }
 	World* GetCurrentWorld() const { return m_worlds.at(m_currentWorldId); }
-	
+
 	Camera* GetCamera() const { return m_camera.get(); }
 	std::unordered_map<int, World*> m_worlds;
 	int m_currentWorldId;
-	
-	private:
+
+private:
 
 	static Game* s_instance;
 

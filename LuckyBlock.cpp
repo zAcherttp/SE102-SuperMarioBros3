@@ -44,15 +44,15 @@ LuckyBlock::LuckyBlock(Vector2 position, Vector2 size, bool isSolid, SpriteSheet
 	m_collisionComponent->SetPosition(newPos);
 	m_origin = newPos;
 
-	if(isMimic) {
+	if (isMimic) {
 		SetAnimation(ID_ANIM_BRICK, true);
 	}
 	else {
 		SetAnimation(ID_ANIM_LUCKY_BLOCK, true);
 	}
 
-	if(isSpecial && isMushroom) m_isButton = true;
-	if(!isSpecial && !isMushroom) m_isCoin = true;
+	if (isSpecial && isMushroom) m_isButton = true;
+	if (!isSpecial && !isMushroom) m_isCoin = true;
 
 }
 
@@ -64,7 +64,7 @@ void LuckyBlock::Render(DirectX::SpriteBatch* spriteBatch)
 
 	m_animator->Draw(spriteBatch, pos, 0.0f);
 
-	if(m_hiddenButton) {
+	if (m_hiddenButton) {
 		m_hiddenButton->Render(spriteBatch);
 	}
 
@@ -100,10 +100,10 @@ void LuckyBlock::Update(float dt)
 			SetVelocity(vel);
 			SetPosition(m_origin);
 			SpawnReward();
-			if(m_isMimic && m_isCoin) {
+			if (m_isMimic && m_isCoin) {
 				m_isClaimed = false;
 				m_claimCoinCount++;
-				if(m_claimCoinCount >= m_maxClaimCoinCount) {
+				if (m_claimCoinCount >= m_maxClaimCoinCount) {
 					m_isClaimed = true;
 					m_isClaiming = false;
 					SetAnimId(ID_ANIM_LUCKY_BLOCK_CLAIMED);
@@ -118,14 +118,14 @@ void LuckyBlock::Update(float dt)
 
 	m_animator->Update(dt);
 
-	if(m_hiddenButton) {
+	if (m_hiddenButton) {
 		m_hiddenButton->Update(dt);
 	}
 }
 
 void LuckyBlock::Bump() {
 	if (m_isClaimed || m_isClaiming) return;
-	if(m_isMimic && m_isCoin)
+	if (m_isMimic && m_isCoin)
 	{
 		m_isClaiming = true;
 		m_isClaimed = false;
@@ -159,7 +159,7 @@ void LuckyBlock::SpawnReward()
 		SpawnButton();
 		return;
 	}
-	if(m_isMushroom){
+	if (m_isMushroom) {
 		SpawnMushroom();
 		return;
 	}
@@ -169,6 +169,7 @@ void LuckyBlock::SpawnReward()
 	}
 	if (m_isCoin) {
 		SpawnCoin();
+		Game::GetInstance()->AddCoin(1);
 		return;
 	}
 }

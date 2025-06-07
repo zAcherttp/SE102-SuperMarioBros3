@@ -292,13 +292,12 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 		return;
 	}
 
-	FloatingPlatform* moving =
-		dynamic_cast<FloatingPlatform*>(result.collidedWith);
+	FloatingPlatform* moving = dynamic_cast<FloatingPlatform*>(result.collidedWith);
 	if (result.contactNormal.y < 0) {
 		Vector2 vel = GetVelocity();
 		m_collisionComponent->SetPlatform(moving);
 		if (moving) {
-			// moving->Fall();
+			moving->Fall();
 		}
 		if (block) {
 			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) *
@@ -307,7 +306,7 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 		}
 	}
 	else if (result.contactNormal.x != 0) {
-		if (block && block->IsSolid()) {
+		if (block && block->IsSolid() && !moving) {
 			Vector2 otherSize = result.collidedWith->GetSize();
 			Vector2 otherPos = result.collidedWith->GetPosition();
 			Vector2 pos = GetPosition();
@@ -375,12 +374,11 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 	}
 
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
-	FloatingPlatform* moving =
-		dynamic_cast<FloatingPlatform*>(result.collidedWith);
 	// TODO: change to universal Troopa class
 	if (block && block->IsCollectible()) {
 		return;
 	}
+	FloatingPlatform* moving = dynamic_cast<FloatingPlatform*>(result.collidedWith);
 	Troopa* shell = dynamic_cast<Troopa*>(result.collidedWith);
 	if (result.contactNormal.x < 0) {
 		if (block && block->IsSolid()) {
@@ -399,7 +397,7 @@ void Mario::OnRightSideCollision(const CollisionResult& result) {
 			m_movementSM->Enter(this);
 		}
 	}
-	else if (result.contactNormal.y != 0) {
+	else if (result.contactNormal.y != 0 && !moving) {
 		if (block && block->IsSolid()) {
 			Vector2 otherSize = result.collidedWith->GetSize();
 			Vector2 otherPos = result.collidedWith->GetPosition();
@@ -420,12 +418,11 @@ void Mario::OnLeftSideCollision(const CollisionResult& result) {
 		return;
 	}
 	Block* block = dynamic_cast<Block*>(result.collidedWith);
-	FloatingPlatform* moving =
-		dynamic_cast<FloatingPlatform*>(result.collidedWith);
 	Troopa* shell = dynamic_cast<Troopa*>(result.collidedWith);
 	if (block && block->IsCollectible()) {
 		return;
 	}
+	FloatingPlatform* moving = dynamic_cast<FloatingPlatform*>(result.collidedWith);
 	if (result.contactNormal.x > 0) {
 		if (block && block->IsSolid()) {
 			Vector2 vel = GetVelocity();
@@ -443,7 +440,7 @@ void Mario::OnLeftSideCollision(const CollisionResult& result) {
 			m_movementSM->Enter(this);
 		}
 	}
-	else if (result.contactNormal.y != 0) {
+	else if (result.contactNormal.y != 0 && !moving) {
 		if (block && block->IsSolid()) {
 			Vector2 otherSize = result.collidedWith->GetSize();
 			Vector2 otherPos = result.collidedWith->GetPosition();

@@ -1191,22 +1191,22 @@
     ]
   },
   {
-    "type": 32,
+    "type": 34,
     "sprites": [
       {
-        "id": 3200,
+        "id": 3400,
         "name": "moving_platform",
         "frames": ["moving-platform-left"],
         "loop": false
       },
       {
-        "id": 3201,
+        "id": 3401,
         "name": "moving_platform_mid",
         "frames": ["moving-platform-mid"],
         "loop": false
       },
       {
-        "id": 3202,
+        "id": 3402,
         "name": "moving_platform_right",
         "frames": ["moving-platform-right"],
         "loop": false

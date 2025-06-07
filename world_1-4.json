@@ -16,6 +16,123 @@
       "y": 305.0
     },
     {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 368.0,
+      "y": 320.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 560.0,
+      "y": 352.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 592.0,
+      "y": 304.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 624.0,
+      "y": 400.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 752.0,
+      "y": 336.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 1088.0,
+      "y": 384.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 1200.0,
+      "y": 320.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 1376.0,
+      "y": 352.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 1408.0,
+      "y": 336.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 1552.0,
+      "y": 304.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 1744.0,
+      "y": 384.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 1776.0,
+      "y": 336.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
+      "type": 34,
+      "width": 16,
+      "height": 16,
+      "x": 1792.0,
+      "y": 416.0,
+      "solid": true,
+      "countX": 4
+    },
+    {
       "type": 23,
       "x": 0.0,
       "y": 352.0,

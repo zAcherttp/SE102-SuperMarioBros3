@@ -176,12 +176,14 @@ const RECT& Camera::GetGameViewRect() const { return m_gameViewRect; }
 void Camera::ClampPointInView(DirectX::SimpleMath::Vector2& position) const {
 	int gameWidth, gameHeight;
 	Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
-	position.x = std::clamp(position.x, m_targetPosition.x + 8.f, m_targetPosition.x + gameWidth - 8.f);
+	position.x = std::clamp(position.x, m_targetPosition.x + 16.f, m_targetPosition.x + gameWidth - 16.f);
 }
 
 const bool Camera::IsInGameView(const DirectX::SimpleMath::Vector2& position, const int padding) const {
-	return (position.x >= m_gameViewRect.left - padding && position.x <= m_gameViewRect.right + padding &&
-		position.y >= m_gameViewRect.top - padding && position.y <= m_gameViewRect.bottom + padding);
+	int gameWidth, gameHeight;
+	Game::GetInstance()->GetDefaultGameSize(gameWidth, gameHeight);
+
+	return (position.x >= m_targetPosition.x - (float)padding && position.x <= m_targetPosition.x + gameWidth + (float)padding);
 }
 
 void Camera::Shake(const DirectX::SimpleMath::Vector2& shakeOffset, const int amount, const float duration) {
