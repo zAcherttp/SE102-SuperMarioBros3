@@ -14,6 +14,7 @@
 #include "MarioMovementStates.h"
 #include "MarioPowerUpStates.h"
 #include "MarioStateBase.h"
+#include "Pipe.h"
 #include "SimpleMath.h"
 #include "SpriteBatch.h"
 #include "SpriteSheet.h"
@@ -293,6 +294,7 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 	}
 
 	FloatingPlatform* moving = dynamic_cast<FloatingPlatform*>(result.collidedWith);
+	Pipe* pipe = dynamic_cast<Pipe*>(result.collidedWith);
 	if (result.contactNormal.y < 0) {
 		Vector2 vel = GetVelocity();
 		m_collisionComponent->SetPlatform(moving);
@@ -303,6 +305,21 @@ void Mario::OnFootCollision(const CollisionResult& result) {
 			vel += result.contactNormal * Vector2(std::abs(vel.x), std::abs(vel.y)) *
 				(1.0f - result.contactTime);
 			SetVelocity(vel);
+		}
+		if (pipe) {
+			if (pipe->GetEnterable()) {
+				int worldID;
+				Vector2 pos;
+				switch (pipe->GetEnterType()) {
+				case 1:
+					worldID = 3;
+					break;
+				case 3:
+					worldID = 1;
+					break;
+				}
+				Game::GetInstance()->SetNextWorldId(worldID);
+			}
 		}
 	}
 	else if (result.contactNormal.x != 0) {
@@ -335,6 +352,7 @@ void Mario::OnTopHeadCollision(const CollisionResult& result) {
 	if (block && block->IsCollectible()) {
 		return;
 	}
+	Pipe* pipe = dynamic_cast<Pipe*>(result.collidedWith);
 
 	if (result.contactNormal.y > 0) {
 		if (block && block->IsSolid()) {
@@ -345,6 +363,15 @@ void Mario::OnTopHeadCollision(const CollisionResult& result) {
 			SetVelocity(vel);
 
 			block->Bump();
+		}
+		if (pipe) {
+			if (pipe->GetEnterable()) {
+				if (pipe->GetEnterType() == 2) {
+					Game::GetInstance()->SetNextWorldId(4);
+					Game::GetInstance()->SetEnterPosition(Vector2(2336, 363));
+				}
+
+			}
 		}
 	}
 	else if (result.contactNormal.x != 0) {

@@ -136,6 +136,11 @@ void Game::AddCoin(const int& coin)
 	m_hud->AddCoins(coin);
 }
 
+void Game::SetEnterPosition(const Vector2& pos)
+{
+	m_worldStartPosition = pos;
+}
+
 void Game::RestartWorld()
 {
 	m_requestReset = true;
@@ -434,6 +439,11 @@ void Game::SwitchWorld()
 	World* world = m_worlds[m_currentWorldId];
 	Log(__FUNCTION__, "Loading into world: " + world->GetName());
 	world->Load(m_spriteSheet.get());
+
+	if (m_worldStartPosition.x > 0 && m_worldStartPosition.y > 0) {
+		world->GetPlayer()->SetPosition(m_worldStartPosition);
+		m_worldStartPosition = Vector2(-1, -1);
+	}
 
 	m_camera->SetPosition(Vector2(0.f, 0.f), false);
 

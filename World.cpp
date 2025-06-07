@@ -438,6 +438,13 @@ Entity* World::CreateEntity(int entType, const json& data,
 		bool hasHead = data["hasHead"];
 		bool isBonus = data["isBonus"];
 		bool isCollidable = data["isCollidable"];
+		if (data.contains("enterable")) {
+			bool enterable = data["enterable"];
+			int enterType = data["enterType"];
+			entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid,
+				spriteSheet, hasHead, isBonus, isCollidable, enterable, enterType);
+			break;
+		}
 		entity = new Pipe(position, Vector2(width, height), countX, countY, isSolid,
 			spriteSheet, hasHead, isBonus, isCollidable);
 		break;

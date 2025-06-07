@@ -937,6 +937,8 @@
       "solid": true,
       "hasHead": true,
       "isBonus": false,
+      "enterable": true,
+      "enterType": 1,
       "isCollidable": true
     },
     {
